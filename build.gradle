@@ -1,0 +1,27 @@
+plugins {
+    id 'org.springframework.boot' version '3.0.0'
+    id 'io.spring.dependency-management' version '1.1.0'
+    id 'java'
+}
+
+group 'ru.yandex.market'
+version '0.0.1-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+compileJava {
+    options.encoding = 'UTF-8'
+    sourceCompatibility = 17
+    targetCompatibility = 17
+    options.annotationProcessorPath = configurations.annotationProcessor
+}
+
+dependencies {
+
+}
+
+test {
+    useJUnitPlatform()
+}
