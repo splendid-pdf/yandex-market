@@ -1,0 +1,20 @@
+server:
+  port: 8097
+
+spring:
+  application:
+    name: shop_system
+  datasource:
+    url: jdbc:postgresql://localhost:5432/shop_system
+    username: yandex_test_user
+    password: secret_password192
+    driverClassName: org.postgresql.Driver
+  jpa:
+    database: POSTGRESQL
+    show-sql: true
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true

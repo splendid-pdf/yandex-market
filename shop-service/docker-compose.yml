@@ -1,0 +1,19 @@
+services:
+  postgres:
+    container_name: shopsystem
+    image: postgres
+    environment:
+      POSTGRES_USER: ${secret_user}
+      POSTGRES_PASSWORD: ${secret_password}
+      PGDATA: /data/postgres
+    volumes:
+      - ./postgres:/data/postgres
+    ports:
+      - "5432:5432"
+    networks:
+      - postgres
+    restart: unless-stopped
+
+networks:
+  postgres:
+    driver: bridge
