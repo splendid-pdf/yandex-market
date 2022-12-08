@@ -10,3 +10,5 @@ include 'user-info-service'
 include 'comparison-service'
 include 'statistics-service'
 include 'adaptive-search-service'
+include 'commons'
+
