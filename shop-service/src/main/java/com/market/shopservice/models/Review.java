@@ -1,5 +1,6 @@
-package com.market.shopservice.model;
+package com.market.shopservice.models;
 
+import com.market.shopservice.models.shop.ShopSystem;
 import jakarta.persistence.*;
 import lombok.*;
 

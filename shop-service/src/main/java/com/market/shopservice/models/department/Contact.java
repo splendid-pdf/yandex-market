@@ -1,4 +1,4 @@
-package com.market.shopservice.model;
+package com.market.shopservice.models.department;
 
 import jakarta.persistence.Embeddable;
 import lombok.*;
@@ -9,9 +9,11 @@ import lombok.*;
 @Embeddable
 @NoArgsConstructor
 @AllArgsConstructor
-public class Support {
+public class Contact {
 
-    private String number;
+    private String hotlinePhone;
+
+    private String servicePhone;
 
     private String email;
 }

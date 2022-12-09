@@ -1,4 +1,4 @@
-package com.market.shopservice.model;
+package com.market.shopservice.models.department;
 
 import jakarta.persistence.Embeddable;
 import lombok.*;
@@ -9,19 +9,17 @@ import lombok.*;
 @Embeddable
 @NoArgsConstructor
 @AllArgsConstructor
-public class LegalEntityAddress {
-
-    private String country;
-
-    private String region;
+public class Location {
 
     private String city;
-
-    private String postcode;
 
     private String street;
 
     private String houseNumber;
 
-    private String officeNumber;
+    private String postcode;
+
+    private double latitude;
+
+    private double longitude;
 }

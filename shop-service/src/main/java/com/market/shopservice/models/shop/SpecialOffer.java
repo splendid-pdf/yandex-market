@@ -1,4 +1,4 @@
-package com.market.shopservice.model;
+package com.market.shopservice.models.shop;
 
 import jakarta.persistence.*;
 import lombok.*;
