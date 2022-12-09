@@ -3,6 +3,7 @@ package com.market.shopservice.models.department;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.Objects;
 import java.util.UUID;
 
 @Entity
@@ -15,7 +16,9 @@ import java.util.UUID;
 public class Department {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(nullable = false)
+    @SequenceGenerator(name = "department_seq", sequenceName = "department_sequence")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "department_seq")
     private Long id;
 
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -47,4 +50,18 @@ public class Department {
     private boolean pickup;
 
     //TODO features
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Department that = (Department) o;
+        return id.equals(that.id) && externalId.equals(that.externalId) && ogrn.equals(that.ogrn);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, externalId, ogrn);
+    }
 }
