@@ -1,10 +1,11 @@
 services:
   postgres:
-    container_name: shopsystem
+    container_name: postgres_shops
     image: postgres
     environment:
-      POSTGRES_USER: ${secret_user}
-      POSTGRES_PASSWORD: ${secret_password}
+      POSTGRES_USER: ${postgres_user}
+      POSTGRES_PASSWORD: ${postgres_password}
+      POSTGRES_DB: ${db_name}
       PGDATA: /data/postgres
     volumes:
       - ./postgres:/data/postgres
@@ -13,7 +14,25 @@ services:
     networks:
       - postgres
     restart: unless-stopped
+  pgadmin:
+    container_name: pgadmin_shops
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${pgadmin_email}
+      PGADMIN_DEFAULT_PASSWORD: ${pgadmin_password}
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    volumes:
+      - pgadmin:/var/lib/pgadmin
+    ports:
+      - "5050:80"
+    networks:
+      - postgres
+    restart: unless-stopped
 
 networks:
   postgres:
     driver: bridge
+
+volumes:
+  postgres:
+  pgadmin:

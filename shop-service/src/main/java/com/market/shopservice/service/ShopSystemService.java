@@ -1,21 +1,16 @@
 package com.market.shopservice.service;
 
-import com.market.shopservice.models.ShopSystem;
+import com.market.shopservice.impl.IShopSystemService;
 import com.market.shopservice.repositories.ShopSystemRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
-public class ShopSystemService {
+@RequiredArgsConstructor
+public class ShopSystemService implements IShopSystemService {
     private ShopSystemRepository repository;
-//
-//    public ShopSystemService(ShopSystemRepository repository) {
-//        this.repository = repository;
-//    }
 
-    public List<ShopSystem> getAllShopSystems() {
-        ShopSystem byId = repository.getById(1L);
-        return List.of(byId);
+    public String getAllShopSystems() {
+        return "Test ... 123";
     }
 }

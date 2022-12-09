@@ -17,7 +17,7 @@ public class SpecialOffer {
     private String terms;
 
     // TODO: доделать
-//    @ManyToOne
-//    @JoinColumn(name = "shop_system_id")
-//    private ShopSystem shopSystem;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "shop_system_id")
+    private ShopSystem shopSystem;
 }

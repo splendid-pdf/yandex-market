@@ -1,13 +1,13 @@
 server:
-  port: 8097
+  port: 8080
 
 spring:
   application:
     name: shop_system
   datasource:
     url: jdbc:postgresql://localhost:5432/shop_system
-    username: yandex_test_user
-    password: secret_password192
+    username: damir
+    password: damir
     driverClassName: org.postgresql.Driver
   jpa:
     database: POSTGRESQL
