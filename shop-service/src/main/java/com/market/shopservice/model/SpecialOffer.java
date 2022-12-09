@@ -15,7 +15,6 @@ import java.util.Objects;
 public class SpecialOffer {
 
     @Id
-    @Column(name = "special_offer_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 

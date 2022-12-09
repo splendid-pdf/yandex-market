@@ -15,7 +15,6 @@ import java.util.Objects;
 public class Review {
 
     @Id
-    @Column(name = "review_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 

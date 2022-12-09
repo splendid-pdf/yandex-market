@@ -6,6 +6,7 @@ import lombok.*;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+import java.util.UUID;
 
 @Entity
 @Getter
@@ -17,30 +18,30 @@ import java.util.Set;
 public class ShopSystem {
 
     @Id
-    @Column(name = "shop_systems_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID externalId;
 
     @Column(nullable = false)
     private String name;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "support_id")
+    @Column(nullable = false)
+    private String token;
+
+    @Embedded
     private Support support;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "legal_entity_address_id")
+    @Embedded
     private LegalEntityAddress legalEntityAddress;
-
-    @OneToMany(mappedBy = "shopSystem", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-    private Set<Review> reviews = new HashSet<>();
 
     @OneToMany(mappedBy = "shopSystem", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private Set<SpecialOffer> specialOffers = new HashSet<>();
 
     private String logoUrl;
 
-    private Float rating;
+    private float rating;
 
     private boolean disabled;
 
