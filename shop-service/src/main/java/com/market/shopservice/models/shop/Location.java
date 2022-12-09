@@ -9,7 +9,7 @@ import lombok.*;
 @Embeddable
 @NoArgsConstructor
 @AllArgsConstructor
-public class LegalEntityAddress {
+public class Location {
 
     private String country;
 

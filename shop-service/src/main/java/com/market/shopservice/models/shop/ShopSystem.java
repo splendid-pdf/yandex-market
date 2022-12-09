@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
@@ -12,29 +11,28 @@ import java.util.UUID;
 @Getter
 @Setter
 @Builder
+@EqualsAndHashCode(of = {"externalId"})
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "shop_systems")
 public class ShopSystem {
 
     @Id
-    @SequenceGenerator(name = "shop_seq", sequenceName = "shop_sequence")
+    @SequenceGenerator(name = "shop_seq", sequenceName = "shop_sequence", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "shop_seq")
     private Long id;
 
     private UUID externalId;
 
-    @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false)
     private String token;
 
     @Embedded
     private Support support;
 
     @Embedded
-    private LegalEntityAddress legalEntityAddress;
+    private Location legalEntityAddress;
 
     @OneToMany(mappedBy = "shopSystem", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private Set<SpecialOffer> specialOffers = new HashSet<>();
@@ -43,20 +41,16 @@ public class ShopSystem {
 
     private float rating;
 
-    private boolean disabled;
+    private boolean isDisabled;
 
     private boolean isTest;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ShopSystem that = (ShopSystem) o;
-        return id.equals(that.id) && name.equals(that.name) && legalEntityAddress.equals(that.legalEntityAddress);
+    public void addSpecialOffer(SpecialOffer specialOffer) {
+        specialOffer.setShopSystem(this);
+        specialOffers.add(specialOffer);
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, name, legalEntityAddress);
+    public void removeSpecialOffer(SpecialOffer specialOffer) {
+        specialOffers.remove(specialOffer);
     }
 }

@@ -1,4 +1,4 @@
-package com.market.shopservice.models.department;
+package com.market.shopservice.models.branch;
 
 import lombok.Getter;
 
