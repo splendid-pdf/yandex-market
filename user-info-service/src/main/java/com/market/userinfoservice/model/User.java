@@ -17,9 +17,9 @@ import java.util.UUID;
 @Getter
 @Entity
 @Setter
+@NoArgsConstructor
 @Table(name = "users")
 @EqualsAndHashCode(of = "id")
-@NoArgsConstructor
 public class User {
 
     @Id
@@ -75,7 +75,4 @@ public class User {
     public void removeContact(Contact contact) {
         contacts.remove(contact);
     }
-
-
-
 }

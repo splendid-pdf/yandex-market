@@ -6,9 +6,9 @@ import lombok.*;
 @Entity
 @Getter
 @Setter
+@NoArgsConstructor
 @Table(name = "contacts")
 @EqualsAndHashCode(of = "id")
-@NoArgsConstructor
 public class Contact {
 
     @Id
