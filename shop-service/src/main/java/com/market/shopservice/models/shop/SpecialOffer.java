@@ -15,7 +15,8 @@ import java.util.Objects;
 public class SpecialOffer {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @SequenceGenerator(name = "special_offer_seq", sequenceName = "special_offer_sequence")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "special_offer_seq")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)

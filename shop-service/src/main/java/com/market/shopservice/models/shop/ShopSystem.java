@@ -18,12 +18,10 @@ import java.util.UUID;
 public class ShopSystem {
 
     @Id
-    @Column(nullable = false)
     @SequenceGenerator(name = "shop_seq", sequenceName = "shop_sequence")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "shop_seq")
     private Long id;
 
-    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID externalId;
 
     @Column(nullable = false)

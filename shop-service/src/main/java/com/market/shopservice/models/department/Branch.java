@@ -1,5 +1,6 @@
 package com.market.shopservice.models.department;
 
+import com.market.shopservice.models.shop.LegalEntityAddress;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -12,16 +13,14 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "departments")
-public class Department {
+@Table(name = "branchs")
+public class Branch {
 
     @Id
-    @Column(nullable = false)
-    @SequenceGenerator(name = "department_seq", sequenceName = "department_sequence")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "department_seq")
+    @SequenceGenerator(name = "branch_seq", sequenceName = "branch_sequence")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "branch_seq")
     private Long id;
 
-    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID externalId;
 
     @Column(nullable = false)
@@ -37,26 +36,25 @@ public class Department {
     private Country country;
 
     @Embedded
-    private Location location;
+    private LegalEntityAddress location;
 
     @Embedded
     private Contact contact;
 
     //TODO openingTimes
 
-    @Embedded
+    @OneToOne(fetch = FetchType.LAZY)
     private Delivery delivery;
 
     private boolean pickup;
 
     //TODO features
 
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Department that = (Department) o;
+        Branch that = (Branch) o;
         return id.equals(that.id) && externalId.equals(that.externalId) && ogrn.equals(that.ogrn);
     }
 

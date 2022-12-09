@@ -17,11 +17,15 @@ public class LegalEntityAddress {
 
     private String city;
 
-    private String postcode;
-
     private String street;
 
     private String houseNumber;
 
     private String officeNumber;
+
+    private String postcode;
+
+    private double latitude;
+
+    private double longitude;
 }
