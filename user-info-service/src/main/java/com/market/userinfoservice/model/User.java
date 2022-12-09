@@ -14,11 +14,11 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
-@Entity
 @Getter
+@Entity
 @Setter
 @Table(name = "users")
-@EqualsAndHashCode
+@EqualsAndHashCode(of = "id")
 @NoArgsConstructor
 public class User {
 
@@ -75,5 +75,7 @@ public class User {
     public void removeContact(Contact contact) {
         contacts.remove(contact);
     }
+
+
 
 }

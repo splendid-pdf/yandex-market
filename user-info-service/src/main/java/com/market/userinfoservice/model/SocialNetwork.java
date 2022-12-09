@@ -1,5 +1,5 @@
 package com.market.userinfoservice.model;
 
-public enum SocialContactType {
+public enum SocialNetwork {
     VK, TWITTER, INSTAGRAM, FACEBOOK, TELEGRAM;
 }

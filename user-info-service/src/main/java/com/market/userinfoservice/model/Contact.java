@@ -7,7 +7,7 @@ import lombok.*;
 @Getter
 @Setter
 @Table(name = "contacts")
-@EqualsAndHashCode
+@EqualsAndHashCode(of = "id")
 @NoArgsConstructor
 public class Contact {
 
@@ -18,11 +18,9 @@ public class Contact {
 
     private String value;
 
-    private SocialContactType type;
+    private SocialNetwork type;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
-
-
 
 }
