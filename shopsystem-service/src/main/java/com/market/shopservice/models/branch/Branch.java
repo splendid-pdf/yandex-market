@@ -5,7 +5,6 @@ import com.market.shopservice.models.shop.ShopSystem;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.Objects;
 import java.util.UUID;
 
 @Entity

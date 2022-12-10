@@ -58,6 +58,7 @@ public class Delivery {
     public void removeDeliveryInterval(DeliveryInterval deliveryInterval) {
         deliveryIntervals.remove(deliveryInterval);
     }
+    
 
     @Override
     public boolean equals(Object o) {

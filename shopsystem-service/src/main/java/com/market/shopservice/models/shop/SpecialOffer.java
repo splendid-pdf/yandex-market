@@ -25,5 +25,6 @@ public class SpecialOffer {
     private String name;
     private String type;
     private Integer value;
+    
     private String terms;
 }
