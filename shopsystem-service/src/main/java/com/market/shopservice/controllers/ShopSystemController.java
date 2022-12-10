@@ -1,15 +1,16 @@
 package com.market.shopservice.controllers;
 
-import com.market.shopservice.dao.ShopSystemDao;
+import com.market.shopservice.dto.ShopSystemDto;
 import com.market.shopservice.models.shop.ShopSystem;
 import com.market.shopservice.service.ShopSystemService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
-@RequestMapping("/public/api/v1/shopsystem")
+@RequestMapping("/public/api/v1/shopsystems")
 public class ShopSystemController {
     private final ShopSystemService shopService;
 
@@ -17,17 +18,27 @@ public class ShopSystemController {
         this.shopService = shopService;
     }
 
-    // TODO: удалить после всех тестов и проверок (не имеет значимости)
-    @GetMapping("/all")
+    @GetMapping()
     @ResponseStatus(HttpStatus.OK)
-    public List<ShopSystem> getAllShopSystems(){
+    public List<ShopSystem> getAllShopSystems() {
         return shopService.getAllShopSystems();
     }
 
-    // TODO: обновить до принятия DAO
-    @PostMapping("/add")
+    @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
-    public void createNewShopSystem(@RequestBody ShopSystem shopSystem) {
-        shopService.createShopSystem(shopSystem);
+    public void createNewShopSystem(@RequestBody ShopSystemDto shopSystemDto) {
+        shopService.createShopSystem(shopSystemDto);
+    }
+
+    @GetMapping("/{externalId}")
+    @ResponseStatus(HttpStatus.OK)
+    public ShopSystem getShopSystemByExternalId(@PathVariable("externalId") UUID externalId) {
+        return shopService.getShopSystemByExternalId(externalId);
+    }
+
+    @DeleteMapping("/{externalId}")
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteSystemShopByExternalId(@PathVariable("externalId") UUID externalId) {
+        shopService.deleteSystemShopByExternalId(externalId);
     }
 }

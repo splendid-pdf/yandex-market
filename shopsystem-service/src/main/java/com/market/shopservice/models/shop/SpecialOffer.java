@@ -3,8 +3,6 @@ package com.market.shopservice.models.shop;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.Objects;
-
 @Entity
 @Getter
 @Setter

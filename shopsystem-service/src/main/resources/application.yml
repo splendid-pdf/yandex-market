@@ -5,9 +5,9 @@ spring:
   application:
     name: shop_system
   datasource:
-    url: jdbc:postgresql://localhost:5432/shop_system
-    username: damir
-    password: damir
+    url: jdbc:postgresql://localhost:5432/${db_name}
+    username: ${postgres_user}
+    password: ${postgres_password}
     driverClassName: org.postgresql.Driver
   jpa:
     database: POSTGRESQL

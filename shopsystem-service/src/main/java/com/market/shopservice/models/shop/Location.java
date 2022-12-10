@@ -14,8 +14,8 @@ public class Location {
     private String region;
     private String city;
     private String street;
-    private String houseNumber;
-    private String officeNumber;
+    private int houseNumber;
+    private int officeNumber;
     private String postcode;
     private double latitude;
     private double longitude;

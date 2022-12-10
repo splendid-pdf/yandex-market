@@ -30,6 +30,7 @@ public class Branch {
     private Location location;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(foreignKey=@ForeignKey(name="FK_SHOP_SYSTEM"))
     private ShopSystem shopSystem;
 
     @Embedded

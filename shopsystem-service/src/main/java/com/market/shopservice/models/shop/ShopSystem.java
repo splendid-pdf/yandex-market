@@ -22,11 +22,8 @@ public class ShopSystem {
     @SequenceGenerator(name = "shop_seq", sequenceName = "shop_sequence", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "shop_seq")
     private Long id;
-
     private UUID externalId;
-
     private String name;
-
     private String token;
 
     @Embedded
@@ -45,10 +42,8 @@ public class ShopSystem {
     private String logoUrl;
 
     private float rating;
-
-    private boolean isDisabled = false;
-
-    private boolean isTest = false;
+    private boolean isDisabled;
+    private boolean isTest;
 
     public void addSpecialOffer(SpecialOffer specialOffer) {
         specialOffer.setShopSystem(this);
@@ -66,17 +61,5 @@ public class ShopSystem {
 
     public void removeBranch(Branch branch) {
         branches.remove(branch);
-    }
-
-    public ShopSystem(UUID externalId, String name, String token, Support support, Location legalEntityAddress, Set<SpecialOffer> specialOffers, Set<Branch> branches, String logoUrl, float rating) {
-        this.externalId = externalId;
-        this.name = name;
-        this.token = token;
-        this.support = support;
-        this.legalEntityAddress = legalEntityAddress;
-        this.specialOffers = specialOffers;
-        this.branches = branches;
-        this.logoUrl = logoUrl;
-        this.rating = rating;
     }
 }
