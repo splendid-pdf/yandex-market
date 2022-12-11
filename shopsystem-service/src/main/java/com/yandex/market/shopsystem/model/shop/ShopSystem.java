@@ -15,10 +15,10 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "shop_systems")
-@EqualsAndHashCode(of = "id")
 public class ShopSystem {
 
     @Id
+    @EqualsAndHashCode.Include
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "shop_seq")
     @SequenceGenerator(name = "shop_seq", sequenceName = "shop_sequence", allocationSize = 1)
     private Long id;

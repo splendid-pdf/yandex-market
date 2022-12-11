@@ -11,11 +11,11 @@ import java.time.LocalTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(of = "id")
 @Table(name = "delivery_intervals")
 public class DeliveryInterval {
 
     @Id
+    @EqualsAndHashCode.Include
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "delivery_interval_seq")
     @SequenceGenerator(name = "delivery_interval_seq", sequenceName = "delivery_interval_sequence", allocationSize = 1)
     private Long id;

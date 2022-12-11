@@ -10,10 +10,10 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "special_offers")
-@EqualsAndHashCode(of = "id")
 public class SpecialOffer {
 
     @Id
+    @EqualsAndHashCode.Include
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "special_offer_seq")
     @SequenceGenerator(name = "special_offer_seq", sequenceName = "special_offer_sequence", allocationSize = 1)
     private Long id;

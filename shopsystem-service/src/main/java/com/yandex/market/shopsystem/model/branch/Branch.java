@@ -14,10 +14,10 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "branches")
-@EqualsAndHashCode(of = "id")
 public class Branch {
 
     @Id
+    @EqualsAndHashCode.Include
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "branch_seq")
     @SequenceGenerator(name = "branch_seq", sequenceName = "branch_sequence", allocationSize = 1)
     private Long id;

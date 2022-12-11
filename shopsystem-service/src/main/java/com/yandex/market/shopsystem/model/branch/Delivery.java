@@ -13,10 +13,10 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "deliveries")
-@EqualsAndHashCode(of = "id")
 public class Delivery {
 
     @Id
+    @EqualsAndHashCode.Include
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "delivery_seq")
     @SequenceGenerator(name = "delivery_seq", sequenceName = "delivery_sequence", allocationSize = 1)
     private Long id;
