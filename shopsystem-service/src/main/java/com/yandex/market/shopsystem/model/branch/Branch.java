@@ -14,6 +14,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "branches")
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Branch {
 
     @Id

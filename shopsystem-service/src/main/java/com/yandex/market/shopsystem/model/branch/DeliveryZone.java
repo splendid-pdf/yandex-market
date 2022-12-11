@@ -10,6 +10,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "delivery_zones")
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class DeliveryZone {
 
     @Id

@@ -12,6 +12,7 @@ import java.time.LocalTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "delivery_intervals")
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class DeliveryInterval {
 
     @Id

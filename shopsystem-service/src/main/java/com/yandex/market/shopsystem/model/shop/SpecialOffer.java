@@ -10,6 +10,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "special_offers")
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class SpecialOffer {
 
     @Id

@@ -15,6 +15,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "shop_systems")
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class ShopSystem {
 
     @Id

@@ -13,6 +13,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "deliveries")
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Delivery {
 
     @Id
