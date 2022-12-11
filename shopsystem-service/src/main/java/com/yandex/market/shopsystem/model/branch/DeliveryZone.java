@@ -1,4 +1,4 @@
-package com.market.shopservice.models.branch;
+package com.yandex.market.shopsystem.model.branch;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -7,9 +7,9 @@ import lombok.*;
 @Setter
 @Builder
 @Entity
-@EqualsAndHashCode(of = "id")
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(of = "id")
 @Table(name = "delivery_zones")
 public class DeliveryZone {
 

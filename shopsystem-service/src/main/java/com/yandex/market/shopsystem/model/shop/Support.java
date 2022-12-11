@@ -1,4 +1,4 @@
-package com.market.shopservice.models.branch;
+package com.yandex.market.shopsystem.model.shop;
 
 import jakarta.persistence.Embeddable;
 import lombok.*;
@@ -9,11 +9,9 @@ import lombok.*;
 @Embeddable
 @NoArgsConstructor
 @AllArgsConstructor
-public class Contact {
+public class Support {
 
-    private String hotlinePhone;
-
-    private String servicePhone;
+    private String number;
 
     private String email;
 }

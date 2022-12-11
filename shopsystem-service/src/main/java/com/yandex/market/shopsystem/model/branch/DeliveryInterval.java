@@ -1,4 +1,4 @@
-package com.market.shopservice.models.branch;
+package com.yandex.market.shopsystem.model.branch;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -9,9 +9,9 @@ import java.time.LocalTime;
 @Getter
 @Setter
 @Builder
-@EqualsAndHashCode(of = "id")
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(of = "id")
 @Table(name = "delivery_intervals")
 public class DeliveryInterval {
 
@@ -25,7 +25,7 @@ public class DeliveryInterval {
 
     private String intervalId;
 
-    private LocalTime start;
+    private LocalTime periodStart;
 
-    private LocalTime finish;
+    private LocalTime periodEnd;
 }

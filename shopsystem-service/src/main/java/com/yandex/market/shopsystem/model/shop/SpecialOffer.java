@@ -1,23 +1,21 @@
-package com.market.shopservice.models.shop;
+package com.yandex.market.shopsystem.model.shop;
 
 import jakarta.persistence.*;
 import lombok.*;
-
-import java.util.Objects;
 
 @Entity
 @Getter
 @Setter
 @Builder
-@EqualsAndHashCode(of = "id")
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "special_offers")
+@EqualsAndHashCode(of = "id")
 public class SpecialOffer {
 
     @Id
-    @SequenceGenerator(name = "special_offer_seq", sequenceName = "special_offer_sequence")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "special_offer_seq")
+    @SequenceGenerator(name = "special_offer_seq", sequenceName = "special_offer_sequence", allocationSize = 1)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
