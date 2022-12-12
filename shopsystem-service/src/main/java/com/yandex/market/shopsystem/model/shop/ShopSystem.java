@@ -1,5 +1,6 @@
-package com.market.shopservice.models.shop;
+package com.yandex.market.shopsystem.model.shop;
 
+import com.yandex.market.shopsystem.model.branch.Branch;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -11,15 +12,16 @@ import java.util.UUID;
 @Getter
 @Setter
 @Builder
-@EqualsAndHashCode(of = {"externalId"})
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "shop_systems")
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class ShopSystem {
 
     @Id
-    @SequenceGenerator(name = "shop_seq", sequenceName = "shop_sequence", allocationSize = 1)
+    @EqualsAndHashCode.Include
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "shop_seq")
+    @SequenceGenerator(name = "shop_seq", sequenceName = "shop_sequence", allocationSize = 1)
     private Long id;
 
     private UUID externalId;
@@ -35,6 +37,9 @@ public class ShopSystem {
     private Location legalEntityAddress;
 
     @OneToMany(mappedBy = "shopSystem", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    private Set<Branch> branches = new HashSet<>();
+
+    @OneToMany(mappedBy = "shopSystem", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private Set<SpecialOffer> specialOffers = new HashSet<>();
 
     private String logoUrl;
@@ -45,6 +50,14 @@ public class ShopSystem {
 
     private boolean isTest;
 
+    public void addBranch(Branch branch) {
+        branch.setShopSystem(this);
+        branches.add(branch);
+    }
+
+    public void removeBranch(Branch branch) {
+        branches.remove(branch);
+    }
     public void addSpecialOffer(SpecialOffer specialOffer) {
         specialOffer.setShopSystem(this);
         specialOffers.add(specialOffer);

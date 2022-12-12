@@ -1,4 +1,4 @@
-package com.market.shopservice.models.shop;
+package com.yandex.market.shopsystem.model.shop;
 
 import jakarta.persistence.Embeddable;
 import lombok.*;

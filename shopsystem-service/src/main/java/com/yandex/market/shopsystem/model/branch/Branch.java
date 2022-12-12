@@ -1,28 +1,32 @@
-package com.market.shopservice.models.branch;
+package com.yandex.market.shopsystem.model.branch;
 
-import com.market.shopservice.models.shop.Location;
+import com.yandex.market.shopsystem.model.shop.Location;
+import com.yandex.market.shopsystem.model.shop.ShopSystem;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.Objects;
 import java.util.UUID;
 
 @Entity
 @Getter
 @Setter
 @Builder
-@EqualsAndHashCode(of = "id")
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "branches")
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Branch {
 
     @Id
-    @SequenceGenerator(name = "branch_seq", sequenceName = "branch_sequence", allocationSize = 1)
+    @EqualsAndHashCode.Include
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "branch_seq")
+    @SequenceGenerator(name = "branch_seq", sequenceName = "branch_sequence", allocationSize = 1)
     private Long id;
 
     private UUID externalId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private ShopSystem shopSystem;
 
     private String name;
 

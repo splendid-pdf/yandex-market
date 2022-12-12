@@ -1,4 +1,23 @@
 spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/shopsystem_db
+    username: shopsystem
+    password: password
+    driver-class-name: org.postgresql.Driver
   jpa:
+    database-platform: org.hibernate.dialect.PostgreSQL95Dialect
+    open-in-view: false
     hibernate:
       ddl-auto: create
+    properties:
+      hibernate:
+        jdbc:
+          batch_size: 500
+          order_inserts: true
+          lob:
+            non_contextual_creation: true
+        show_sql: true
+        format_sql: true
+        generate_statistics: true
+  flyway:
+    enabled: false
