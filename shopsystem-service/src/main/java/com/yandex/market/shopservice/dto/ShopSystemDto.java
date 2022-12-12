@@ -1,15 +1,13 @@
 package com.yandex.market.shopservice.dto;
 
 import com.yandex.market.shopservice.model.branch.Branch;
-import com.yandex.market.shopservice.model.shop.Location;
 import com.yandex.market.shopservice.model.shop.SpecialOffer;
-import com.yandex.market.shopservice.model.shop.Support;
 import jakarta.persistence.Embedded;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -17,18 +15,17 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ShopSystemDto {
-    private UUID externalId;
+    @NotBlank(message = "Field \"Name\" must not be empty")
     private String name;
     private String token;
 
     @Embedded
-    private Support support;
+    private SupportDto support;
 
     @Embedded
-    private Location legalEntityAddress;
+    private LocationDto legalEntityAddress;
 
     private Set<SpecialOffer> specialOffers = new HashSet<>();
-
     private Set<Branch> branches = new HashSet<>();
 
     private String logoUrl;

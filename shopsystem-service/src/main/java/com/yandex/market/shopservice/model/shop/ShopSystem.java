@@ -67,4 +67,20 @@ public class ShopSystem {
     public void removeSpecialOffer(SpecialOffer specialOffer) {
         specialOffers.remove(specialOffer);
     }
+
+    @Override
+    public String toString() {
+        return "ShopSystem{" +
+                "id=" + id +
+                ", externalId=" + externalId +
+                ", name='" + name + '\'' +
+                ", token='" + token + '\'' +
+                ", support=" + support +
+                ", legalEntityAddress=" + legalEntityAddress +
+                ", branches=" + branches +
+                ", specialOffers=" + specialOffers +
+                ", logoUrl='" + logoUrl + '\'' +
+                ", rating=" + rating +
+                '}';
+    }
 }

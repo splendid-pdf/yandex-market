@@ -9,8 +9,15 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class ShopSystemExtensionHandler {
 
     @ExceptionHandler
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     public String handlerShopSystemNotFound(ShopSystemNotFound e) {
+        return e.getMessage();
+    }
+
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public String handlerShopSystemDtoIsEmpty(ShopSystemDtoIsEmpty e) {
         return e.getMessage();
     }
 }
