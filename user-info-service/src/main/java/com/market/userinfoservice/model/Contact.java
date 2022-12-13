@@ -6,14 +6,16 @@ import lombok.*;
 @Entity
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "contacts")
 @EqualsAndHashCode(of = "id")
 public class Contact {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "contact-generator")
     @SequenceGenerator(name = "contact-generator")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "contact-generator")
     private Long id;
 
     private String value;

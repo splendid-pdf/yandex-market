@@ -1,10 +1,7 @@
 package com.market.userinfoservice.model;
 
 import jakarta.persistence.*;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -17,14 +14,16 @@ import java.util.UUID;
 @Getter
 @Entity
 @Setter
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "users")
 @EqualsAndHashCode(of = "id")
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user-generator")
     @SequenceGenerator(name = "user-generator", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user-generator")
     private Long id;
 
     private UUID externalId;
