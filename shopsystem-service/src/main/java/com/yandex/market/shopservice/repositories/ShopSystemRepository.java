@@ -9,9 +9,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface ShopSystemRepository extends JpaRepository<ShopSystem, Long> {
-    // TODO: далее настроить поиск по externalID
-    @Query(value = "SELECT ss " +
-            "FROM ShopSystem ss " +
-            "WHERE ss.externalId=:externalId")
+    @Query(value = "FROM ShopSystem ss " +
+            "WHERE ss.externalId=:externalId AND ss.isDisabled = false")
     Optional<ShopSystem> findByExternalId(@Param("externalId") UUID externalId);
 }

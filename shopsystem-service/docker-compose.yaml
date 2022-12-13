@@ -6,6 +6,7 @@ services:
       POSTGRES_DB: shopsystem_db
       POSTGRES_USER: shopsystem
       POSTGRES_PASSWORD: password
+      PGDATA: /data/postgres
     volumes:
       - pgdata:/var/lib/postgresql/data
     ports:
