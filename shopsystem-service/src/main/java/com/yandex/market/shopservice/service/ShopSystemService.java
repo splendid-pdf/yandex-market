@@ -22,32 +22,25 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ShopSystemService implements IShopSystemService {
     private final ShopSystemRepository repository;
+    private final ShopSystemMapper mapper = new ShopSystemMapper();
 
     public Page<ShopSystemDto> getAllShopSystems(Pageable pageable) {
         Page<ShopSystem> shopSystemPages = repository.findAll(pageable);
-        if (shopSystemPages.getTotalElements() != 0) {
-            log.info("All ShopSystem entries are searched.");
-        } else {
-            log.info("No entries were found.");
-            return null;
-        }
         return new PageImpl<>(
-                ShopSystemMapper.INSTANCE.toPageShopSystemDto(shopSystemPages.getContent()),
+                mapper.toShopSystemDtoPages(shopSystemPages.getContent()),
                 pageable,
                 shopSystemPages.getTotalElements());
     }
 
     @Transactional
     public void createShopSystem(ShopSystemDto dto) {
-        ShopSystem shopSystem = ShopSystemMapper.INSTANCE.toShopSystem(dto);
-        System.out.println(shopSystem);
+        ShopSystem shopSystem = mapper.toShopSystemFromDto(dto);
         shopSystem.setExternalId(UUID.randomUUID());
         repository.save(shopSystem);
-        log.info("REQUEST SUCCESSFUL. ShopSystem = " + shopSystem);
     }
 
     public ShopSystem getShopSystemByExternalId(UUID externalId) {
-        ShopSystem shopSystem = repository
+        return repository
                 .findByExternalId(externalId)
                 .orElseThrow(() -> {
                             log.error("REQUEST REJECTED. Could not find a matching record.");
@@ -55,8 +48,6 @@ public class ShopSystemService implements IShopSystemService {
                                     externalId + "\" was not found. Creation canceled!");
                         }
                 );
-        log.info("REQUEST SUCCESSFUL. Request received to search for ShopSystem = " + shopSystem.toString());
-        return shopSystem;
     }
 
     @Transactional
@@ -70,6 +61,5 @@ public class ShopSystemService implements IShopSystemService {
                         }
                 );
         shopSystem.setDisabled(true);
-        log.info("REQUEST SUCCESSFUL. ShopSystem = \"" + shopSystem.getName() + "\" successfully marked as deleted");
     }
 }

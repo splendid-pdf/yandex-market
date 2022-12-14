@@ -6,6 +6,7 @@ import com.yandex.market.shopservice.service.ShopSystemService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -17,16 +18,18 @@ import java.util.UUID;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/public/api/v1/shopsystems")
+@RequestMapping("${spring.application.url}")
 public class ShopSystemController {
     private final ShopSystemService shopService;
-    private final String REQUEST_NAME = "/public/api/v1/shopsystems";
+    @Value("${spring.application.url}")
+    private String REQUEST_NAME;
 
     @GetMapping()
     @ResponseStatus(HttpStatus.OK)
     public Page<ShopSystemDto> getAllShopSystems(@PageableDefault(size = 20) Pageable pageable) {
         log.info("GET " + REQUEST_NAME +
-                ". Get request received. Pageable parameters: " + pageable);
+                ". Received a request to get paginated list of shop systems. page = " + pageable +
+                ", size = " + pageable.getPageSize());
         return shopService.getAllShopSystems(pageable);
     }
 
@@ -34,7 +37,7 @@ public class ShopSystemController {
     @ResponseStatus(HttpStatus.CREATED)
     public void createNewShopSystem(@RequestBody @Valid ShopSystemDto shopSystemDto) {
         log.info("POST " + REQUEST_NAME +
-                ". A request was received to add an organization. ShopSystemDto parameters: " + shopSystemDto);
+                ". Received a request to create new shop system: %s".formatted(shopSystemDto));
         shopService.createShopSystem(shopSystemDto);
     }
 
@@ -42,7 +45,7 @@ public class ShopSystemController {
     @ResponseStatus(HttpStatus.OK)
     public ShopSystem getShopSystemByExternalId(@PathVariable("externalId") UUID externalId) {
         log.info("GET" + REQUEST_NAME + "/" + externalId +
-                ". A request was received to search for an organization. Parameters ExternalId: " + externalId);
+                ". Received a request to get shop system by external id = %s".formatted(externalId));
         return shopService.getShopSystemByExternalId(externalId);
     }
 
@@ -50,7 +53,7 @@ public class ShopSystemController {
     @ResponseStatus(HttpStatus.OK)
     public void deleteSystemShopByExternalId(@PathVariable("externalId") UUID externalId) {
         log.info("GET " + REQUEST_NAME + "/" + externalId +
-                ". Request received to delete organization. ExternalId parameters: " + externalId);
+                ". Received a request to delete a shop system by external id = %s".formatted(externalId));
         shopService.deleteSystemShopByExternalId(externalId);
     }
 }

@@ -3,16 +3,14 @@ package com.yandex.market.shopservice.dto;
 import com.yandex.market.shopservice.model.branch.Branch;
 import com.yandex.market.shopservice.model.shop.SpecialOffer;
 import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.HashSet;
 import java.util.Set;
 
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class ShopSystemDto {
