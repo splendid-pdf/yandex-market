@@ -6,10 +6,12 @@ import com.yandex.market.shopservice.dto.SupportDto;
 import com.yandex.market.shopservice.model.shop.Location;
 import com.yandex.market.shopservice.model.shop.ShopSystem;
 import com.yandex.market.shopservice.model.shop.Support;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Component
 public class ShopSystemMapper {
     public ShopSystem toShopSystemFromDto(ShopSystemDto dto) {
         return ShopSystem.builder()
@@ -57,8 +59,6 @@ public class ShopSystemMapper {
                 .houseNumber(dto.houseNumber())
                 .officeNumber(dto.officeNumber())
                 .postcode(dto.postcode())
-                .latitude(dto.latitude())
-                .longitude(dto.longitude())
                 .build();
     }
 
@@ -70,9 +70,7 @@ public class ShopSystemMapper {
                 location.getStreet(),
                 location.getHouseNumber(),
                 location.getOfficeNumber(),
-                location.getPostcode(),
-                location.getLatitude(),
-                location.getLongitude()
+                location.getPostcode()
         );
     }
 

@@ -22,7 +22,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ShopSystemService implements IShopSystemService {
     private final ShopSystemRepository repository;
-    private final ShopSystemMapper mapper = new ShopSystemMapper();
+    private final ShopSystemMapper mapper;
 
     public Page<ShopSystemDto> getAllShopSystems(Pageable pageable) {
         Page<ShopSystem> shopSystemPages = repository.findAll(pageable);

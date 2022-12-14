@@ -14,8 +14,6 @@ public record LocationDto(
         int houseNumber,
         int officeNumber,
         @Size(max = 10)
-        String postcode,
-        double latitude,
-        double longitude) {
+        String postcode) {
 }
 
