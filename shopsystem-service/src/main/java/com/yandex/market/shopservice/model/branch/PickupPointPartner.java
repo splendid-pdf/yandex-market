@@ -1,4 +1,4 @@
-package com.yandex.market.shopsystem.model.branch;
+package com.yandex.market.shopservice.model.branch;
 
 import lombok.Getter;
 

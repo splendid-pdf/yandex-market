@@ -1,4 +1,4 @@
-package com.yandex.market.shopsystem;
+package com.yandex.market.shopservice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

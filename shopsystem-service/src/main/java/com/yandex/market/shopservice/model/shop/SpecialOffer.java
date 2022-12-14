@@ -1,4 +1,4 @@
-package com.yandex.market.shopsystem.model.shop;
+package com.yandex.market.shopservice.model.shop;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -21,12 +21,9 @@ public class SpecialOffer {
 
     @ManyToOne(fetch = FetchType.LAZY)
     private ShopSystem shopSystem;
-
     private String name;
-
     private String type;
-
     private Integer value;
-
+    
     private String terms;
 }

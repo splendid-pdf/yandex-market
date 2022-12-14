@@ -1,4 +1,4 @@
-package com.yandex.market.shopsystem.model.shop;
+package com.yandex.market.shopservice.model.shop;
 
 import jakarta.persistence.Embeddable;
 import lombok.*;
@@ -10,22 +10,13 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Location {
-
     private String country;
-
     private String region;
-
     private String city;
-
     private String street;
-
-    private String houseNumber;
-
-    private String officeNumber;
-
+    private int houseNumber;
+    private int officeNumber;
     private String postcode;
-
     private double latitude;
-
     private double longitude;
 }

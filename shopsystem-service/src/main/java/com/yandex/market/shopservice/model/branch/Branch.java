@@ -1,7 +1,7 @@
-package com.yandex.market.shopsystem.model.branch;
+package com.yandex.market.shopservice.model.branch;
 
-import com.yandex.market.shopsystem.model.shop.Location;
-import com.yandex.market.shopsystem.model.shop.ShopSystem;
+import com.yandex.market.shopservice.model.shop.Location;
+import com.yandex.market.shopservice.model.shop.ShopSystem;
 import jakarta.persistence.*;
 import lombok.*;
 

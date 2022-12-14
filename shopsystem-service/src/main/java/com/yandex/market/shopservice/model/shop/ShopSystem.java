@@ -1,6 +1,6 @@
-package com.yandex.market.shopsystem.model.shop;
+package com.yandex.market.shopservice.model.shop;
 
-import com.yandex.market.shopsystem.model.branch.Branch;
+import com.yandex.market.shopservice.model.branch.Branch;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -58,6 +58,7 @@ public class ShopSystem {
     public void removeBranch(Branch branch) {
         branches.remove(branch);
     }
+
     public void addSpecialOffer(SpecialOffer specialOffer) {
         specialOffer.setShopSystem(this);
         specialOffers.add(specialOffer);
@@ -65,5 +66,21 @@ public class ShopSystem {
 
     public void removeSpecialOffer(SpecialOffer specialOffer) {
         specialOffers.remove(specialOffer);
+    }
+
+    @Override
+    public String toString() {
+        return "ShopSystem{" +
+                "id=" + id +
+                ", externalId=" + externalId +
+                ", name='" + name + '\'' +
+                ", token='" + token + '\'' +
+                ", support=" + support +
+                ", legalEntityAddress=" + legalEntityAddress +
+                ", branches=" + branches +
+                ", specialOffers=" + specialOffers +
+                ", logoUrl='" + logoUrl + '\'' +
+                ", rating=" + rating +
+                '}';
     }
 }
