@@ -27,8 +27,7 @@ public class ShopSystemController {
     @GetMapping()
     @ResponseStatus(HttpStatus.OK)
     public Page<ShopSystemDto> getAllShopSystems(@PageableDefault(size = 20) Pageable pageable) {
-        log.info("GET " + REQUEST_NAME +
-                ". Received a request to get paginated list of shop systems. page = " + pageable +
+        log.info("Received a request to get paginated list of shop systems. page = " + pageable +
                 ", size = " + pageable.getPageSize());
         return shopService.getAllShopSystems(pageable);
     }
@@ -36,24 +35,21 @@ public class ShopSystemController {
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
     public void createNewShopSystem(@RequestBody @Valid ShopSystemDto shopSystemDto) {
-        log.info("POST " + REQUEST_NAME +
-                ". Received a request to create new shop system: %s".formatted(shopSystemDto));
+        log.info("Received a request to create new shop system: %s".formatted(shopSystemDto));
         shopService.createShopSystem(shopSystemDto);
     }
 
     @GetMapping("/{externalId}")
     @ResponseStatus(HttpStatus.OK)
     public ShopSystem getShopSystemByExternalId(@PathVariable("externalId") UUID externalId) {
-        log.info("GET" + REQUEST_NAME + "/" + externalId +
-                ". Received a request to get shop system by external id = %s".formatted(externalId));
+        log.info("Received a request to get shop system by external id = %s".formatted(externalId));
         return shopService.getShopSystemByExternalId(externalId);
     }
 
     @DeleteMapping("/{externalId}")
     @ResponseStatus(HttpStatus.OK)
     public void deleteSystemShopByExternalId(@PathVariable("externalId") UUID externalId) {
-        log.info("GET " + REQUEST_NAME + "/" + externalId +
-                ". Received a request to delete a shop system by external id = %s".formatted(externalId));
+        log.info("Received a request to delete a shop system by external id = %s".formatted(externalId));
         shopService.deleteSystemShopByExternalId(externalId);
     }
 }
