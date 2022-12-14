@@ -38,6 +38,10 @@ paths:
 
         '400':
           description: Invalid data provided to the server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
     get:
       tags:
         - user
@@ -60,8 +64,16 @@ paths:
                 $ref: '#/components/schemas/UserResponseDto'
         '400':
           description: Invalid data provided to the server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
         '404':
           description: User by email or phone {emailOrPhone} was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
   /users/{externalId}:
     get:
       tags:
@@ -87,8 +99,16 @@ paths:
                 $ref: '#/components/schemas/UserResponseDto'
         '400':
           description: Invalid data provided to the server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
         '404':
           description: User by id {externalId} was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
     put:
       tags:
         - user
@@ -119,8 +139,16 @@ paths:
                 $ref: '#/components/schemas/UserResponseDto'
         '400':
           description: Invalid data provided to the server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
         '404':
           description: User by id {externalId} was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
     delete:
       tags:
         - user
@@ -146,8 +174,16 @@ paths:
                 $ref: '#/components/schemas/UserResponseDto'
         '400':
           description: Invalid username supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
         '404':
           description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
   /users/{externalId}/location:
     get:
       tags:
@@ -170,18 +206,34 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Location'
+                $ref: '#/components/schemas/LocationDto'
         '400':
           description: Invalid data provided to the server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
         '401':
           description: Unauthorized request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
         '403':
           description: No permissions to perform that request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
         '404':
           description: User by id {externalId} was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 components:
   schemas:
-    NotificationSettings:
+    NotificationSettingsDto:
       type: object
       properties:
         isAllowedToReceiveOnAddress:
@@ -232,13 +284,13 @@ components:
             - FEMALE
             - NONE
         location:
-          $ref: '#/components/schemas/Location'
+          $ref: '#/components/schemas/LocationDto'
         contacts:
           type: array
           items:
-            $ref: '#/components/schemas/Contact'
+            $ref: '#/components/schemas/ContactDto'
         notificationSettings:
-          $ref: '#/components/schemas/NotificationSettings'
+          $ref: '#/components/schemas/NotificationSettingsDto'
         photoId:
           type: string
           example: 'id2003104u48396'
@@ -275,17 +327,17 @@ components:
             - FEMALE
             - NONE
         location:
-          $ref: '#/components/schemas/Location'
+          $ref: '#/components/schemas/LocationDto'
         contacts:
           type: array
           items:
-            $ref: '#/components/schemas/Contact'
+            $ref: '#/components/schemas/ContactDto'
         notificationSettings:
-          $ref: '#/components/schemas/NotificationSettings'
+          $ref: '#/components/schemas/NotificationSettingsDto'
         photoId:
           type: string
           example: 'id2003104u48396'
-    Location:
+    LocationDto:
       type: object
       properties:
         country:
@@ -311,12 +363,12 @@ components:
           type: integer
           format: int32
           example: 12
-    Contact:
+    ContactDto:
       type: object
       properties:
         value:
           type: string
-          example: "vk.com/id153215112412"
+          example: 'vk.com/id153215112412'
         type:
           type: string
           enum:
@@ -325,6 +377,19 @@ components:
             - FACEBOOK
             - TELEGRAM
             - INSTAGRAM
+    ErrorResponse:
+      type: object
+      properties:
+        statusCode:
+          type: string
+          example: '400'
+        message:
+          type: string
+          example: Entity wasn't found
+        timestamp:
+          type: string
+          format: date-time
+          example: '2018-03-20T09:12:28Z'
   requestBodies:
     User:
       description: User object that needs to be added to the database
