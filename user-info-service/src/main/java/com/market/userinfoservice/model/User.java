@@ -50,6 +50,7 @@ public class User {
     @Embedded
     private Location location;
 
+    @Builder.Default
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private Set<Contact> contacts = new HashSet<>();
 

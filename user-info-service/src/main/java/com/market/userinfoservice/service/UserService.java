@@ -5,20 +5,31 @@ import com.market.userinfoservice.dto.UserDto;
 import com.market.userinfoservice.model.User;
 import com.market.userinfoservice.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserService {
 
+    public static final String USER_WITH_THE_SAME_EMAIL_IS_EXISTS_MESSAGE =
+            "User with similar email = %s is already exists";
     private final UserRepository userRepository;
 
     private final UserConverter userConverter;
 
-    public void create(UserDto userDto) {
+    public UUID create(UserDto userDto) {
         User user = userConverter.convert(userDto);
-        userRepository.save(user);
-    }
 
+        if (userRepository.existsByEmail(userDto.email())) {
+            throw new IllegalArgumentException(USER_WITH_THE_SAME_EMAIL_IS_EXISTS_MESSAGE.formatted(userDto.email()));
+        }
+
+        userRepository.save(user);
+        return user.getExternalId();
+    }
 
 }
