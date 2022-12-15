@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
-
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -61,5 +60,11 @@ public class ShopSystemService implements IShopSystemService {
                         }
                 );
         shopSystem.setDisabled(true);
+    }
+
+    @Transactional
+    public void updateSystemShopByExternalId(UUID externalId, ShopSystemDto shopSystemDtoRequest) {
+        ShopSystem shopSystem = getShopSystemByExternalId(externalId);
+        repository.save(mapper.toShopSystemFromDto(shopSystem, shopSystemDtoRequest));
     }
 }

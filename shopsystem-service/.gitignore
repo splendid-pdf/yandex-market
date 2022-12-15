@@ -39,3 +39,4 @@ out/
 !/postgres/
 pgadmin/
 pgdata/
+/src/main/resources/application.properties

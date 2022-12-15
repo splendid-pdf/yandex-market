@@ -52,4 +52,12 @@ public class ShopSystemController {
         log.info("Received a request to delete a shop system by external id = %s".formatted(externalId));
         shopService.deleteSystemShopByExternalId(externalId);
     }
+
+    @PutMapping("/{externalId}")
+    @ResponseStatus(HttpStatus.OK)
+    public void updateSystemShopByExternalId(@PathVariable("externalId") UUID externalId,
+                                             @RequestBody @Valid ShopSystemDto shopSystemDtoRequest) {
+        log.info("Received a request to update a shop system by external id = %s".formatted(externalId));
+        shopService.updateSystemShopByExternalId(externalId, shopSystemDtoRequest);
+    }
 }

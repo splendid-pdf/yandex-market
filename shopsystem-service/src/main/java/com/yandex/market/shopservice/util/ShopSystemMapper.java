@@ -26,6 +26,18 @@ public class ShopSystemMapper {
                 .build();
     }
 
+    public ShopSystem toShopSystemFromDto(ShopSystem shopSystem, ShopSystemDto dto) {
+        shopSystem.setName(dto.getName());
+        shopSystem.setToken(dto.getToken());
+        shopSystem.setSupport(toSupportFromDto(dto.getSupport()));
+        shopSystem.setLegalEntityAddress(toLocationFromDto(dto.getLegalEntityAddress()));
+        shopSystem.setSpecialOffers(dto.getSpecialOffers());
+        shopSystem.setBranches(dto.getBranches());
+        shopSystem.setLogoUrl(dto.getLogoUrl());
+        shopSystem.setRating(dto.getRating());
+        return shopSystem;
+    }
+
     public ShopSystemDto toShopSystemDto(ShopSystem shopSystem) {
         return ShopSystemDto.builder()
                 .name(shopSystem.getName())
