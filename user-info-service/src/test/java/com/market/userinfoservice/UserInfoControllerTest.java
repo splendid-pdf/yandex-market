@@ -3,7 +3,7 @@ package com.market.userinfoservice;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.market.userinfoservice.model.NotificationSettings;
 import com.market.userinfoservice.model.User;
-import com.market.userinfoservice.repository.UserRepo;
+import com.market.userinfoservice.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -12,9 +12,12 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.UUID;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -22,66 +25,70 @@ public class UserInfoControllerTest {
     @Autowired
     private MockMvc mockMvc;
     @Autowired
-    private UserRepo userRepo;
+    private UserRepository userRepository;
     @Autowired
     private ObjectMapper objectMapper;
 
     @AfterEach
     public void resetDb() {
-        userRepo.deleteAll();
+        userRepository.deleteAll();
     }
 
     @Test
-    public void testGetUserWhenStatus200est() throws Exception {
+    public void getUserWhenStatus200() throws Exception {
         User user = createTestUser();
-        long userId = user.getId();
-        mockMvc.perform(get("/public/api/v1/users/{id}", userId))
+        UUID externalId = user.getExternalId();
+        mockMvc.perform(get("/public/api/v1/users/{externalId}", externalId))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(userId))
+                .andExpect(jsonPath("$.deleted").value(false))
+                .andExpect(jsonPath("$.externalId").value(externalId.toString()))
                 .andExpect(jsonPath("$.firstName").value(user.getFirstName()));
     }
 
     @Test
-    public void testDeleteUserWhenStatus200Test() throws Exception {
-        long id = createTestUser().getId();
-        User user = userRepo.findById(id).get();
-        User userBuffer = copyUser(user);
-        mockMvc.perform(delete("/public/api/v1/users/{id}", userBuffer.getId()))
-                .andExpect(status().isOk())
-                .andExpect(content().json(objectMapper.writeValueAsString(userBuffer)));
+    public void deleteUserWhenStatus200() throws Exception {
+        UUID externalId = createTestUser().getExternalId();
+        User user = userRepository.findByExternalId(externalId).orElseThrow();
+        mockMvc.perform(delete("/public/api/v1/users/{externalId}", user.getExternalId()))
+                .andExpect(status().isOk());
     }
 
     @Test
-    public void testGetUserWhenStatus404Test() throws Exception {
-        mockMvc.perform(get("/public/api/v1/users/0"))
+    public void getUserWhenStatus400() throws Exception {
+        mockMvc.perform(get("/public/api/v1/users/1"))
+                .andExpect(status().isBadRequest())
+                .andExpect(mvcResult -> mvcResult.getResolvedException().getClass().equals(EntityNotFoundException.class));
+    }
+
+    @Test
+    public void deleteUserWhenStatus400() throws Exception {
+        mockMvc.perform(get("/public/api/v1/users/1"))
+                .andExpect(status().isBadRequest())
+                .andExpect(mvcResult -> mvcResult.getResolvedException().getClass().equals(EntityNotFoundException.class));
+    }
+
+    @Test
+    public void getUserWhenStatus404() throws Exception {
+        mockMvc.perform(get("/public/api/v1/users/8b9af550-a4c7-4181-b6ba-1a1899109783"))
                 .andExpect(status().isNotFound())
                 .andExpect(mvcResult -> mvcResult.getResolvedException().getClass().equals(EntityNotFoundException.class));
     }
 
     @Test
-    public void testDeleteUserWhenStatus404() throws Exception {
-        mockMvc.perform(get("/public/api/v1/users/0"))
+    public void deleteUserWhenStatus404() throws Exception {
+        mockMvc.perform(get("/public/api/v1/users/8b9af550-a4c7-4181-b6ba-1a1899109783"))
                 .andExpect(status().isNotFound())
                 .andExpect(mvcResult -> mvcResult.getResolvedException().getClass().equals(EntityNotFoundException.class));
     }
 
     private User createTestUser() {
-        User user;
+        User user = new User();
         NotificationSettings notificationSettings = new NotificationSettings("test_email",false,false,false);
-        user = new User();
         user.setFirstName("TestUser");
+        user.setDeleted(false);
         user.setNotificationSettings(notificationSettings);
-        return userRepo.save(user);
-    }
-
-    private User copyUser(User user) {
-        User userBuffer = new User();
-        userBuffer.setId(user.getId());
-        userBuffer.setFirstName(user.getFirstName());
-        userBuffer.setNotificationSettings(user.getNotificationSettings());
-        userBuffer.setCreatedAt(user.getCreatedAt());
-        userBuffer.setModifiedAt(user.getModifiedAt());
-        return userBuffer;
+        user.setExternalId(UUID.fromString("8b9af550-a4c7-4181-b6ba-1a1899109783"));
+        return userRepository.save(user);
     }
 
 }

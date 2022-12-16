@@ -2,30 +2,34 @@ package com.market.userinfoservice.controller;
 
 import com.market.userinfoservice.model.User;
 import com.market.userinfoservice.service.UserService;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-@RestController
-@RequestMapping("/public/api/v1/users")
-@RequiredArgsConstructor
+import java.util.UUID;
+
 @Slf4j
+@RestController
+@RequestMapping("${spring.application.url}")
+@RequiredArgsConstructor
 public class UserInfoController {
     private final UserService userService;
+    @Value("${spring.application.url}")
+    private String REQUEST_NAME;
 
-    @GetMapping("/{id}")
-    public ResponseEntity<User> getUserData(@PathVariable("id") long id) throws EntityNotFoundException {
-        User user = userService.findUserById(id);
-        log.info("GET public/api/v1/users/" + id);
-        return ResponseEntity.ok().body(user);
+    @GetMapping("/{externalId}")
+    @ResponseStatus(HttpStatus.OK)
+    public User getUserData(@PathVariable("externalId") UUID externalId) {
+        log.info("GET %s/%s".formatted(REQUEST_NAME, externalId));
+        return userService.findUserByExternalId(externalId);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<User> deleteUser(@PathVariable("id") long id) throws EntityNotFoundException {
-        User user = userService.deleteUserById(id);
-        log.info("DELETE public/api/v1/users/" + id);
-        return ResponseEntity.ok().body(user);
+    @DeleteMapping("/{externalId}")
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteUser(@PathVariable("externalId") UUID externalId) {
+        log.info("DELETE %s/%s".formatted(REQUEST_NAME, externalId));
+        userService.deleteUserByExternalId(externalId);
     }
 }

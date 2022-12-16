@@ -1,1 +1,14 @@
-
+spring:
+  application:
+    name: user_info
+    url: public/api/v1/users
+  jpa:
+    show-sql: true
+    hibernate:
+      dialect: org.hibernate.dialect.PostgreSQLDialect
+      ddl-auto: validate
+  datasource:
+    url: jdbc:postgresql://localhost:5432/{db_name}
+    username: ${postgres_user}
+    password: ${postgres_password}
+    driver-class-name: org.postgresql.Driver
