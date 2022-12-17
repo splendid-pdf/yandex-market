@@ -6,9 +6,9 @@ spring:
     name: shop_system
     url: public/api/v1/shopsystems
   datasource:
-    url: jdbc:postgresql://localhost:5432/${db_name}
-    username: ${postgres_user}
-    password: ${postgres_password}
+    url: jdbc:postgresql://localhost:5432/${db_name:shopsystem_db}
+    username: ${postgres_user:shopsystem}
+    password: ${postgres_password:password}
     driverClassName: org.postgresql.Driver
   jpa:
     database: POSTGRESQL
