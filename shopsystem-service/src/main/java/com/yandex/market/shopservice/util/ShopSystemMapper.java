@@ -30,8 +30,6 @@ public class ShopSystemMapper {
         shopSystem.setToken(dto.getToken());
         shopSystem.setSupport(toSupportFromDto(dto.getSupport()));
         shopSystem.setLegalEntityAddress(toLocationFromDto(dto.getLegalEntityAddress()));
-        shopSystem.setSpecialOffers(dto.getSpecialOffers());
-        shopSystem.setBranches(dto.getBranches());
         shopSystem.setLogoUrl(dto.getLogoUrl());
         return shopSystem;
     }

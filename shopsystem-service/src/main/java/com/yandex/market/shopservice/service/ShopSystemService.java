@@ -65,6 +65,12 @@ public class ShopSystemService implements IShopSystemService {
     @Transactional
     public void updateSystemShopByExternalId(UUID externalId, ShopSystemDto shopSystemDtoRequest) {
         ShopSystem shopSystem = getShopSystemByExternalId(externalId);
-        repository.save(mapper.toShopSystemFromDto(shopSystem, shopSystemDtoRequest));
+        if (shopSystem != null) {
+            repository.save(mapper.toShopSystemFromDto(shopSystem, shopSystemDtoRequest));
+        } else {
+            log.error("REQUEST REJECTED. Could not find a matching record.");
+            throw new EntityNotFoundException("Organization by given externalId = \"" +
+                    externalId + "\" was not found. Update canceled!");
+        }
     }
 }
