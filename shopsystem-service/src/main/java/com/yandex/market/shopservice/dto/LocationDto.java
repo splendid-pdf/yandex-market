@@ -11,7 +11,7 @@ public record LocationDto(
         String city,
         @Size(max = 255)
         String street,
-        int houseNumber,
+        String houseNumber,
         int officeNumber,
         @Size(max = 10)
         String postcode) {
