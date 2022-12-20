@@ -19,6 +19,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @RequestMapping("${spring.application.url.shop}")
 public class ShopSystemController {
+
     private final ShopSystemService shopService;
 
     @GetMapping()
