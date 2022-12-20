@@ -21,6 +21,8 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
+        shema_update:
+          unique_constraint_strategy: RECREATE_QUIETLY
         connection:
           provider_disables_autocommit: true
 

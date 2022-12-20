@@ -65,21 +65,10 @@ public class ShopSystemService implements IShopSystemService {
     @Transactional
     public void updateSystemShopByExternalId(UUID externalId, ShopSystemDto shopSystemDtoRequest) {
         ShopSystem shopSystem = getShopSystemByExternalId(externalId);
-
-        try {
-            if (shopSystem != null) {
-                shopSystem.setName(shopSystemDtoRequest.getName());
-                shopSystem.setToken(shopSystemDtoRequest.getToken());
-                shopSystem.setSupport(mapper.toSupportFromDto(shopSystemDtoRequest.getSupport()));
-                shopSystem.setLegalEntityAddress(mapper.toLocationFromDto(shopSystemDtoRequest.getLegalEntityAddress()));
-                shopSystem.setLogoUrl(shopSystemDtoRequest.getLogoUrl());
-            } else {
-                log.error("REQUEST REJECTED. Could not find a matching record.");
-                throw new EntityNotFoundException("Organization by given externalId = \"" +
-                        externalId + "\" was not found. Update canceled!");
-            }
-        } catch (RuntimeException e) {
-            log.error("");
-        }
+        shopSystem.setName(shopSystemDtoRequest.getName());
+        shopSystem.setToken(shopSystemDtoRequest.getToken());
+        shopSystem.setSupport(mapper.toSupportFromDto(shopSystemDtoRequest.getSupport()));
+        shopSystem.setLegalEntityAddress(mapper.toLocationFromDto(shopSystemDtoRequest.getLegalEntityAddress()));
+        shopSystem.setLogoUrl(shopSystemDtoRequest.getLogoUrl());
     }
 }
