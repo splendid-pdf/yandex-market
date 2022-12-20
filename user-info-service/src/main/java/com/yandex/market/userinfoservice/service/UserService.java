@@ -1,6 +1,6 @@
 package com.yandex.market.userinfoservice.service;
 
-import com.yandex.market.userinfoservice.converter.Converter;
+import com.yandex.market.userinfoservice.mapper.UserMapper;
 import com.yandex.market.userinfoservice.dto.UserDto;
 import com.yandex.market.userinfoservice.model.User;
 import com.yandex.market.userinfoservice.repository.UserRepository;
@@ -19,10 +19,10 @@ public class UserService {
             "User with similar email = %s is already exists";
     private final UserRepository userRepository;
 
-    private final Converter converter;
+    private final UserMapper userMapper;
 
     public UUID create(UserDto userDto) {
-        User user = converter.convertUser(userDto);
+        User user = userMapper.map(userDto);
 
         if (userRepository.existsByEmail(userDto.email())) {
             throw new IllegalArgumentException(USER_WITH_THE_SAME_EMAIL_IS_EXISTS_MESSAGE.formatted(userDto.email()));
