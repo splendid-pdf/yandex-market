@@ -4,7 +4,9 @@ server:
 spring:
   application:
     name: shop_system
-    url: public/api/v1/shopsystems
+    url:
+      shop: public/api/v1/shopsystems
+      branch: public/api/v1/branches
   datasource:
     url: jdbc:postgresql://localhost:5432/${db_name}
     username: ${postgres_user}

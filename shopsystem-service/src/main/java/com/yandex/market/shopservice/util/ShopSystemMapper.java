@@ -1,9 +1,9 @@
 package com.yandex.market.shopservice.util;
 
-import com.yandex.market.shopservice.dto.LocationDto;
-import com.yandex.market.shopservice.dto.SupportDto;
-import com.yandex.market.shopservice.dto.requests.ShopSystemRequestDto;
-import com.yandex.market.shopservice.dto.responses.ShopSystemResponsesDto;
+import com.yandex.market.shopservice.dto.shop.LocationDto;
+import com.yandex.market.shopservice.dto.shop.SupportDto;
+import com.yandex.market.shopservice.dto.shop.requests.ShopSystemRequestDto;
+import com.yandex.market.shopservice.dto.shop.responses.ShopSystemResponsesDto;
 import com.yandex.market.shopservice.model.shop.Location;
 import com.yandex.market.shopservice.model.shop.ShopSystem;
 import com.yandex.market.shopservice.model.shop.Support;

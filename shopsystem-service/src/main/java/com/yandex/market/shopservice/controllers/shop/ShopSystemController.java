@@ -1,8 +1,8 @@
-package com.yandex.market.shopservice.controllers;
+package com.yandex.market.shopservice.controllers.shop;
 
-import com.yandex.market.shopservice.dto.requests.ShopSystemRequestDto;
-import com.yandex.market.shopservice.dto.responses.ShopSystemResponsesDto;
-import com.yandex.market.shopservice.service.impl.ShopSystemService;
+import com.yandex.market.shopservice.dto.shop.requests.ShopSystemRequestDto;
+import com.yandex.market.shopservice.dto.shop.responses.ShopSystemResponsesDto;
+import com.yandex.market.shopservice.service.shop.ShopSystemService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +17,7 @@ import java.util.UUID;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("${spring.application.url}")
+@RequestMapping("${spring.application.url.shop}")
 public class ShopSystemController {
     private final ShopSystemService shopService;
 
