@@ -1,4 +1,4 @@
-package com.market.userinfoservice.model;
+package com.yandex.market.userinfoservice.model;
 
 import jakarta.persistence.*;
 import lombok.EqualsAndHashCode;
