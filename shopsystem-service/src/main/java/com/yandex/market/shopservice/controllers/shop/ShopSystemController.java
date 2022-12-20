@@ -46,14 +46,14 @@ public class ShopSystemController {
 
     @DeleteMapping("/{externalId}")
     @ResponseStatus(HttpStatus.OK)
-    public void deleteSystemShopByExternalId(@PathVariable("externalId") UUID externalId) {
+    public void deleteShopSystemByExternalId(@PathVariable("externalId") UUID externalId) {
         log.info("Received a request to delete a shop system by external id = %s".formatted(externalId));
         shopService.deleteShopSystemByExternalId(externalId);
     }
 
     @PutMapping("/{externalId}")
     @ResponseStatus(HttpStatus.OK)
-    public void updateSystemShopByExternalId(@PathVariable("externalId") UUID externalId,
+    public void updateShopSystemByExternalId(@PathVariable("externalId") UUID externalId,
                                              @RequestBody @Valid ShopSystemRequestDto shopSystemDtoRequest) {
         log.info("Received a request to update a shop system by external id = %s".formatted(externalId));
         shopService.updateShopSystemByExternalId(externalId, shopSystemDtoRequest);

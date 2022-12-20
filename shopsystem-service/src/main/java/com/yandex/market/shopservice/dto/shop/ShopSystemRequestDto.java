@@ -14,6 +14,7 @@ import java.util.Set;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode
 public class ShopSystemRequestDto {
     @NotBlank(message = "Field \"Name\" must not be empty")
     private String name;
