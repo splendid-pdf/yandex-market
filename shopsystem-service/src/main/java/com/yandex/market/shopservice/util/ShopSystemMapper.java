@@ -1,8 +1,9 @@
 package com.yandex.market.shopservice.util;
 
 import com.yandex.market.shopservice.dto.LocationDto;
-import com.yandex.market.shopservice.dto.ShopSystemDto;
 import com.yandex.market.shopservice.dto.SupportDto;
+import com.yandex.market.shopservice.dto.requests.ShopSystemRequestDto;
+import com.yandex.market.shopservice.dto.responses.ShopSystemResponsesDto;
 import com.yandex.market.shopservice.model.shop.Location;
 import com.yandex.market.shopservice.model.shop.ShopSystem;
 import com.yandex.market.shopservice.model.shop.Support;
@@ -13,7 +14,7 @@ import java.util.stream.Collectors;
 
 @Component
 public class ShopSystemMapper {
-    public ShopSystem toShopSystemFromDto(ShopSystemDto dto) {
+    public ShopSystem toShopSystemFromRequestDto(ShopSystemRequestDto dto) {
         return ShopSystem.builder()
                 .name(dto.getName())
                 .token(dto.getToken())
@@ -24,9 +25,20 @@ public class ShopSystemMapper {
                 .logoUrl(dto.getLogoUrl())
                 .build();
     }
-
-    public ShopSystemDto toShopSystemDto(ShopSystem shopSystem) {
-        return ShopSystemDto.builder()
+    public ShopSystem toShopSystemFromResponseDto(ShopSystemResponsesDto dto) {
+        return ShopSystem.builder()
+                .name(dto.getName())
+                .token(dto.getToken())
+                .support(toSupportFromDto(dto.getSupport()))
+                .legalEntityAddress(toLocationFromDto(dto.getLegalEntityAddress()))
+                .specialOffers(dto.getSpecialOffers())
+                .branches(dto.getBranches())
+                .logoUrl(dto.getLogoUrl())
+                .rating(dto.getRating())
+                .build();
+    }
+    public ShopSystemResponsesDto toShopSystemResponseDto(ShopSystem shopSystem) {
+        return ShopSystemResponsesDto.builder()
                 .name(shopSystem.getName())
                 .token(shopSystem.getToken())
                 .support(toSupportDto(shopSystem.getSupport()))
@@ -34,6 +46,7 @@ public class ShopSystemMapper {
                 .specialOffers(shopSystem.getSpecialOffers())
                 .branches(shopSystem.getBranches())
                 .logoUrl(shopSystem.getLogoUrl())
+                .rating(shopSystem.getRating())
                 .build();
     }
 
@@ -72,9 +85,9 @@ public class ShopSystemMapper {
         );
     }
 
-    public List<ShopSystemDto> toShopSystemDtoPages(List<ShopSystem> content) {
+    public List<ShopSystemResponsesDto> toShopSystemResponseDtoPages(List<ShopSystem> content) {
         return content.stream()
-                .map(this::toShopSystemDto)
+                .map(this::toShopSystemResponseDto)
                 .collect(Collectors.toList());
     }
 }

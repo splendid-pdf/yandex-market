@@ -1,7 +1,8 @@
 package com.yandex.market.shopservice.service;
 
-import com.yandex.market.shopservice.dto.ShopSystemDto;
-import com.yandex.market.shopservice.impl.IShopSystemService;
+import com.yandex.market.shopservice.dto.requests.ShopSystemRequestDto;
+import com.yandex.market.shopservice.dto.responses.ShopSystemResponsesDto;
+import com.yandex.market.shopservice.service.impl.ShopSystemServiceImpl;
 import com.yandex.market.shopservice.model.shop.ShopSystem;
 import com.yandex.market.shopservice.repositories.ShopSystemRepository;
 import com.yandex.market.shopservice.util.ShopSystemMapper;
@@ -19,34 +20,35 @@ import java.util.UUID;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class ShopSystemService implements IShopSystemService {
+public class ShopSystemService implements ShopSystemServiceImpl {
     private final ShopSystemRepository repository;
     private final ShopSystemMapper mapper;
 
-    public Page<ShopSystemDto> getAllShopSystems(Pageable pageable) {
+    public Page<ShopSystemResponsesDto> getAllShopSystems(Pageable pageable) {
         Page<ShopSystem> shopSystemPages = repository.findAll(pageable);
         return new PageImpl<>(
-                mapper.toShopSystemDtoPages(shopSystemPages.getContent()),
+                mapper.toShopSystemResponseDtoPages(shopSystemPages.getContent()),
                 pageable,
                 shopSystemPages.getTotalElements());
     }
 
     @Transactional
-    public void createShopSystem(ShopSystemDto dto) {
-        ShopSystem shopSystem = mapper.toShopSystemFromDto(dto);
+    public void createShopSystem(ShopSystemRequestDto dto) {
+        ShopSystem shopSystem = mapper.toShopSystemFromRequestDto(dto);
         shopSystem.setExternalId(UUID.randomUUID());
         repository.save(shopSystem);
     }
 
-    public ShopSystem getShopSystemByExternalId(UUID externalId) {
-        return repository
-                .findByExternalId(externalId)
-                .orElseThrow(() -> {
-                            log.error("REQUEST REJECTED. Could not find a matching record.");
-                            throw new EntityNotFoundException("Organization by given externalId = \"" +
-                                    externalId + "\" was not found. Creation canceled!");
-                        }
-                );
+    public ShopSystemResponsesDto getShopSystemByExternalId(UUID externalId) {
+        return mapper.toShopSystemResponseDto(
+                repository.findByExternalId(externalId)
+                        .orElseThrow(() -> {
+                                    log.error("REQUEST REJECTED. Could not find a matching record.");
+                                    throw new EntityNotFoundException("Organization by given externalId = \"" +
+                                            externalId + "\" was not found. Creation canceled!");
+                                }
+                        )
+        );
     }
 
     @Transactional
@@ -63,12 +65,12 @@ public class ShopSystemService implements IShopSystemService {
     }
 
     @Transactional
-    public void updateSystemShopByExternalId(UUID externalId, ShopSystemDto shopSystemDtoRequest) {
-        ShopSystem shopSystem = getShopSystemByExternalId(externalId);
-        shopSystem.setName(shopSystemDtoRequest.getName());
-        shopSystem.setToken(shopSystemDtoRequest.getToken());
-        shopSystem.setSupport(mapper.toSupportFromDto(shopSystemDtoRequest.getSupport()));
-        shopSystem.setLegalEntityAddress(mapper.toLocationFromDto(shopSystemDtoRequest.getLegalEntityAddress()));
-        shopSystem.setLogoUrl(shopSystemDtoRequest.getLogoUrl());
+    public void updateSystemShopByExternalId(UUID externalId, ShopSystemRequestDto dto) {
+        ShopSystem shopSystem = mapper.toShopSystemFromResponseDto(getShopSystemByExternalId(externalId));
+        shopSystem.setName(dto.getName());
+        shopSystem.setToken(dto.getToken());
+        shopSystem.setSupport(mapper.toSupportFromDto(dto.getSupport()));
+        shopSystem.setLegalEntityAddress(mapper.toLocationFromDto(dto.getLegalEntityAddress()));
+        shopSystem.setLogoUrl(dto.getLogoUrl());
     }
 }
