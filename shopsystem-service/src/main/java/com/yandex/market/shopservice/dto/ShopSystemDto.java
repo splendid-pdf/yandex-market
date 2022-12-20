@@ -25,6 +25,4 @@ public class ShopSystemDto {
     private Set<Branch> branches = new HashSet<>();
 
     private String logoUrl;
-    private float rating;
-
 }

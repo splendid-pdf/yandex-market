@@ -22,7 +22,6 @@ public class ShopSystemMapper {
                 .specialOffers(dto.getSpecialOffers())
                 .branches(dto.getBranches())
                 .logoUrl(dto.getLogoUrl())
-                .rating(dto.getRating())
                 .build();
     }
 
@@ -35,7 +34,6 @@ public class ShopSystemMapper {
                 .specialOffers(shopSystem.getSpecialOffers())
                 .branches(shopSystem.getBranches())
                 .logoUrl(shopSystem.getLogoUrl())
-                .rating(shopSystem.getRating())
                 .build();
     }
 

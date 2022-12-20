@@ -10,6 +10,8 @@ spring:
     username: ${postgres_user}
     password: ${postgres_password}
     driverClassName: org.postgresql.Driver
+    hikari:
+      auto-commit: false
   jpa:
     database: POSTGRESQL
     show-sql: true
@@ -19,6 +21,10 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
+        shema_update:
+          unique_constraint_strategy: RECREATE_QUIETLY
+        connection:
+          provider_disables_autocommit: true
 
   flyway:
     enabled: false
