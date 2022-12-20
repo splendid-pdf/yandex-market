@@ -1,42 +1,28 @@
 package com.yandex.market.userinfoservice.controller;
 
-import org.openapitools.api.controller.UsersApi;
-import org.openapitools.api.model.LocationDto;
-import org.openapitools.api.model.UserRequestDto;
-import org.openapitools.api.model.UserResponseDto;
-import org.springframework.http.ResponseEntity;
+import com.yandex.market.userinfoservice.dto.UserDto;
+import com.yandex.market.userinfoservice.service.UserService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
-public class UserController implements UsersApi {
+@Slf4j
+@RestController
+@RequestMapping("${app.users-api.path}")
+@RequiredArgsConstructor
+public class UserController {
 
-    @Override
-    public ResponseEntity<UUID> createUser(UserRequestDto userRequestDto) {
-        return UsersApi.super.createUser(userRequestDto);
+    private final UserService userService;
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public UUID registrationUser(@RequestBody @Valid UserDto userDto){
+        log.info("Received a request to create a user: {}", userDto);
+        return userService.create(userDto);
     }
 
-    @Override
-    public ResponseEntity<UserResponseDto> deleteUser(UUID externalId) {
-        return UsersApi.super.deleteUser(externalId);
-    }
-
-    @Override
-    public ResponseEntity<UserResponseDto> getByExternalId(UUID externalId) {
-        return UsersApi.super.getByExternalId(externalId);
-    }
-
-    @Override
-    public ResponseEntity<UserResponseDto> getUserByEmailOrPhone(String emailOrPhone) {
-        return UsersApi.super.getUserByEmailOrPhone(emailOrPhone);
-    }
-
-    @Override
-    public ResponseEntity<LocationDto> getUserLocationByExternalId(UUID externalId) {
-        return UsersApi.super.getUserLocationByExternalId(externalId);
-    }
-
-    @Override
-    public ResponseEntity<UserResponseDto> updateUser(UUID externalId, UserRequestDto userRequestDto) {
-        return UsersApi.super.updateUser(externalId, userRequestDto);
-    }
 }

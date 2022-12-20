@@ -1,8 +1,8 @@
 package com.example.userinfoservice;
 
-import com.market.userinfoservice.UserInfoServiceApplication;
-import com.market.userinfoservice.model.User;
-import com.market.userinfoservice.repository.UserRepository;
+import com.yandex.market.userinfoservice.UserInfoServiceApplication;
+import com.yandex.market.userinfoservice.model.User;
+import com.yandex.market.userinfoservice.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentMatchers;
@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;

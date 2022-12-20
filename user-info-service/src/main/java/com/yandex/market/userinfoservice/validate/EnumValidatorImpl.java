@@ -1,4 +1,4 @@
-package com.market.userinfoservice.validate;
+package com.yandex.market.userinfoservice.validate;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;

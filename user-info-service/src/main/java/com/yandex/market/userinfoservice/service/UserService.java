@@ -1,9 +1,9 @@
-package com.market.userinfoservice.service;
+package com.yandex.market.userinfoservice.service;
 
-import com.market.userinfoservice.converter.Converter;
-import com.market.userinfoservice.dto.UserDto;
-import com.market.userinfoservice.model.User;
-import com.market.userinfoservice.repository.UserRepository;
+import com.yandex.market.userinfoservice.converter.Converter;
+import com.yandex.market.userinfoservice.dto.UserDto;
+import com.yandex.market.userinfoservice.model.User;
+import com.yandex.market.userinfoservice.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

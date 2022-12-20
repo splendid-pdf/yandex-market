@@ -1,7 +1,7 @@
-package com.market.userinfoservice.dto;
+package com.yandex.market.userinfoservice.dto;
 
-import com.market.userinfoservice.model.Sex;
-import com.market.userinfoservice.validate.EnumValidator;
+import com.yandex.market.userinfoservice.model.Sex;
+import com.yandex.market.userinfoservice.validate.EnumValidator;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;

@@ -45,7 +45,7 @@ def generatedDir = "${buildDir}/generated"
 
 task generateOpenApi(type: GenerateTask) {
     generatorName = 'spring'
-    inputSpec = "$rootDir/openapi/docs/spec.yaml"
+    inputSpec = "$projectDir/openapi/docs/spec.yaml"
     outputDir = generatedDir
     configOptions = [
             interfaceOnly: 'true',

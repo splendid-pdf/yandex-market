@@ -1,8 +1,8 @@
-package com.market.userinfoservice.converter;
+package com.yandex.market.userinfoservice.converter;
 
-import com.market.userinfoservice.dto.UserDto;
-import com.market.userinfoservice.model.Sex;
-import com.market.userinfoservice.model.User;
+import com.yandex.market.userinfoservice.dto.UserDto;
+import com.yandex.market.userinfoservice.model.Sex;
+import com.yandex.market.userinfoservice.model.User;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;

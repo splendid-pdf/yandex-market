@@ -1,6 +1,6 @@
-package com.market.userinfoservice.repository;
+package com.yandex.market.userinfoservice.repository;
 
-import com.market.userinfoservice.model.User;
+import com.yandex.market.userinfoservice.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
