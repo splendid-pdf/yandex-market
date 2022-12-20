@@ -1,9 +1,8 @@
-app:
-  users-api:
-    path: /public/api/v1/users
+user-controller:
+  path: /public/api/v1/users
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/user_info_db4
+    url: jdbc:postgresql://localhost:5432/user_info_db3
     username: postgres
     password: 123
     driver-class-name: org.postgresql.Driver

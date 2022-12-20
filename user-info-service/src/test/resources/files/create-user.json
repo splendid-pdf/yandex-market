@@ -1,0 +1,31 @@
+{
+  "firstName": "John",
+  "middleName": null,
+  "lastName": "Thompson",
+  "phone": "+79241249521",
+  "email": "john-thompson@email.com",
+  "password": "I_AMfr0mSpb259631!@#",
+  "birthday": "1967-01-02",
+  "sex": "MALE",
+  "location": {
+    "country": "USA",
+    "region": "Florida",
+    "city": "Saint-Petersburg",
+    "postcode": "33112",
+    "street": "Ocean Drive",
+    "houseNumber": 5,
+    "apartNumber": 12
+  },
+  "contacts": [
+    {
+      "value": "vk.com/id153215112412",
+      "type": "VK"
+    }
+  ],
+  "notificationSettings": {
+    "isAllowedToReceiveOnAddress": true,
+    "isAllowedToSendPromotionsAndMailingLists": true,
+    "isAllowedToSendPopularArticles": true
+  },
+  "photoId": "id2003104u48396"
+}

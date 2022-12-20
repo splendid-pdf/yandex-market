@@ -3,8 +3,8 @@ package com.yandex.market.userinfoservice.model;
 import jakarta.persistence.Embeddable;
 import lombok.*;
 
-@Getter
 @Setter
+@Getter
 @Embeddable
 @NoArgsConstructor
 @AllArgsConstructor
