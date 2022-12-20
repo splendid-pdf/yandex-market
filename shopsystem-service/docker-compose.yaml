@@ -1,0 +1,35 @@
+version: "3.9"
+services:
+  postgres:
+    image: postgres:15.1-alpine
+    environment:
+      POSTGRES_DB: shopsystem_db
+      POSTGRES_USER: shopsystem
+      POSTGRES_PASSWORD: password
+      PGDATA: /data/postgres
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - default-network
+
+  pgadmin:
+    container_name: pgadmin_ui
+    image: dpage/pgadmin4:6.17
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-shopsystem@mail.ru}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-shopsystem}
+    volumes:
+      - ./pgadmin:/var/lib/pgadmin
+    ports:
+      - "5050:80"
+    networks:
+      - default-network
+
+volumes:
+  pgdata:
+  pgadmin:
+
+networks:
+  default-network:
