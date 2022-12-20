@@ -1,5 +1,7 @@
-package com.yandex.market.shopservice.dto;
+package com.yandex.market.shopservice.dto.requests;
 
+import com.yandex.market.shopservice.dto.LocationDto;
+import com.yandex.market.shopservice.dto.SupportDto;
 import com.yandex.market.shopservice.model.branch.Branch;
 import com.yandex.market.shopservice.model.shop.SpecialOffer;
 import jakarta.validation.constraints.NotBlank;
@@ -13,7 +15,7 @@ import java.util.Set;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ShopSystemDto {
+public class ShopSystemRequestDto {
     @NotBlank(message = "Field \"Name\" must not be empty")
     private String name;
     private String token;
