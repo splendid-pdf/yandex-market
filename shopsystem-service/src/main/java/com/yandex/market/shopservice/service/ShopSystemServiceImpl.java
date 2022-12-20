@@ -2,9 +2,9 @@ package com.yandex.market.shopservice.service;
 
 import com.yandex.market.shopservice.dto.requests.ShopSystemRequestDto;
 import com.yandex.market.shopservice.dto.responses.ShopSystemResponsesDto;
-import com.yandex.market.shopservice.service.impl.ShopSystemServiceImpl;
 import com.yandex.market.shopservice.model.shop.ShopSystem;
 import com.yandex.market.shopservice.repositories.ShopSystemRepository;
+import com.yandex.market.shopservice.service.impl.ShopSystemService;
 import com.yandex.market.shopservice.util.ShopSystemMapper;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
@@ -20,7 +20,7 @@ import java.util.UUID;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class ShopSystemService implements ShopSystemServiceImpl {
+public class ShopSystemServiceImpl implements ShopSystemService {
     private final ShopSystemRepository repository;
     private final ShopSystemMapper mapper;
 
