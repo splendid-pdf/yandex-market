@@ -16,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -27,7 +28,10 @@ public class ShopSystemServiceImpl implements ShopSystemService {
     public Page<ShopSystemResponsesDto> getAllShopSystems(Pageable pageable) {
         Page<ShopSystem> shopSystemPages = repository.findAll(pageable);
         return new PageImpl<>(
-                mapper.toShopSystemResponseDtoPages(shopSystemPages.getContent()),
+                shopSystemPages.getContent()
+                        .stream()
+                        .map(mapper::toShopSystemResponseDto)
+                        .collect(Collectors.toList()),
                 pageable,
                 shopSystemPages.getTotalElements());
     }

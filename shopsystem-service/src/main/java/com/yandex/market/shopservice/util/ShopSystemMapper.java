@@ -9,9 +9,6 @@ import com.yandex.market.shopservice.model.shop.ShopSystem;
 import com.yandex.market.shopservice.model.shop.Support;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 @Component
 public class ShopSystemMapper {
     public ShopSystem toShopSystemFromRequestDto(ShopSystemRequestDto dto) {
@@ -83,11 +80,5 @@ public class ShopSystemMapper {
                 location.getOfficeNumber(),
                 location.getPostcode()
         );
-    }
-
-    public List<ShopSystemResponsesDto> toShopSystemResponseDtoPages(List<ShopSystem> content) {
-        return content.stream()
-                .map(this::toShopSystemResponseDto)
-                .collect(Collectors.toList());
     }
 }
