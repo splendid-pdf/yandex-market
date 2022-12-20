@@ -14,6 +14,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,13 +22,24 @@ import java.util.stream.Collectors;
 public class ShopSystemControllerAdvice extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(SQLException.class)
-    public ResponseEntity<Object> handleEntityNotFoundEx(SQLException ex) {
+    public ResponseEntity<Object> handleSQLException(SQLException ex) {
         ExceptionResponse exceptionResponse;
         if ("23505".equals(ex.getSQLState())) {
-            exceptionResponse =
-                    new ExceptionResponse("The uniqueness of the key has been violated", ex.getMessage());
+            exceptionResponse = ExceptionResponse.builder()
+                    .timeStamped(LocalDateTime.now())
+                    .message("The uniqueness of the key has been violated")
+                    .debugMessage(ex.getMessage())
+                    .errorCode(ex.getErrorCode())
+                    .SQLState(ex.getSQLState())
+                    .build();
         } else {
-            exceptionResponse = new ExceptionResponse("SQLException", ex.getMessage());
+            exceptionResponse = ExceptionResponse.builder()
+                    .timeStamped(LocalDateTime.now())
+                    .message("SQLException")
+                    .debugMessage(ex.getMessage())
+                    .errorCode(ex.getErrorCode())
+                    .SQLState(ex.getSQLState())
+                    .build();
         }
         return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
     }
@@ -36,8 +48,13 @@ public class ShopSystemControllerAdvice extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleHttpRequestMethodNotSupported(
             HttpRequestMethodNotSupportedException ex,
             HttpHeaders headers, HttpStatusCode status, WebRequest request) {
-        ExceptionResponse exceptionResponse =
-                new ExceptionResponse("Malformed JSON Request", ex.getMessage());
+
+        ExceptionResponse exceptionResponse = ExceptionResponse.builder()
+                .timeStamped(LocalDateTime.now())
+                .message("Malformed JSON Request")
+                .debugMessage(ex.getMessage())
+                .statusCode(ex.getStatusCode())
+                .build();
         return new ResponseEntity<>(exceptionResponse, status);
     }
 
@@ -52,8 +69,13 @@ public class ShopSystemControllerAdvice extends ResponseEntityExceptionHandler {
                 .map(DefaultMessageSourceResolvable::getDefaultMessage)
                 .collect(Collectors.toList());
 
-        ExceptionResponse exceptionResponse =
-                new ExceptionResponse("Method Argument Not Valid", ex.getMessage(), errors);
+        ExceptionResponse exceptionResponse = ExceptionResponse.builder()
+                .timeStamped(LocalDateTime.now())
+                .message("Method Argument Not Valid")
+                .debugMessage(ex.getMessage())
+                .statusCode(ex.getStatusCode())
+                .errors(errors)
+                .build();
         return new ResponseEntity<>(exceptionResponse, status);
     }
 }
