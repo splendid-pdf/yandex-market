@@ -2,7 +2,7 @@ package com.yandex.market.shopservice.controllers;
 
 import com.yandex.market.shopservice.dto.requests.ShopSystemRequestDto;
 import com.yandex.market.shopservice.dto.responses.ShopSystemResponsesDto;
-import com.yandex.market.shopservice.service.ShopSystemServiceImpl;
+import com.yandex.market.shopservice.service.impl.ShopSystemService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +19,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @RequestMapping("${spring.application.url}")
 public class ShopSystemController {
-    private final ShopSystemServiceImpl shopService;
+    private final ShopSystemService shopService;
 
     @GetMapping()
     @ResponseStatus(HttpStatus.OK)
