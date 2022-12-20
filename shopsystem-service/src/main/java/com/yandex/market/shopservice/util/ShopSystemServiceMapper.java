@@ -1,16 +1,18 @@
 package com.yandex.market.shopservice.util;
 
+import com.yandex.market.shopservice.dto.branch.BranchDto;
 import com.yandex.market.shopservice.dto.shop.LocationDto;
 import com.yandex.market.shopservice.dto.shop.SupportDto;
 import com.yandex.market.shopservice.dto.shop.requests.ShopSystemRequestDto;
 import com.yandex.market.shopservice.dto.shop.responses.ShopSystemResponsesDto;
+import com.yandex.market.shopservice.model.branch.Branch;
 import com.yandex.market.shopservice.model.shop.Location;
 import com.yandex.market.shopservice.model.shop.ShopSystem;
 import com.yandex.market.shopservice.model.shop.Support;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ShopSystemMapper {
+public class ShopSystemServiceMapper {
     public ShopSystem toShopSystemFromRequestDto(ShopSystemRequestDto dto) {
         return ShopSystem.builder()
                 .name(dto.getName())
@@ -80,5 +82,16 @@ public class ShopSystemMapper {
                 location.getOfficeNumber(),
                 location.getPostcode()
         );
+    }
+
+    public Branch toBranchFromRequestDto(BranchDto dto) {
+        return Branch.builder()
+                .name(dto.getName())
+                .token(dto.getToken())
+                .ogrn(dto.getOgrn())
+                .shopSystem(dto.getShopSystem())
+                .location(dto.getLocation())
+                .delivery(dto.getDelivery())
+                .build();
     }
 }

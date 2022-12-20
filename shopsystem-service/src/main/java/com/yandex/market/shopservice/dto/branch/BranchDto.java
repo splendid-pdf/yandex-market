@@ -15,7 +15,10 @@ import lombok.*;
 public class BranchDto {
     @NotBlank(message = "Field \"Name\" must not be empty")
     private String name;
+
     private String token;
+
+    @NotBlank(message = "Field \"OGRN\" must not be empty")
     private String ogrn;
 
     private ShopSystem shopSystem;
