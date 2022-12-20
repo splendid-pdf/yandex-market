@@ -1,14 +1,10 @@
 package com.market.userinfoservice.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.market.userinfoservice.model.Sex;
 import com.market.userinfoservice.validate.EnumValidator;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
-import org.springframework.format.annotation.DateTimeFormat;
-
-import java.time.LocalDate;
 
 public record UserDto(
 
