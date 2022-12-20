@@ -19,8 +19,6 @@ public class ExceptionResponse {
     private LocalDateTime timeStamped;
     private String message;
     private String debugMessage;
-    private String SQLState;
-    private HttpStatusCode statusCode;
     private int errorCode;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
