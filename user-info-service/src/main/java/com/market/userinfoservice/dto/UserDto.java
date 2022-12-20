@@ -1,20 +1,49 @@
 package com.market.userinfoservice.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.market.userinfoservice.model.Sex;
-import jakarta.validation.constraints.NotNull;
+import com.market.userinfoservice.validate.EnumValidator;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 
 public record UserDto(
-        @NotNull String firstName,
-        @NotNull String middleName,
-        @NotNull String lastName,
-        @NotNull String phone,
-        @NotNull String email,
-        @NotNull String login,
-        @NotNull String password,
-        @NotNull LocalDate birthday,
-        @NotNull Sex sex
+
+        @NotBlank(message = "Field \"FirstName\" must not be empty")
+        String firstName,
+
+        String middleName,
+
+        @NotBlank(message = "Field \"LastName\" must not be empty")
+        String lastName,
+
+        @NotBlank(message = "Field \"Phone\" must not be empty")
+        String phone,
+
+        @NotBlank(message = "Field \"Email\" must not be empty")
+        @Email(message = "Wrong mail format")
+        String email,
+
+        @NotBlank(message = "Field \"Login\" must not be empty")
+        String login,
+
+        @NotBlank(message = "Field \"Password\" must not be empty")
+        String password,
+
+
+        @Pattern(regexp = "([12]\\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01]))",
+                message = "Invalid format date")
+        String birthday,
+
+        @EnumValidator(
+                enumClazz = Sex.class,
+                message = "Invalid data",
+                groups = {Sex.class}
+        )
+        String sex
 ) {
 
 }

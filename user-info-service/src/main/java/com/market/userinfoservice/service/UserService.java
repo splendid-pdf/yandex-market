@@ -1,6 +1,6 @@
 package com.market.userinfoservice.service;
 
-import com.market.userinfoservice.converter.UserConverter;
+import com.market.userinfoservice.converter.Converter;
 import com.market.userinfoservice.dto.UserDto;
 import com.market.userinfoservice.model.User;
 import com.market.userinfoservice.repository.UserRepository;
@@ -19,10 +19,10 @@ public class UserService {
             "User with similar email = %s is already exists";
     private final UserRepository userRepository;
 
-    private final UserConverter userConverter;
+    private final Converter converter;
 
     public UUID create(UserDto userDto) {
-        User user = userConverter.convert(userDto);
+        User user = converter.convertUser(userDto);
 
         if (userRepository.existsByEmail(userDto.email())) {
             throw new IllegalArgumentException(USER_WITH_THE_SAME_EMAIL_IS_EXISTS_MESSAGE.formatted(userDto.email()));

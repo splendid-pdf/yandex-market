@@ -12,7 +12,7 @@ import java.util.UUID;
 
 @Slf4j
 @RestController
-@RequestMapping("${user-controller.path}")
+@RequestMapping("${app.users-api.path}")
 @RequiredArgsConstructor
 public class UserController {
 
