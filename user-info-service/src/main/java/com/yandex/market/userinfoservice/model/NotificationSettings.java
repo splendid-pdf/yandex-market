@@ -10,8 +10,8 @@ import lombok.*;
 @AllArgsConstructor
 public class NotificationSettings {
     private String emailToSend;
-    private Boolean isAllowedToStoreResponseToMyReviews;
-    private Boolean isAllowedToSendDiscountsAndPromotionsMailingLists;
-    private Boolean isAllowedToSendPopularArticles;
+    private boolean isAllowedToStoreResponseToMyReviews;
+    private boolean isAllowedToSendDiscountsAndPromotionsMailingLists;
+    private boolean isAllowedToSendPopularArticles;
 }
 
