@@ -88,7 +88,6 @@ public class ShopSystemServiceMapper {
 
     public Branch toBranchFromDto(BranchDto dto) {
         return Branch.builder()
-                .shopSystem(dto.getShopSystem())
                 .name(dto.getName())
                 .token(dto.getToken())
                 .ogrn(dto.getOgrn())

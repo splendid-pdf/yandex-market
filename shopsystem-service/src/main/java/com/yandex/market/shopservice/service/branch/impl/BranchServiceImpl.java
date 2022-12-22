@@ -4,6 +4,7 @@ import com.yandex.market.shopservice.dto.branch.BranchDto;
 import com.yandex.market.shopservice.model.branch.Branch;
 import com.yandex.market.shopservice.repositories.BranchRepository;
 import com.yandex.market.shopservice.service.branch.BranchService;
+import com.yandex.market.shopservice.service.shop.ShopSystemService;
 import com.yandex.market.shopservice.util.ShopSystemServiceMapper;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +18,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class BranchServiceImpl implements BranchService {
     private final BranchRepository repository;
+    private final ShopSystemService shopSystemService;
     private final ShopSystemServiceMapper mapper;
 
     @Override
@@ -24,7 +26,7 @@ public class BranchServiceImpl implements BranchService {
     public void createBranch(BranchDto dto) {
         Branch branch = mapper.toBranchFromDto(dto);
         branch.setExternalId(UUID.randomUUID());
-        // TODO нужно записать бренч в систем шоп
+        branch.setShopSystem(shopSystemService.getShopSystemByExternalId(dto.getShopSystem()));
         repository.save(branch);
     }
 }

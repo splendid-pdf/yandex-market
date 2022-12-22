@@ -2,6 +2,7 @@ package com.yandex.market.shopservice.service.shop;
 
 import com.yandex.market.shopservice.dto.shop.ShopSystemRequestDto;
 import com.yandex.market.shopservice.dto.shop.ShopSystemResponsesDto;
+import com.yandex.market.shopservice.model.shop.ShopSystem;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -12,7 +13,9 @@ public interface ShopSystemService {
 
     void createShopSystem(ShopSystemRequestDto dto);
 
-    ShopSystemResponsesDto getShopSystemByExternalId(UUID externalId);
+    ShopSystemResponsesDto getShopSystemDtoByExternalId(UUID externalId);
+
+    ShopSystem getShopSystemByExternalId(UUID externalId);
 
     void deleteSystemShopByExternalId(UUID externalId);
 

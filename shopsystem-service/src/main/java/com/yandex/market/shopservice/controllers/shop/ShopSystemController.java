@@ -40,7 +40,7 @@ public class ShopSystemController {
     @ResponseStatus(HttpStatus.OK)
     public ShopSystemResponsesDto getShopSystemByExternalId(@PathVariable("externalId") UUID externalId) {
         log.info("Received a request to get shop system by external id = %s".formatted(externalId));
-        return shopService.getShopSystemByExternalId(externalId);
+        return shopService.getShopSystemDtoByExternalId(externalId);
     }
 
     @DeleteMapping("/{externalId}")
