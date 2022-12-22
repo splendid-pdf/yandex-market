@@ -37,17 +37,17 @@ public class ShopSystemServiceImpl implements ShopSystemService {
     }
 
     @Transactional
-    public void createShopSystem(ShopSystemRequestDto dto) {
+    public UUID createShopSystem(ShopSystemRequestDto dto) {
         ShopSystem shopSystem = mapper.toShopSystemFromRequestDto(dto);
         shopSystem.setExternalId(UUID.randomUUID());
         repository.save(shopSystem);
+        return shopSystem.getExternalId();
     }
 
     public ShopSystemResponsesDto getShopSystemDtoByExternalId(UUID externalId) {
         return mapper.toShopSystemResponseDto(
                 repository.findByExternalId(externalId)
                         .orElseThrow(() -> {
-                                    log.error("REQUEST REJECTED. Could not find a matching record.");
                                     throw new EntityNotFoundException("Organization by given externalId = \"" +
                                             externalId + "\" was not found. Search canceled!");
                                 }
@@ -59,7 +59,6 @@ public class ShopSystemServiceImpl implements ShopSystemService {
     public ShopSystem getShopSystemByExternalId(UUID externalId) {
         return repository.findByExternalId(externalId)
                 .orElseThrow(() -> {
-                            log.error("REQUEST REJECTED. Could not find a matching record.");
                             throw new EntityNotFoundException("Organization by given externalId = \"" +
                                     externalId + "\" was not found. Search canceled!");
                         }
@@ -71,7 +70,6 @@ public class ShopSystemServiceImpl implements ShopSystemService {
         ShopSystem shopSystem = repository
                 .findByExternalId(externalId)
                 .orElseThrow(() -> {
-                            log.error("REQUEST REJECTED. Could not find a matching record.");
                             throw new EntityNotFoundException("Organization by given externalId = \"" +
                                     externalId + "\" was not found. Deletion canceled!");
                         }

@@ -1,4 +1,4 @@
-package com.yandex.market.shopservice.dto.shop;
+package com.yandex.market.shopservice.dto;
 
 import jakarta.validation.constraints.Size;
 

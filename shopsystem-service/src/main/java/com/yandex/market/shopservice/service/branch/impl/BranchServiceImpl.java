@@ -23,10 +23,11 @@ public class BranchServiceImpl implements BranchService {
 
     @Override
     @Transactional
-    public void createBranch(BranchDto dto) {
+    public UUID createBranch(BranchDto dto) {
         Branch branch = mapper.toBranchFromDto(dto);
         branch.setExternalId(UUID.randomUUID());
         branch.setShopSystem(shopSystemService.getShopSystemByExternalId(dto.getShopSystem()));
         repository.save(branch);
+        return branch.getExternalId();
     }
 }

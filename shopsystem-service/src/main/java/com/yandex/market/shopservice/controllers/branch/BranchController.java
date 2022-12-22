@@ -17,7 +17,7 @@ public class BranchController {
 
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
-    public void createNewBranch(@RequestBody @Valid BranchDto branchDto) {
+    public void createBranch(@RequestBody @Valid BranchDto branchDto) {
         log.info("Received a request to create new branch for shop system: %s".formatted(branchDto));
         branchService.createBranch(branchDto);
     }

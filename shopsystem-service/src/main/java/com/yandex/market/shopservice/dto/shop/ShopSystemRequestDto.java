@@ -1,5 +1,6 @@
 package com.yandex.market.shopservice.dto.shop;
 
+import com.yandex.market.shopservice.dto.LocationDto;
 import com.yandex.market.shopservice.model.branch.Branch;
 import com.yandex.market.shopservice.model.shop.SpecialOffer;
 import jakarta.validation.constraints.NotBlank;

@@ -2,7 +2,9 @@ package com.yandex.market.shopservice.service.branch;
 
 import com.yandex.market.shopservice.dto.branch.BranchDto;
 
+import java.util.UUID;
+
 public interface BranchService {
 
-    void createBranch(BranchDto dto);
+    UUID createBranch(BranchDto dto);
 }

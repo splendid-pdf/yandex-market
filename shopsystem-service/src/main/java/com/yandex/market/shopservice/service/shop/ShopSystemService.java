@@ -11,7 +11,7 @@ import java.util.UUID;
 public interface ShopSystemService {
     Page<ShopSystemResponsesDto> getAllShopSystems(Pageable pageable);
 
-    void createShopSystem(ShopSystemRequestDto dto);
+    UUID createShopSystem(ShopSystemRequestDto dto);
 
     ShopSystemResponsesDto getShopSystemDtoByExternalId(UUID externalId);
 

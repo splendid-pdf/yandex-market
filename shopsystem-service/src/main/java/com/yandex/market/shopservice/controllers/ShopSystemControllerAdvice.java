@@ -36,23 +36,21 @@ public class ShopSystemControllerAdvice extends ResponseEntityExceptionHandler {
     @ExceptionHandler(SQLException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     private ExceptionResponse handleSQLException(SQLException ex) {
-        ExceptionResponse exceptionResponse;
         if ("23505".equals(ex.getSQLState())) {
-            exceptionResponse = ExceptionResponse.builder()
+            return ExceptionResponse.builder()
                     .timeStamped(LocalDateTime.now())
                     .message("SQLException: The uniqueness of the key has been violated")
                     .debugMessage(ex.getMessage())
                     .errorCode(ex.getErrorCode())
                     .build();
         } else {
-            exceptionResponse = ExceptionResponse.builder()
+            return ExceptionResponse.builder()
                     .timeStamped(LocalDateTime.now())
                     .message("SQLException")
                     .debugMessage(ex.getMessage())
                     .errorCode(ex.getErrorCode())
                     .build();
         }
-        return exceptionResponse;
     }
 
     @Override

@@ -2,7 +2,7 @@ package com.yandex.market.shopservice.util;
 
 import com.yandex.market.shopservice.dto.branch.BranchDto;
 import com.yandex.market.shopservice.dto.branch.ContactDto;
-import com.yandex.market.shopservice.dto.shop.LocationDto;
+import com.yandex.market.shopservice.dto.LocationDto;
 import com.yandex.market.shopservice.dto.shop.ShopSystemRequestDto;
 import com.yandex.market.shopservice.dto.shop.ShopSystemResponsesDto;
 import com.yandex.market.shopservice.dto.shop.SupportDto;
