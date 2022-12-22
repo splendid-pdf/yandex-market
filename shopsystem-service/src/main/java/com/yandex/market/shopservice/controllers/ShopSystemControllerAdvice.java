@@ -1,6 +1,7 @@
 package com.yandex.market.shopservice.controllers;
 
 import com.yandex.market.shopservice.service.ExceptionResponse;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -22,6 +23,16 @@ import java.util.stream.Collectors;
 @RestControllerAdvice
 public class ShopSystemControllerAdvice extends ResponseEntityExceptionHandler {
 
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ExceptionResponse handleEntityNotFoundException(EntityNotFoundException ex) {
+        return ExceptionResponse.builder()
+                .timeStamped(LocalDateTime.now())
+                .message("EntityNotFoundException: entity does not found in datasource")
+                .debugMessage(ex.getMessage())
+                .build();
+    }
+
     @ExceptionHandler(SQLException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     private ExceptionResponse handleSQLException(SQLException ex) {
@@ -29,7 +40,7 @@ public class ShopSystemControllerAdvice extends ResponseEntityExceptionHandler {
         if ("23505".equals(ex.getSQLState())) {
             exceptionResponse = ExceptionResponse.builder()
                     .timeStamped(LocalDateTime.now())
-                    .message("The uniqueness of the key has been violated")
+                    .message("SQLException: The uniqueness of the key has been violated")
                     .debugMessage(ex.getMessage())
                     .errorCode(ex.getErrorCode())
                     .build();
@@ -51,7 +62,7 @@ public class ShopSystemControllerAdvice extends ResponseEntityExceptionHandler {
 
         ExceptionResponse exceptionResponse = ExceptionResponse.builder()
                 .timeStamped(LocalDateTime.now())
-                .message("Malformed JSON Request")
+                .message("HttpRequestMethodNotSupported: Malformed JSON Request")
                 .debugMessage(ex.getMessage())
                 .build();
         return new ResponseEntity<>(exceptionResponse, status);
@@ -70,7 +81,7 @@ public class ShopSystemControllerAdvice extends ResponseEntityExceptionHandler {
 
         ExceptionResponse exceptionResponse = ExceptionResponse.builder()
                 .timeStamped(LocalDateTime.now())
-                .message("Method Argument Not Valid")
+                .message("MethodArgumentNotValid: Method Argument Not Valid")
                 .debugMessage(ex.getMessage())
                 .errors(errors)
                 .build();
