@@ -31,14 +31,17 @@ public class Delivery {
 
     private boolean hasDeliveryToPickupPoint;
 
+    @Builder.Default
     @Enumerated(EnumType.STRING)
     @ElementCollection(targetClass = PickupPointPartner.class, fetch = FetchType.LAZY)
     @JoinTable(name = "pickup_point_partners", joinColumns = @JoinColumn(name = "pickup_partner_id"))
     private Set<PickupPointPartner> pickupPointPartners = new HashSet<>();
 
+    @Builder.Default
     @OneToMany(mappedBy = "delivery", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<DeliveryZone> deliveryZones = new HashSet<>();
 
+    @Builder.Default
     @OneToMany(mappedBy = "delivery", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<DeliveryInterval> deliveryIntervals = new HashSet<>();
 
