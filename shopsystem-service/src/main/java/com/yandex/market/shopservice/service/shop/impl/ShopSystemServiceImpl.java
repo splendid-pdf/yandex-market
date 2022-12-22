@@ -49,7 +49,7 @@ public class ShopSystemServiceImpl implements ShopSystemService {
                         .orElseThrow(() -> {
                                     log.error("REQUEST REJECTED. Could not find a matching record.");
                                     throw new EntityNotFoundException("Organization by given externalId = \"" +
-                                            externalId + "\" was not found. Creation canceled!");
+                                            externalId + "\" was not found. Search canceled!");
                                 }
                         )
         );
