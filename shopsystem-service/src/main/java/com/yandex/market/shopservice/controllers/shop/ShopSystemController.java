@@ -26,28 +26,28 @@ public class ShopSystemController {
     public Page<ShopSystemResponsesDto> getAllShopSystems(@PageableDefault(size = 20) Pageable pageable) {
         log.info("Received a request to get paginated list of shop systems. page = " + pageable +
                 ", size = " + pageable.getPageSize());
-        return shopService.getAllShopSystems(pageable);
+        return shopService.getAll(pageable);
     }
 
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
     public void createNewShopSystem(@RequestBody @Valid ShopSystemRequestDto shopSystemDto) {
         log.info("Received a request to create new shop system: %s".formatted(shopSystemDto));
-        shopService.createShopSystem(shopSystemDto);
+        shopService.create(shopSystemDto);
     }
 
     @GetMapping("/{externalId}")
     @ResponseStatus(HttpStatus.OK)
     public ShopSystemResponsesDto getShopSystemByExternalId(@PathVariable("externalId") UUID externalId) {
         log.info("Received a request to get shop system by external id = %s".formatted(externalId));
-        return shopService.getShopSystemDtoByExternalId(externalId);
+        return shopService.getDtoByExternalId(externalId);
     }
 
     @DeleteMapping("/{externalId}")
     @ResponseStatus(HttpStatus.OK)
     public void deleteSystemShopByExternalId(@PathVariable("externalId") UUID externalId) {
         log.info("Received a request to delete a shop system by external id = %s".formatted(externalId));
-        shopService.deleteSystemShopByExternalId(externalId);
+        shopService.deleteByExternalId(externalId);
     }
 
     @PutMapping("/{externalId}")
@@ -55,6 +55,6 @@ public class ShopSystemController {
     public void updateSystemShopByExternalId(@PathVariable("externalId") UUID externalId,
                                              @RequestBody @Valid ShopSystemRequestDto shopSystemDtoRequest) {
         log.info("Received a request to update a shop system by external id = %s".formatted(externalId));
-        shopService.updateSystemShopByExternalId(externalId, shopSystemDtoRequest);
+        shopService.updateByExternalId(externalId, shopSystemDtoRequest);
     }
 }

@@ -14,7 +14,7 @@ import com.yandex.market.shopservice.model.shop.Support;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ShopSystemServiceMapper {
+public class ShopSystemMapper {
     public ShopSystem toShopSystemFromRequestDto(ShopSystemRequestDto dto) {
         return ShopSystem.builder()
                 .name(dto.getName())

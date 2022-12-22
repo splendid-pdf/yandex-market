@@ -6,5 +6,5 @@ import java.util.UUID;
 
 public interface BranchService {
 
-    UUID createBranch(BranchDto dto);
+    UUID create(BranchDto dto);
 }
