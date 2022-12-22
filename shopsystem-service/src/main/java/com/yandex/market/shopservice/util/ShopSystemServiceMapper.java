@@ -1,11 +1,13 @@
 package com.yandex.market.shopservice.util;
 
 import com.yandex.market.shopservice.dto.branch.BranchDto;
+import com.yandex.market.shopservice.dto.branch.ContactDto;
 import com.yandex.market.shopservice.dto.shop.LocationDto;
+import com.yandex.market.shopservice.dto.shop.ShopSystemRequestDto;
+import com.yandex.market.shopservice.dto.shop.ShopSystemResponsesDto;
 import com.yandex.market.shopservice.dto.shop.SupportDto;
-import com.yandex.market.shopservice.dto.shop.requests.ShopSystemRequestDto;
-import com.yandex.market.shopservice.dto.shop.responses.ShopSystemResponsesDto;
 import com.yandex.market.shopservice.model.branch.Branch;
+import com.yandex.market.shopservice.model.branch.Contact;
 import com.yandex.market.shopservice.model.shop.Location;
 import com.yandex.market.shopservice.model.shop.ShopSystem;
 import com.yandex.market.shopservice.model.shop.Support;
@@ -84,14 +86,23 @@ public class ShopSystemServiceMapper {
         );
     }
 
-    public Branch toBranchFromRequestDto(BranchDto dto) {
+    public Branch toBranchFromDto(BranchDto dto) {
         return Branch.builder()
+                .shopSystem(dto.getShopSystem())
                 .name(dto.getName())
                 .token(dto.getToken())
                 .ogrn(dto.getOgrn())
-                .shopSystem(dto.getShopSystem())
-                .location(dto.getLocation())
+                .location(toLocationFromDto(dto.getLocation()))
+                .contact(tocContactFromDto(dto.getContact()))
                 .delivery(dto.getDelivery())
+                .build();
+    }
+
+    public Contact tocContactFromDto(ContactDto dto) {
+        return Contact.builder()
+                .hotlinePhone(dto.hotlinePhone())
+                .servicePhone(dto.servicePhone())
+                .email(dto.email())
                 .build();
     }
 }

@@ -1,7 +1,7 @@
 package com.yandex.market.shopservice.service.shop;
 
-import com.yandex.market.shopservice.dto.shop.requests.ShopSystemRequestDto;
-import com.yandex.market.shopservice.dto.shop.responses.ShopSystemResponsesDto;
+import com.yandex.market.shopservice.dto.shop.ShopSystemRequestDto;
+import com.yandex.market.shopservice.dto.shop.ShopSystemResponsesDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

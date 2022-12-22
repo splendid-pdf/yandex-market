@@ -1,8 +1,7 @@
 package com.yandex.market.shopservice.dto.branch;
 
-import com.yandex.market.shopservice.model.branch.Contact;
+import com.yandex.market.shopservice.dto.shop.LocationDto;
 import com.yandex.market.shopservice.model.branch.Delivery;
-import com.yandex.market.shopservice.model.shop.Location;
 import com.yandex.market.shopservice.model.shop.ShopSystem;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
@@ -13,6 +12,9 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BranchDto {
+
+    private ShopSystem shopSystem;
+
     @NotBlank(message = "Field \"Name\" must not be empty")
     private String name;
 
@@ -21,11 +23,9 @@ public class BranchDto {
     @NotBlank(message = "Field \"OGRN\" must not be empty")
     private String ogrn;
 
-    private ShopSystem shopSystem;
+    private LocationDto location;
 
-    private Location location;
-
-    private Contact contact;
+    private ContactDto contact;
 
     private Delivery delivery;
 }

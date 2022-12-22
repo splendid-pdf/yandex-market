@@ -22,8 +22,9 @@ public class BranchServiceImpl implements BranchService {
     @Override
     @Transactional
     public void createBranch(BranchDto dto) {
-        Branch branch = mapper.toBranchFromRequestDto(dto);
+        Branch branch = mapper.toBranchFromDto(dto);
         branch.setExternalId(UUID.randomUUID());
+        // TODO нужно записать бренч в систем шоп
         repository.save(branch);
     }
 }

@@ -1,7 +1,7 @@
 package com.yandex.market.shopservice.service.shop.impl;
 
-import com.yandex.market.shopservice.dto.shop.requests.ShopSystemRequestDto;
-import com.yandex.market.shopservice.dto.shop.responses.ShopSystemResponsesDto;
+import com.yandex.market.shopservice.dto.shop.ShopSystemRequestDto;
+import com.yandex.market.shopservice.dto.shop.ShopSystemResponsesDto;
 import com.yandex.market.shopservice.model.shop.ShopSystem;
 import com.yandex.market.shopservice.repositories.ShopSystemRepository;
 import com.yandex.market.shopservice.service.shop.ShopSystemService;

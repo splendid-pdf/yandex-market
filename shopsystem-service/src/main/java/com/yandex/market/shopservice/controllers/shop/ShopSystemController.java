@@ -1,7 +1,7 @@
 package com.yandex.market.shopservice.controllers.shop;
 
-import com.yandex.market.shopservice.dto.shop.requests.ShopSystemRequestDto;
-import com.yandex.market.shopservice.dto.shop.responses.ShopSystemResponsesDto;
+import com.yandex.market.shopservice.dto.shop.ShopSystemRequestDto;
+import com.yandex.market.shopservice.dto.shop.ShopSystemResponsesDto;
 import com.yandex.market.shopservice.service.shop.ShopSystemService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
