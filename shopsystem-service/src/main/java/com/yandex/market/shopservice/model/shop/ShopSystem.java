@@ -36,9 +36,11 @@ public class ShopSystem {
     @Embedded
     private Location legalEntityAddress;
 
+    @Builder.Default
     @OneToMany(mappedBy = "shopSystem", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private Set<Branch> branches = new HashSet<>();
 
+    @Builder.Default
     @OneToMany(mappedBy = "shopSystem", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private Set<SpecialOffer> specialOffers = new HashSet<>();
 
