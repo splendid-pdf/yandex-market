@@ -27,7 +27,7 @@ public class BranchController {
     @PutMapping("/{externalId}")
     @ResponseStatus(HttpStatus.OK)
     public void updateBranchByExternalId(@PathVariable("externalId") UUID externalId, @RequestBody @Valid BranchDto dto) {
-        log.info("Received a request to update a shop system by external id = %s".formatted(externalId));
+        log.info("Received a request to update a branch by external id = %s".formatted(externalId));
         branchService.updateBranchByExternalId(externalId, dto);
     }
 }
