@@ -53,6 +53,16 @@ public class ShopSystemControllerAdvice extends ResponseEntityExceptionHandler {
         }
     }
 
+    @ExceptionHandler(RuntimeException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    private ExceptionResponse handleRuntimeException(RuntimeException ex) {
+        return ExceptionResponse.builder()
+                .timeStamped(LocalDateTime.now())
+                .message("RuntimeException")
+                .debugMessage(ex.getMessage())
+                .build();
+    }
+
     @Override
     protected ResponseEntity<Object> handleHttpRequestMethodNotSupported(
             HttpRequestMethodNotSupportedException ex,
