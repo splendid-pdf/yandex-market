@@ -7,7 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Map;
 
 @Data
 @Builder
@@ -21,5 +21,5 @@ public class ExceptionResponse {
     private int errorCode;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private List<String> errors;
+    private Map<String, String> errors;
 }
