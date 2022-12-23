@@ -9,6 +9,7 @@ public interface BranchService {
 
     UUID createBranch(BranchDto dto);
 
-    Branch getBranchByExternalId(UUID externalId);
+    BranchDto getBranchDtoByExternalId(UUID externalId);
+
     void updateBranchByExternalId(UUID externalId, BranchDto dto);
 }

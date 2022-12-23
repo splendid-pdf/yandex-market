@@ -32,7 +32,7 @@ public class BranchServiceImpl implements BranchService {
         return branch.getExternalId();
     }
 
-    public Branch getBranchByExternalId(UUID externalId) {
+    private Branch getBranchByExternalId(UUID externalId) {
         return repository.findByExternalId(externalId)
                 .orElseThrow(() -> {
                     throw new EntityNotFoundException("Branch by given externalId = \"" +
@@ -40,13 +40,13 @@ public class BranchServiceImpl implements BranchService {
                 });
     }
 
+    public BranchDto getBranchDtoByExternalId(UUID externalId) {
+        return mapper.toBranchDto(getBranchByExternalId(externalId));
+    }
+
     @Transactional
     public void updateBranchByExternalId(UUID externalId, BranchDto dto) {
         Branch branch = getBranchByExternalId(externalId);
-        updateBranch(branch, dto);
-    }
-
-    void updateBranch(Branch branch, BranchDto dto) {
         branch.setName(dto.getName());
         branch.setToken(dto.getToken());
         branch.setOgrn(dto.getOgrn());

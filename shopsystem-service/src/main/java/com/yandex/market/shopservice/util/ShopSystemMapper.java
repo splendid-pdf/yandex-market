@@ -93,4 +93,23 @@ public class ShopSystemMapper {
                 .email(dto.email())
                 .build();
     }
+
+    private ContactDto tocContactDto(Contact contact) {
+        return new ContactDto(
+                contact.getHotlinePhone(),
+                contact.getServicePhone(),
+                contact.getEmail()
+        );
+    }
+
+    public BranchDto toBranchDto(Branch branch) {
+        return BranchDto.builder()
+                .name(branch.getName())
+                .token(branch.getToken())
+                .ogrn(branch.getOgrn())
+                .location(toLocationDto(branch.getLocation()))
+                .contact(tocContactDto(branch.getContact()))
+                .delivery(branch.getDelivery())
+                .build();
+    }
 }
