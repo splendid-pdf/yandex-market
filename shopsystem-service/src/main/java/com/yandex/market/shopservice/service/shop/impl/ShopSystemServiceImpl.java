@@ -25,7 +25,7 @@ public class ShopSystemServiceImpl implements ShopSystemService {
     private final ShopSystemRepository repository;
     private final ShopSystemMapper mapper;
 
-    public Page<ShopSystemResponsesDto> getAll(Pageable pageable) {
+    public Page<ShopSystemResponsesDto> getAllShopSystems(Pageable pageable) {
         Page<ShopSystem> shopSystemPages = repository.findAll(pageable);
         return new PageImpl<>(
                 shopSystemPages.getContent()
@@ -37,26 +37,18 @@ public class ShopSystemServiceImpl implements ShopSystemService {
     }
 
     @Transactional
-    public UUID create(ShopSystemRequestDto dto) {
+    public UUID createShopSystem(ShopSystemRequestDto dto) {
         ShopSystem shopSystem = mapper.toShopSystemFromRequestDto(dto);
         shopSystem.setExternalId(UUID.randomUUID());
         repository.save(shopSystem);
         return shopSystem.getExternalId();
     }
 
-    public ShopSystemResponsesDto getDtoByExternalId(UUID externalId) {
-        return mapper.toShopSystemResponseDto(
-                repository.findByExternalId(externalId)
-                        .orElseThrow(() -> {
-                                    throw new EntityNotFoundException("Organization by given externalId = \"" +
-                                            externalId + "\" was not found. Search canceled!");
-                                }
-                        )
-        );
+    public ShopSystemResponsesDto getShopSystemDtoByExternalId(UUID externalId) {
+        return mapper.toShopSystemResponseDto(getShopSystemByExternalId(externalId));
     }
 
-    @Override
-    public ShopSystem getByExternalId(UUID externalId) {
+    public ShopSystem getShopSystemByExternalId(UUID externalId) {
         return repository.findByExternalId(externalId)
                 .orElseThrow(() -> {
                             throw new EntityNotFoundException("Organization by given externalId = \"" +
@@ -66,7 +58,7 @@ public class ShopSystemServiceImpl implements ShopSystemService {
     }
 
     @Transactional
-    public void deleteByExternalId(UUID externalId) {
+    public void deleteShopSystemByExternalId(UUID externalId) {
         ShopSystem shopSystem = repository
                 .findByExternalId(externalId)
                 .orElseThrow(() -> {
@@ -78,8 +70,8 @@ public class ShopSystemServiceImpl implements ShopSystemService {
     }
 
     @Transactional
-    public void updateByExternalId(UUID externalId, ShopSystemRequestDto dto) {
-        ShopSystem shopSystem = mapper.toShopSystemFromResponseDto(getDtoByExternalId(externalId));
+    public void updateShopSystemByExternalId(UUID externalId, ShopSystemRequestDto dto) {
+        ShopSystem shopSystem = getShopSystemByExternalId(externalId);
         shopSystem.setName(dto.getName());
         shopSystem.setToken(dto.getToken());
         shopSystem.setSupport(mapper.toSupportFromDto(dto.getSupport()));

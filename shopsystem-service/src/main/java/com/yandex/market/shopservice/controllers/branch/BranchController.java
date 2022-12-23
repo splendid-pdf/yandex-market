@@ -8,6 +8,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
+
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -17,8 +19,15 @@ public class BranchController {
 
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
-    public void createBranch(@RequestBody @Valid BranchDto branchDto) {
+    public UUID createBranch(@RequestBody @Valid BranchDto branchDto) {
         log.info("Received a request to create new branch for shop system: %s".formatted(branchDto));
-        branchService.create(branchDto);
+        return branchService.createBranch(branchDto);
+    }
+
+    @PutMapping("/{externalId}")
+    @ResponseStatus(HttpStatus.OK)
+    public void updateBranchByExternalId(@PathVariable("externalId") UUID externalId, @RequestBody @Valid BranchDto dto) {
+        log.info("Received a request to update a shop system by external id = %s".formatted(externalId));
+        branchService.updateBranchByExternalId(externalId, dto);
     }
 }
