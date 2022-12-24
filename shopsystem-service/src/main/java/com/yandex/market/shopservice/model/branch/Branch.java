@@ -46,6 +46,7 @@ public class Branch {
     private Delivery delivery;
 
     private boolean pickup;
+    private boolean isDisabled;
 
     //TODO features
 }

@@ -1,8 +1,8 @@
 package com.yandex.market.shopservice.util;
 
+import com.yandex.market.shopservice.dto.LocationDto;
 import com.yandex.market.shopservice.dto.branch.BranchDto;
 import com.yandex.market.shopservice.dto.branch.ContactDto;
-import com.yandex.market.shopservice.dto.LocationDto;
 import com.yandex.market.shopservice.dto.shop.ShopSystemRequestDto;
 import com.yandex.market.shopservice.dto.shop.ShopSystemResponsesDto;
 import com.yandex.market.shopservice.dto.shop.SupportDto;
@@ -26,18 +26,7 @@ public class ShopSystemMapper {
                 .logoUrl(dto.getLogoUrl())
                 .build();
     }
-    public ShopSystem toShopSystemFromResponseDto(ShopSystemResponsesDto dto) {
-        return ShopSystem.builder()
-                .name(dto.getName())
-                .token(dto.getToken())
-                .support(toSupportFromDto(dto.getSupport()))
-                .legalEntityAddress(toLocationFromDto(dto.getLegalEntityAddress()))
-                .specialOffers(dto.getSpecialOffers())
-                .branches(dto.getBranches())
-                .logoUrl(dto.getLogoUrl())
-                .rating(dto.getRating())
-                .build();
-    }
+
     public ShopSystemResponsesDto toShopSystemResponseDto(ShopSystem shopSystem) {
         return ShopSystemResponsesDto.builder()
                 .name(shopSystem.getName())
@@ -102,6 +91,25 @@ public class ShopSystemMapper {
                 .hotlinePhone(dto.hotlinePhone())
                 .servicePhone(dto.servicePhone())
                 .email(dto.email())
+                .build();
+    }
+
+    private ContactDto tocContactDto(Contact contact) {
+        return new ContactDto(
+                contact.getHotlinePhone(),
+                contact.getServicePhone(),
+                contact.getEmail()
+        );
+    }
+
+    public BranchDto toBranchDto(Branch branch) {
+        return BranchDto.builder()
+                .name(branch.getName())
+                .token(branch.getToken())
+                .ogrn(branch.getOgrn())
+                .location(toLocationDto(branch.getLocation()))
+                .contact(tocContactDto(branch.getContact()))
+                .delivery(branch.getDelivery())
                 .build();
     }
 }

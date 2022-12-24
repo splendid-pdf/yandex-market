@@ -9,15 +9,15 @@ import org.springframework.data.domain.Pageable;
 import java.util.UUID;
 
 public interface ShopSystemService {
-    Page<ShopSystemResponsesDto> getAll(Pageable pageable);
+    Page<ShopSystemResponsesDto> getAllShopSystems(Pageable pageable);
 
-    UUID create(ShopSystemRequestDto dto);
+    UUID createShopSystem(ShopSystemRequestDto dto);
 
-    ShopSystemResponsesDto getDtoByExternalId(UUID externalId);
+    ShopSystemResponsesDto getShopSystemDtoByExternalId(UUID externalId);
 
-    ShopSystem getByExternalId(UUID externalId);
+    ShopSystem getShopSystemByExternalId(UUID externalId);
 
-    void deleteByExternalId(UUID externalId);
+    void deleteShopSystemByExternalId(UUID externalId);
 
-    void updateByExternalId(UUID externalId, ShopSystemRequestDto dto);
+    void updateShopSystemByExternalId(UUID externalId, ShopSystemRequestDto dto);
 }
