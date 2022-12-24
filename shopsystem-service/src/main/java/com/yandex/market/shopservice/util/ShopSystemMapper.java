@@ -28,19 +28,6 @@ public class ShopSystemMapper {
                 .build();
     }
 
-    public ShopSystem toShopSystemFromResponseDto(ShopSystemResponsesDto dto) {
-        return ShopSystem.builder()
-                .name(dto.getName())
-                .token(dto.getToken())
-                .support(toSupportFromDto(dto.getSupport()))
-                .legalEntityAddress(toLocationFromDto(dto.getLegalEntityAddress()))
-                .specialOffers(dto.getSpecialOffers())
-                .branches(dto.getBranches())
-                .logoUrl(dto.getLogoUrl())
-                .rating(dto.getRating())
-                .build();
-    }
-
     public ShopSystemResponsesDto toShopSystemResponseDto(ShopSystem shopSystem) {
         return ShopSystemResponsesDto.builder()
                 .name(shopSystem.getName())
@@ -142,5 +129,23 @@ public class ShopSystemMapper {
                         .periodEnd(deliveryIntervalDto.periodEnd())
                         .build()));
         return deliveryIntervals;
+
+    private ContactDto tocContactDto(Contact contact) {
+        return new ContactDto(
+                contact.getHotlinePhone(),
+                contact.getServicePhone(),
+                contact.getEmail()
+        );
+    }
+
+    public BranchDto toBranchDto(Branch branch) {
+        return BranchDto.builder()
+                .name(branch.getName())
+                .token(branch.getToken())
+                .ogrn(branch.getOgrn())
+                .location(toLocationDto(branch.getLocation()))
+                .contact(tocContactDto(branch.getContact()))
+                .delivery(branch.getDelivery())
+                .build();
     }
 }
