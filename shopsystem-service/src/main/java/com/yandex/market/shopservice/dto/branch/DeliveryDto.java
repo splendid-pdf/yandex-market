@@ -1,14 +1,13 @@
 package com.yandex.market.shopservice.dto.branch;
 
-import com.yandex.market.shopservice.model.branch.Branch;
-import com.yandex.market.shopservice.model.branch.DeliveryInterval;
-import com.yandex.market.shopservice.model.branch.DeliveryZone;
 import com.yandex.market.shopservice.model.branch.PickupPointPartner;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -17,8 +16,8 @@ import java.util.Set;
 @AllArgsConstructor
 public class DeliveryDto {
 
-    @Valid
-    private Branch branch;
+    @NotNull(message = "\"UUID of Branch\" field must not be empty")
+    private UUID branch;
 
     private boolean hasDelivery;
 
@@ -26,15 +25,9 @@ public class DeliveryDto {
 
     private boolean hasDeliveryToPickupPoint;
 
-    @Valid
-    // @NotNull
     private Set<PickupPointPartner> pickupPointPartners = new HashSet<>();
 
-    @Valid
-    // @NotNull
-    private Set<DeliveryZone> deliveryZones = new HashSet<>();
+    private Set<@Valid DeliveryZoneDto> deliveryZones = new HashSet<>();
 
-    @Valid
-    // @NotNull
-    private Set<DeliveryInterval> deliveryIntervals = new HashSet<>();
+    private Set<@Valid DeliveryIntervalDto> deliveryIntervals = new HashSet<>();
 }

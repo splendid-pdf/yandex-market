@@ -25,8 +25,8 @@ public record LocationDto(
         @Size(max = 5, message = "\"House number\" field can not be more than 5 characters")
         String houseNumber,
 
-        @Positive(message = "\"Office number\" field can not be negative")
-        int officeNumber,
+        @Size(max = 5, message = "\"Office number\" field can not be more than 5 characters")
+        String officeNumber,
 
         @NotBlank(message = "\"Postcode\" field must not be empty")
         @Pattern(regexp = "^\\d{6}$", message = "Invalid \"Postcode\" entered")

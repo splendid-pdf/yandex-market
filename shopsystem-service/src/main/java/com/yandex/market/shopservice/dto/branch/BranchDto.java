@@ -34,14 +34,13 @@ public class BranchDto {
     private String ogrn;
 
     @Valid
-    // @NotNull
+    @NotNull(message = "\"Location of Branch\" field must not be empty")
     private LocationDto location;
 
     @Valid
-    // @NotNull
+    @NotNull(message = "\"Contact of Branch\" field must not be empty")
     private ContactDto contact;
 
-    @Valid
-    // @NotNull
-    private Delivery delivery;
+    @NotNull(message = "\"Delivery of Branch\" field must not be empty")
+    private DeliveryDto delivery;
 }

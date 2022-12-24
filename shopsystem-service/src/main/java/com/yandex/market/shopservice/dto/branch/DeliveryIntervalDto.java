@@ -1,7 +1,5 @@
 package com.yandex.market.shopservice.dto.branch;
 
-import com.yandex.market.shopservice.model.branch.Delivery;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -12,9 +10,8 @@ import java.time.LocalTime;
 
 @Builder
 public record DeliveryIntervalDto(
-        @Valid
-        // @NotNull
-        Delivery delivery,
+        @NotNull(message = "\"Delivery\" field must not be empty")
+        DeliveryDto delivery,
 
         @NotBlank(message = "\"Interval ID\" field must not be empty")
         String intervalId,

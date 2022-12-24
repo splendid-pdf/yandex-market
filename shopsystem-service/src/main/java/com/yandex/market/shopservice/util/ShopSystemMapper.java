@@ -1,17 +1,18 @@
 package com.yandex.market.shopservice.util;
 
-import com.yandex.market.shopservice.dto.branch.BranchDto;
-import com.yandex.market.shopservice.dto.branch.ContactDto;
 import com.yandex.market.shopservice.dto.LocationDto;
+import com.yandex.market.shopservice.dto.branch.*;
 import com.yandex.market.shopservice.dto.shop.ShopSystemRequestDto;
 import com.yandex.market.shopservice.dto.shop.ShopSystemResponsesDto;
 import com.yandex.market.shopservice.dto.shop.SupportDto;
-import com.yandex.market.shopservice.model.branch.Branch;
-import com.yandex.market.shopservice.model.branch.Contact;
-import com.yandex.market.shopservice.model.shop.Location;
+import com.yandex.market.shopservice.model.Location;
+import com.yandex.market.shopservice.model.branch.*;
 import com.yandex.market.shopservice.model.shop.ShopSystem;
 import com.yandex.market.shopservice.model.shop.Support;
 import org.springframework.stereotype.Component;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Component
 public class ShopSystemMapper {
@@ -26,6 +27,7 @@ public class ShopSystemMapper {
                 .logoUrl(dto.getLogoUrl())
                 .build();
     }
+
     public ShopSystem toShopSystemFromResponseDto(ShopSystemResponsesDto dto) {
         return ShopSystem.builder()
                 .name(dto.getName())
@@ -38,6 +40,7 @@ public class ShopSystemMapper {
                 .rating(dto.getRating())
                 .build();
     }
+
     public ShopSystemResponsesDto toShopSystemResponseDto(ShopSystem shopSystem) {
         return ShopSystemResponsesDto.builder()
                 .name(shopSystem.getName())
@@ -93,7 +96,7 @@ public class ShopSystemMapper {
                 .ogrn(dto.getOgrn())
                 .location(toLocationFromDto(dto.getLocation()))
                 .contact(tocContactFromDto(dto.getContact()))
-                .delivery(dto.getDelivery())
+                .delivery(toDeliveryFromDto(dto.getDelivery()))
                 .build();
     }
 
@@ -103,5 +106,41 @@ public class ShopSystemMapper {
                 .servicePhone(dto.servicePhone())
                 .email(dto.email())
                 .build();
+    }
+
+    public Delivery toDeliveryFromDto(DeliveryDto dto) {
+        return Delivery.builder()
+                .hasDelivery(dto.isHasDelivery())
+                .hasExpressDelivery(dto.isHasExpressDelivery())
+                .hasDeliveryToPickupPoint(dto.isHasDeliveryToPickupPoint())
+                .pickupPointPartners(dto.getPickupPointPartners())
+                .deliveryZones(toDeliveryZoneFromDto(dto.getDeliveryZones()))
+                .deliveryIntervals(toDeliveryIntervalFromDto(dto.getDeliveryIntervals()))
+                .build();
+    }
+
+    public Set<DeliveryZone> toDeliveryZoneFromDto(Set<DeliveryZoneDto> dto) {
+        Set<DeliveryZone> deliveryZones = new HashSet<>();
+        dto.forEach(deliveryZoneDto -> deliveryZones.add(
+                DeliveryZone.builder()
+                        .zoneId(deliveryZoneDto.zoneId())
+                        .delivery(toDeliveryFromDto(deliveryZoneDto.delivery()))
+                        .radiusInMeters(deliveryZoneDto.radiusInMeters())
+                        .standardDeliveryPrice(deliveryZoneDto.standardDeliveryPrice())
+                        .expressDeliveryPrice(deliveryZoneDto.expressDeliveryPrice())
+                        .build()));
+        return deliveryZones;
+    }
+
+    public Set<DeliveryInterval> toDeliveryIntervalFromDto(Set<DeliveryIntervalDto> dto) {
+        Set<DeliveryInterval> deliveryIntervals = new HashSet<>();
+        dto.forEach(deliveryIntervalDto -> deliveryIntervals.add(
+                DeliveryInterval.builder()
+                        .delivery(toDeliveryFromDto(deliveryIntervalDto.delivery()))
+                        .intervalId(deliveryIntervalDto.intervalId())
+                        .periodStart(deliveryIntervalDto.periodStart())
+                        .periodEnd(deliveryIntervalDto.periodEnd())
+                        .build()));
+        return deliveryIntervals;
     }
 }
