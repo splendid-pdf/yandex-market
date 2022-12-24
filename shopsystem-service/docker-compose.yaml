@@ -4,9 +4,9 @@ services:
     container_name: postgres_shops
     image: postgres:15.1-alpine
     environment:
-      POSTGRES_DB: ${db_name}
-      POSTGRES_USER: ${postgres_user}
-      POSTGRES_PASSWORD: ${postgres_password}
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       PGDATA: /data/postgres
     volumes:
       - pgdata:/var/lib/postgresql/data
@@ -19,8 +19,8 @@ services:
     container_name: pgadmin_ui
     image: dpage/pgadmin4:6.17
     environment:
-      PGADMIN_DEFAULT_EMAIL: ${pgadmin_user}
-      PGADMIN_DEFAULT_PASSWORD: ${pgadmin_password}
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_USER}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD}
     volumes:
       - ./pgadmin:/var/lib/pgadmin
     ports:
