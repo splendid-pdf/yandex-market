@@ -11,7 +11,7 @@ create table shop_systems
     house_number  varchar(5),
     latitude      double precision,
     longitude     double precision,
-    office_number integer,
+    office_number varchar(5),
     postcode      varchar(10),
     region        varchar(128),
     street        varchar(128),
