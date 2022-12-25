@@ -40,8 +40,6 @@ public class Branch {
     @Embedded
     private Contact contact;
 
-    //TODO openingTimes
-
     @OneToOne(mappedBy = "branch", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private Delivery delivery;
 
