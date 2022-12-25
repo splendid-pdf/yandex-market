@@ -5,6 +5,7 @@ import com.yandex.market.shopservice.service.branch.BranchService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,7 +13,7 @@ import java.util.UUID;
 
 @Slf4j
 @RestController
-@RequiredArgsConstructor
+@RequiredArgsConstructor(onConstructor_ = {@Autowired})
 @RequestMapping("${spring.application.url.branch}")
 public class BranchController {
     private final BranchService branchService;
