@@ -2,7 +2,9 @@ package com.yandex.market.shopservice.util;
 
 import com.yandex.market.shopservice.dto.LocationDto;
 import com.yandex.market.shopservice.dto.branch.BranchDto;
+import com.yandex.market.shopservice.dto.branch.BranchResponseDto;
 import com.yandex.market.shopservice.dto.branch.ContactDto;
+import com.yandex.market.shopservice.dto.shop.ShopSystemBranchInfoDto;
 import com.yandex.market.shopservice.dto.shop.ShopSystemRequestDto;
 import com.yandex.market.shopservice.dto.shop.ShopSystemResponsesDto;
 import com.yandex.market.shopservice.dto.shop.SupportDto;
@@ -106,6 +108,22 @@ public class ShopSystemMapper {
         return BranchDto.builder()
                 .name(branch.getName())
                 .token(branch.getToken())
+                .ogrn(branch.getOgrn())
+                .location(toLocationDto(branch.getLocation()))
+                .contact(tocContactDto(branch.getContact()))
+                .delivery(branch.getDelivery())
+                .build();
+    }
+
+
+
+    public BranchResponseDto toBranchDtoResponse(Branch branch, ShopSystemBranchInfoDto shopSystem){
+        return BranchResponseDto.builder()
+                .shopSystemExternalId(shopSystem.getShopSystemExternalId())
+                .branchExternalId(branch.getExternalId())
+                .companyName(shopSystem.getCompanyName())
+                .branchName(branch.getName())
+                .companyLogoUrl(shopSystem.getCompanyLogoUrl())
                 .ogrn(branch.getOgrn())
                 .location(toLocationDto(branch.getLocation()))
                 .contact(tocContactDto(branch.getContact()))

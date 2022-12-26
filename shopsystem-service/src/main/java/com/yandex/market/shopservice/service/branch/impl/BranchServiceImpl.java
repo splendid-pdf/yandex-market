@@ -1,6 +1,8 @@
 package com.yandex.market.shopservice.service.branch.impl;
 
 import com.yandex.market.shopservice.dto.branch.BranchDto;
+import com.yandex.market.shopservice.dto.branch.BranchResponseDto;
+import com.yandex.market.shopservice.dto.shop.ShopSystemBranchInfoDto;
 import com.yandex.market.shopservice.model.branch.Branch;
 import com.yandex.market.shopservice.repositories.BranchRepository;
 import com.yandex.market.shopservice.service.branch.BranchService;
@@ -12,9 +14,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -59,13 +61,16 @@ public class BranchServiceImpl implements BranchService {
         branch.setDelivery(dto.getDelivery());
     }
 
-    public Page<BranchDto> getAllBranchesByShopSystem(UUID externalId) {
-        Page<Branch> branches = new PageImpl<>(repository.findAllByShopSystem(externalId));
+    public Page<BranchResponseDto> getBranchesByShopSystem(UUID externalId, Pageable pageable) {
+        ShopSystemBranchInfoDto shopSystem = shopSystemService.getShopSystemInfoForBranch(externalId);
+        Page<Branch> branches = repository.findAllByShopSystem(externalId, pageable);
         System.out.println(branches);
         return new PageImpl<>(
                 branches.getContent().stream()
-                        .map(mapper::toBranchDto)
-                        .collect(Collectors.toList())
+                        .map(br -> mapper.toBranchDtoResponse(br, shopSystem))
+                        .collect(Collectors.toList()),
+                pageable,
+                branches.getTotalElements()
         );
     }
 }

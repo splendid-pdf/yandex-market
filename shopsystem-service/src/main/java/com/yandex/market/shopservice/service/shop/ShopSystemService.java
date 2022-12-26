@@ -1,5 +1,6 @@
 package com.yandex.market.shopservice.service.shop;
 
+import com.yandex.market.shopservice.dto.shop.ShopSystemBranchInfoDto;
 import com.yandex.market.shopservice.dto.shop.ShopSystemRequestDto;
 import com.yandex.market.shopservice.dto.shop.ShopSystemResponsesDto;
 import com.yandex.market.shopservice.model.shop.ShopSystem;
@@ -20,4 +21,6 @@ public interface ShopSystemService {
     void deleteShopSystemByExternalId(UUID externalId);
 
     void updateShopSystemByExternalId(UUID externalId, ShopSystemRequestDto dto);
+
+    ShopSystemBranchInfoDto getShopSystemInfoForBranch(UUID externalId);
 }

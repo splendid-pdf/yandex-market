@@ -1,7 +1,7 @@
 package com.yandex.market.shopservice.controllers.branch;
 
 import com.yandex.market.shopservice.dto.branch.BranchDto;
-import com.yandex.market.shopservice.dto.shop.ShopSystemResponsesDto;
+import com.yandex.market.shopservice.dto.branch.BranchResponseDto;
 import com.yandex.market.shopservice.service.branch.BranchService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -36,10 +36,11 @@ public class BranchController {
     }
 
 
-    @GetMapping("/by-shop-system/{externalId}")
+    @GetMapping("/search/{externalId}")
     @ResponseStatus(HttpStatus.OK)
-    public Page<BranchDto> getAllBranchesByShopSystem(@PathVariable("externalId") UUID externalId) {
+    public Page<BranchResponseDto> getAllBranchesByShopSystem(@PageableDefault(size = 20) Pageable pageable,
+                                                              @PathVariable("externalId") UUID externalId){
         log.info("Received a request to get paginated list of branches by shop systems.");
-        return branchService.getAllBranchesByShopSystem(externalId);
+        return branchService.getBranchesByShopSystem(externalId, pageable);
     }
 }

@@ -1,5 +1,6 @@
 package com.yandex.market.shopservice.service.shop.impl;
 
+import com.yandex.market.shopservice.dto.shop.ShopSystemBranchInfoDto;
 import com.yandex.market.shopservice.dto.shop.ShopSystemRequestDto;
 import com.yandex.market.shopservice.dto.shop.ShopSystemResponsesDto;
 import com.yandex.market.shopservice.model.shop.ShopSystem;
@@ -46,6 +47,15 @@ public class ShopSystemServiceImpl implements ShopSystemService {
 
     public ShopSystemResponsesDto getShopSystemDtoByExternalId(UUID externalId) {
         return mapper.toShopSystemResponseDto(getShopSystemByExternalId(externalId));
+    }
+
+    public ShopSystemBranchInfoDto getShopSystemInfoForBranch(UUID externalId){
+        ShopSystem shopSystem = getShopSystemByExternalId(externalId);
+        return ShopSystemBranchInfoDto.builder()
+                .shopSystemExternalId(shopSystem.getExternalId())
+                .companyName(shopSystem.getName())
+                .companyLogoUrl(shopSystem.getLogoUrl())
+                .build();
     }
 
     public ShopSystem getShopSystemByExternalId(UUID externalId) {
