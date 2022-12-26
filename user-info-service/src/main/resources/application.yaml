@@ -1,7 +1,7 @@
+app:
+  users-api:
+    path: /public/api/v1/users
 spring:
-  application:
-    name: user_info
-    url: public/api/v1/users
   jpa:
     show-sql: true
     hibernate:

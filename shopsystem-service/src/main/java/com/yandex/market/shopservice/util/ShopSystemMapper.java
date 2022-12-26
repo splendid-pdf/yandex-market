@@ -1,19 +1,22 @@
 package com.yandex.market.shopservice.util;
 
 import com.yandex.market.shopservice.dto.LocationDto;
-import com.yandex.market.shopservice.dto.ShopSystemDto;
-import com.yandex.market.shopservice.dto.SupportDto;
-import com.yandex.market.shopservice.model.shop.Location;
+import com.yandex.market.shopservice.dto.branch.*;
+import com.yandex.market.shopservice.dto.shop.ShopSystemRequestDto;
+import com.yandex.market.shopservice.dto.shop.ShopSystemResponsesDto;
+import com.yandex.market.shopservice.dto.shop.SupportDto;
+import com.yandex.market.shopservice.model.Location;
+import com.yandex.market.shopservice.model.branch.*;
 import com.yandex.market.shopservice.model.shop.ShopSystem;
 import com.yandex.market.shopservice.model.shop.Support;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.HashSet;
+import java.util.Set;
 
 @Component
 public class ShopSystemMapper {
-    public ShopSystem toShopSystemFromDto(ShopSystemDto dto) {
+    public ShopSystem toShopSystemFromRequestDto(ShopSystemRequestDto dto) {
         return ShopSystem.builder()
                 .name(dto.getName())
                 .token(dto.getToken())
@@ -22,12 +25,11 @@ public class ShopSystemMapper {
                 .specialOffers(dto.getSpecialOffers())
                 .branches(dto.getBranches())
                 .logoUrl(dto.getLogoUrl())
-                .rating(dto.getRating())
                 .build();
     }
 
-    public ShopSystemDto toShopSystemDto(ShopSystem shopSystem) {
-        return ShopSystemDto.builder()
+    public ShopSystemResponsesDto toShopSystemResponseDto(ShopSystem shopSystem) {
+        return ShopSystemResponsesDto.builder()
                 .name(shopSystem.getName())
                 .token(shopSystem.getToken())
                 .support(toSupportDto(shopSystem.getSupport()))
@@ -74,9 +76,113 @@ public class ShopSystemMapper {
         );
     }
 
-    public List<ShopSystemDto> toShopSystemDtoPages(List<ShopSystem> content) {
-        return content.stream()
-                .map(this::toShopSystemDto)
-                .collect(Collectors.toList());
+    public Branch toBranchFromDto(BranchDto dto) {
+        return Branch.builder()
+                .name(dto.getName())
+                .token(dto.getToken())
+                .ogrn(dto.getOgrn())
+                .location(toLocationFromDto(dto.getLocation()))
+                .contact(tocContactFromDto(dto.getContact()))
+                .delivery(toDeliveryFromDto(dto.getDelivery()))
+                .build();
+    }
+
+    public Contact tocContactFromDto(ContactDto dto) {
+        return Contact.builder()
+                .hotlinePhone(dto.hotlinePhone())
+                .servicePhone(dto.servicePhone())
+                .email(dto.email())
+                .build();
+    }
+
+    public Delivery toDeliveryFromDto(DeliveryDto dto) {
+        return Delivery.builder()
+                .hasDelivery(dto.isHasDelivery())
+                .hasExpressDelivery(dto.isHasExpressDelivery())
+                .hasDeliveryToPickupPoint(dto.isHasDeliveryToPickupPoint())
+                .pickupPointPartners(dto.getPickupPointPartners())
+                .deliveryZones(toDeliveryZoneFromDto(dto.getDeliveryZones()))
+                .deliveryIntervals(toDeliveryIntervalFromDto(dto.getDeliveryIntervals()))
+                .build();
+    }
+
+    public Set<DeliveryZone> toDeliveryZoneFromDto(Set<DeliveryZoneDto> dto) {
+        Set<DeliveryZone> deliveryZones = new HashSet<>();
+        dto.forEach(deliveryZoneDto -> deliveryZones.add(
+                DeliveryZone.builder()
+                        .zoneId(deliveryZoneDto.zoneId())
+                        .delivery(toDeliveryFromDto(deliveryZoneDto.delivery()))
+                        .radiusInMeters(deliveryZoneDto.radiusInMeters())
+                        .standardDeliveryPrice(deliveryZoneDto.standardDeliveryPrice())
+                        .expressDeliveryPrice(deliveryZoneDto.expressDeliveryPrice())
+                        .build()));
+        return deliveryZones;
+    }
+
+    public Set<DeliveryInterval> toDeliveryIntervalFromDto(Set<DeliveryIntervalDto> dto) {
+        Set<DeliveryInterval> deliveryIntervals = new HashSet<>();
+        dto.forEach(deliveryIntervalDto -> deliveryIntervals.add(
+                DeliveryInterval.builder()
+                        .delivery(toDeliveryFromDto(deliveryIntervalDto.delivery()))
+                        .intervalId(deliveryIntervalDto.intervalId())
+                        .periodStart(deliveryIntervalDto.periodStart())
+                        .periodEnd(deliveryIntervalDto.periodEnd())
+                        .build()));
+        return deliveryIntervals;
+    }
+
+    public ContactDto toContactDto(Contact contact) {
+        return new ContactDto(
+                contact.getHotlinePhone(),
+                contact.getServicePhone(),
+                contact.getEmail()
+        );
+    }
+
+    public BranchDto toBranchDto(Branch branch) {
+        return BranchDto.builder()
+                .name(branch.getName())
+                .token(branch.getToken())
+                .ogrn(branch.getOgrn())
+                .location(toLocationDto(branch.getLocation()))
+                .contact(toContactDto(branch.getContact()))
+                .delivery(toDeliveryDto(branch.getDelivery()))
+                .build();
+    }
+
+    public DeliveryDto toDeliveryDto(Delivery delivery) {
+        return DeliveryDto.builder()
+                .branch(delivery.getBranch().getExternalId())
+                .hasDelivery(delivery.isHasDelivery())
+                .hasExpressDelivery(delivery.isHasExpressDelivery())
+                .hasDeliveryToPickupPoint(delivery.isHasDeliveryToPickupPoint())
+                .pickupPointPartners(delivery.getPickupPointPartners())
+                .deliveryZones(toDeliveryZoneDto(delivery.getDeliveryZones()))
+                .deliveryIntervals(toDeliveryIntervalDto(delivery.getDeliveryIntervals()))
+                .build();
+    }
+
+    public Set<DeliveryZoneDto> toDeliveryZoneDto(Set<DeliveryZone> deliveryZones) {
+        Set<DeliveryZoneDto> deliveryZonesDto = new HashSet<>();
+        deliveryZones.forEach(deliveryZone -> deliveryZonesDto.add(
+                new DeliveryZoneDto(
+                        deliveryZone.getZoneId(),
+                        toDeliveryDto(deliveryZone.getDelivery()),
+                        deliveryZone.getRadiusInMeters(),
+                        deliveryZone.getStandardDeliveryPrice(),
+                        deliveryZone.getExpressDeliveryPrice())));
+        return deliveryZonesDto;
+    }
+
+    public Set<DeliveryIntervalDto> toDeliveryIntervalDto(Set<DeliveryInterval> deliveryIntervals) {
+        Set<DeliveryIntervalDto> deliveryIntervalsDto = new HashSet<>();
+        deliveryIntervals.forEach(deliveryInterval -> deliveryIntervalsDto.add(
+                new DeliveryIntervalDto(
+                        toDeliveryDto(deliveryInterval.getDelivery()),
+                        deliveryInterval.getIntervalId(),
+                        deliveryInterval.getPeriodStart(),
+                        deliveryInterval.getPeriodEnd()
+                        )));
+        return deliveryIntervalsDto;
     }
 }
