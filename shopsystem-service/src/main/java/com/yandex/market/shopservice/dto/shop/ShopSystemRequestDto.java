@@ -8,7 +8,6 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.*;
 
-import java.util.HashSet;
 import java.util.Set;
 
 @Getter
@@ -32,9 +31,9 @@ public class ShopSystemRequestDto {
     @NotNull(message = "\"Location of Shop\" field must not be empty")
     private LocationDto legalEntityAddress;
 
-    private Set<@Valid SpecialOfferDto> specialOffers = new HashSet<>();
+    private Set<@Valid SpecialOfferDto> specialOffers;
 
-    private Set<@Valid BranchDto> branches = new HashSet<>();
+    private Set<@Valid BranchDto> branches;
 
     @Pattern(regexp = "^(https?:\\/\\/)?([\\w-]{1,32}\\.[\\w-]{1,32})[^\\s@]*$",
             message = "Invalid \"Logo URL\" entered")
