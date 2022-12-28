@@ -1,4 +1,4 @@
-package com.market.userinfoservice.response;
+package com.yandex.market.userinfoservice.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

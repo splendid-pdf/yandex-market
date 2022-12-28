@@ -1,6 +1,6 @@
-package com.market.userinfoservice.controller;
+package com.yandex.market.userinfoservice.controller;
 
-import com.market.userinfoservice.response.ExceptionResponse;
+import com.yandex.market.userinfoservice.response.ExceptionResponse;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @Slf4j
 @RestControllerAdvice
-public class UserInfoControllerAdvice {
+public class UserControllerAdvice {
 
     @ExceptionHandler(EntityNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
