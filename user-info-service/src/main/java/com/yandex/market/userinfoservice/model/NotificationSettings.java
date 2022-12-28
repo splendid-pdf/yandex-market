@@ -5,12 +5,12 @@ import lombok.*;
 
 @Setter
 @Getter
+@Builder
 @Embeddable
 @NoArgsConstructor
 @AllArgsConstructor
 public class NotificationSettings {
-    private String emailToSend;
-    private boolean isAllowedToStoreResponseToMyReviews;
+    private boolean isAllowedToReceiveOnAddress;
     private boolean isAllowedToSendDiscountsAndPromotionsMailingLists;
     private boolean isAllowedToSendPopularArticles;
 }
