@@ -300,6 +300,10 @@ components:
         - password
       type: object
       properties:
+        externalId:
+          type: string
+          format: uuid
+          example: '8a8ecdcc-6a9b-4c5a-8a71-3f7a377ae4cd'
         firstName:
           type: string
           example: John

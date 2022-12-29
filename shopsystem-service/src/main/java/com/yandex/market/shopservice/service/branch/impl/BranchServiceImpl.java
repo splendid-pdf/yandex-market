@@ -57,7 +57,7 @@ public class BranchServiceImpl implements BranchService {
         branch.setOgrn(dto.getOgrn());
         branch.setLocation(mapper.toLocationFromDto(dto.getLocation()));
         branch.setContact(mapper.tocContactFromDto(dto.getContact()));
-        branch.setDelivery(dto.getDelivery());
+        branch.setDelivery(mapper.toDeliveryFromDto(dto.getDelivery()));
     }
 
     public Page<BranchResponseDto> getBranchesByShopSystem(UUID externalId, Pageable pageable) {

@@ -2,7 +2,6 @@ package com.yandex.market.shopservice.controllers;
 
 import com.yandex.market.shopservice.service.ExceptionResponse;
 import jakarta.persistence.EntityNotFoundException;
-import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -17,8 +16,8 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import java.sql.SQLException;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestControllerAdvice
 public class ShopSystemControllerAdvice extends ResponseEntityExceptionHandler {
@@ -53,6 +52,16 @@ public class ShopSystemControllerAdvice extends ResponseEntityExceptionHandler {
         }
     }
 
+    @ExceptionHandler(RuntimeException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    private ExceptionResponse handleRuntimeException(RuntimeException ex) {
+        return ExceptionResponse.builder()
+                .timeStamped(LocalDateTime.now())
+                .message("RuntimeException")
+                .debugMessage(ex.getMessage())
+                .build();
+    }
+
     @Override
     protected ResponseEntity<Object> handleHttpRequestMethodNotSupported(
             HttpRequestMethodNotSupportedException ex,
@@ -71,11 +80,11 @@ public class ShopSystemControllerAdvice extends ResponseEntityExceptionHandler {
             MethodArgumentNotValidException ex,
             HttpHeaders headers, HttpStatusCode status, WebRequest request) {
 
-        List<String> errors = ex.getBindingResult()
+        Map<String, String> errors = new HashMap<>();
+        ex.getBindingResult()
                 .getFieldErrors()
-                .stream()
-                .map(DefaultMessageSourceResolvable::getDefaultMessage)
-                .collect(Collectors.toList());
+                .forEach(error ->
+                        errors.put(error.getField(), error.getDefaultMessage()));
 
         ExceptionResponse exceptionResponse = ExceptionResponse.builder()
                 .timeStamped(LocalDateTime.now())
