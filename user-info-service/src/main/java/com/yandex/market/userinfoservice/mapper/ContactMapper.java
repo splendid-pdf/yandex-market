@@ -6,7 +6,7 @@ import org.openapitools.api.model.ContactDto;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ContactMapper implements Mapper <ContactDto, Contact> {
+public class ContactMapper implements Mapper<ContactDto, Contact> {
     @Override
     public Contact map(ContactDto contactDto) {
         return Contact.builder()

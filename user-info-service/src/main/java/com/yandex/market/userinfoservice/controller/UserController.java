@@ -22,22 +22,26 @@ public class UserController implements UsersApi {
 
     @Override
     public ResponseEntity<UUID> createUser(UserRequestDto userRequestDto) {
+        log.info("Received request to create a user: {}", userRequestDto);
         return ResponseEntity.ok(userService.create(userRequestDto));
     }
 
     @Override
     public ResponseEntity<UserResponseDto> deleteUser(UUID externalId) {
+        log.info("Received request to delete a user: {}", externalId);
         return ResponseEntity.ok(userService.deleteUserByExternalId(externalId));
     }
 
     @Override
     public ResponseEntity<UserResponseDto> getByExternalId(UUID externalId) {
+        log.info("Received request to get a user: {}", externalId);
         return ResponseEntity.ok(userService.findUserByExternalId(externalId));
     }
 
     @Override
     public ResponseEntity<UserResponseDto> getUserByEmailOrPhone(String emailOrPhone) {
-        return UsersApi.super.getUserByEmailOrPhone(emailOrPhone);
+        log.info("Received request to get a user: {}", emailOrPhone);
+        return ResponseEntity.ok(userService.getByEmailOrPhone(emailOrPhone));
     }
 
     @Override

@@ -1,7 +1,6 @@
-app:
-  users-api:
-    path: /public/api/v1/users
 spring:
+  flyway:
+    baseline-on-migrate: false
   jpa:
     show-sql: true
     hibernate:

@@ -29,6 +29,7 @@ public class UserMapper implements BiMapper<UserResponseDto, UserRequestDto, Use
                 .lastName(userRequestDto.getLastName())
                 .phone(userRequestDto.getPhone())
                 .email(userRequestDto.getEmail())
+                .login(trimEmailForLogin(userRequestDto))
                 .password(userRequestDto.getPassword())
                 .birthday(userRequestDto.getBirthday())
                 .sex(Sex.valueOf(userRequestDto.getSex().name()))
@@ -82,5 +83,7 @@ public class UserMapper implements BiMapper<UserResponseDto, UserRequestDto, Use
                 .build();
     }
 
-
+    private String trimEmailForLogin(UserRequestDto userRequestDto) {
+        return userRequestDto.getEmail().replaceAll("@[a-zA-Z0-9.-]+$", "");
+    }
 }
