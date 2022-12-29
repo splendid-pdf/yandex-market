@@ -1,7 +1,6 @@
 package com.yandex.market.shopservice.dto.branch;
 
 import com.yandex.market.shopservice.dto.LocationDto;
-import com.yandex.market.shopservice.model.branch.Delivery;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
