@@ -249,9 +249,6 @@ components:
           default: true
           example: true
     UserRequestDto:
-      required:
-        - email
-        - password
       type: object
       properties:
         firstName:

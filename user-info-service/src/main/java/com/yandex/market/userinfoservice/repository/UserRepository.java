@@ -19,11 +19,13 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByExternalId(@Param("externalId") UUID externalId);
 
     @Modifying
-    @Query("UPDATE User u SET isDeleted=true WHERE u.externalId=:externalId AND u.isDeleted=false")
+    @Query("UPDATE User u SET isDeleted = true WHERE u.externalId=:externalId AND u.isDeleted=false")
     void deleteUserByExternalId(@Param("externalId") UUID externalId);
 
     @Query("FROM User u WHERE u.email=:value OR u.phone=:value AND u.isDeleted=false")
     Optional<User> findUserByEmailOrPhone(String value);
+
+
 
 
 }

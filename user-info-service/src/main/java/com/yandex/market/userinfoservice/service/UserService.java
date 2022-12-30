@@ -3,7 +3,8 @@ package com.yandex.market.userinfoservice.service;
 import com.yandex.market.userinfoservice.mapper.UserMapper;
 import com.yandex.market.userinfoservice.model.User;
 import com.yandex.market.userinfoservice.repository.UserRepository;
-import com.yandex.market.userinfoservice.validate.Validator;
+import com.yandex.market.userinfoservice.validator.UserDtoValidator;
+import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,21 +22,19 @@ import java.util.stream.Stream;
 @RequiredArgsConstructor
 public class UserService {
 
-    private static final String USER_NOT_FOUND_MESSAGE = "User wasn't found by id =";
-
-    private static final String USER_NOT_FOUND_MESSAGE_EMAIL_OR_PHONE = "User wasn't found by this value =";
-
     public static final String USER_WITH_THE_SAME_EMAIL_IS_EXISTS_MESSAGE =
             "User with similar email = %s is already exists";
+    private static final String USER_NOT_FOUND_MESSAGE = "User wasn't found by id =";
+    private static final String USER_NOT_FOUND_MESSAGE_EMAIL_OR_PHONE = "User wasn't found by this value =";
     private final UserRepository userRepository;
     private final UserMapper userMapper;
 
-    private final Validator validator;
+    private final UserDtoValidator userDtoValidator;
 
     @Transactional
     public UUID create(UserRequestDto userRequestDto) {
-        validator.validateDto(userRequestDto);
-        //todo Валидация
+        userDtoValidator.validateDto(userRequestDto);
+
         if (userRepository.existsByEmail(userRequestDto.getEmail())) {
             throw new IllegalArgumentException(USER_WITH_THE_SAME_EMAIL_IS_EXISTS_MESSAGE.formatted(userRequestDto.getEmail()));
         }
