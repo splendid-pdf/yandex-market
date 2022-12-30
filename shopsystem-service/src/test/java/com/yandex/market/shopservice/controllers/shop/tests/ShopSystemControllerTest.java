@@ -1,13 +1,10 @@
 package com.yandex.market.shopservice.controllers.shop.tests;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.cliftonlabs.json_simple.JsonObject;
 import com.github.cliftonlabs.json_simple.Jsoner;
 import com.yandex.market.shopservice.controllers.shop.ShopSystemController;
-import com.yandex.market.shopservice.dto.shop.ShopSystemResponsesDto;
 import org.junit.Before;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,11 +13,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.io.Reader;
-import java.io.UnsupportedEncodingException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
@@ -49,15 +44,6 @@ class ShopSystemControllerTest {
     public void setup() {
         this.mockMvc = MockMvcBuilders.standaloneSetup(ShopSystemController.class).build();
     }
-
-
-    private ShopSystemResponsesDto convertJsonParserShopSystemResponsesDto(MvcResult mvcResult)
-            throws UnsupportedEncodingException, JsonProcessingException {
-        String jsonResponse = mvcResult.getResponse().getContentAsString();
-        System.out.println("jsonResponse: " + jsonResponse);
-        return objectMapper.readValue(jsonResponse, ShopSystemResponsesDto.class);
-    }
-
 
     @Test
     void createNewShopSystem_correctSuccess() throws Exception {
@@ -100,7 +86,7 @@ class ShopSystemControllerTest {
     @Test
     void createNewShopSystem_incorrectFailed() throws Exception {
         Reader reader = Files.newBufferedReader(
-                Paths.get(ENTRY_PATH + "shop_system_empty_data.json"));
+                Paths.get(ENTRY_PATH + "shop_system_incorrect_surrort.json"));
         JsonObject parser = (JsonObject) Jsoner.deserialize(reader);
 
         String jsonRequest = objectMapper.writeValueAsString(parser);

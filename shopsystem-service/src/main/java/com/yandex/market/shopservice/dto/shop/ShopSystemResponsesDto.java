@@ -1,5 +1,6 @@
 package com.yandex.market.shopservice.dto.shop;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.yandex.market.shopservice.dto.LocationDto;
 import com.yandex.market.shopservice.model.branch.Branch;
 import com.yandex.market.shopservice.model.shop.SpecialOffer;
@@ -22,7 +23,10 @@ public class ShopSystemResponsesDto {
 
     private LocationDto legalEntityAddress;
 
+    @JsonIgnoreProperties(value = {"shopSystem"})
     private Set<SpecialOffer> specialOffers = new HashSet<>();
+
+    @JsonIgnoreProperties(value = {"shopSystem"})
     private Set<Branch> branches = new HashSet<>();
 
     private String logoUrl;

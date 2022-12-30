@@ -17,6 +17,6 @@ public interface BranchRepository extends JpaRepository<Branch, Long> {
 
     @Query(value = "FROM Branch b " +
             "WHERE b.shopSystem.externalId=:externalId")
-    Page<Branch> findAllByShopSystem(@Param("externalId") UUID externalId,
-                                     Pageable pageable);
+    Page<Branch> findAllByShopSystemExternalId(@Param("externalId") UUID externalId,
+                                               Pageable pageable);
 }

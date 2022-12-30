@@ -4,6 +4,7 @@ import com.yandex.market.shopservice.dto.branch.BranchDto;
 import com.yandex.market.shopservice.dto.branch.BranchResponseDto;
 import com.yandex.market.shopservice.dto.shop.ShopSystemBranchInfoDto;
 import com.yandex.market.shopservice.model.branch.Branch;
+import com.yandex.market.shopservice.model.shop.ShopSystem;
 import com.yandex.market.shopservice.repositories.BranchRepository;
 import com.yandex.market.shopservice.service.branch.BranchService;
 import com.yandex.market.shopservice.service.shop.ShopSystemService;
@@ -33,7 +34,9 @@ public class BranchServiceImpl implements BranchService {
     public UUID createBranch(BranchDto dto) {
         Branch branch = mapper.toBranchFromDto(dto);
         branch.setExternalId(UUID.randomUUID());
-        branch.setShopSystem(shopSystemService.getShopSystemByExternalId(dto.getShopSystem()));
+        ShopSystem shopSystem = shopSystemService.getShopSystemByExternalId(dto.getShopSystem());
+        shopSystem.addBranch(branch);
+        repository.save(branch);
         return branch.getExternalId();
     }
 
@@ -49,6 +52,15 @@ public class BranchServiceImpl implements BranchService {
         return mapper.toBranchDto(getBranchByExternalId(externalId));
     }
 
+
+    public BranchResponseDto getBranchResponseDtoByExternalId(UUID externalId) {
+        Branch branch = getBranchByExternalId(externalId);
+        ShopSystemBranchInfoDto shopSystem = shopSystemService
+                .getShopSystemInfoForBranch(branch.getShopSystem().getExternalId());
+        return mapper.toBranchDtoResponse(branch, shopSystem);
+    }
+
+
     @Transactional
     public void updateBranchByExternalId(UUID externalId, BranchDto dto) {
         Branch branch = getBranchByExternalId(externalId);
@@ -62,8 +74,7 @@ public class BranchServiceImpl implements BranchService {
 
     public Page<BranchResponseDto> getBranchesByShopSystem(UUID externalId, Pageable pageable) {
         ShopSystemBranchInfoDto shopSystem = shopSystemService.getShopSystemInfoForBranch(externalId);
-        Page<Branch> branches = repository.findAllByShopSystem(externalId, pageable);
-        System.out.println(branches);
+        Page<Branch> branches = repository.findAllByShopSystemExternalId(externalId, pageable);
         return new PageImpl<>(
                 branches.getContent().stream()
                         .map(br -> mapper.toBranchDtoResponse(br, shopSystem))

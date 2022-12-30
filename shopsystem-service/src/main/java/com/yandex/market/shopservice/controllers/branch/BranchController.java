@@ -6,9 +6,6 @@ import com.yandex.market.shopservice.service.branch.BranchService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,12 +32,19 @@ public class BranchController {
         branchService.updateBranchByExternalId(externalId, dto);
     }
 
+//
+//    @GetMapping("/search/{externalId}")
+//    @ResponseStatus(HttpStatus.OK)
+//    public Page<BranchResponseDto> getAllBranchesByShopSystemExternalId(@PageableDefault(size = 20) Pageable pageable,
+//                                                              @PathVariable("externalId") UUID externalId){
+//        log.info("Received a request to get paginated list of branches by shop systems.");
+//        return branchService.getBranchesByShopSystem(externalId, pageable);
+//    }
 
-    @GetMapping("/search/{externalId}")
+    @GetMapping("/{externalId}")
     @ResponseStatus(HttpStatus.OK)
-    public Page<BranchResponseDto> getAllBranchesByShopSystem(@PageableDefault(size = 20) Pageable pageable,
-                                                              @PathVariable("externalId") UUID externalId){
-        log.info("Received a request to get paginated list of branches by shop systems.");
-        return branchService.getBranchesByShopSystem(externalId, pageable);
+    public BranchResponseDto getBranchByExternalId(@PathVariable("externalId") UUID externalId){
+        log.info("Received a request to get branch by external id.");
+        return branchService.getBranchResponseDtoByExternalId(externalId);
     }
 }
