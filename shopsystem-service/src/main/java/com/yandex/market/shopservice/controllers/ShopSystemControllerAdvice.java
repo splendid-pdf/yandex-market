@@ -1,7 +1,7 @@
 package com.yandex.market.shopservice.controllers;
 
 import com.yandex.market.shopservice.service.ExceptionResponse;
-import org.springframework.context.support.DefaultMessageSourceResolvable;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -16,32 +16,50 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import java.sql.SQLException;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestControllerAdvice
 public class ShopSystemControllerAdvice extends ResponseEntityExceptionHandler {
 
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ExceptionResponse handleEntityNotFoundException(EntityNotFoundException ex) {
+        return ExceptionResponse.builder()
+                .timeStamped(LocalDateTime.now())
+                .message("EntityNotFoundException: entity does not found in datasource")
+                .debugMessage(ex.getMessage())
+                .build();
+    }
+
     @ExceptionHandler(SQLException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     private ExceptionResponse handleSQLException(SQLException ex) {
-        ExceptionResponse exceptionResponse;
         if ("23505".equals(ex.getSQLState())) {
-            exceptionResponse = ExceptionResponse.builder()
+            return ExceptionResponse.builder()
                     .timeStamped(LocalDateTime.now())
-                    .message("The uniqueness of the key has been violated")
+                    .message("SQLException: The uniqueness of the key has been violated")
                     .debugMessage(ex.getMessage())
                     .errorCode(ex.getErrorCode())
                     .build();
         } else {
-            exceptionResponse = ExceptionResponse.builder()
+            return ExceptionResponse.builder()
                     .timeStamped(LocalDateTime.now())
                     .message("SQLException")
                     .debugMessage(ex.getMessage())
                     .errorCode(ex.getErrorCode())
                     .build();
         }
-        return exceptionResponse;
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    private ExceptionResponse handleRuntimeException(RuntimeException ex) {
+        return ExceptionResponse.builder()
+                .timeStamped(LocalDateTime.now())
+                .message("RuntimeException")
+                .debugMessage(ex.getMessage())
+                .build();
     }
 
     @Override
@@ -51,7 +69,7 @@ public class ShopSystemControllerAdvice extends ResponseEntityExceptionHandler {
 
         ExceptionResponse exceptionResponse = ExceptionResponse.builder()
                 .timeStamped(LocalDateTime.now())
-                .message("Malformed JSON Request")
+                .message("HttpRequestMethodNotSupported: Malformed JSON Request")
                 .debugMessage(ex.getMessage())
                 .build();
         return new ResponseEntity<>(exceptionResponse, status);
@@ -62,15 +80,15 @@ public class ShopSystemControllerAdvice extends ResponseEntityExceptionHandler {
             MethodArgumentNotValidException ex,
             HttpHeaders headers, HttpStatusCode status, WebRequest request) {
 
-        List<String> errors = ex.getBindingResult()
+        Map<String, String> errors = new HashMap<>();
+        ex.getBindingResult()
                 .getFieldErrors()
-                .stream()
-                .map(DefaultMessageSourceResolvable::getDefaultMessage)
-                .collect(Collectors.toList());
+                .forEach(error ->
+                        errors.put(error.getField(), error.getDefaultMessage()));
 
         ExceptionResponse exceptionResponse = ExceptionResponse.builder()
                 .timeStamped(LocalDateTime.now())
-                .message("Method Argument Not Valid")
+                .message("MethodArgumentNotValid: Method Argument Not Valid")
                 .debugMessage(ex.getMessage())
                 .errors(errors)
                 .build();

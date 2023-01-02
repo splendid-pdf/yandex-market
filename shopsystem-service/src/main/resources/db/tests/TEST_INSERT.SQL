@@ -12,6 +12,3 @@ values (991, 'cccccccc-cccc-cccc-cccc-cccccccccccc', false, false, 'Saratov', 'R
         12, 51.32, 46.00, 4, 410080, 'Saratov region',
         'Leninskaya', 'https:\\random.image.jpg', 'DNS', 4.3, 'support.main@dns.ru',
         '640-640', '7fa-ff55df4f-gadf');
-
-select *
-from shop_systems;

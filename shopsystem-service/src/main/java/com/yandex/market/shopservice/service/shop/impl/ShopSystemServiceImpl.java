@@ -1,10 +1,10 @@
-package com.yandex.market.shopservice.service;
+package com.yandex.market.shopservice.service.shop.impl;
 
-import com.yandex.market.shopservice.dto.requests.ShopSystemRequestDto;
-import com.yandex.market.shopservice.dto.responses.ShopSystemResponsesDto;
+import com.yandex.market.shopservice.dto.shop.ShopSystemRequestDto;
+import com.yandex.market.shopservice.dto.shop.ShopSystemResponsesDto;
 import com.yandex.market.shopservice.model.shop.ShopSystem;
 import com.yandex.market.shopservice.repositories.ShopSystemRepository;
-import com.yandex.market.shopservice.service.impl.ShopSystemService;
+import com.yandex.market.shopservice.service.shop.ShopSystemService;
 import com.yandex.market.shopservice.util.ShopSystemMapper;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
@@ -37,30 +37,31 @@ public class ShopSystemServiceImpl implements ShopSystemService {
     }
 
     @Transactional
-    public void createShopSystem(ShopSystemRequestDto dto) {
+    public UUID createShopSystem(ShopSystemRequestDto dto) {
         ShopSystem shopSystem = mapper.toShopSystemFromRequestDto(dto);
         shopSystem.setExternalId(UUID.randomUUID());
         repository.save(shopSystem);
+        return shopSystem.getExternalId();
     }
 
-    public ShopSystemResponsesDto getShopSystemByExternalId(UUID externalId) {
-        return mapper.toShopSystemResponseDto(
-                repository.findByExternalId(externalId)
-                        .orElseThrow(() -> {
-                                    log.error("REQUEST REJECTED. Could not find a matching record.");
-                                    throw new EntityNotFoundException("Organization by given externalId = \"" +
-                                            externalId + "\" was not found. Creation canceled!");
-                                }
-                        )
-        );
+    public ShopSystemResponsesDto getShopSystemDtoByExternalId(UUID externalId) {
+        return mapper.toShopSystemResponseDto(getShopSystemByExternalId(externalId));
+    }
+
+    public ShopSystem getShopSystemByExternalId(UUID externalId) {
+        return repository.findByExternalId(externalId)
+                .orElseThrow(() -> {
+                            throw new EntityNotFoundException("Organization by given externalId = \"" +
+                                    externalId + "\" was not found. Search canceled!");
+                        }
+                );
     }
 
     @Transactional
-    public void deleteSystemShopByExternalId(UUID externalId) {
+    public void deleteShopSystemByExternalId(UUID externalId) {
         ShopSystem shopSystem = repository
                 .findByExternalId(externalId)
                 .orElseThrow(() -> {
-                            log.error("REQUEST REJECTED. Could not find a matching record.");
                             throw new EntityNotFoundException("Organization by given externalId = \"" +
                                     externalId + "\" was not found. Deletion canceled!");
                         }
@@ -69,8 +70,8 @@ public class ShopSystemServiceImpl implements ShopSystemService {
     }
 
     @Transactional
-    public void updateSystemShopByExternalId(UUID externalId, ShopSystemRequestDto dto) {
-        ShopSystem shopSystem = mapper.toShopSystemFromResponseDto(getShopSystemByExternalId(externalId));
+    public void updateShopSystemByExternalId(UUID externalId, ShopSystemRequestDto dto) {
+        ShopSystem shopSystem = getShopSystemByExternalId(externalId);
         shopSystem.setName(dto.getName());
         shopSystem.setToken(dto.getToken());
         shopSystem.setSupport(mapper.toSupportFromDto(dto.getSupport()));

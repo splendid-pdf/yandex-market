@@ -1,14 +1,18 @@
 server:
   port: 8080
+  error:
+    include-message: always
 
 spring:
   application:
     name: shop_system
-    url: public/api/v1/shopsystems
+    url:
+      shop: public/api/v1/shopsystems
+      branch: public/api/v1/branches
   datasource:
-    url: jdbc:postgresql://localhost:5432/${db_name}
-    username: ${postgres_user}
-    password: ${postgres_password}
+    url: jdbc:postgresql://localhost:5432/${DB_NAME}
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
     driverClassName: org.postgresql.Driver
     hikari:
       auto-commit: false
@@ -21,7 +25,7 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
-        shema_update:
+        schema_update:
           unique_constraint_strategy: RECREATE_QUIETLY
         connection:
           provider_disables_autocommit: true

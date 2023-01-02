@@ -1,8 +1,8 @@
-package com.yandex.market.shopservice.controllers;
+package com.yandex.market.shopservice.controllers.shop;
 
-import com.yandex.market.shopservice.dto.requests.ShopSystemRequestDto;
-import com.yandex.market.shopservice.dto.responses.ShopSystemResponsesDto;
-import com.yandex.market.shopservice.service.impl.ShopSystemService;
+import com.yandex.market.shopservice.dto.shop.ShopSystemRequestDto;
+import com.yandex.market.shopservice.dto.shop.ShopSystemResponsesDto;
+import com.yandex.market.shopservice.service.shop.ShopSystemService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +17,7 @@ import java.util.UUID;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("${spring.application.url}")
+@RequestMapping("${spring.application.url.shop}")
 public class ShopSystemController {
     private final ShopSystemService shopService;
 
@@ -31,23 +31,23 @@ public class ShopSystemController {
 
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
-    public void createNewShopSystem(@RequestBody @Valid ShopSystemRequestDto shopSystemDto) {
+    public UUID createShopSystem(@RequestBody @Valid ShopSystemRequestDto shopSystemDto) {
         log.info("Received a request to create new shop system: %s".formatted(shopSystemDto));
-        shopService.createShopSystem(shopSystemDto);
+        return shopService.createShopSystem(shopSystemDto);
     }
 
     @GetMapping("/{externalId}")
     @ResponseStatus(HttpStatus.OK)
     public ShopSystemResponsesDto getShopSystemByExternalId(@PathVariable("externalId") UUID externalId) {
         log.info("Received a request to get shop system by external id = %s".formatted(externalId));
-        return shopService.getShopSystemByExternalId(externalId);
+        return shopService.getShopSystemDtoByExternalId(externalId);
     }
 
     @DeleteMapping("/{externalId}")
     @ResponseStatus(HttpStatus.OK)
     public void deleteSystemShopByExternalId(@PathVariable("externalId") UUID externalId) {
         log.info("Received a request to delete a shop system by external id = %s".formatted(externalId));
-        shopService.deleteSystemShopByExternalId(externalId);
+        shopService.deleteShopSystemByExternalId(externalId);
     }
 
     @PutMapping("/{externalId}")
@@ -55,6 +55,6 @@ public class ShopSystemController {
     public void updateSystemShopByExternalId(@PathVariable("externalId") UUID externalId,
                                              @RequestBody @Valid ShopSystemRequestDto shopSystemDtoRequest) {
         log.info("Received a request to update a shop system by external id = %s".formatted(externalId));
-        shopService.updateSystemShopByExternalId(externalId, shopSystemDtoRequest);
+        shopService.updateShopSystemByExternalId(externalId, shopSystemDtoRequest);
     }
 }

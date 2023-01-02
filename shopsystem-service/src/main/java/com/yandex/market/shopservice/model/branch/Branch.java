@@ -1,6 +1,6 @@
 package com.yandex.market.shopservice.model.branch;
 
-import com.yandex.market.shopservice.model.shop.Location;
+import com.yandex.market.shopservice.model.Location;
 import com.yandex.market.shopservice.model.shop.ShopSystem;
 import jakarta.persistence.*;
 import lombok.*;
@@ -40,12 +40,11 @@ public class Branch {
     @Embedded
     private Contact contact;
 
-    //TODO openingTimes
-
     @OneToOne(mappedBy = "branch", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private Delivery delivery;
 
     private boolean pickup;
+    private boolean isDisabled;
 
     //TODO features
 }
