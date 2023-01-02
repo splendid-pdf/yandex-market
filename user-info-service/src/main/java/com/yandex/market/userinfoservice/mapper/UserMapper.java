@@ -1,5 +1,6 @@
 package com.yandex.market.userinfoservice.mapper;
 
+import com.yandex.market.mapper.Mapper;
 import com.yandex.market.userinfoservice.dto.UserDto;
 import com.yandex.market.userinfoservice.model.Sex;
 import com.yandex.market.userinfoservice.model.User;

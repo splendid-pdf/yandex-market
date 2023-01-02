@@ -1,22 +1,8 @@
 plugins {
+    id 'pmd'
     id 'java'
-    id 'org.springframework.boot' version '3.0.0'
+    id 'org.springframework.boot' version '3.0.1'
     id 'io.spring.dependency-management' version '1.1.0'
-}
-
-group = 'com.yandex.market'
-version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '17'
-
-
-configurations {
-    compileOnly {
-        extendsFrom annotationProcessor
-    }
-}
-
-repositories {
-    mavenCentral()
 }
 
 dependencies {
@@ -36,6 +22,14 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+pmd {
+    toolVersion = '6.53.0'
+    consoleOutput = true
+    ignoreFailures = false
+    ruleSetFiles = files("${rootDir}/ruleset.xml")
+    ruleSets = []
 }
 
 tasks.named('test') {
