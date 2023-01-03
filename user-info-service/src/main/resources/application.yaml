@@ -1,13 +1,33 @@
 spring:
-  flyway:
-    baseline-on-migrate: false
   jpa:
     show-sql: true
     hibernate:
       dialect: org.hibernate.dialect.PostgreSQLDialect
       ddl-auto: validate
+    properties:
+      hibernate:
+        generate_statistics: true
+        format_sql: true
   datasource:
-    url: jdbc:postgresql://localhost:5432/{db_name}
-    username: ${postgres_user}
-    password: ${postgres_password}
+    url: jdbc:postgresql://localhost:5432/${DB_NAME}
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
     driver-class-name: org.postgresql.Driver
+
+app:
+  validation:
+    error-info:
+      - INCORRECT_FIRST_NAME_CODE: 'Incorrect format firstname: %s'
+      - INCORRECT_LAST_NAME_CODE: 'Incorrect format lastname'
+      - INCORRECT_EMAIL_CODE: 'Incorrect format email: %s'
+      - BLANK_EMAIL_CODE: 'Email can not be blank'
+      - BLANK_BIRTHDAY_CODE: 'Birthday can not be blank!'
+      - BLANK_FIRST_NAME_CODE: 'Firstname can not be blank'
+      - BLANK_LAST_NAME_CODE: 'Lastname can not be blank'
+      - BLANK_PASSWORD_CODE: 'Password can not be blank'
+      - BLANK_PHONE_CODE: 'Phone can not be blank'
+      - NULL_SEX_CODE: 'Sex should not be null'
+
+
+
+

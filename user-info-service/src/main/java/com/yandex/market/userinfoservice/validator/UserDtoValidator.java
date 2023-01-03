@@ -1,7 +1,7 @@
 package com.yandex.market.userinfoservice.validator;
 
 import jakarta.validation.ValidationException;
-import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 import org.openapitools.api.model.UserRequestDto;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
@@ -10,14 +10,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public record UserDtoValidator(List<UserDtoFieldValidator> list) {
-    public void validateDto(UserRequestDto userRequestDto) {
-        List<String> exceptions = new ArrayList<>();
+public record UserDtoValidator(List<FieldValidator<UserRequestDto>> list) {
 
-        list.forEach(fieldsDto -> fieldsDto.validate(userRequestDto, exceptions));
+    public void validateDto(@NotNull UserRequestDto userRequestDto) {
+        List<String> exceptionMessages = new ArrayList<>();
 
-        if (!CollectionUtils.isEmpty(exceptions)) {
-            throw new ValidationException(String.join(", ", exceptions));
+        list.forEach(fieldsDto -> fieldsDto.validate(userRequestDto, exceptionMessages));
+
+        if (!CollectionUtils.isEmpty(exceptionMessages)) {
+            throw new ValidationException(String.join(", ", exceptionMessages));
         }
     }
+
 }

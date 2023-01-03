@@ -1,23 +1,25 @@
 package com.yandex.market.userinfoservice.validator.impl;
 
-import com.yandex.market.userinfoservice.validator.UserDtoFieldValidator;
-import org.apache.commons.lang3.EnumUtils;
+import com.yandex.market.userinfoservice.config.properties.ErrorInfoProperties;
+import com.yandex.market.userinfoservice.validator.FieldValidator;
+import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 import org.openapitools.api.model.UserRequestDto;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+import static com.yandex.market.userinfoservice.utils.Constants.NULL_SEX_CODE;
+
 @Component
-public class SexUserDtoFieldValidatorImpl implements UserDtoFieldValidator {
+@RequiredArgsConstructor
+public class SexUserDtoFieldValidatorImpl implements FieldValidator<UserRequestDto> {
+    private final ErrorInfoProperties properties;
+
     @Override
-    public void validate(UserRequestDto userRequestDto, List<String> exceptions) {
-        //TODO: MUST DEBUG!!!
-        //todo: does not work
-        //todo: Output -> Resolved [org.springframework.http.converter.HttpMessageNotReadableException:
-        //JSON parse error: Cannot construct instance of `org.openapitools.api.model.UserRequestDto$SexEnum`,
-        //problem: Unexpected value 'x']
-        if (!EnumUtils.isValidEnum(UserRequestDto.SexEnum.class, userRequestDto.getSex().toString())) {
-            exceptions.add("Incorrect sex");
+    public void validate(@NotNull UserRequestDto userRequestDto, @NotNull List<String> exceptionMessages) {
+        if (userRequestDto.getSex() == null) {
+            exceptionMessages.add(properties.getMessageByErrorCode(NULL_SEX_CODE));
         }
     }
 }

@@ -292,9 +292,6 @@ components:
           type: string
           example: 'id2003104u48396'
     UserResponseDto:
-      required:
-        - email
-        - password
       type: object
       properties:
         externalId:

@@ -21,8 +21,15 @@ repositories {
     mavenCentral()
 }
 
+ext {
+    set('flywayCoreVersion', '9.10.2')
+    set('mockitoVersion', '4.10.0')
+    set('jetbrainsAnnotationsVersion', '23.1.0')
+}
+
 dependencies {
-    implementation 'org.flywaydb:flyway-core:9.10.2'
+    compileOnly "org.jetbrains:annotations:${jetbrainsAnnotationsVersion}"
+    implementation "org.flywaydb:flyway-core:${flywayCoreVersion}"
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
@@ -38,7 +45,7 @@ dependencies {
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation 'org.mockito:mockito-inline:4.10.0'
+    testImplementation "org.mockito:mockito-inline:${mockitoVersion}"
 
 }
 

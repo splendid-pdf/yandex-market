@@ -1,20 +1,28 @@
 package com.yandex.market.userinfoservice.validator.impl;
 
-import com.yandex.market.userinfoservice.validator.UserDtoFieldValidator;
-import org.apache.commons.lang3.StringUtils;
+import com.yandex.market.userinfoservice.config.properties.ErrorInfoProperties;
+import com.yandex.market.userinfoservice.validator.FieldValidator;
+import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 import org.openapitools.api.model.UserRequestDto;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+import static com.yandex.market.userinfoservice.utils.Constants.BLANK_BIRTHDAY_CODE;
+
 @Component
-public class BirthdayUserDtoFieldValidatorImpl implements UserDtoFieldValidator {
+@RequiredArgsConstructor
+public class BirthdayUserDtoFieldValidatorImpl implements FieldValidator<UserRequestDto> {
+    private final ErrorInfoProperties properties;
+
     @Override
-    public void validate(UserRequestDto userRequestDto, List<String> exceptions) {
-        if (StringUtils.isBlank(userRequestDto.getBirthday().toString())) {
-            exceptions.add("Birthday can't be blank");
-        } else if (userRequestDto.getBirthday().toString().matches("[12]\\\\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\\\d|3[01])")) {
-            exceptions.add("Incorrect format birthday");
+    public void validate(@NotNull UserRequestDto userRequestDto, @NotNull List<String> exceptionMessages) {
+        if (userRequestDto.getBirthday() == null) {
+            exceptionMessages.add(properties.getMessageByErrorCode(BLANK_BIRTHDAY_CODE));
         }
+
+
     }
 }
+
