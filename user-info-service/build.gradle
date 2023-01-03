@@ -1,45 +1,58 @@
 import org.openapitools.generator.gradle.plugin.tasks.GenerateTask
 
 plugins {
+    id 'pmd'
     id 'java'
-    id 'org.springframework.boot' version '3.0.0'
-    id 'io.spring.dependency-management' version '1.1.0'
     id 'org.openapi.generator' version '6.2.1'
+    id 'org.springframework.boot' version '3.0.1'
+    id 'io.spring.dependency-management' version '1.1.0'
 }
 
-group = 'com.yandex.market'
-version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '17'
-
-configurations {
-    compileOnly {
-        extendsFrom annotationProcessor
-    }
-}
-
-repositories {
-    mavenCentral()
+ext {
+    set('flywayVersion', '9.10.1')
+    set('swaggerVersion', '2.2.7')
+    set('mockitoInlineVersion', '4.10.0')
+    set('apacheCommonsLangVersion', '3.12.0')
+    set('openapitoolsJacksonDatabindVersion', '0.2.4')
 }
 
 dependencies {
-    implementation 'org.flywaydb:flyway-core:9.10.0'
+    implementation project(':commons')
+
+    // spring
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
-    implementation 'org.openapitools:jackson-databind-nullable:0.2.4'
-    implementation 'io.swagger.core.v3:swagger-core:2.2.7'
-    implementation 'org.apache.commons:commons-lang3:3.12.0'
-    compileOnly 'org.projectlombok:lombok'
-    developmentOnly 'org.springframework.boot:spring-boot-devtools'
-    runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
-    runtimeOnly 'org.postgresql:postgresql'
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
-    annotationProcessor 'org.projectlombok:lombok'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation 'org.mockito:mockito-inline:4.9.0'
 
+    // db
+    implementation "org.flywaydb:flyway-core:${flywayVersion}"
+    runtimeOnly 'org.postgresql:postgresql'
+
+    // utils
+    implementation "org.apache.commons:commons-lang3:${apacheCommonsLangVersion}"
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
+    // open api
+    implementation "org.openapitools:jackson-databind-nullable:${openapitoolsJacksonDatabindVersion}"
+    implementation "io.swagger.core.v3:swagger-core:${swaggerVersion}"
+
+    // lombok
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+
+    // monitoring
+    runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
+
+    // tests
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation "org.mockito:mockito-inline:${mockitoInlineVersion}"
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
 }
 
 def generatedDir = "${buildDir}/generated"
@@ -62,14 +75,18 @@ task generateOpenApi(type: GenerateTask) {
     ]
 }
 
+compileJava.dependsOn tasks.generateOpenApi
+
 sourceSets {
     main {
         java.srcDirs += generatedDir + '/src/main/java'
     }
 }
 
-compileJava.dependsOn tasks.generateOpenApi
-
-tasks.named('test') {
-    useJUnitPlatform()
+pmd {
+    toolVersion = '6.53.0'
+    consoleOutput = true
+    ignoreFailures = true
+    ruleSetFiles = files("${rootDir}/ruleset.xml")
+    ruleSets = []
 }
