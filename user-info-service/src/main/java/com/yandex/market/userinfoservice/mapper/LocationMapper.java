@@ -1,5 +1,6 @@
 package com.yandex.market.userinfoservice.mapper;
 
+import com.yandex.market.mapper.Mapper;
 import com.yandex.market.userinfoservice.model.Location;
 import org.openapitools.api.model.LocationDto;
 import org.springframework.stereotype.Component;

@@ -3,6 +3,7 @@ package com.yandex.market.userinfoservice.service;
 import com.yandex.market.userinfoservice.mapper.UserMapper;
 import com.yandex.market.userinfoservice.model.User;
 import com.yandex.market.userinfoservice.repository.UserRepository;
+import com.yandex.market.userinfoservice.validator.UserDtoValidator;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Stream;
 
@@ -21,16 +21,19 @@ import java.util.stream.Stream;
 @RequiredArgsConstructor
 public class UserService {
 
-    private static final String USER_NOT_FOUND_MESSAGE = "User wasn't found by id=";
-
     public static final String USER_WITH_THE_SAME_EMAIL_IS_EXISTS_MESSAGE =
             "User with similar email = %s is already exists";
+    private static final String USER_NOT_FOUND_MESSAGE_BY_ID = "User wasn't found by id =";
+    private static final String USER_NOT_FOUND_MESSAGE_BY_VALUE = "User wasn't found by value =";
     private final UserRepository userRepository;
     private final UserMapper userMapper;
 
+    private final UserDtoValidator userDtoValidator;
+
     @Transactional
     public UUID create(UserRequestDto userRequestDto) {
-        //todo Валидация
+        userDtoValidator.validateDto(userRequestDto);
+
         if (userRepository.existsByEmail(userRequestDto.getEmail())) {
             throw new IllegalArgumentException(USER_WITH_THE_SAME_EMAIL_IS_EXISTS_MESSAGE.formatted(userRequestDto.getEmail()));
         }
@@ -42,14 +45,14 @@ public class UserService {
 
     public UserResponseDto findUserByExternalId(UUID externalId) throws EntityNotFoundException {
         User user = userRepository.findByExternalId(externalId)
-                .orElseThrow(() -> new EntityNotFoundException(USER_NOT_FOUND_MESSAGE + externalId));
+                .orElseThrow(() -> new EntityNotFoundException(USER_NOT_FOUND_MESSAGE_BY_ID + externalId));
         return userMapper.mapToResponseDto(user);
     }
 
     @Transactional
     public UserResponseDto deleteUserByExternalId(UUID externalId) throws EntityNotFoundException {
         User user = userRepository.findByExternalId(externalId)
-                .orElseThrow(()-> new EntityNotFoundException(USER_NOT_FOUND_MESSAGE + externalId));
+                .orElseThrow(() -> new EntityNotFoundException(USER_NOT_FOUND_MESSAGE_BY_ID + externalId));
         userRepository.deleteUserByExternalId(externalId);
         return userMapper.mapToResponseDto(user);
     }
@@ -57,7 +60,7 @@ public class UserService {
     @Transactional
     public UserResponseDto update(UUID externalId, UserRequestDto userRequestDto) {
         User storedUser = userRepository.findByExternalId(externalId)
-                .orElseThrow(()-> new EntityNotFoundException(USER_NOT_FOUND_MESSAGE + externalId));
+                .orElseThrow(() -> new EntityNotFoundException(USER_NOT_FOUND_MESSAGE_BY_ID + externalId));
         User updatedUser = userMapper.map(userRequestDto);
         storedUser.setEmail(updatedUser.getEmail());
         storedUser.setFirstName(updatedUser.getFirstName());
@@ -74,6 +77,18 @@ public class UserService {
         storedUser.setNotificationSettings(updatedUser.getNotificationSettings());
         storedUser.setPhotoId(updatedUser.getPhotoId());
         return userMapper.mapToResponseDto(storedUser);
+    }
+
+    public UserResponseDto getUserDtoByEmailOrPhone(String emailOrPhone) {
+        //todo: regex
+
+        if (emailOrPhone.contains("@")) {
+            return userMapper.mapToResponseDto(userRepository.findUserByEmail(emailOrPhone)
+                    .orElseThrow(() -> new EntityNotFoundException(USER_NOT_FOUND_MESSAGE_BY_VALUE + emailOrPhone)));
+        }
+
+        return userMapper.mapToResponseDto(userRepository.findUserByPhone(emailOrPhone)
+                .orElseThrow(() -> new EntityNotFoundException(USER_NOT_FOUND_MESSAGE_BY_VALUE + emailOrPhone)));
     }
 
 }
