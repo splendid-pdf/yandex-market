@@ -1,13 +1,5 @@
 rootProject.name = 'yandex-market'
 
 include 'shopsystem-service'
-include 'order-service'
-include 'basket-service'
-include 'upload-service'
-include 'product-service'
-include 'activity-service'
 include 'user-info-service'
-include 'comparison-service'
-include 'statistics-service'
-include 'adaptive-search-service'
 include 'commons'

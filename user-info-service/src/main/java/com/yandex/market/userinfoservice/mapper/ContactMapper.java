@@ -1,5 +1,6 @@
 package com.yandex.market.userinfoservice.mapper;
 
+import com.yandex.market.mapper.Mapper;
 import com.yandex.market.userinfoservice.model.Contact;
 import com.yandex.market.userinfoservice.model.SocialNetwork;
 import org.openapitools.api.model.ContactDto;
