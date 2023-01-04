@@ -26,6 +26,7 @@ public class ShopSystemServiceImpl implements ShopSystemService {
     private final ShopSystemRepository repository;
     private final ShopSystemMapper mapper;
 
+    @Override
     public Page<ShopSystemResponsesDto> getAllShopSystems(Pageable pageable) {
         Page<ShopSystem> shopSystemPages = repository.findAll(pageable);
         return new PageImpl<>(
@@ -45,11 +46,13 @@ public class ShopSystemServiceImpl implements ShopSystemService {
         return shopSystem.getExternalId();
     }
 
+    @Override
     public ShopSystemResponsesDto getShopSystemDtoByExternalId(UUID externalId) {
         return mapper.toShopSystemResponseDto(getShopSystemByExternalId(externalId));
     }
 
-    public ShopSystemBranchInfoDto getShopSystemInfoForBranch(UUID externalId){
+    @Override
+    public ShopSystemBranchInfoDto getShopSystemInfoForBranch(UUID externalId) {
         ShopSystem shopSystem = getShopSystemByExternalId(externalId);
         return ShopSystemBranchInfoDto.builder()
                 .shopSystemExternalId(shopSystem.getExternalId())
@@ -58,6 +61,7 @@ public class ShopSystemServiceImpl implements ShopSystemService {
                 .build();
     }
 
+    @Override
     public ShopSystem getShopSystemByExternalId(UUID externalId) {
         return repository.findByExternalId(externalId)
                 .orElseThrow(() -> {
@@ -67,6 +71,7 @@ public class ShopSystemServiceImpl implements ShopSystemService {
                 );
     }
 
+    @Override
     @Transactional
     public void deleteShopSystemByExternalId(UUID externalId) {
         ShopSystem shopSystem = repository
@@ -79,6 +84,7 @@ public class ShopSystemServiceImpl implements ShopSystemService {
         shopSystem.setDisabled(true);
     }
 
+    @Override
     @Transactional
     public void updateShopSystemByExternalId(UUID externalId, ShopSystemRequestDto dto) {
         ShopSystem shopSystem = getShopSystemByExternalId(externalId);

@@ -48,11 +48,8 @@ public class BranchServiceImpl implements BranchService {
                 });
     }
 
-    public BranchDto getBranchDtoByExternalId(UUID externalId) {
-        return mapper.toBranchDto(getBranchByExternalId(externalId));
-    }
 
-
+    @Override
     public BranchResponseDto getBranchResponseDtoByExternalId(UUID externalId) {
         Branch branch = getBranchByExternalId(externalId);
         ShopSystemBranchInfoDto shopSystem = shopSystemService
@@ -61,6 +58,7 @@ public class BranchServiceImpl implements BranchService {
     }
 
 
+    @Override
     @Transactional
     public void updateBranchByExternalId(UUID externalId, BranchDto dto) {
         Branch branch = getBranchByExternalId(externalId);
@@ -72,6 +70,7 @@ public class BranchServiceImpl implements BranchService {
         branch.setDelivery(mapper.toDeliveryFromDto(dto.getDelivery()));
     }
 
+    @Override
     public Page<BranchResponseDto> getBranchesByShopSystem(UUID externalId, Pageable pageable) {
         ShopSystemBranchInfoDto shopSystem = shopSystemService.getShopSystemInfoForBranch(externalId);
         Page<Branch> branches = repository.findAllByShopSystemExternalId(externalId, pageable);

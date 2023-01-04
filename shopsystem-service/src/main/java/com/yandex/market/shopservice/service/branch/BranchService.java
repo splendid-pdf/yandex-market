@@ -11,7 +11,6 @@ public interface BranchService {
 
     UUID createBranch(BranchDto dto);
 
-    BranchDto getBranchDtoByExternalId(UUID externalId);
     BranchResponseDto getBranchResponseDtoByExternalId(UUID externalId);
 
     void updateBranchByExternalId(UUID externalId, BranchDto dto);
