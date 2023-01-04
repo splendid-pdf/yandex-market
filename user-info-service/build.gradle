@@ -9,10 +9,11 @@ plugins {
 }
 
 ext {
-    set('flywayVersion', '9.10.1')
+    set('flywayCoreVersion', '9.10.2')
     set('swaggerVersion', '2.2.7')
     set('mockitoInlineVersion', '4.10.0')
     set('apacheCommonsLangVersion', '3.12.0')
+    set('jetbrainsAnnotationsVersion', '23.1.0')
     set('openapitoolsJacksonDatabindVersion', '0.2.4')
 }
 
@@ -20,6 +21,7 @@ dependencies {
     implementation project(':commons')
 
     // spring
+    implementation "org.flywaydb:flyway-core:${flywayCoreVersion}"
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
@@ -28,10 +30,11 @@ dependencies {
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
 
     // db
-    implementation "org.flywaydb:flyway-core:${flywayVersion}"
+    implementation "org.flywaydb:flyway-core:${flywayCoreVersion}"
     runtimeOnly 'org.postgresql:postgresql'
 
     // utils
+    compileOnly "org.jetbrains:annotations:${jetbrainsAnnotationsVersion}"
     implementation "org.apache.commons:commons-lang3:${apacheCommonsLangVersion}"
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
