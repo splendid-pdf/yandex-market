@@ -32,18 +32,9 @@ public class BranchController {
         branchService.updateBranchByExternalId(externalId, dto);
     }
 
-//
-//    @GetMapping("/search/{externalId}")
-//    @ResponseStatus(HttpStatus.OK)
-//    public Page<BranchResponseDto> getAllBranchesByShopSystemExternalId(@PageableDefault(size = 20) Pageable pageable,
-//                                                              @PathVariable("externalId") UUID externalId){
-//        log.info("Received a request to get paginated list of branches by shop systems.");
-//        return branchService.getBranchesByShopSystem(externalId, pageable);
-//    }
-
     @GetMapping("/{externalId}")
     @ResponseStatus(HttpStatus.OK)
-    public BranchResponseDto getBranchByExternalId(@PathVariable("externalId") UUID externalId){
+    public BranchResponseDto getBranchByExternalId(@PathVariable("externalId") UUID externalId) {
         log.info("Received a request to get branch by external id.");
         return branchService.getBranchResponseDtoByExternalId(externalId);
     }
