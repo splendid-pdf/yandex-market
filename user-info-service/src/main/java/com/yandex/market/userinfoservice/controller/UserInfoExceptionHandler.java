@@ -33,7 +33,6 @@ public class UserInfoExceptionHandler {
                 .statusCode(HttpStatus.NOT_FOUND.name())
                 .message(ex.getMessage())
                 .timestamp(OffsetDateTime.now());
-
     }
 
 
