@@ -103,12 +103,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-        '404':
-          description: User by email or phone {emailOrPhone} was not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
 
   /public/api/v1/users/{externalId}:
     get:
