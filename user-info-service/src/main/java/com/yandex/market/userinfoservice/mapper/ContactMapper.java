@@ -1,14 +1,12 @@
 package com.yandex.market.userinfoservice.mapper;
 
-import com.yandex.market.mapper.Mapper;
 import com.yandex.market.userinfoservice.model.Contact;
 import com.yandex.market.userinfoservice.model.SocialNetwork;
 import org.openapitools.api.model.ContactDto;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ContactMapper implements Mapper<ContactDto, Contact> {
-    @Override
+public class ContactMapper {
     public Contact map(ContactDto contactDto) {
         return Contact.builder()
                 .value(contactDto.getValue())
@@ -16,7 +14,6 @@ public class ContactMapper implements Mapper<ContactDto, Contact> {
                 .build();
     }
 
-    @Override
     public ContactDto mapToDto(Contact contact) {
         ContactDto contactDto = new ContactDto();
         contactDto.setType(ContactDto.TypeEnum.valueOf(contact.getType().name()));
