@@ -1,8 +1,10 @@
 package com.yandex.market.userinfoservice.validator;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yandex.market.userinfoservice.config.properties.ErrorInfoProperties;
 import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.val;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
@@ -13,29 +15,28 @@ import org.springframework.util.CollectionUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.regex.Pattern;
 
-import static com.yandex.market.userinfoservice.utils.Constants.*;
+import static com.yandex.market.userinfoservice.utils.PatternConstants.EMAIL_PATTERN;
+import static com.yandex.market.userinfoservice.utils.PatternConstants.NAME_PATTERN;
+import static com.yandex.market.userinfoservice.utils.ValidationCodeConstants.*;
 
 @Component
 @RequiredArgsConstructor
 public class UserValidator {
 
-    private static final Pattern EMAIL_PATTERN =
-            Pattern.compile("^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$");
-    private static final Pattern NAME_PATTERN = Pattern.compile("[a-zA-Z]{2,100}");
-    private static final Pattern REG_VALID_PHONE = Pattern.compile("([7-8])?(9)(\\d){9}");
-
     private final ErrorInfoProperties properties;
+    private final ObjectMapper objectMapper;
 
-    public void validate(@NotNull UserRequestDto userRequestDto){
+
+    @SneakyThrows
+    public void validate(@NotNull UserRequestDto userRequestDto) {
         List<String> exceptionMessages = new ArrayList<>();
 
         Arrays.stream(UserFieldValidation.values())
                 .forEach(field -> field.consume(this, userRequestDto, exceptionMessages));
 
-        if (!CollectionUtils.isEmpty(exceptionMessages)){
-            throw new ValidationException(String.join(", ", exceptionMessages));
+        if (!CollectionUtils.isEmpty(exceptionMessages)) {
+            throw new ValidationException(objectMapper.writeValueAsString(exceptionMessages));
         }
     }
 

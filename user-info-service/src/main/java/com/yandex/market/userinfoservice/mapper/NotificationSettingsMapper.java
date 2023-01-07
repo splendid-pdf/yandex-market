@@ -15,7 +15,6 @@ public class NotificationSettingsMapper {
                 .setIsAllowedToSendPromotionsAndMailingLists(notificationSettings.isAllowedToSendDiscountsAndPromotionsMailingLists());
         return notificationSettingsDto;
     }
-
     public NotificationSettings mapNotificationSettings(NotificationSettingsDto notificationSettingsDto) {
         return NotificationSettings.builder()
                 .isAllowedToSendDiscountsAndPromotionsMailingLists(notificationSettingsDto.getIsAllowedToSendPromotionsAndMailingLists())
