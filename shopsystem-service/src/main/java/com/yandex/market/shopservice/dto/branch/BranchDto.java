@@ -1,6 +1,8 @@
 package com.yandex.market.shopservice.dto.branch;
 
 import com.yandex.market.shopservice.dto.LocationDto;
+import com.yandex.market.shopservice.model.branch.SupportedPaymentMethods;
+import jakarta.persistence.Embedded;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -42,4 +44,8 @@ public class BranchDto {
 
     @NotNull(message = "\"Delivery of Branch\" field must not be empty")
     private DeliveryDto delivery;
+
+
+    @Embedded
+    private SupportedPaymentMethods paymentMethods;
 }

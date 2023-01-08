@@ -3,7 +3,7 @@ package com.yandex.market.shopservice.model.branch;
 import lombok.Getter;
 
 @Getter
-public enum PickupPointPartner {
+public enum     PickupPointPartner {
     YANDEX_MARKET("Яндекс-Маркет"),
     OZON("OZON"),
     WILDBERRIES("Вайлдбериз"),

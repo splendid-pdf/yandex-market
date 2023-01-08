@@ -52,8 +52,7 @@ public class ShopSystemServiceImpl implements ShopSystemService {
     }
 
     @Override
-    public ShopSystemBranchInfoDto getShopSystemInfoForBranch(UUID externalId) {
-        ShopSystem shopSystem = getShopSystemByExternalId(externalId);
+    public ShopSystemBranchInfoDto getShopSystemInfoForBranch(ShopSystem shopSystem) {
         return ShopSystemBranchInfoDto.builder()
                 .shopSystemExternalId(shopSystem.getExternalId())
                 .companyName(shopSystem.getName())

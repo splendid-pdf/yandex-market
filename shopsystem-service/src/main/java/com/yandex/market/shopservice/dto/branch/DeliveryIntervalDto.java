@@ -10,7 +10,7 @@ import java.time.LocalTime;
 
 @Builder
 public record DeliveryIntervalDto(
-        @NotNull(message = "\"Delivery\" field must not be empty")
+//        @NotNull(message = "\"Delivery\" field must not be empty")
         DeliveryDto delivery,
 
         @NotBlank(message = "\"Interval ID\" field must not be empty")

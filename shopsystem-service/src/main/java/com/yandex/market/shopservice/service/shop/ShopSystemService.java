@@ -22,5 +22,5 @@ public interface ShopSystemService {
 
     void updateShopSystemByExternalId(UUID externalId, ShopSystemRequestDto dto);
 
-    ShopSystemBranchInfoDto getShopSystemInfoForBranch(UUID externalId);
+    ShopSystemBranchInfoDto getShopSystemInfoForBranch(ShopSystem shopSystem);
 }

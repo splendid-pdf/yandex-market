@@ -4,7 +4,9 @@ import com.yandex.market.shopservice.dto.branch.BranchDto;
 import com.yandex.market.shopservice.dto.branch.BranchResponseDto;
 import com.yandex.market.shopservice.dto.shop.ShopSystemBranchInfoDto;
 import com.yandex.market.shopservice.model.branch.Branch;
+import com.yandex.market.shopservice.model.branch.Delivery;
 import com.yandex.market.shopservice.model.shop.ShopSystem;
+import com.yandex.market.shopservice.model.shop.Support;
 import com.yandex.market.shopservice.repositories.BranchRepository;
 import com.yandex.market.shopservice.service.branch.BranchService;
 import com.yandex.market.shopservice.service.shop.ShopSystemService;
@@ -30,11 +32,12 @@ public class BranchServiceImpl implements BranchService {
     private final ShopSystemMapper mapper;
 
     @Override
-    @Transactional
     public UUID createBranch(BranchDto dto) {
         Branch branch = mapper.toBranchFromDto(dto);
         branch.setExternalId(UUID.randomUUID());
         ShopSystem shopSystem = shopSystemService.getShopSystemByExternalId(dto.getShopSystem());
+        Delivery delivery = mapper.toDeliveryFromDto(dto.getDelivery());
+        branch.setDelivery(delivery);
         shopSystem.addBranch(branch);
         repository.save(branch);
         return branch.getExternalId();
@@ -52,9 +55,11 @@ public class BranchServiceImpl implements BranchService {
     @Override
     public BranchResponseDto getBranchResponseDtoByExternalId(UUID externalId) {
         Branch branch = getBranchByExternalId(externalId);
-        ShopSystemBranchInfoDto shopSystem = shopSystemService
-                .getShopSystemInfoForBranch(branch.getShopSystem().getExternalId());
-        return mapper.toBranchDtoResponse(branch, shopSystem);
+        ShopSystem shopSystem = shopSystemService.getShopSystemByExternalId(branch.getShopSystem().getExternalId());
+        ShopSystemBranchInfoDto shopSystemInfoForBranch = shopSystemService
+                .getShopSystemInfoForBranch(shopSystem);
+        Support support = shopSystem.getSupport();
+        return mapper.toBranchDtoResponse(branch, shopSystemInfoForBranch, support);
     }
 
 
@@ -72,11 +77,18 @@ public class BranchServiceImpl implements BranchService {
 
     @Override
     public Page<BranchResponseDto> getBranchesByShopSystem(UUID externalId, Pageable pageable) {
-        ShopSystemBranchInfoDto shopSystem = shopSystemService.getShopSystemInfoForBranch(externalId);
-        Page<Branch> branches = repository.findAllByShopSystemExternalId(externalId, pageable);
+        return getBranchPageImpl(pageable,
+                shopSystemService.getShopSystemByExternalId(externalId),
+                repository.findAllByShopSystemExternalId(externalId, pageable));
+    }
+
+    private PageImpl<BranchResponseDto> getBranchPageImpl(
+            Pageable pageable, ShopSystem shopSystem, Page<Branch> branches) {
         return new PageImpl<>(
                 branches.getContent().stream()
-                        .map(br -> mapper.toBranchDtoResponse(br, shopSystem))
+                        .map(br -> mapper.toBranchDtoResponse(br,
+                                shopSystemService.getShopSystemInfoForBranch(shopSystem),
+                                shopSystem.getSupport()))
                         .collect(Collectors.toList()),
                 pageable,
                 branches.getTotalElements()
