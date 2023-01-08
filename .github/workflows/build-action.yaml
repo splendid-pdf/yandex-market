@@ -3,7 +3,7 @@ name: Build Action
 on:
   pull_request:
     branches:
-      - develop/shopsystem
+      - develop/*
 
 jobs:
   build-action:
