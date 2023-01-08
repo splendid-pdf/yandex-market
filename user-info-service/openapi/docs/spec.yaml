@@ -9,15 +9,16 @@ info:
     - [User Info Github Repository](https://github.com/splendid-pdf/yandex-market/tree/master/user-info-service)
 
 servers:
-  - url: http://localhost:8080/public/api/v1
+  - url: http://localhost:8080
 tags:
-  - name: user
-    description: Rest API service to CRUD user's information
+  - name: users
+    description: Rest API to work with users
+
 paths:
-  /users:
+  /public/api/v1/users:
     post:
       tags:
-        - user
+        - users
       summary: Create user
       operationId: createUser
       requestBody:
@@ -44,7 +45,7 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
     get:
       tags:
-        - user
+        - users
       summary: Get user by email or phone
       operationId: getUserByEmailOrPhone
       parameters:
@@ -74,10 +75,39 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-  /users/{externalId}:
+
+  /private/api/v1/users/search:
+    post:
+      tags:
+        - users
+      summary: Get paginated list of users by filter
+      operationId: getUsersByFilter
+      requestBody:
+        description: JSON Object with user's information
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserFilter'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserResponseDto'
+        '400':
+          description: Invalid data provided to the server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /public/api/v1/users/{externalId}:
     get:
       tags:
-        - user
+        - users
       summary: Get a user by external id
       operationId: getByExternalId
       parameters:
@@ -111,7 +141,7 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
     put:
       tags:
-        - user
+        - users
       summary: Update user
       description: This can only be done by the logged in user.
       operationId: updateUser
@@ -151,7 +181,7 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
     delete:
       tags:
-        - user
+        - users
       summary: Delete user
       description: This can only be done by the logged in user.
       operationId: deleteUser
@@ -166,12 +196,8 @@ paths:
           example: 'b0ca32a7-6960-49a9-9f20-d78fb3799409'
           required: true
       responses:
-        '200':
-          description: Successful operation
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/UserResponseDto'
+        '204':
+          description: Successfully deleted
         '400':
           description: Invalid username supplied
           content:
@@ -180,53 +206,6 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
         '404':
           description: User not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-  /users/{externalId}/location:
-    get:
-      tags:
-        - user
-      summary: Get a user's location by external id
-      operationId: getUserLocationByExternalId
-      parameters:
-        - in: path
-          name: externalId
-          description: User External Id
-          schema: {
-            type: string,
-            format: uuid
-          }
-          example: 'b0ca32a7-6960-49a9-9f20-d78fb3799409'
-          required: true
-      responses:
-        '200':
-          description: Successful operation
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/LocationDto'
-        '400':
-          description: Invalid data provided to the server
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '401':
-          description: Unauthorized request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '403':
-          description: No permissions to perform that request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '404':
-          description: User by id {externalId} was not found
           content:
             application/json:
               schema:
@@ -249,9 +228,6 @@ components:
           default: true
           example: true
     UserRequestDto:
-      required:
-        - email
-        - password
       type: object
       properties:
         firstName:
@@ -295,9 +271,6 @@ components:
           type: string
           example: 'id2003104u48396'
     UserResponseDto:
-      required:
-        - email
-        - password
       type: object
       properties:
         externalId:
@@ -367,6 +340,14 @@ components:
           type: integer
           format: int32
           example: 12
+        latitide:
+          type: number
+          format: double
+          example: 59.938627
+        longitude:
+          type: number
+          format: double
+          example: 30.346416
     ContactDto:
       type: object
       properties:
@@ -394,6 +375,59 @@ components:
           type: string
           format: date-time
           example: '2018-03-20T09:12:28Z'
+    UserFilter:
+      type: object
+      properties:
+        firstName:
+          type: string
+          example: 'Antonio'
+        lastName:
+          type: string
+          example: 'Banderos'
+        sex:
+          type: string
+          example: 'MALE'
+        location:
+          $ref: '#/components/schemas/LocationFilter'
+        birthdayFrom:
+          type: string
+          format: date
+          description: Date of birth
+          example: 1989-01-02
+        birthdayTo:
+          type: string
+          format: date
+          description: Date of birth
+          example: 1989-02-02
+        notificationSettings:
+          $ref: '#/components/schemas/NotificationSettingsDto'
+    LocationFilter:
+      type: object
+      properties:
+        country:
+          type: string
+          example: 'Russia'
+        city:
+          type: string
+          example: 'Saint-Petersburg'
+        street:
+          type: string
+          example: 'Nevskii prospect'
+        streetNumber:
+          type: string
+          example: '10'
+        latitude:
+          type: number
+          format: double
+          example: 59.930393
+        longitude:
+          type: number
+          format: double
+          example: 30.372081
+        radius:
+          type: number
+          format: double
+          example: 10.0
   requestBodies:
     User:
       description: User object that needs to be added to the database

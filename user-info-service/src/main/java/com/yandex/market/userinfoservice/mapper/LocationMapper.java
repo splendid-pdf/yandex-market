@@ -5,9 +5,8 @@ import org.openapitools.api.model.LocationDto;
 import org.springframework.stereotype.Component;
 
 @Component
-public class LocationMapper implements Mapper<LocationDto, Location> {
+public class LocationMapper {
 
-    @Override
     public Location map(LocationDto locationDto) {
         return Location.builder()
                 .country(locationDto.getCountry())
@@ -20,7 +19,7 @@ public class LocationMapper implements Mapper<LocationDto, Location> {
                 .build();
     }
 
-    @Override
+
     public LocationDto mapToDto(Location location) {
         LocationDto locationDto = new LocationDto();
         locationDto.setCountry(location.getCountry());
