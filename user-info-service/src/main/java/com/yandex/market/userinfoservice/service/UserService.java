@@ -53,11 +53,10 @@ public class UserService {
     }
 
     @Transactional
-    public UserResponseDto deleteUserByExternalId(UUID externalId) throws EntityNotFoundException {
-        User user = userRepository.findByExternalId(externalId)
+    public void deleteUserByExternalId(UUID externalId) throws EntityNotFoundException {
+        userRepository.findByExternalId(externalId)
                 .orElseThrow(() -> new EntityNotFoundException(USER_NOT_FOUND_MESSAGE_BY_ID + externalId));
         userRepository.deleteUserByExternalId(externalId);
-        return userResponseMapper.map(user);
     }
 
     @Transactional

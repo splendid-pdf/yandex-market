@@ -4,21 +4,17 @@ info:
   version: 0.0.1
   description: |-
     Developed by Vlad, Arkady and Andrey
-    
+
     Some useful links:
     - [User Info Github Repository](https://github.com/splendid-pdf/yandex-market/tree/master/user-info-service)
 
 servers:
   - url: http://localhost:8080
-tags:
-  - name: users
-    description: Rest API to work with users
+
 
 paths:
   /public/api/v1/users:
     post:
-      tags:
-        - users
       summary: Create user
       operationId: createUser
       requestBody:
@@ -44,8 +40,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
     get:
-      tags:
-        - users
       summary: Get user by email or phone
       operationId: getUserByEmailOrPhone
       parameters:
@@ -78,8 +72,6 @@ paths:
 
   /private/api/v1/users/search:
     post:
-      tags:
-        - users
       summary: Get paginated list of users by filter
       operationId: getUsersByFilter
       requestBody:
@@ -106,8 +98,6 @@ paths:
 
   /public/api/v1/users/{externalId}:
     get:
-      tags:
-        - users
       summary: Get a user by external id
       operationId: getByExternalId
       parameters:
@@ -140,8 +130,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
     put:
-      tags:
-        - users
       summary: Update user
       description: This can only be done by the logged in user.
       operationId: updateUser
@@ -180,8 +168,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
     delete:
-      tags:
-        - users
       summary: Delete user
       description: This can only be done by the logged in user.
       operationId: deleteUser

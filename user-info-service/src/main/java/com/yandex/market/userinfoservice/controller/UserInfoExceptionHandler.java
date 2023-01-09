@@ -16,7 +16,6 @@ public class UserInfoExceptionHandler {
 
     //todo: put to another package
 
-
     @ExceptionHandler(ValidationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handeValidationException(ValidationException ex) {

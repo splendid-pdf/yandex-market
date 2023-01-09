@@ -9,7 +9,6 @@ import org.springframework.context.annotation.Configuration;
 public class AppConfig {
 
     @Bean
-//    @ConditionalOnProperty(prefix = "app.validation",)
     @ConfigurationProperties(prefix = "app.validation")
     public ErrorInfoProperties errorInfoProperties() {
         return new ErrorInfoProperties();
