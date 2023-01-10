@@ -8,9 +8,9 @@ import java.util.List;
 import java.util.UUID;
 
 @Entity
-@Builder
 @Getter
 @Setter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(of = "id")
@@ -25,21 +25,23 @@ public class Order {
 
     private UUID userId;
 
-    @Embedded
+    private double price;
+
+    @Enumerated(value = EnumType.STRING)
     private OrderStatus orderStatus;
 
     @OneToMany(mappedBy = "order", fetch = FetchType.LAZY, orphanRemoval = true)
     private List<ProductDetails> productDetails;
 
-    @Embedded
-    private PaymentMethod paymentMethod;
+    @Enumerated(value = EnumType.STRING)
+    private PaymentType paymentType;
 
     @Embedded
     private ReceiptMethod receiptMethod;
 
     private boolean paid;
 
-    private LocalDateTime paidTimestamp;
+    private LocalDateTime paymentDateTime;
 
     private LocalDateTime creationTimestamp;
 }

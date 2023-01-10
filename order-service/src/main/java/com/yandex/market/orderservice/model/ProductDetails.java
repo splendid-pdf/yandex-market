@@ -9,8 +9,8 @@ import java.util.UUID;
 @Getter
 @Setter
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @EqualsAndHashCode(of = "id")
 public class ProductDetails {
 
@@ -21,17 +21,17 @@ public class ProductDetails {
 
     private UUID productId;
 
-    private UUID branchId; //конкретный магазин
-
-    private UUID shopSystemId; // организация
+    private String name;
 
     private double price;
 
     private String description;
 
-    private String name;
-
     private String photoUrl;
+
+    private UUID branchId; //конкретный магазин
+
+    private UUID shopSystemId; // организация
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Order order;
