@@ -29,9 +29,9 @@ public class ProductDetails {
 
     private String photoUrl;
 
-    private UUID branchId; //конкретный магазин
+    private UUID branchId;
 
-    private UUID shopSystemId; // организация
+    private UUID shopSystemId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Order order;
