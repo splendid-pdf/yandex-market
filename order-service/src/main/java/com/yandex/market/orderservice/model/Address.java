@@ -23,5 +23,5 @@ public class Address {
 
     private String houseNumber;
 
-    private int officeNumber;
+    private String officeNumber;
 }
