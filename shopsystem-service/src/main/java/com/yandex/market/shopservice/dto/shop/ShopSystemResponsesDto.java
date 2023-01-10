@@ -2,33 +2,45 @@ package com.yandex.market.shopservice.dto.shop;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.yandex.market.shopservice.dto.LocationDto;
-import com.yandex.market.shopservice.model.branch.Branch;
-import com.yandex.market.shopservice.model.shop.SpecialOffer;
+import com.yandex.market.shopservice.dto.branch.BranchDto;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Positive;
 import lombok.*;
 
-import java.util.HashSet;
 import java.util.Set;
 
 @Getter
 @Setter
 @Builder
 @NoArgsConstructor
+@EqualsAndHashCode
 @AllArgsConstructor
 public class ShopSystemResponsesDto {
-    @NotBlank(message = "Field \"Name\" must not be empty")
+    @NotBlank(message = "\"Name\" field must not be empty")
     private String name;
+
+    @NotBlank(message = "\"Token\" field must not be empty")
     private String token;
+
+    @Valid
+    @NotNull(message = "\"Support contact of Shop\" field must not be empty")
     private SupportDto support;
 
+    @Valid
+    @NotNull(message = "\"Location of Shop\" field must not be empty")
     private LocationDto legalEntityAddress;
 
-    @JsonIgnoreProperties(value = {"shopSystem"})
-    private Set<SpecialOffer> specialOffers = new HashSet<>();
+    private Set<@Valid SpecialOfferDto> specialOffers;
 
-    @JsonIgnoreProperties(value = {"shopSystem"})
-    private Set<Branch> branches = new HashSet<>();
+    private Set<@Valid BranchDto> branches;
 
+    @Pattern(regexp = "^(https?:\\/\\/)?([\\w-]{1,32}\\.[\\w-]{1,32})[^\\s@]*$",
+            message = "Invalid \"Logo URL\" entered")
     private String logoUrl;
+
+    @Positive(message = "\"Rating of Shop\" field must not be negative")
     private float rating;
 }

@@ -3,7 +3,7 @@ package com.yandex.market.userinfoservice.utils;
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
-public class Constants {
+public class ValidationCodeConstants {
     public static final String BLANK_BIRTHDAY_CODE = "BLANK_BIRTHDAY_CODE";
     public static final String INCORRECT_EMAIL_CODE = "INCORRECT_EMAIL_CODE";
     public static final String BLANK_EMAIL_CODE = "BLANK_EMAIL_CODE";

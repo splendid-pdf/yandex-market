@@ -5,26 +5,37 @@ import com.yandex.market.shopservice.dto.branch.*;
 import com.yandex.market.shopservice.dto.shop.ShopSystemBranchInfoDto;
 import com.yandex.market.shopservice.dto.shop.ShopSystemRequestDto;
 import com.yandex.market.shopservice.dto.shop.ShopSystemResponsesDto;
+import com.yandex.market.shopservice.dto.shop.SpecialOfferDto;
 import com.yandex.market.shopservice.dto.shop.SupportDto;
 import com.yandex.market.shopservice.model.Location;
 import com.yandex.market.shopservice.model.branch.*;
 import com.yandex.market.shopservice.model.shop.ShopSystem;
+import com.yandex.market.shopservice.model.shop.SpecialOffer;
 import com.yandex.market.shopservice.model.shop.Support;
+import com.yandex.market.shopservice.service.branch.BranchService;
+import com.yandex.market.shopservice.service.shop.ShopSystemService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import java.util.HashSet;
 import java.util.Set;
 
 @Component
+@RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class ShopSystemMapper {
+
+    // >>> shop
+
     public ShopSystem toShopSystemFromRequestDto(ShopSystemRequestDto dto) {
         return ShopSystem.builder()
                 .name(dto.getName())
                 .token(dto.getToken())
                 .support(toSupportFromDto(dto.getSupport()))
                 .legalEntityAddress(toLocationFromDto(dto.getLegalEntityAddress()))
-                .specialOffers(dto.getSpecialOffers())
-                .branches(dto.getBranches())
+                .specialOffers(toSpecialOffersFromDto(dto.getSpecialOffers()))
+                .branches(toBranchesFromDto(dto.getBranches()))
                 .logoUrl(dto.getLogoUrl())
                 .build();
     }
@@ -35,12 +46,44 @@ public class ShopSystemMapper {
                 .token(shopSystem.getToken())
                 .support(toSupportDto(shopSystem.getSupport()))
                 .legalEntityAddress(toLocationDto(shopSystem.getLegalEntityAddress()))
-                .specialOffers(shopSystem.getSpecialOffers())
-                .branches(shopSystem.getBranches())
+                .specialOffers(toSpecialOffersDto(shopSystem.getSpecialOffers()))
+                .branches(toBranchesDto(shopSystem.getBranches()))
                 .logoUrl(shopSystem.getLogoUrl())
                 .rating(shopSystem.getRating())
                 .build();
     }
+
+    // >>> special offer
+
+    public Set<SpecialOffer> toSpecialOffersFromDto(Set<SpecialOfferDto> dto) {
+        Set<SpecialOffer> specialOffers = new HashSet<>();
+        if (dto != null && !dto.isEmpty()) {
+            dto.forEach(specialOfferDto -> specialOffers.add(
+                    SpecialOffer.builder()
+                            .name(specialOfferDto.name())
+                            .type(specialOfferDto.type())
+                            .value(specialOfferDto.value())
+                            .terms(specialOfferDto.terms())
+                            .build()));
+        }
+        return specialOffers;
+    }
+
+    public Set<SpecialOfferDto> toSpecialOffersDto(Set<SpecialOffer> specialOffers) {
+        Set<SpecialOfferDto> specialOffersDto = new HashSet<>();
+        if (specialOffers != null && !specialOffers.isEmpty()) {
+            specialOffers.forEach(specialOffer -> specialOffersDto.add(
+                    new SpecialOfferDto(
+                            specialOffer.getShopSystem().getExternalId(),
+                            specialOffer.getName(),
+                            specialOffer.getType(),
+                            specialOffer.getValue(),
+                            specialOffer.getTerms())));
+        }
+        return specialOffersDto;
+    }
+
+    // >>> support
 
     public SupportDto toSupportDto(Support support) {
         return new SupportDto(support.getNumber(), support.getEmail());
@@ -52,6 +95,8 @@ public class ShopSystemMapper {
                 .email(dto.email())
                 .build();
     }
+
+    // >>> location
 
     public Location toLocationFromDto(LocationDto dto) {
         return Location.builder()
@@ -77,6 +122,8 @@ public class ShopSystemMapper {
         );
     }
 
+    // >>> branch
+
     public Branch toBranchFromDto(BranchDto dto) {
         return Branch.builder()
                 .name(dto.getName())
@@ -88,15 +135,19 @@ public class ShopSystemMapper {
                 .build();
     }
 
-    public Contact tocContactFromDto(ContactDto dto) {
-        return Contact.builder()
-                .hotlinePhone(dto.hotlinePhone())
-                .servicePhone(dto.servicePhone())
-                .email(dto.email())
+    public BranchDto toBranchDto(Branch branch) {
+        return BranchDto.builder()
+                .shopSystem(branch.getShopSystem().getExternalId())
+                .name(branch.getName())
+                .token(branch.getToken())
+                .ogrn(branch.getOgrn())
+                .location(toLocationDto(branch.getLocation()))
+                .contact(toContactDto(branch.getContact()))
+                .delivery(toDeliveryDto(branch.getDelivery()))
                 .build();
     }
 
-    public Delivery toDeliveryFromDto(DeliveryDto dto) {
+public Delivery toDeliveryFromDto(DeliveryDto dto) {
         Set<DeliveryZoneDto> zoneDto = dto.getDeliveryZones();
         Set<DeliveryIntervalDto> intervalDto = dto.getDeliveryIntervals();
         Delivery delivery = Delivery.builder()
@@ -171,7 +222,7 @@ public class ShopSystemMapper {
                 contact.getEmail()
         );
     }
-
+    
     private DeliveryResponseDto toDeliveryResponseDto(Branch branch) {
         Delivery delivery = branch.getDelivery();
         return DeliveryResponseDto.builder()
@@ -196,8 +247,7 @@ public class ShopSystemMapper {
                 .periodEnd(interval.getPeriodEnd())
                 .build();
     }
-
-    private Set<DeliveryZoneDto> toSetDeliveryZoneDto(Set<DeliveryZone> deliveryZones) {
+ private Set<DeliveryZoneDto> toSetDeliveryZoneDto(Set<DeliveryZone> deliveryZones) {
         Set<DeliveryZoneDto> deliveryZonesDto = new HashSet<>();
         for (DeliveryZone zoneDto : deliveryZones) {
             deliveryZonesDto.add(toDeliveryZoneDto(zoneDto));
@@ -205,7 +255,7 @@ public class ShopSystemMapper {
         return deliveryZonesDto;
     }
 
-    private DeliveryZoneDto toDeliveryZoneDto(DeliveryZone zoneDto) {
+private DeliveryZoneDto toDeliveryZoneDto(DeliveryZone zoneDto) {
         return DeliveryZoneDto.builder()
                 .zoneId(zoneDto.getZoneId())
                 .radiusInMeters(zoneDto.getRadiusInMeters())
