@@ -21,9 +21,13 @@ public class SpecialOffer {
 
     @ManyToOne(fetch = FetchType.LAZY)
     private ShopSystem shopSystem;
+
     private String name;
-    private String type;
-    private Integer value;
+
+    @Enumerated(EnumType.STRING)
+    private SpecialOfferType type;
+
+    private int value;
     
     private String terms;
 }

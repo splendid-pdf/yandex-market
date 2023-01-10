@@ -5,7 +5,6 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
-import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
@@ -25,9 +24,9 @@ public class DeliveryDto {
 
     private boolean hasDeliveryToPickupPoint;
 
-    private Set<PickupPointPartner> pickupPointPartners = new HashSet<>();
+    private Set<PickupPointPartner> pickupPointPartners;
 
-    private Set<@Valid DeliveryZoneDto> deliveryZones = new HashSet<>();
+    private Set<@Valid DeliveryZoneDto> deliveryZones;
 
-    private Set<@Valid DeliveryIntervalDto> deliveryIntervals = new HashSet<>();
+    private Set<@Valid DeliveryIntervalDto> deliveryIntervals;
 }
