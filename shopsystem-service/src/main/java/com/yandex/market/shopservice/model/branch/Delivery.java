@@ -6,10 +6,10 @@ import lombok.*;
 import java.util.HashSet;
 import java.util.Set;
 
+@Entity
 @Getter
 @Setter
 @Builder
-@Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "deliveries")
@@ -22,7 +22,7 @@ public class Delivery {
     @SequenceGenerator(name = "delivery_seq", sequenceName = "delivery_sequence", allocationSize = 1)
     private Long id;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Branch branch;
 
     private boolean hasDelivery;

@@ -1,6 +1,7 @@
 package com.yandex.market.shopservice.controllers.branch;
 
 import com.yandex.market.shopservice.dto.branch.BranchDto;
+import com.yandex.market.shopservice.dto.branch.BranchResponseDto;
 import com.yandex.market.shopservice.service.branch.BranchService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -30,5 +31,12 @@ public class BranchController {
     public void updateBranchByExternalId(@PathVariable("externalId") UUID externalId, @RequestBody @Valid BranchDto dto) {
         log.info("Received a request to update a branch by external id = %s".formatted(externalId));
         branchService.updateBranchByExternalId(externalId, dto);
+    }
+
+    @GetMapping("/{externalId}")
+    @ResponseStatus(HttpStatus.OK)
+    public BranchResponseDto getBranchByExternalId(@PathVariable("externalId") UUID externalId) {
+        log.info("Received a request to get branch by external id.");
+        return branchService.getBranchResponseDtoByExternalId(externalId);
     }
 }

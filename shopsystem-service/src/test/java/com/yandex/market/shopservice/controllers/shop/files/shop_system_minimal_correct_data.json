@@ -1,0 +1,10 @@
+{
+  "name": "TEST SHOP 2",
+  "support": {
+    "email": "test_shop@test"
+  },
+  "legalEntityAddress": {
+    "country": "Russia",
+    "region": "Moscow region"
+  }
+}

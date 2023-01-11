@@ -1,5 +1,6 @@
 package com.yandex.market.shopservice.model.branch;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.yandex.market.shopservice.model.Location;
 import com.yandex.market.shopservice.model.shop.ShopSystem;
 import jakarta.persistence.*;
@@ -40,11 +41,16 @@ public class Branch {
     @Embedded
     private Contact contact;
 
-    @OneToOne(mappedBy = "branch", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(cascade = CascadeType.ALL,
+            mappedBy = "branch")
+    @JoinColumn(name = "delivery_id")
+    @JsonIgnoreProperties(value = "delivery")
     private Delivery delivery;
+
+    @Embedded
+    private SupportedPaymentMethods paymentMethods;
 
     private boolean pickup;
     private boolean isDisabled;
 
-    //TODO features
 }

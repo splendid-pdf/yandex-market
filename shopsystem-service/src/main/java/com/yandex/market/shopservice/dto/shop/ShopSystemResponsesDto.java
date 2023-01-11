@@ -1,5 +1,6 @@
 package com.yandex.market.shopservice.dto.shop;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.yandex.market.shopservice.dto.LocationDto;
 import com.yandex.market.shopservice.dto.branch.BranchDto;
 import jakarta.validation.Valid;

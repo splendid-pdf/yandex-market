@@ -1,5 +1,6 @@
 package com.yandex.market.shopservice.service.shop.impl;
 
+import com.yandex.market.shopservice.dto.shop.ShopSystemBranchInfoDto;
 import com.yandex.market.shopservice.dto.shop.ShopSystemRequestDto;
 import com.yandex.market.shopservice.dto.shop.ShopSystemResponsesDto;
 import com.yandex.market.shopservice.model.shop.ShopSystem;
@@ -26,6 +27,7 @@ public class ShopSystemServiceImpl implements ShopSystemService {
     private final ShopSystemRepository repository;
     private final ShopSystemMapper mapper;
 
+    @Override
     public Page<ShopSystemResponsesDto> getAllShopSystems(Pageable pageable) {
         Page<ShopSystem> shopSystemPages = repository.findAll(pageable);
         return new PageImpl<>(
@@ -45,10 +47,21 @@ public class ShopSystemServiceImpl implements ShopSystemService {
         return shopSystem.getExternalId();
     }
 
+    @Override
     public ShopSystemResponsesDto getShopSystemDtoByExternalId(UUID externalId) {
         return mapper.toShopSystemResponseDto(getShopSystemByExternalId(externalId));
     }
 
+    @Override
+    public ShopSystemBranchInfoDto getShopSystemInfoForBranch(ShopSystem shopSystem) {
+        return ShopSystemBranchInfoDto.builder()
+                .shopSystemExternalId(shopSystem.getExternalId())
+                .companyName(shopSystem.getName())
+                .companyLogoUrl(shopSystem.getLogoUrl())
+                .build();
+    }
+
+    @Override
     public ShopSystem getShopSystemByExternalId(UUID externalId) {
         return repository.findByExternalId(externalId)
                 .orElseThrow(() -> {
@@ -58,6 +71,7 @@ public class ShopSystemServiceImpl implements ShopSystemService {
                 );
     }
 
+    @Override
     @Transactional
     public void deleteShopSystemByExternalId(UUID externalId) {
         ShopSystem shopSystem = repository
@@ -70,6 +84,7 @@ public class ShopSystemServiceImpl implements ShopSystemService {
         shopSystem.setDisabled(true);
     }
 
+    @Override
     @Transactional
     public void updateShopSystemByExternalId(UUID externalId, ShopSystemRequestDto dto) {
         ShopSystem shopSystem = getShopSystemByExternalId(externalId);

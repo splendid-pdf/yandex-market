@@ -1,0 +1,18 @@
+{
+  "name": "TEST SHOP 1",
+  "token": "4df-adf5sadf-asdf",
+  "support": {
+    "number": "640-440",
+    "email": "test_shop@test"
+  },
+  "legalEntityAddress": {
+    "country": "Russia",
+    "region": "Moscow region",
+    "city": "Moscow",
+    "street": "Aleekseeva",
+    "houseNumber": 5,
+    "officeNumber": 2,
+    "postcode": "408080"
+  },
+  "logoUrl": "https://test_shop.jpg"
+}
