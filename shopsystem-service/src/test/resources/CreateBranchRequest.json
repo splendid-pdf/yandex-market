@@ -1,19 +1,21 @@
 {
-  "shopSystemId": "может быть а может и не быть",
   "name": "Eldorado Ohta Moll",
   "token": "0d305bfS05e74beS8fe9cedfaf4f6003",
   "ogrn": "1227700339492",
   "location": {
+    "country": "этого не должно быть тут",
+    "region": "этого не должно быть тут",
     "street": "Brantovskaya d.",
-    "streetNumber": "3",
-    "postcode": "195027",
     "city": "Saint-Petersburg",
-    "latitude": 59.934542,
-    "longitude": 30.416842
+    "houseNumber": "5B",
+    "officeNumber": "1",
+    "postcode": "195027",
+    "latitude": 50.2,
+    "longitude": 30.4
   },
   "contact": {
     "hotlinePhone": "+78126123941",
-    "servicePhoneNumber": "+78126121211",
+    "servicePhone": "+78126121211",
     "email": "eldorado-ohta@eldorado.ru"
   },
   "delivery": {
@@ -22,13 +24,13 @@
     "hasDeliveryToPickupPoint": true,
     "pickupPointPartners": [
       "OZON",
-      "PickPoint",
-      "SPost"
+      "CDEK",
+      "YANDEX_MARKET"
     ],
     "deliveryZones": [
       {
         "zoneId": "id742100",
-        "radiusTnMeters": 2000,
+        "radiusInMeters": 2000,
         "standardDeliveryPrice": 399,
         "expressDeliveryPrice": 599
       },
@@ -39,14 +41,16 @@
         "expressDeliveryPrice": 599
       }
     ],
-    "deliveryTimeIntervals": [
+    "deliveryIntervals": [
       {
         "intervalId": "126600302",
-        "interval": "10:00 - 12:00"
+        "periodStart": "10:00",
+        "periodEnd": "12:00"
       },
       {
         "intervalId": "126600303",
-        "interval": "12:00 - 18:00"
+        "periodStart": "12:00",
+        "periodEnd": "18:00"
       }
     ]
   },
