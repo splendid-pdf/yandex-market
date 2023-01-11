@@ -1,10 +1,11 @@
 package com.yandex.market.shopservice.service.shop.impl;
 
 import com.yandex.market.shopservice.dto.shop.ShopSystemRequestDto;
-import com.yandex.market.shopservice.dto.shop.ShopSystemResponsesDto;
+import com.yandex.market.shopservice.dto.shop.ShopSystemResponseDto;
 import com.yandex.market.shopservice.model.shop.ShopSystem;
 import com.yandex.market.shopservice.repositories.ShopSystemRepository;
 import com.yandex.market.shopservice.service.shop.ShopSystemService;
+import com.yandex.market.shopservice.util.ShopSystemMapStructMapper;
 import com.yandex.market.shopservice.util.ShopSystemMapper;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
@@ -26,12 +27,15 @@ public class ShopSystemServiceImpl implements ShopSystemService {
     private final ShopSystemRepository repository;
     private final ShopSystemMapper mapper;
 
-    public Page<ShopSystemResponsesDto> getAllShopSystems(Pageable pageable) {
+    private final ShopSystemMapStructMapper mapStructMapper;
+
+    public Page<ShopSystemResponseDto> getAllShopSystems(Pageable pageable) {
         Page<ShopSystem> shopSystemPages = repository.findAll(pageable);
+
         return new PageImpl<>(
                 shopSystemPages.getContent()
                         .stream()
-                        .map(mapper::toShopSystemResponseDto)
+                        .map(mapStructMapper::toShopSystemResponse)
                         .collect(Collectors.toList()),
                 pageable,
                 shopSystemPages.getTotalElements());
@@ -45,7 +49,7 @@ public class ShopSystemServiceImpl implements ShopSystemService {
         return shopSystem.getExternalId();
     }
 
-    public ShopSystemResponsesDto getShopSystemDtoByExternalId(UUID externalId) {
+    public ShopSystemResponseDto getShopSystemDtoByExternalId(UUID externalId) {
         return mapper.toShopSystemResponseDto(getShopSystemByExternalId(externalId));
     }
 

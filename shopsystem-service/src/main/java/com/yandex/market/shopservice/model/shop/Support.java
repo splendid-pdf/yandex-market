@@ -9,6 +9,7 @@ import lombok.*;
 @Embeddable
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode
 public class Support {
     private String number;
     private String email;
