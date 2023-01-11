@@ -14,16 +14,16 @@ insert into shop_systems(id,
                          country,
                          region,
                          city,
-                         postcode,
                          street,
                          house_number,
                          office_number,
+                         postcode,
                          logo_url,
                          rating,
                          is_disabled,
                          is_test,
 
---          shopsystem hasn't coordinates
+--          todo shopsystem hasn't coordinates
                          latitude,
                          longitude)
 values (1,
@@ -35,10 +35,10 @@ values (1,
         'Russia',
         'Moscow Region',
         'Moscow',
-        '117218',
         'Krizhanovskaya',
         '5B',
         '12C',
+        '117218',
         'https://static.eldorado.ru/espa/l.42.0-ab-esp-5648.3-Ps0BSwVDAKQkPjSPyBVlu/static_spa/assets/logo.dc65dadd.svg',
         4.8,
         false,
@@ -53,7 +53,7 @@ insert into branches (id,
                       token,
                       ogrn,
 
---                    Branch location hasn't country and region
+--                  todo  Branch location hasn't country and region
                       country,
                       region,
 --
@@ -98,7 +98,7 @@ insert into special_offers (id,
                             terms)
 values (1,
         1,
-        'Скидка на день рождение',
+        'Подарок на день рождение',
         'DISCOUNT',
         10,
         'Скидка предоставляется в течение 7 дней до дня рождения и 7 дней после');

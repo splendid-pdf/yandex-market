@@ -146,6 +146,7 @@ class BranchControllerTest {
         branchDto.setName("Splendid Super Shop");
         branchDto.setToken("0d200bfS05e66beS8fe9asdfaf4f6777");
         branchDto.setOgrn("6669911337888");
+
         branchDto.setContact(new ContactDto("8-800-250-34-34", "8-800-222-89-89", "Splendid@support.com"));
 
         Branch branch = branchRepository.findById(1L).orElseThrow(EntityNotFoundException::new);
@@ -159,9 +160,12 @@ class BranchControllerTest {
         assertThat(branch.getName()).isEqualTo("Splendid Super Shop");
         assertThat(branch.getToken()).isEqualTo("0d200bfS05e66beS8fe9asdfaf4f6777");
         assertThat(branch.getOgrn()).isEqualTo("6669911337888");
-        assertThat(branch.getContact().getHotlinePhone()).isEqualTo("8-800-250-34-34");
-        assertThat(branch.getContact().getServicePhone()).isEqualTo("8-800-222-89-89");
-        assertThat(branch.getContact().getEmail()).isEqualTo("Splendid@support.com");
+
+        Contact contact = branch.getContact();
+
+        assertThat(contact.getHotlinePhone()).isEqualTo("8-800-250-34-34");
+        assertThat(contact.getServicePhone()).isEqualTo("8-800-222-89-89");
+        assertThat(contact.getEmail()).isEqualTo("Splendid@support.com");
     }
 
     @Test

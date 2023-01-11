@@ -6,11 +6,12 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.Builder;
 
+import java.util.Objects;
 import java.util.UUID;
 
 @Builder
 public record SpecialOfferDto(
-        @NotNull(message = "\"UUID of Shop System\" field must not be empty")
+//        @NotNull(message = "\"UUID of Shop System\" field must not be empty")
         UUID shopSystem,
 
         @NotBlank(message = "\"Name\" field must not be empty")
@@ -23,4 +24,16 @@ public record SpecialOfferDto(
         int value,
 
         String terms) {
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        SpecialOfferDto that = (SpecialOfferDto) o;
+        return name.equals(that.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name);
+    }
 }

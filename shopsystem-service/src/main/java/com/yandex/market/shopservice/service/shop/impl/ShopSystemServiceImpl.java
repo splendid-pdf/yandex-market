@@ -87,10 +87,11 @@ public class ShopSystemServiceImpl implements ShopSystemService {
     @Transactional
     public void updateShopSystemByExternalId(UUID externalId, ShopSystemRequestDto dto) {
         ShopSystem shopSystem = getShopSystemByExternalId(externalId);
-        shopSystem.setName(dto.getName());
-        shopSystem.setToken(dto.getToken());
-        shopSystem.setSupport(mapper.toShopSystem(dto).getSupport());
-        shopSystem.setLegalEntityAddress(mapper.toShopSystem(dto).getLegalEntityAddress());
-        shopSystem.setLogoUrl(dto.getLogoUrl());
+        mapper.updateShopSystem(shopSystem, dto);
+//        shopSystem.setName(dto.getName());
+//        shopSystem.setToken(dto.getToken());
+//        shopSystem.setSupport(mapper.toShopSystem(dto).getSupport());
+//        shopSystem.setLegalEntityAddress(mapper.toShopSystem(dto).getLegalEntityAddress());
+//        shopSystem.setLogoUrl(dto.getLogoUrl());
     }
 }

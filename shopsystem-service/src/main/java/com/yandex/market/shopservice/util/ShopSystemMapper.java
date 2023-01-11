@@ -6,6 +6,7 @@ import com.yandex.market.shopservice.model.shop.ShopSystem;
 import org.mapstruct.Builder;
 import org.mapstruct.CollectionMappingStrategy;
 import org.mapstruct.Mapper;
+import org.mapstruct.MappingTarget;
 
 @Mapper(
         componentModel = "spring",
@@ -17,5 +18,9 @@ public interface ShopSystemMapper {
     ShopSystemResponseDto toShopSystemResponse(ShopSystem shopSystem);
 
     ShopSystem toShopSystem(ShopSystemRequestDto request);
+
+    //    @Mapping(target = "shopSystem", ignore = true)
+//    @Mapping(target = "delivery.branch", ignore = true)
+    ShopSystem updateShopSystem(@MappingTarget ShopSystem entity, ShopSystemRequestDto dto);
 }
 
