@@ -25,6 +25,7 @@ import java.nio.file.Path;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -112,18 +113,21 @@ class ShopSystemControllerTest {
         ShopSystem shopSystem = shopSystemRepository.findById(1L).orElseThrow(EntityNotFoundException::new);
 
         mockMvc.perform(get(url + "/{externalId}", shopSystem.getExternalId()))
-                .andExpect(content().string(containsString(shopSystem.getName())))
-                .andExpect(content().string(containsString(shopSystem.getToken())))
-                .andExpect(content().string(containsString(shopSystem.getSupport().getNumber())))
-                .andExpect(content().string(containsString(shopSystem.getSupport().getEmail())))
-                .andExpect(content().string(containsString(shopSystem.getLegalEntityAddress().getCountry())))
-                .andExpect(content().string(containsString(shopSystem.getLegalEntityAddress().getCity())))
-                .andExpect(content().string(containsString(shopSystem.getLegalEntityAddress().getStreet())))
-                .andExpect(content().string(containsString(shopSystem.getLegalEntityAddress().getHouseNumber())))
-                .andExpect(content().string(containsString(shopSystem.getLegalEntityAddress().getOfficeNumber())))
-                .andExpect(content().string(containsString(shopSystem.getLegalEntityAddress().getPostcode())))
-                .andExpect(content().string(containsString(shopSystem.getLogoUrl())))
-                .andExpect(content().string(containsString(String.valueOf(shopSystem.getRating()))));
+                .andExpect(status().isOk())
+                .andExpect(content().string(allOf(
+                        containsString(shopSystem.getName()),
+                        containsString(shopSystem.getToken()),
+                        containsString(shopSystem.getSupport().getNumber()),
+                        containsString(shopSystem.getSupport().getEmail()),
+                        containsString(shopSystem.getLegalEntityAddress().getCountry()),
+                        containsString(shopSystem.getLegalEntityAddress().getCity()),
+                        containsString(shopSystem.getLegalEntityAddress().getStreet()),
+                        containsString(shopSystem.getLegalEntityAddress().getHouseNumber()),
+                        containsString(shopSystem.getLegalEntityAddress().getOfficeNumber()),
+                        containsString(shopSystem.getLegalEntityAddress().getPostcode()),
+                        containsString(shopSystem.getLogoUrl()),
+                        containsString(String.valueOf(shopSystem.getRating()))
+                )));
     }
 
     @Test

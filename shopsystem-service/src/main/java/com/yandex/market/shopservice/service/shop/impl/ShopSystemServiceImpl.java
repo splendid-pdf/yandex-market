@@ -5,7 +5,7 @@ import com.yandex.market.shopservice.dto.shop.ShopSystemResponseDto;
 import com.yandex.market.shopservice.model.shop.ShopSystem;
 import com.yandex.market.shopservice.repositories.ShopSystemRepository;
 import com.yandex.market.shopservice.service.shop.ShopSystemService;
-import com.yandex.market.shopservice.util.ShopSystemMapStructMapper;
+import com.yandex.market.shopservice.util.ShopSystemMapper;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +26,7 @@ public class ShopSystemServiceImpl implements ShopSystemService {
 
     private final ShopSystemRepository shopSystemRepository;
 
-    private final ShopSystemMapStructMapper mapper;
+    private final ShopSystemMapper mapper;
 
     public Page<ShopSystemResponseDto> getAllShopSystems(Pageable pageable) {
         Page<ShopSystem> shopSystemPages = shopSystemRepository.findAll(pageable);
