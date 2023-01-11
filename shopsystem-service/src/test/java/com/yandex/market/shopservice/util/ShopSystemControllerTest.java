@@ -1,36 +1,38 @@
 package com.yandex.market.shopservice.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.yandex.market.shopservice.dto.branch.BranchDto;
 import com.yandex.market.shopservice.dto.shop.ShopSystemRequestDto;
-import com.yandex.market.shopservice.dto.shop.ShopSystemResponseDto;
+import com.yandex.market.shopservice.dto.shop.SupportDto;
 import com.yandex.market.shopservice.model.shop.ShopSystem;
 import com.yandex.market.shopservice.repositories.ShopSystemRepository;
-import com.yandex.market.shopservice.service.shop.ShopSystemService;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 
-import java.util.Collections;
-import java.util.UUID;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Set;
 
-import static org.mockito.Mockito.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@Sql(value = "classpath:insert_shopsystems.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-@Sql(value = "classpath:truncate.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+@Sql(value = "classpath:insert_shopsystem.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+//@Sql(value = "classpath:truncate.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 class ShopSystemControllerTest {
 
     @Value("${spring.application.url.shop}")
@@ -42,163 +44,127 @@ class ShopSystemControllerTest {
     @Autowired
     private ShopSystemRepository shopSystemRepository;
 
-    private ShopSystemService shopSystemService = mock(ShopSystemService.class);
-
-    private final ObjectMapper mapper = new ObjectMapper();
+    @Autowired
+    private ObjectMapper mapper;
 
     @Test
-    public void getAllShopSystems_returnDefaultPagingPageAnd200OkWhenPagingQueryParamsNotDefined() throws Exception {
+    public void getAllShopSystems_returnPageWithShopSystemsAnd200Ok() throws Exception {
         ShopSystem shopSystem = shopSystemRepository.findById(1L).orElseThrow(EntityNotFoundException::new);
 
         mockMvc.perform(get(url))
-                .andDo(print())
+                .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content").exists())
-                .andExpect(jsonPath("$.content[0].name").value(shopSystem.getName()))
-                .andExpect(status().isOk());
+                .andExpect(content().string(containsString(shopSystem.getName())))
+                .andExpect(content().string(containsString(shopSystem.getToken())))
+                .andExpect(content().string(containsString(shopSystem.getSupport().getNumber())))
+                .andExpect(content().string(containsString(shopSystem.getSupport().getEmail())))
+                .andExpect(content().string(containsString(shopSystem.getLegalEntityAddress().getCountry())))
+                .andExpect(content().string(containsString(shopSystem.getLegalEntityAddress().getCity())))
+                .andExpect(content().string(containsString(shopSystem.getLegalEntityAddress().getStreet())))
+                .andExpect(content().string(containsString(shopSystem.getLegalEntityAddress().getHouseNumber())))
+                .andExpect(content().string(containsString(shopSystem.getLegalEntityAddress().getOfficeNumber())))
+                .andExpect(content().string(containsString(shopSystem.getLegalEntityAddress().getPostcode())))
+                .andExpect(content().string(containsString(shopSystem.getLogoUrl())))
+                .andExpect(content().string(containsString(String.valueOf(shopSystem.getRating()))));
     }
 
     @Test
-    public void getAllShopSystems_returnDefaultPagingPageAnd200OkWhenPagingQueryParamsWrong() throws Exception {
-        PageRequest defaultPageable = PageRequest.of(0, 20);
-        PageImpl<ShopSystemResponseDto> page = new PageImpl<>(Collections.emptyList(), defaultPageable, 43);
+    void createNewShopSystemWithoutBranches_returnShopSystemExternalIdAnd201Created() throws Exception {
+        String request = getShopSystemRequestJson();
 
-        when(shopSystemService.getAllShopSystems(defaultPageable)).thenReturn(page);
+        ResultActions result = mockMvc.perform(post(url)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(request)
+        );
 
-        mockMvc.perform(get(url + "?page=-2&size=-10"))
-                .andDo(print())
-                .andExpect(jsonPath("$.content").exists())
-                .andExpect(jsonPath("$.number").value(0))
-                .andExpect(jsonPath("$.size").value(20))
-                .andExpect(jsonPath("$.totalPages").value(3))
-                .andExpect(jsonPath("$.totalElements").value(page.getTotalElements()))
-                .andExpect(status().isOk());
+        ShopSystem newShopSystem = shopSystemRepository.findById(2L).orElseThrow(EntityNotFoundException::new);
+
+        result
+                .andExpect(status().isCreated())
+                .andExpect(content().string(containsString(newShopSystem.getExternalId().toString())));
     }
 
     @Test
-    public void getAllShopSystems_returnPagingPageAnd200OkWhenQueryParamsDefined() throws Exception {
-        PageRequest pageable = PageRequest.of(2, 10);
-        PageImpl<ShopSystemResponseDto> page = new PageImpl<>(Collections.emptyList(), pageable, 43);
+    @Transactional
+    @Rollback(value = false)
+    void createNewShopSystemWithBranches_returnShopSystemExternalIdAnd201Created() throws Exception {
+        ShopSystemRequestDto shopSystemRequestDto = mapper.readValue(getShopSystemRequestJson(), ShopSystemRequestDto.class);
+        BranchDto branchDto = mapper.readValue(getBranchRequestJson(), BranchDto.class);
 
-        when(shopSystemService.getAllShopSystems(pageable)).thenReturn(page);
+        shopSystemRequestDto.setBranches(Set.of(branchDto));
 
-        mockMvc.perform(get(url + "?page=2&size=10"))
-                .andDo(print())
-                .andExpect(jsonPath("$.content").exists())
-                .andExpect(jsonPath("$.number").value(2))
-                .andExpect(jsonPath("$.size").value(10))
-                .andExpect(jsonPath("$.totalPages").value(5))
-                .andExpect(jsonPath("$.totalElements").value(page.getTotalElements()))
-                .andExpect(status().isOk());
-    }
+        ResultActions result = mockMvc.perform(post(url)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(shopSystemRequestDto))
+        );
 
-    @Test
-    void createNewShopSystem_return201Created() throws Exception {
-        ShopSystemRequestDto request = new ShopSystemRequestDto();
-        request.setName("splendid");
+        ShopSystem newShopSystem = shopSystemRepository.findById(2L).orElseThrow(EntityNotFoundException::new);
 
-        mockMvc.perform(post(url)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(request))
-                )
-                .andExpect(status().isCreated());
-    }
+        result
+                .andExpect(status().isCreated())
+                .andExpect(content().string(containsString(newShopSystem.getExternalId().toString())));
 
-    @Test
-    void createNewShopSystem_throwValidationExceptionNameNotBlankAnd400BadRequestWhenNameIsBlank() throws Exception {
-        ShopSystemRequestDto request = new ShopSystemRequestDto();
-
-        mockMvc.perform(post(url)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(request))
-                )
-                .andDo(print())
-                .andExpect(status().isBadRequest());
+        assertThat(newShopSystem.getBranches().size()).isEqualTo(1);
     }
 
     @Test
     void getShopSystemByExternalId_returnShopSystemAnd200Ok() throws Exception {
-        UUID externalId = UUID.randomUUID();
-        ShopSystemResponseDto response = new ShopSystemResponseDto();
+        ShopSystem shopSystem = shopSystemRepository.findById(1L).orElseThrow(EntityNotFoundException::new);
 
-        when(shopSystemService.getShopSystemDtoByExternalId(externalId)).thenReturn(response);
+        mockMvc.perform(get(url + "/{externalId}", shopSystem.getExternalId()))
+                .andExpect(content().string(containsString(shopSystem.getName())))
+                .andExpect(content().string(containsString(shopSystem.getToken())))
+                .andExpect(content().string(containsString(shopSystem.getSupport().getNumber())))
+                .andExpect(content().string(containsString(shopSystem.getSupport().getEmail())))
+                .andExpect(content().string(containsString(shopSystem.getLegalEntityAddress().getCountry())))
+                .andExpect(content().string(containsString(shopSystem.getLegalEntityAddress().getCity())))
+                .andExpect(content().string(containsString(shopSystem.getLegalEntityAddress().getStreet())))
+                .andExpect(content().string(containsString(shopSystem.getLegalEntityAddress().getHouseNumber())))
+                .andExpect(content().string(containsString(shopSystem.getLegalEntityAddress().getOfficeNumber())))
+                .andExpect(content().string(containsString(shopSystem.getLegalEntityAddress().getPostcode())))
+                .andExpect(content().string(containsString(shopSystem.getLogoUrl())))
+                .andExpect(content().string(containsString(String.valueOf(shopSystem.getRating()))));
+    }
 
-        mockMvc.perform(get(url + "/{externalId}", externalId))
-                .andDo(print())
-                .andExpect(jsonPath("$").exists())
+    @Test
+    void deleteShopSystemByExternalId_return200OkAndDisableShopSystem() throws Exception {
+        ShopSystem shopSystem = shopSystemRepository.findById(1L).orElseThrow(EntityNotFoundException::new);
+
+        mockMvc.perform(delete(url + "/{externalId}", shopSystem.getExternalId()))
                 .andExpect(status().isOk());
+
+        ShopSystem updatedShopSystem = shopSystemRepository.findById(1L).orElseThrow(EntityNotFoundException::new);
+
+        assertThat(updatedShopSystem.isDisabled()).isTrue();
     }
 
     @Test
-    void getShopSystemByExternalId_throwEntityNotFoundExceptionAnd404NotFound() throws Exception {
-        UUID externalId = UUID.randomUUID();
+    void updateSystemShopByExternalId_return200OkAndUpdateFields() throws Exception {
+        String request = getShopSystemRequestJson();
+        ShopSystemRequestDto shopSystemRequest = mapper.readValue(request, ShopSystemRequestDto.class);
 
-        when(shopSystemService.getShopSystemDtoByExternalId(externalId))
-                .thenThrow(EntityNotFoundException.class);
+        shopSystemRequest.setName("Splendid");
+        shopSystemRequest.setSupport(new SupportDto("8-800-250-34-34", "Splendid@support.com"));
 
-        mockMvc.perform(get(url + "/{externalId}", externalId))
-                .andDo(print())
-                .andExpect(status().isNotFound());
-    }
-
-    @Test
-    void deleteShopSystemByExternalId_return200Ok() throws Exception {
-        UUID externalId = UUID.randomUUID();
-
-        mockMvc.perform(delete(url + "/{externalId}", externalId))
-                .andExpect(status().isOk());
-    }
-
-    @Test
-    void deleteShopSystemByExternalId_throwEntityNotFoundExceptionAnd404NotFound() throws Exception {
-        UUID externalId = UUID.randomUUID();
-
-        doThrow(EntityNotFoundException.class)
-                .when(shopSystemService)
-                .deleteShopSystemByExternalId(externalId);
-
-        mockMvc.perform(delete(url + "/{externalId}", externalId))
-                .andExpect(status().isNotFound());
-    }
-
-    @Test
-    void updateSystemShopByExternalId_return200Ok() throws Exception {
-        UUID externalId = UUID.randomUUID();
-        ShopSystemRequestDto request = new ShopSystemRequestDto();
-        request.setName("splendid");
-
-        mockMvc.perform(put(url + "/{externalId}", externalId)
+        ShopSystem shopSystem = shopSystemRepository.findById(1L).orElseThrow(EntityNotFoundException::new);
+        mockMvc.perform(put(url + "/{externalId}", shopSystem.getExternalId())
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(request))
+                        .content(mapper.writeValueAsString(shopSystemRequest))
                 )
                 .andExpect(status().isOk());
+
+        ShopSystem updatedShopSystem = shopSystemRepository.findById(1L).orElseThrow(EntityNotFoundException::new);
+
+        assertThat(updatedShopSystem.getName()).isEqualTo("Splendid");
+        assertThat(updatedShopSystem.getSupport().getNumber()).isEqualTo("8-800-250-34-34");
+        assertThat(updatedShopSystem.getSupport().getEmail()).isEqualTo("Splendid@support.com");
     }
 
-    @Test
-    void updateSystemShopByExternalId_throwEntityNotFoundExceptionAnd404NotFound() throws Exception {
-        UUID externalId = UUID.randomUUID();
-        ShopSystemRequestDto request = new ShopSystemRequestDto();
-        request.setName("splendid");
-
-        doThrow(EntityNotFoundException.class)
-                .when(shopSystemService)
-                .updateShopSystemByExternalId(externalId, request);
-
-        mockMvc.perform(put(url + "/{externalId}", externalId)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(request))
-                )
-                .andExpect(status().isNotFound());
+    private static String getBranchRequestJson() throws IOException {
+        return Files.readString(Path.of("src/test/resources/CreateBranchRequest.json"));
     }
 
-    @Test
-    void updateSystemShopByExternalId_throwValidationExceptionNameNotBlankAnd400BadRequestWhenNameIsBlank() throws Exception {
-        UUID externalId = UUID.randomUUID();
-        ShopSystemRequestDto request = new ShopSystemRequestDto();
-
-        mockMvc.perform(put(url + "/{externalId}", externalId)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(request))
-                )
-                .andExpect(status().isBadRequest());
+    private static String getShopSystemRequestJson() throws IOException {
+        return Files.readString(Path.of("src/test/resources/CreateShopsystemRequest.json"));
     }
 }

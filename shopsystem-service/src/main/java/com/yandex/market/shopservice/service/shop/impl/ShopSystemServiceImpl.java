@@ -6,7 +6,6 @@ import com.yandex.market.shopservice.model.shop.ShopSystem;
 import com.yandex.market.shopservice.repositories.ShopSystemRepository;
 import com.yandex.market.shopservice.service.shop.ShopSystemService;
 import com.yandex.market.shopservice.util.ShopSystemMapStructMapper;
-import com.yandex.market.shopservice.util.ShopSystemMapper;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -24,18 +23,18 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class ShopSystemServiceImpl implements ShopSystemService {
-    private final ShopSystemRepository repository;
-    private final ShopSystemMapper mapper;
 
-    private final ShopSystemMapStructMapper mapStructMapper;
+    private final ShopSystemRepository shopSystemRepository;
+
+    private final ShopSystemMapStructMapper mapper;
 
     public Page<ShopSystemResponseDto> getAllShopSystems(Pageable pageable) {
-        Page<ShopSystem> shopSystemPages = repository.findAll(pageable);
+        Page<ShopSystem> shopSystemPages = shopSystemRepository.findAll(pageable);
 
         return new PageImpl<>(
                 shopSystemPages.getContent()
                         .stream()
-                        .map(mapStructMapper::toShopSystemResponse)
+                        .map(mapper::toShopSystemResponse)
                         .collect(Collectors.toList()),
                 pageable,
                 shopSystemPages.getTotalElements());
@@ -43,18 +42,28 @@ public class ShopSystemServiceImpl implements ShopSystemService {
 
     @Transactional
     public UUID createShopSystem(ShopSystemRequestDto dto) {
-        ShopSystem shopSystem = mapper.toShopSystemFromRequestDto(dto);
+        ShopSystem shopSystem = mapper.toShopSystem(dto);
         shopSystem.setExternalId(UUID.randomUUID());
-        repository.save(shopSystem);
+
+        // todo W/A use another class without lat&lon for LegalEntityAddress
+        shopSystem.getLegalEntityAddress().setLatitude(58);
+        shopSystem.getLegalEntityAddress().setLongitude(24);
+
+        // todo manually set extId or do it in the mapper?
+        shopSystem.getBranches().forEach(b -> {
+            b.setExternalId(UUID.randomUUID());
+        });
+
+        shopSystemRepository.saveAndFlush(shopSystem);
         return shopSystem.getExternalId();
     }
 
     public ShopSystemResponseDto getShopSystemDtoByExternalId(UUID externalId) {
-        return mapper.toShopSystemResponseDto(getShopSystemByExternalId(externalId));
+        return mapper.toShopSystemResponse(getShopSystemByExternalId(externalId));
     }
 
     public ShopSystem getShopSystemByExternalId(UUID externalId) {
-        return repository.findByExternalId(externalId)
+        return shopSystemRepository.findByExternalId(externalId)
                 .orElseThrow(() -> {
                             throw new EntityNotFoundException("Organization by given externalId = \"" +
                                     externalId + "\" was not found. Search canceled!");
@@ -64,13 +73,14 @@ public class ShopSystemServiceImpl implements ShopSystemService {
 
     @Transactional
     public void deleteShopSystemByExternalId(UUID externalId) {
-        ShopSystem shopSystem = repository
+        ShopSystem shopSystem = shopSystemRepository
                 .findByExternalId(externalId)
                 .orElseThrow(() -> {
                             throw new EntityNotFoundException("Organization by given externalId = \"" +
                                     externalId + "\" was not found. Deletion canceled!");
                         }
                 );
+
         shopSystem.setDisabled(true);
     }
 
@@ -79,8 +89,8 @@ public class ShopSystemServiceImpl implements ShopSystemService {
         ShopSystem shopSystem = getShopSystemByExternalId(externalId);
         shopSystem.setName(dto.getName());
         shopSystem.setToken(dto.getToken());
-        shopSystem.setSupport(mapper.toSupportFromDto(dto.getSupport()));
-        shopSystem.setLegalEntityAddress(mapper.toLocationFromDto(dto.getLegalEntityAddress()));
+        shopSystem.setSupport(mapper.toShopSystem(dto).getSupport());
+        shopSystem.setLegalEntityAddress(mapper.toShopSystem(dto).getLegalEntityAddress());
         shopSystem.setLogoUrl(dto.getLogoUrl());
     }
 }

@@ -1,12 +1,9 @@
-truncate shop_systems,
-    delivery_intervals,
-    delivery_zones,
-    pickup_point_partners,
-    deliveries,
-    branches,
-    special_offers,
-    shop_systems
-    cascade;
+truncate shop_systems cascade;
+
+alter sequence shop_sequence restart with 2;
+alter sequence branch_sequence restart with 2;
+alter sequence delivery_interval_sequence restart with 3;
+alter sequence delivery_zone_sequence restart with 3;
 
 insert into shop_systems(id,
                          external_id,
@@ -26,7 +23,7 @@ insert into shop_systems(id,
                          is_disabled,
                          is_test,
 
---          shopsystem don`t have coordinates
+--          shopsystem hasn't coordinates
                          latitude,
                          longitude)
 values (1,
@@ -56,7 +53,7 @@ insert into branches (id,
                       token,
                       ogrn,
 
---                    Branch location dont have country and region
+--                    Branch location hasn't country and region
                       country,
                       region,
 --
