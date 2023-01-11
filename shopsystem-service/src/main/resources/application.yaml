@@ -7,12 +7,12 @@ spring:
   application:
     name: shop_system
     url:
-      shop: public/api/v1/shopsystems
+      shop: /public/api/v1/shopsystems
       branch: public/api/v1/branches
   datasource:
-    url: jdbc:postgresql://localhost:5432/${DB_NAME}
-    username: ${POSTGRES_USER}
-    password: ${POSTGRES_PASSWORD}
+    url: jdbc:postgresql://localhost:5432/shopsystem_db
+    username: postgres
+    password: password
     driverClassName: org.postgresql.Driver
     hikari:
       auto-commit: false

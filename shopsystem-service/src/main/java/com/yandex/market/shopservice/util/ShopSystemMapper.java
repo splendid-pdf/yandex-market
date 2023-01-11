@@ -3,7 +3,7 @@ package com.yandex.market.shopservice.util;
 import com.yandex.market.shopservice.dto.LocationDto;
 import com.yandex.market.shopservice.dto.branch.*;
 import com.yandex.market.shopservice.dto.shop.ShopSystemRequestDto;
-import com.yandex.market.shopservice.dto.shop.ShopSystemResponsesDto;
+import com.yandex.market.shopservice.dto.shop.ShopSystemResponseDto;
 import com.yandex.market.shopservice.dto.shop.SpecialOfferDto;
 import com.yandex.market.shopservice.dto.shop.SupportDto;
 import com.yandex.market.shopservice.model.Location;
@@ -11,11 +11,8 @@ import com.yandex.market.shopservice.model.branch.*;
 import com.yandex.market.shopservice.model.shop.ShopSystem;
 import com.yandex.market.shopservice.model.shop.SpecialOffer;
 import com.yandex.market.shopservice.model.shop.Support;
-import com.yandex.market.shopservice.service.branch.BranchService;
-import com.yandex.market.shopservice.service.shop.ShopSystemService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import java.util.HashSet;
@@ -39,8 +36,8 @@ public class ShopSystemMapper {
                 .build();
     }
 
-    public ShopSystemResponsesDto toShopSystemResponseDto(ShopSystem shopSystem) {
-        return ShopSystemResponsesDto.builder()
+    public ShopSystemResponseDto toShopSystemResponseDto(ShopSystem shopSystem) {
+        return ShopSystemResponseDto.builder()
                 .name(shopSystem.getName())
                 .token(shopSystem.getToken())
                 .support(toSupportDto(shopSystem.getSupport()))
@@ -213,7 +210,7 @@ public class ShopSystemMapper {
             dto.forEach(deliveryZoneDto -> deliveryZones.add(
                     DeliveryZone.builder()
                             .zoneId(deliveryZoneDto.zoneId())
-                            .delivery(toDeliveryFromDto(deliveryZoneDto.delivery()))
+//                            .delivery(toDeliveryFromDto(deliveryZoneDto.delivery()))
                             .radiusInMeters(deliveryZoneDto.radiusInMeters())
                             .standardDeliveryPrice(deliveryZoneDto.standardDeliveryPrice())
                             .expressDeliveryPrice(deliveryZoneDto.expressDeliveryPrice())
@@ -228,7 +225,7 @@ public class ShopSystemMapper {
             deliveryZones.forEach(deliveryZone -> deliveryZonesDto.add(
                     new DeliveryZoneDto(
                             deliveryZone.getZoneId(),
-                            toDeliveryDto(deliveryZone.getDelivery()),
+//                            toDeliveryDto(deliveryZone.getDelivery()),
                             deliveryZone.getRadiusInMeters(),
                             deliveryZone.getStandardDeliveryPrice(),
                             deliveryZone.getExpressDeliveryPrice())));
@@ -243,7 +240,7 @@ public class ShopSystemMapper {
         if (dto != null && !dto.isEmpty()) {
             dto.forEach(deliveryIntervalDto -> deliveryIntervals.add(
                     DeliveryInterval.builder()
-                            .delivery(toDeliveryFromDto(deliveryIntervalDto.delivery()))
+//                            .delivery(toDeliveryFromDto(deliveryIntervalDto.delivery()))
                             .intervalId(deliveryIntervalDto.intervalId())
                             .periodStart(deliveryIntervalDto.periodStart())
                             .periodEnd(deliveryIntervalDto.periodEnd())
@@ -257,7 +254,7 @@ public class ShopSystemMapper {
         if (deliveryIntervals != null && !deliveryIntervals.isEmpty()) {
             deliveryIntervals.forEach(deliveryInterval -> deliveryIntervalsDto.add(
                     new DeliveryIntervalDto(
-                            toDeliveryDto(deliveryInterval.getDelivery()),
+//                            toDeliveryDto(deliveryInterval.getDelivery()),
                             deliveryInterval.getIntervalId(),
                             deliveryInterval.getPeriodStart(),
                             deliveryInterval.getPeriodEnd()

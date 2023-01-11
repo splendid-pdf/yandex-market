@@ -46,5 +46,9 @@ public class Branch {
     private boolean pickup;
     private boolean isDisabled;
 
+    public void setDelivery(Delivery delivery) {
+        delivery.setBranch(this);
+        this.delivery = delivery;
+    }
     //TODO features
 }

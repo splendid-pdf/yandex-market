@@ -1,0 +1,22 @@
+{
+  "name": "Eldorado",
+  "token": "DzdWIiOiIxMjM0NTY3ODkwIiwibmFtNTE2MjM5MDIyfQ",
+  "support": {
+    "phone": "8-800-250-25-25",
+    "email": "eldorado@sup.com"
+  },
+  "legalEntityAddress": {
+    "country": "Russia",
+    "region": "Moscow Region",
+    "city": "Moscow",
+    "postcode": "117218",
+    "street": "Krizhanovskaya",
+    "houseNumber": "5",
+    "officeNumber": "12"
+  },
+  "specialOffers": [
+  ],
+  "branches": [
+  ],
+  "logoUrl": "https://static.eldorado.ru/espa/l.42.0-ab-esp-5648.3-Ps0BSwVDAKQkPjSPyBVlu/static_spa/assets/logo.dc65dadd.svg"
+}
