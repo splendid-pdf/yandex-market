@@ -7,7 +7,6 @@ import com.yandex.market.shopservice.repositories.BranchRepository;
 import com.yandex.market.shopservice.service.branch.BranchService;
 import com.yandex.market.shopservice.service.shop.ShopSystemService;
 import com.yandex.market.shopservice.util.BranchMapper;
-import com.yandex.market.shopservice.util.ShopSystemMapper;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -26,14 +25,12 @@ public class BranchServiceImpl implements BranchService {
 
     private final ShopSystemService shopSystemService;
 
-    private final ShopSystemMapper mapper;
-
-    private final BranchMapper mapStructMapper;
+    private final BranchMapper mapper;
 
     @Override
     @Transactional
     public UUID createBranch(BranchDto dto) {
-        Branch branch = mapStructMapper.toBranch(dto);
+        Branch branch = mapper.toBranch(dto);
         branch.setExternalId(UUID.randomUUID());
 
         ShopSystem shopSystem = shopSystemService.getShopSystemByExternalId(dto.getShopSystem());
@@ -59,6 +56,6 @@ public class BranchServiceImpl implements BranchService {
     @Transactional
     public void updateBranchByExternalId(UUID externalId, BranchDto dto) {
         Branch branch = getBranchByExternalId(externalId);
-        mapStructMapper.updateBranch(branch, dto);
+        mapper.updateBranch(branch, dto);
     }
 }
