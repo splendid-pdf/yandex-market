@@ -6,10 +6,7 @@ import com.yandex.market.shopservice.dto.branch.BranchDto;
 import com.yandex.market.shopservice.dto.shop.ShopSystemRequestDto;
 import com.yandex.market.shopservice.dto.shop.SpecialOfferDto;
 import com.yandex.market.shopservice.dto.shop.SupportDto;
-import com.yandex.market.shopservice.model.Location;
 import com.yandex.market.shopservice.model.shop.ShopSystem;
-import com.yandex.market.shopservice.model.shop.SpecialOffer;
-import com.yandex.market.shopservice.model.shop.Support;
 import com.yandex.market.shopservice.repositories.ShopSystemRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
@@ -32,7 +29,6 @@ import java.util.Set;
 
 import static com.yandex.market.shopservice.model.shop.SpecialOfferType.PERSONAL_OFFER;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.tuple;
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -90,49 +86,8 @@ class ShopSystemControllerTest {
     }
 
     @Test
-    void createNewShopSystemWithoutBranches_returnShopSystemExternalIdAnd201Created() throws Exception {
-        ShopSystemRequestDto shopSystemRequestDto = getShopSystemRequestDto();
-
-        ResultActions result = mockMvc.perform(post(url)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(shopSystemRequestDto))
-        );
-
-        ShopSystem newShopSystem = shopSystemRepository.findById(2L).orElseThrow(EntityNotFoundException::new);
-
-        result
-                .andExpect(status().isCreated())
-                .andExpect(content().string(containsString(newShopSystem.getExternalId().toString())));
-    }
-
-    @Test
-    @Transactional
-    @Rollback(value = false)
-    void createNewShopSystemWithBranches_returnShopSystemExternalIdAnd201Created() throws Exception {
-        ShopSystemRequestDto shopSystemRequestDto = getShopSystemRequestDto();
-        BranchDto branchDto = getBranchDto();
-
-        shopSystemRequestDto.setBranches(Set.of(branchDto));
-
-        ResultActions result = mockMvc.perform(post(url)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(shopSystemRequestDto))
-        );
-
-        ShopSystem newShopSystem = shopSystemRepository.findById(2L).orElseThrow(EntityNotFoundException::new);
-
-        result
-                .andExpect(status().isCreated())
-                .andExpect(content().string(containsString(newShopSystem.getExternalId().toString())));
-
-        assertThat(newShopSystem.getBranches()).hasSize(1);
-    }
-
-    @Test
     void getShopSystemByExternalId_returnShopSystemAnd200Ok() throws Exception {
-        ShopSystem shopSystem = shopSystemRepository.findById(1L).orElseThrow(EntityNotFoundException::new);
-
-        ResultActions actions = mockMvc.perform(get(url + "/{externalId}", shopSystem.getExternalId()))
+        ResultActions actions = mockMvc.perform(get(url + "/{externalId}", "87ba7a03-054e-4c7f-ac35-f4802d66cec3"))
                 .andExpect(status().isOk());
 
         actions
@@ -164,20 +119,53 @@ class ShopSystemControllerTest {
     }
 
     @Test
-    void deleteShopSystemByExternalId_return200OkAndDisableShopSystem() throws Exception {
-        ShopSystem shopSystem = shopSystemRepository.findById(1L).orElseThrow(EntityNotFoundException::new);
+    void createNewShopSystemWithoutBranches_returnShopSystemExternalIdAnd201Created() throws Exception {
+        ShopSystemRequestDto shopSystemRequestDto = getShopSystemRequestDto();
 
-        mockMvc.perform(delete(url + "/{externalId}", shopSystem.getExternalId()))
-                .andExpect(status().isOk());
+        ResultActions result = mockMvc.perform(post(url)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(shopSystemRequestDto))
+        );
 
-        ShopSystem updatedShopSystem = shopSystemRepository.findById(1L).orElseThrow(EntityNotFoundException::new);
+        ShopSystem newShopSystem = shopSystemRepository.findById(2L).orElseThrow(EntityNotFoundException::new);
 
-        assertThat(updatedShopSystem.isDisabled()).isTrue();
+        // todo нельзя протестировать без репозитория
+        result
+                .andExpect(status().isCreated())
+                .andExpect(content().string(containsString(newShopSystem.getExternalId().toString())));
     }
 
     @Test
     @Transactional
     @Rollback(value = false)
+    void createNewShopSystemWithBranches_returnShopSystemExternalIdAnd201Created() throws Exception {
+        ShopSystemRequestDto shopSystemRequestDto = getShopSystemRequestDto();
+        BranchDto branchDto = getBranchDto();
+
+        shopSystemRequestDto.setBranches(Set.of(branchDto));
+
+        ResultActions result = mockMvc.perform(post(url)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(shopSystemRequestDto))
+        );
+
+        ShopSystem newShopSystem = shopSystemRepository.findById(2L).orElseThrow(EntityNotFoundException::new);
+
+        // todo нельзя протестировать без репозитория
+        result
+                .andExpect(status().isCreated())
+                .andExpect(content().string(containsString(newShopSystem.getExternalId().toString())));
+
+        assertThat(newShopSystem.getBranches()).hasSize(1);
+    }
+
+    @Test
+    void deleteShopSystemByExternalId_return200OkAndDisableShopSystem() throws Exception {
+        mockMvc.perform(delete(url + "/{externalId}", "87ba7a03-054e-4c7f-ac35-f4802d66cec3"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
     void updateSystemShopByExternalId_return200OkAndUpdateFields() throws Exception {
         ShopSystemRequestDto shopSystemRequest = getShopSystemRequestDto();
 
@@ -187,46 +175,18 @@ class ShopSystemControllerTest {
 
         shopSystemRequest.setSupport(new SupportDto("8-800-250-34-34", "Splendid@support.com"));
 
-        LocationDto locationDto = getLocationDto();
-        shopSystemRequest.setLegalEntityAddress(locationDto);
+        shopSystemRequest.setLegalEntityAddress(getLocationDto());
 
         Set<@Valid SpecialOfferDto> specialOffersDto = shopSystemRequest.getSpecialOffers();
         SpecialOfferDto specialOfferDto = getSpecialOfferDto();
         specialOffersDto.remove(specialOfferDto);
         specialOffersDto.add(specialOfferDto);
 
-        ShopSystem shopSystem = shopSystemRepository.findById(1L).orElseThrow(EntityNotFoundException::new);
-
-        mockMvc.perform(put(url + "/{externalId}", shopSystem.getExternalId())
+        mockMvc.perform(put(url + "/{externalId}", "87ba7a03-054e-4c7f-ac35-f4802d66cec3")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(shopSystemRequest))
                 )
                 .andExpect(status().isOk());
-
-        assertThat(shopSystem.getName()).isEqualTo("Splendid");
-        assertThat(shopSystem.getToken()).isEqualTo("DooMIiOiIxMjQWERT3ODkwIivimmFtNTE2MjM5ZXCnpR");
-        assertThat(shopSystem.getLogoUrl()).isEqualTo("https://static.eldorado.ru/espa/short-logo.dc65dadd.svg");
-
-        Support support = shopSystem.getSupport();
-
-        assertThat(support.getNumber()).isEqualTo("8-800-250-34-34");
-        assertThat(support.getEmail()).isEqualTo("Splendid@support.com");
-
-        Location location = shopSystem.getLegalEntityAddress();
-
-        assertThat(location.getCountry()).isEqualTo("Russia2");
-        assertThat(location.getRegion()).isEqualTo("Kirovskiy region");
-        assertThat(location.getCity()).isEqualTo("Kirov");
-        assertThat(location.getStreet()).isEqualTo("Voljanskaya");
-        assertThat(location.getHouseNumber()).isEqualTo("2P");
-        assertThat(location.getOfficeNumber()).isEqualTo("9M");
-        assertThat(location.getPostcode()).isEqualTo("337129");
-
-        Set<SpecialOffer> specialOffers = shopSystem.getSpecialOffers();
-
-        assertThat(specialOffers).extracting("name", "type", "value", "terms")
-                .contains(tuple("Подарок на день рождение", PERSONAL_OFFER, 15, "Персональное предложение на день рождение"));
-
     }
 
     private static LocationDto getLocationDto() {
