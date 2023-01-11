@@ -15,6 +15,13 @@
     "officeNumber": "12"
   },
   "specialOffers": [
+    {
+      "shopSystem": "",
+      "name": "Подарок на день рождение",
+      "type": "DISCOUNT",
+      "value": 10,
+      "terms": "Скидка предоставляется в течение 7 дней до дня рождения и 7 дней после"
+    }
   ],
   "branches": [
   ],

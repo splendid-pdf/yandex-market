@@ -63,6 +63,7 @@ public class ShopSystem {
     }
 
     public void addSpecialOffer(SpecialOffer specialOffer) {
+        specialOffers.remove(specialOffer);
         specialOffer.setShopSystem(this);
         specialOffers.add(specialOffer);
     }
