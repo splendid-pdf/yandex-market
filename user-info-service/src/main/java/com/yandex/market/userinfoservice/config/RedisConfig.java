@@ -45,20 +45,8 @@ public class RedisConfig {
 
     @Bean
     public RedisCacheConfiguration cacheConfiguration() {
-        return determineConfiguration(getObjectMapper());
-    }
-
-    @Bean
-    public RedisCacheManager cacheManager(RedisCacheConfiguration redisCacheConfiguration) {
-        return RedisCacheManager.builder(redisConnectionFactory())
-                .cacheDefaults(redisCacheConfiguration)
-                .transactionAware()
-                .build();
-    }
-
-    private RedisCacheConfiguration determineConfiguration(ObjectMapper objectMapper) {
         Jackson2JsonRedisSerializer<Object> jackson2JsonRedisSerializer =
-                new Jackson2JsonRedisSerializer<>(objectMapper, Object.class);
+                new Jackson2JsonRedisSerializer<>(getObjectMapper(), Object.class);
 
         return RedisCacheConfiguration
                 .defaultCacheConfig()
@@ -70,6 +58,15 @@ public class RedisConfig {
                         .fromSerializer(jackson2JsonRedisSerializer))
                 .disableCachingNullValues();
     }
+
+    @Bean
+    public RedisCacheManager cacheManager(RedisCacheConfiguration redisCacheConfiguration) {
+        return RedisCacheManager.builder(redisConnectionFactory())
+                .cacheDefaults(redisCacheConfiguration)
+                .transactionAware()
+                .build();
+    }
+
 
     @NotNull
     private ObjectMapper getObjectMapper() {
