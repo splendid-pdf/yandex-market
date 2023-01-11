@@ -49,10 +49,12 @@ public class BranchServiceImpl implements BranchService {
                 });
     }
 
+    @Override
     public BranchDto getBranchDtoByExternalId(UUID externalId) {
         return mapper.toBranchDto(getBranchByExternalId(externalId));
     }
 
+    @Override
     @Transactional
     public void updateBranchByExternalId(UUID externalId, BranchDto dto) {
         Branch branch = getBranchByExternalId(externalId);
