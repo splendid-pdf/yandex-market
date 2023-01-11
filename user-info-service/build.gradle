@@ -44,13 +44,7 @@ dependencies {
 
     // open api
     implementation "org.openapitools:jackson-databind-nullable:${openapitoolsJacksonDatabindVersion}"
-//    implementation "io.swagger.core.v3:swagger-core:${swaggerVersion}"
-
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
-
-
-
-
 
     // lombok
     compileOnly 'org.projectlombok:lombok'
@@ -62,10 +56,6 @@ dependencies {
     // tests
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation "org.mockito:mockito-inline:${mockitoInlineVersion}"
-
-
-
-
 
 }
 

@@ -9,11 +9,11 @@ spring:
         generate_statistics: false
         format_sql: false
 
-#  data:
-#    redis:
-#      host: localhost
-#      port: 6379
-#      password: password
+  data:
+    redis:
+      host: redis
+      port: 6379
+      password: password
 
   cache:
     type: redis
@@ -23,7 +23,6 @@ spring:
     username: postgres
     password: admin
     driver-class-name: org.postgresql.Driver
-
 
 app:
   validation:
@@ -38,7 +37,3 @@ app:
       BLANK_PASSWORD_CODE: 'Password can not be blank'
       BLANK_PHONE_CODE: 'Phone can not be blank'
       NULL_SEX_CODE: 'Sex should not be null'
-
-
-
-
