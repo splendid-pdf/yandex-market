@@ -1,4 +1,4 @@
-package com.yandex.market.shopservice.util;
+package com.yandex.market.shopservice.controllers.shop;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yandex.market.shopservice.dto.branch.BranchDto;
@@ -104,7 +104,7 @@ class ShopSystemControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(content().string(containsString(newShopSystem.getExternalId().toString())));
 
-        assertThat(newShopSystem.getBranches().size()).isEqualTo(1);
+        assertThat(newShopSystem.getBranches()).hasSize(1);
     }
 
     @Test
@@ -139,6 +139,8 @@ class ShopSystemControllerTest {
     }
 
     @Test
+    @Transactional
+    @Rollback(value = false)
     void updateSystemShopByExternalId_return200OkAndUpdateFields() throws Exception {
         String request = getShopSystemRequestJson();
         ShopSystemRequestDto shopSystemRequest = mapper.readValue(request, ShopSystemRequestDto.class);
@@ -147,24 +149,23 @@ class ShopSystemControllerTest {
         shopSystemRequest.setSupport(new SupportDto("8-800-250-34-34", "Splendid@support.com"));
 
         ShopSystem shopSystem = shopSystemRepository.findById(1L).orElseThrow(EntityNotFoundException::new);
+
         mockMvc.perform(put(url + "/{externalId}", shopSystem.getExternalId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(shopSystemRequest))
                 )
                 .andExpect(status().isOk());
 
-        ShopSystem updatedShopSystem = shopSystemRepository.findById(1L).orElseThrow(EntityNotFoundException::new);
-
-        assertThat(updatedShopSystem.getName()).isEqualTo("Splendid");
-        assertThat(updatedShopSystem.getSupport().getNumber()).isEqualTo("8-800-250-34-34");
-        assertThat(updatedShopSystem.getSupport().getEmail()).isEqualTo("Splendid@support.com");
+        assertThat(shopSystem.getName()).isEqualTo("Splendid");
+        assertThat(shopSystem.getSupport().getNumber()).isEqualTo("8-800-250-34-34");
+        assertThat(shopSystem.getSupport().getEmail()).isEqualTo("Splendid@support.com");
     }
 
-    private static String getBranchRequestJson() throws IOException {
+    private String getBranchRequestJson() throws IOException {
         return Files.readString(Path.of("src/test/resources/CreateBranchRequest.json"));
     }
 
-    private static String getShopSystemRequestJson() throws IOException {
+    private String getShopSystemRequestJson() throws IOException {
         return Files.readString(Path.of("src/test/resources/CreateShopsystemRequest.json"));
     }
 }

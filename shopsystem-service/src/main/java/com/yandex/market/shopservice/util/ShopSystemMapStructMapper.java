@@ -6,7 +6,6 @@ import com.yandex.market.shopservice.model.shop.ShopSystem;
 import org.mapstruct.Builder;
 import org.mapstruct.CollectionMappingStrategy;
 import org.mapstruct.Mapper;
-import org.mapstruct.factory.Mappers;
 
 @Mapper(
         componentModel = "spring",
@@ -15,8 +14,6 @@ import org.mapstruct.factory.Mappers;
         builder = @Builder(disableBuilder = true)
 )
 public interface ShopSystemMapStructMapper {
-    ShopSystemMapStructMapper INSTANCE = Mappers.getMapper(ShopSystemMapStructMapper.class);
-
     ShopSystemResponseDto toShopSystemResponse(ShopSystem shopSystem);
 
     ShopSystem toShopSystem(ShopSystemRequestDto request);

@@ -2,9 +2,11 @@ package com.yandex.market.shopservice.service.branch.impl;
 
 import com.yandex.market.shopservice.dto.branch.BranchDto;
 import com.yandex.market.shopservice.model.branch.Branch;
+import com.yandex.market.shopservice.model.shop.ShopSystem;
 import com.yandex.market.shopservice.repositories.BranchRepository;
 import com.yandex.market.shopservice.service.branch.BranchService;
 import com.yandex.market.shopservice.service.shop.ShopSystemService;
+import com.yandex.market.shopservice.util.BranchMapper;
 import com.yandex.market.shopservice.util.ShopSystemMapper;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
@@ -19,17 +21,26 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class BranchServiceImpl implements BranchService {
+
     private final BranchRepository repository;
+
     private final ShopSystemService shopSystemService;
+
     private final ShopSystemMapper mapper;
+
+    private final BranchMapper mapStructMapper;
 
     @Override
     @Transactional
     public UUID createBranch(BranchDto dto) {
-        Branch branch = mapper.toBranchFromDto(dto);
+        Branch branch = mapStructMapper.toBranch(dto);
         branch.setExternalId(UUID.randomUUID());
-        branch.setShopSystem(shopSystemService.getShopSystemByExternalId(dto.getShopSystem()));
+
+        ShopSystem shopSystem = shopSystemService.getShopSystemByExternalId(dto.getShopSystem());
+        shopSystem.addBranch(branch);
+
         repository.save(branch);
+
         return branch.getExternalId();
     }
 
@@ -48,11 +59,6 @@ public class BranchServiceImpl implements BranchService {
     @Transactional
     public void updateBranchByExternalId(UUID externalId, BranchDto dto) {
         Branch branch = getBranchByExternalId(externalId);
-        branch.setName(dto.getName());
-        branch.setToken(dto.getToken());
-        branch.setOgrn(dto.getOgrn());
-        branch.setLocation(mapper.toLocationFromDto(dto.getLocation()));
-        branch.setContact(mapper.tocContactFromDto(dto.getContact()));
-        branch.setDelivery(mapper.toDeliveryFromDto(dto.getDelivery()));
+        mapStructMapper.updateBranch(branch, dto);
     }
 }

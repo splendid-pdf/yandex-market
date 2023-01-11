@@ -16,7 +16,6 @@ import java.time.LocalTime;
 public class DeliveryInterval {
 
     @Id
-    @EqualsAndHashCode.Include
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "delivery_interval_seq")
     @SequenceGenerator(name = "delivery_interval_seq", sequenceName = "delivery_interval_sequence", allocationSize = 1)
     private Long id;
@@ -24,6 +23,7 @@ public class DeliveryInterval {
     @ManyToOne(fetch = FetchType.LAZY)
     private Delivery delivery;
 
+    @EqualsAndHashCode.Include
     private String intervalId;
 
     private LocalTime periodStart;

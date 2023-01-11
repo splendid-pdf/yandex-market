@@ -8,7 +8,7 @@ spring:
     name: shop_system
     url:
       shop: /public/api/v1/shopsystems
-      branch: public/api/v1/branches
+      branch: /public/api/v1/branches
   datasource:
     url: jdbc:postgresql://localhost:5432/shopsystem_db
     username: postgres

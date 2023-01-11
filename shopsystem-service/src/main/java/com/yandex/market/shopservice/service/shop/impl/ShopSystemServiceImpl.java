@@ -49,12 +49,12 @@ public class ShopSystemServiceImpl implements ShopSystemService {
         shopSystem.getLegalEntityAddress().setLatitude(58);
         shopSystem.getLegalEntityAddress().setLongitude(24);
 
-        // todo manually set extId or do it in the mapper?
+        // todo manually set extId or use createBranch from branchService?
         shopSystem.getBranches().forEach(b -> {
             b.setExternalId(UUID.randomUUID());
         });
 
-        shopSystemRepository.saveAndFlush(shopSystem);
+        shopSystemRepository.save(shopSystem);
         return shopSystem.getExternalId();
     }
 
