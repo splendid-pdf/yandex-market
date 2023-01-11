@@ -8,6 +8,7 @@ import com.yandex.market.userinfoservice.validator.UserValidator;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.BooleanUtils;
 import org.openapitools.api.model.UserRequestDto;
 import org.openapitools.api.model.UserResponseDto;
 import org.springframework.cache.annotation.CacheEvict;
@@ -43,6 +44,8 @@ public class UserService {
         checkEmailToExist(userRequestDto);
         User user = userRequestMapper.map(userRequestDto);
 
+
+
         userRepository.save(user);
         return user.getExternalId();
     }
@@ -72,12 +75,15 @@ public class UserService {
                 .orElseThrow(() -> new EntityNotFoundException(USER_NOT_FOUND_MESSAGE_BY_ID + externalId));
         User updatedUser = userRequestMapper.map(userRequestDto);
 
+        //todo: delete unique constraint on email field
+
 
         if(!storedUser.getEmail().equals(updatedUser.getEmail())){
             checkEmailToExist(userRequestDto);
             storedUser.setEmail(updatedUser.getEmail());
         }
 
+        //to method
         storedUser.setFirstName(updatedUser.getFirstName());
         storedUser.setMiddleName(updatedUser.getMiddleName());
         storedUser.setLastName(updatedUser.getLastName());

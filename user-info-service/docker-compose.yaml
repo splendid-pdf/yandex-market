@@ -1,19 +1,37 @@
 version: "3.9"
 services:
+
+  user-info:
+    container_name: yandex-market-user-info
+    image: yandex-market/user-info:0.0.1-SNAPSHOT
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/test2
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=admin
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=validate
+      - SPRING_DATA_REDIS_HOST=redis
+      - SPRING_DATA_REDIS_PORT=6379
+      - SPRING_DATA_REDIS_PASSWORD=password
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+      - redis
+
+
   postgres:
     container_name: postgres-shops
     image: postgres:15.1-alpine
     environment:
-      POSTGRES_DB: ${DB_NAME}
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: test2
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
       PGDATA: /data/postgres
     volumes:
       - pgdata:/var/lib/postgresql/data
     ports:
       - "5432:5432"
-    networks:
-      - default-network
+
 
   pgadmin:
     container_name: pgadmin-ui
@@ -25,8 +43,8 @@ services:
       - ./pgadmin:/var/lib/pgadmin
     ports:
       - "5050:80"
-    networks:
-      - default-network
+
+
 
   redis:
     container_name: yandex-marker-redis
@@ -34,6 +52,7 @@ services:
     image: redis
     ports:
       - "6379:6379"
+
 
   redis-commander:
     container_name: yandex-marker-redis-commander
@@ -45,9 +64,12 @@ services:
     ports:
       - "8081:8081"
 
+
 volumes:
   pgdata:
   pgadmin:
 
-networks:
-  default-network:
+
+
+
+

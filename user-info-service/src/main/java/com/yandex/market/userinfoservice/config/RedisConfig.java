@@ -1,6 +1,12 @@
 package com.yandex.market.userinfoservice.config;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -10,16 +16,14 @@ import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisPassword;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
-import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
-
-import java.time.Duration;
+import org.springframework.web.service.annotation.PostExchange;
 
 @Configuration
 @RequiredArgsConstructor
 public class RedisConfig {
-
     @Value("${spring.data.redis.host}")
     private String REDIS_HOST;
 
@@ -28,9 +32,6 @@ public class RedisConfig {
 
     @Value("${spring.data.redis.password}")
     private String REDIS_PASSWORD;
-
-    private ObjectMapper objectMapper;
-
 
     @Bean
     public LettuceConnectionFactory redisConnectionFactory() {
@@ -42,25 +43,55 @@ public class RedisConfig {
     }
 
     @Bean
-    public RedisCacheConfiguration cacheConfiguration(ObjectMapper objectMapper) {
-        RedisCacheConfiguration cacheConfig = RedisCacheConfiguration.defaultCacheConfig()
-                .prefixCacheNameWith(this.getClass().getPackageName() + ".")
-                .serializeValuesWith(RedisSerializationContext.SerializationPair
-                        .fromSerializer(new GenericJackson2JsonRedisSerializer(objectMapper)))
-                .serializeKeysWith(RedisSerializationContext.SerializationPair
-                        .fromSerializer(new StringRedisSerializer()))
-                .entryTtl(Duration.ofSeconds(180))
-                .disableCachingNullValues();
-        return cacheConfig;
+    public RedisCacheConfiguration cacheConfiguration() {
+        return determineConfiguration();
     }
 
     @Bean
-    public RedisCacheManager cacheManager() {
+    public RedisCacheManager cacheManager(RedisCacheConfiguration redisCacheConfiguration) {
         RedisCacheManager rcm = RedisCacheManager.builder(redisConnectionFactory())
-                .cacheDefaults(cacheConfiguration(objectMapper))
+                .cacheDefaults(redisCacheConfiguration)
                 .transactionAware()
                 .build();
         return rcm;
     }
 
+    private RedisCacheConfiguration determineConfiguration() {
+
+        Jackson2JsonRedisSerializer<Object> jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer<>(
+                Object.class);
+
+        RedisCacheConfiguration config = RedisCacheConfiguration
+                .defaultCacheConfig()
+                .serializeKeysWith(RedisSerializationContext.SerializationPair
+                        .fromSerializer(new StringRedisSerializer()))
+                .serializeValuesWith(RedisSerializationContext.SerializationPair
+                        .fromSerializer(jackson2JsonRedisSerializer));
+
+        ObjectMapper om = new ObjectMapper();
+        om.setVisibility(PropertyAccessor.GETTER, JsonAutoDetect.Visibility.ANY);
+        om.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
+        om.registerModule(new JavaTimeModule());
+        om.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        om.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        jackson2JsonRedisSerializer.setObjectMapper(om);
+
+
+        return config;
+    }
+
+//    private RedisCacheConfiguration determineConfiguration(ObjectMapper objectMapper) {
+//        Jackson2JsonRedisSerializer<Object> jackson2JsonRedisSerializer =
+//                new Jackson2JsonRedisSerializer<Object>(objectMapper, Object.class);
+//
+//        return RedisCacheConfiguration
+//                .defaultCacheConfig()
+//                .prefixCacheNameWith(this.getClass().getPackageName() + ".")
+//                .serializeKeysWith(RedisSerializationContext.SerializationPair
+//                        .fromSerializer(new StringRedisSerializer()))
+//                .serializeValuesWith(RedisSerializationContext.SerializationPair
+//                        .fromSerializer(jackson2JsonRedisSerializer))
+//                .entryTtl(Duration.ofHours(1))
+//                .disableCachingNullValues();
+//    }
 }

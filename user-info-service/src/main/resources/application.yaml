@@ -1,28 +1,29 @@
 spring:
   jpa:
-    show-sql: true
+    show-sql: false
     hibernate:
       dialect: org.hibernate.dialect.PostgreSQLDialect
       ddl-auto: validate
     properties:
       hibernate:
-        generate_statistics: true
-        format_sql: true
+        generate_statistics: false
+        format_sql: false
 
-  data:
-    redis:
-      host: localhost
-      port: 6379
-      password: password
+#  data:
+#    redis:
+#      host: localhost
+#      port: 6379
+#      password: password
 
   cache:
     type: redis
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/${DB_NAME}
-    username: ${POSTGRES_USER}
-    password: ${POSTGRES_PASSWORD}
+    url: jdbc:postgresql://postgres:5432/test2
+    username: postgres
+    password: admin
     driver-class-name: org.postgresql.Driver
+
 
 app:
   validation:
