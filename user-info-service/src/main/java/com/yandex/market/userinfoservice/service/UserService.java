@@ -4,16 +4,20 @@ import com.yandex.market.userinfoservice.mapper.UserRequestMapper;
 import com.yandex.market.userinfoservice.mapper.UserResponseMapper;
 import com.yandex.market.userinfoservice.model.User;
 import com.yandex.market.userinfoservice.repository.UserRepository;
+import com.yandex.market.userinfoservice.specification.UserSpecification;
 import com.yandex.market.userinfoservice.validator.UserValidator;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.openapitools.api.model.UserFilter;
 import org.openapitools.api.model.UserRequestDto;
 import org.openapitools.api.model.UserResponseDto;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 import java.util.stream.Stream;
 
@@ -91,6 +95,17 @@ public class UserService {
 
         return userResponseMapper.map(userRepository.findUserByPhone(emailOrPhone)
                 .orElseThrow(() -> new EntityNotFoundException(USER_NOT_FOUND_MESSAGE_BY_VALUE + emailOrPhone)));
+    }
+
+    public List<UserResponseDto> getUsersByFilter (UserFilter userFilter) {
+
+        userRepository.findAll(UserSpecification.filter(userFilter)).forEach(user -> System.out.println(user.getFirstName()));
+
+
+
+
+        return new ArrayList<>();
+
     }
 
 }
