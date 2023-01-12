@@ -45,9 +45,9 @@ class BranchServiceImplTest {
         //todo add ExternalIdProvider to test returned externalId
         UUID externalId = branchService.createBranch(new BranchDto());
 
+        assertThat(externalId).isEqualTo(branch.getExternalId());
         assertThat(shopSystem.getBranches()).containsExactly(branch);
         assertThat(branch.getShopSystem()).isEqualTo(shopSystem);
-
         verify(branchRepository, times(1)).save(branch);
     }
 

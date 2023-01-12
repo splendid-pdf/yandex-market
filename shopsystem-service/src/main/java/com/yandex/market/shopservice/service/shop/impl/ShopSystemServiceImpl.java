@@ -55,6 +55,7 @@ public class ShopSystemServiceImpl implements ShopSystemService {
         });
 
         shopSystemRepository.save(shopSystem);
+
         return shopSystem.getExternalId();
     }
 
@@ -82,16 +83,12 @@ public class ShopSystemServiceImpl implements ShopSystemService {
                 );
 
         shopSystem.setDisabled(true);
+        shopSystem.getBranches().forEach(b -> b.setDisabled(true));
     }
 
     @Transactional
     public void updateShopSystemByExternalId(UUID externalId, ShopSystemRequestDto dto) {
         ShopSystem shopSystem = getShopSystemByExternalId(externalId);
         mapper.updateShopSystem(shopSystem, dto);
-//        shopSystem.setName(dto.getName());
-//        shopSystem.setToken(dto.getToken());
-//        shopSystem.setSupport(mapper.toShopSystem(dto).getSupport());
-//        shopSystem.setLegalEntityAddress(mapper.toShopSystem(dto).getLegalEntityAddress());
-//        shopSystem.setLogoUrl(dto.getLogoUrl());
     }
 }
