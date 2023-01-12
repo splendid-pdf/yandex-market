@@ -19,6 +19,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.Rollback;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -41,6 +42,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @Sql(value = "classpath:insert_shopsystem.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+@ActiveProfiles("test")
 class BranchControllerTest {
 
     @Value("${spring.application.url.branch}")
@@ -76,8 +78,8 @@ class BranchControllerTest {
                 .andExpect(jsonPath("$.location.postcode").value("117218"));
 
         actions
-                .andExpect(jsonPath("$.contact.hotlinePhone").value("+78126123941"))
-                .andExpect(jsonPath("$.contact.servicePhone").value("+78126121211"))
+                .andExpect(jsonPath("$.contact.hotlinePhone").value("8(937)640-9999"))
+                .andExpect(jsonPath("$.contact.servicePhone").value("8(939)640-8888"))
                 .andExpect(jsonPath("$.contact.email").value("eldorado-ohta@eldorado.ru"));
 
         actions
@@ -141,7 +143,7 @@ class BranchControllerTest {
         branchDto.setToken("0d200bfS05e66beS8fe9asdfaf4f6777");
         branchDto.setOgrn("6669911337888");
 
-        branchDto.setContact(new ContactDto("8-800-250-34-34", "8-800-222-89-89", "Splendid@support.com"));
+        branchDto.setContact(new ContactDto("8(937)640-9999", "8(939)640-8888", "Splendid@support.com"));
 
         mockMvc.perform(put(url + "/{externalId}", "6166b912-878c-11ed-a1eb-0242ac120002")
                         .contentType(MediaType.APPLICATION_JSON)

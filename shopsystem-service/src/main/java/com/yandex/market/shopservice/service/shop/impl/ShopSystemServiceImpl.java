@@ -49,10 +49,7 @@ public class ShopSystemServiceImpl implements ShopSystemService {
         shopSystem.getLegalEntityAddress().setLatitude(58);
         shopSystem.getLegalEntityAddress().setLongitude(24);
 
-        // todo manually set extId or use createBranch from branchService?
-        shopSystem.getBranches().forEach(b -> {
-            b.setExternalId(UUID.randomUUID());
-        });
+        shopSystem.getBranches().forEach(b -> b.setExternalId(UUID.randomUUID()));
 
         shopSystemRepository.save(shopSystem);
 

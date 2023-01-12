@@ -25,7 +25,7 @@ public class Branch {
 
     private UUID externalId;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     private ShopSystem shopSystem;
 
     private String name;

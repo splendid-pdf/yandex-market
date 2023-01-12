@@ -47,7 +47,6 @@ public class Delivery {
 
     public void addDeliveryZone(DeliveryZone deliveryZone) {
         deliveryZones.remove(deliveryZone);
-
         deliveryZone.setDelivery(this);
         deliveryZones.add(deliveryZone);
     }
@@ -58,7 +57,6 @@ public class Delivery {
 
     public void addDeliveryInterval(DeliveryInterval deliveryInterval) {
         deliveryIntervals.remove(deliveryInterval);
-
         deliveryInterval.setDelivery(this);
         deliveryIntervals.add(deliveryInterval);
     }

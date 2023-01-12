@@ -18,11 +18,11 @@ public class DeliveryZone {
     @SequenceGenerator(name = "delivery_zone_seq", sequenceName = "delivery_zone_sequence", allocationSize = 1)
     private Long id;
 
-    @EqualsAndHashCode.Include
-    private String zoneId;
-
     @ManyToOne(fetch = FetchType.LAZY)
     private Delivery delivery;
+
+    @EqualsAndHashCode.Include
+    private String zoneId;
 
     private int radiusInMeters;
 

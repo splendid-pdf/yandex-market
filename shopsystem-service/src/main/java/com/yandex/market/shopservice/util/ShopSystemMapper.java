@@ -19,8 +19,6 @@ public interface ShopSystemMapper {
 
     ShopSystem toShopSystem(ShopSystemRequestDto request);
 
-    //    @Mapping(target = "shopSystem", ignore = true)
-//    @Mapping(target = "delivery.branch", ignore = true)
     ShopSystem updateShopSystem(@MappingTarget ShopSystem entity, ShopSystemRequestDto dto);
 }
 

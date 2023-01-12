@@ -19,7 +19,6 @@ public class BranchController {
 
     private final BranchService branchService;
 
-
     @GetMapping("/{externalId}")
     @ResponseStatus(HttpStatus.OK)
     public BranchDto getBranchByExternalId(@PathVariable("externalId") UUID externalId) {

@@ -16,8 +16,6 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BranchDto {
-
-//    @NotNull(message = "\"UUID of Shop System\" field must not be empty")
     private UUID shopSystem;
 
     @NotBlank(message = "\"Name\" field must not be empty")

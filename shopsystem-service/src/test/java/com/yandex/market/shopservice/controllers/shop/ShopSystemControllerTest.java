@@ -18,6 +18,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.Rollback;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -36,7 +37,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @Sql(value = "classpath:insert_shopsystem.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-//@Sql(value = "classpath:truncate.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+@ActiveProfiles("test")
 class ShopSystemControllerTest {
 
     @Value("${spring.application.url.shop}")
@@ -64,7 +65,7 @@ class ShopSystemControllerTest {
                 .andExpect(jsonPath("$.content[0].rating").value(4.8));
 
         actions
-                .andExpect(jsonPath("$.content[0].support.number").value("8-800-250-25-25"))
+                .andExpect(jsonPath("$.content[0].support.number").value("8(937)640-9999"))
                 .andExpect(jsonPath("$.content[0].support.email").value("eldorado@sup.com"));
 
         actions
@@ -97,7 +98,7 @@ class ShopSystemControllerTest {
                 .andExpect(jsonPath("$.rating").value(4.8));
 
         actions
-                .andExpect(jsonPath("$.support.number").value("8-800-250-25-25"))
+                .andExpect(jsonPath("$.support.number").value("8(937)640-9999"))
                 .andExpect(jsonPath("$.support.email").value("eldorado@sup.com"));
 
         actions
@@ -173,7 +174,7 @@ class ShopSystemControllerTest {
         shopSystemRequest.setToken("DooMIiOiIxMjQWERT3ODkwIivimmFtNTE2MjM5ZXCnpR");
         shopSystemRequest.setLogoUrl("https://static.eldorado.ru/espa/short-logo.dc65dadd.svg");
 
-        shopSystemRequest.setSupport(new SupportDto("8-800-250-34-34", "Splendid@support.com"));
+        shopSystemRequest.setSupport(new SupportDto("8(939)640-8888", "Splendid@support.com"));
 
         shopSystemRequest.setLegalEntityAddress(getLocationDto());
 
@@ -213,7 +214,7 @@ class ShopSystemControllerTest {
     }
 
     private ShopSystemRequestDto getShopSystemRequestDto() throws IOException {
-        String json = Files.readString(Path.of("src/test/resources/CreateShopsystemRequest.json"));
+        String json = Files.readString(Path.of("src/test/resources/CreateShopSystemRequest.json"));
         return mapper.readValue(json, ShopSystemRequestDto.class);
     }
 }

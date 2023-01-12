@@ -9,13 +9,15 @@ spring:
     url:
       shop: /public/api/v1/shopsystems
       branch: /public/api/v1/branches
+
   datasource:
-    url: jdbc:postgresql://localhost:5432/shopsystem_db
-    username: postgres
-    password: password
+    url: jdbc:postgresql://localhost:5432/${DB_NAME}
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
     driverClassName: org.postgresql.Driver
     hikari:
       auto-commit: false
+
   jpa:
     database: POSTGRESQL
     show-sql: true
