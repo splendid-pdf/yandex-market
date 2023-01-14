@@ -12,11 +12,8 @@ import com.yandex.market.shopservice.model.branch.*;
 import com.yandex.market.shopservice.model.shop.ShopSystem;
 import com.yandex.market.shopservice.model.shop.SpecialOffer;
 import com.yandex.market.shopservice.model.shop.Support;
-import com.yandex.market.shopservice.service.branch.BranchService;
-import com.yandex.market.shopservice.service.shop.ShopSystemService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import java.util.HashSet;
@@ -40,6 +37,10 @@ public class ShopSystemMapper {
                 .build();
     }
 
+    private Set<Branch> toBranchesFromDto(Set<BranchDto> branches) {
+        return null;
+    }
+
     public ShopSystemResponsesDto toShopSystemResponseDto(ShopSystem shopSystem) {
         return ShopSystemResponsesDto.builder()
                 .name(shopSystem.getName())
@@ -51,6 +52,10 @@ public class ShopSystemMapper {
                 .logoUrl(shopSystem.getLogoUrl())
                 .rating(shopSystem.getRating())
                 .build();
+    }
+
+    private Set<BranchDto> toBranchesDto(Set<Branch> branches) {
+        return null;
     }
 
     // >>> special offer
@@ -135,9 +140,13 @@ public class ShopSystemMapper {
                 .build();
     }
 
+    private Contact tocContactFromDto(ContactDto contact) {
+        return null;
+    }
+
     public BranchDto toBranchDto(Branch branch) {
         return BranchDto.builder()
-                .shopSystem(branch.getShopSystem().getExternalId())
+                .shopSystemExternalId(branch.getShopSystem().getExternalId())
                 .name(branch.getName())
                 .token(branch.getToken())
                 .ogrn(branch.getOgrn())
@@ -147,7 +156,11 @@ public class ShopSystemMapper {
                 .build();
     }
 
-public Delivery toDeliveryFromDto(DeliveryDto dto) {
+    private DeliveryDto toDeliveryDto(Delivery delivery) {
+        return null;
+    }
+
+    public Delivery toDeliveryFromDto(DeliveryDto dto) {
         Set<DeliveryZoneDto> zoneDto = dto.getDeliveryZones();
         Set<DeliveryIntervalDto> intervalDto = dto.getDeliveryIntervals();
         Delivery delivery = Delivery.builder()
@@ -222,7 +235,7 @@ public Delivery toDeliveryFromDto(DeliveryDto dto) {
                 contact.getEmail()
         );
     }
-    
+
     private DeliveryResponseDto toDeliveryResponseDto(Branch branch) {
         Delivery delivery = branch.getDelivery();
         return DeliveryResponseDto.builder()
@@ -247,7 +260,8 @@ public Delivery toDeliveryFromDto(DeliveryDto dto) {
                 .periodEnd(interval.getPeriodEnd())
                 .build();
     }
- private Set<DeliveryZoneDto> toSetDeliveryZoneDto(Set<DeliveryZone> deliveryZones) {
+
+    private Set<DeliveryZoneDto> toSetDeliveryZoneDto(Set<DeliveryZone> deliveryZones) {
         Set<DeliveryZoneDto> deliveryZonesDto = new HashSet<>();
         for (DeliveryZone zoneDto : deliveryZones) {
             deliveryZonesDto.add(toDeliveryZoneDto(zoneDto));
@@ -255,7 +269,7 @@ public Delivery toDeliveryFromDto(DeliveryDto dto) {
         return deliveryZonesDto;
     }
 
-private DeliveryZoneDto toDeliveryZoneDto(DeliveryZone zoneDto) {
+    private DeliveryZoneDto toDeliveryZoneDto(DeliveryZone zoneDto) {
         return DeliveryZoneDto.builder()
                 .zoneId(zoneDto.getZoneId())
                 .radiusInMeters(zoneDto.getRadiusInMeters())

@@ -1,8 +1,6 @@
 package com.yandex.market.shopservice.dto.branch;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.yandex.market.shopservice.model.branch.PickupPointPartner;
-import jakarta.validation.Valid;
 import lombok.*;
 
 import java.util.Set;
@@ -26,7 +24,7 @@ public class DeliveryDto {
 
     private Set<PickupPointPartner> pickupPointPartners;
 
-    private Set<@Valid DeliveryZoneDto> deliveryZones;
+    private Set<DeliveryZoneDto> deliveryZones;
 
-    private Set<@Valid DeliveryIntervalDto> deliveryIntervals;
+    private Set<DeliveryIntervalDto> deliveryIntervals;
 }

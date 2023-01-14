@@ -2,11 +2,9 @@ package com.yandex.market.shopservice.service.branch.impl;
 
 import com.yandex.market.shopservice.dto.branch.BranchDto;
 import com.yandex.market.shopservice.dto.branch.BranchResponseDto;
-import com.yandex.market.shopservice.dto.shop.ShopSystemBranchInfoDto;
+import com.yandex.market.shopservice.dto.projections.BranchResponseProjection;
 import com.yandex.market.shopservice.model.branch.Branch;
-import com.yandex.market.shopservice.model.branch.Delivery;
 import com.yandex.market.shopservice.model.shop.ShopSystem;
-import com.yandex.market.shopservice.model.shop.Support;
 import com.yandex.market.shopservice.repositories.BranchRepository;
 import com.yandex.market.shopservice.service.branch.BranchService;
 import com.yandex.market.shopservice.service.shop.ShopSystemService;
@@ -15,10 +13,13 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -34,9 +35,8 @@ public class BranchServiceImpl implements BranchService {
     public UUID createBranch(BranchDto dto) {
         Branch branch = mapper.toBranchFromDto(dto);
         branch.setExternalId(UUID.randomUUID());
-        ShopSystem shopSystem = shopSystemService.getShopSystemByExternalId(dto.getShopSystem());
-        Delivery delivery = mapper.toDeliveryFromDto(dto.getDelivery());
-        branch.setDelivery(delivery);
+        ShopSystem shopSystem = shopSystemService.getShopSystemByExternalId(dto.getShopSystemExternalId());
+        branch.setDelivery(mapper.toDeliveryFromDto(dto.getDelivery()));
         shopSystem.addBranch(branch);
         repository.save(branch);
         return branch.getExternalId();
@@ -53,12 +53,33 @@ public class BranchServiceImpl implements BranchService {
 
     @Override
     public BranchResponseDto getBranchResponseDtoByExternalId(UUID externalId) {
-        Branch branch = getBranchByExternalId(externalId);
-        ShopSystem shopSystem = shopSystemService.getShopSystemByExternalId(branch.getShopSystem().getExternalId());
-        ShopSystemBranchInfoDto shopSystemInfoForBranch = shopSystemService
-                .getShopSystemInfoForBranch(shopSystem);
-        Support support = shopSystem.getSupport();
-        return mapper.toBranchDtoResponse(branch, shopSystemInfoForBranch, support);
+//        TODO: ПРЕВДАТИТЬ БОЛЬШОЙ ЗАПРОС В ОДИН
+
+        BranchResponseProjection branchResponseDto = repository
+                .getBranchResponseByExternalId2(externalId);
+//                .orElseThrow(() -> {
+//                    throw new EntityNotFoundException("Branch by given externalId = \"" +
+//                            externalId + "\" was not found. Search canceled!");
+//                });
+
+        Optional<BranchResponseDto> branchResponseByExternalId = repository
+                .getBranchResponseByExternalId(externalId);
+//        BranchResponseDto branchResponseDto = branchResponseByExternalId.get();
+
+
+//        BranchResponseProjection branchResponseDto = repository
+//                .getBranchResponseByExternalId(externalId);
+//
+//        System.out.println(branchResponseDto);
+
+//        Branch branch = getBranchByExternalId(externalId);
+//        ShopSystem shopSystem = shopSystemService.getShopSystemByExternalId(branch.getShopSystem().getExternalId());
+//        ShopSystemBranchInfoDto shopSystemInfoForBranch = shopSystemService
+//                .getShopSystemInfoForBranch(shopSystem);
+
+//        Support support = shopSystem.getSupport();
+        return null;
+//        return mapper.toBranchDtoResponse(branch, shopSystemInfoForBranch, support);
     }
 
 
@@ -70,7 +91,7 @@ public class BranchServiceImpl implements BranchService {
         branch.setToken(dto.getToken());
         branch.setOgrn(dto.getOgrn());
         branch.setLocation(mapper.toLocationFromDto(dto.getLocation()));
-        branch.setContact(mapper.tocContactFromDto(dto.getContact()));
+//        branch.setContact(mapper.tocContactFromDto(dto.getContact()));
         branch.setDelivery(mapper.toDeliveryFromDto(dto.getDelivery()));
     }
 

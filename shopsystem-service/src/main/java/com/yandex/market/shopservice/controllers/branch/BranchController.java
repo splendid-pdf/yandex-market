@@ -7,6 +7,9 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,24 +22,33 @@ import java.util.UUID;
 public class BranchController {
     private final BranchService branchService;
 
-    @PostMapping()
+    @PostMapping("/branches")
     @ResponseStatus(HttpStatus.CREATED)
     public UUID createBranch(@RequestBody @Valid BranchDto branchDto) {
         log.info("Received a request to create new branch for shop system: %s".formatted(branchDto));
         return branchService.createBranch(branchDto);
     }
 
-    @PutMapping("/{externalId}")
+    @PutMapping("/branches/{externalId}")
     @ResponseStatus(HttpStatus.OK)
     public void updateBranchByExternalId(@PathVariable("externalId") UUID externalId, @RequestBody @Valid BranchDto dto) {
         log.info("Received a request to update a branch by external id = %s".formatted(externalId));
         branchService.updateBranchByExternalId(externalId, dto);
     }
 
-    @GetMapping("/{externalId}")
+    @GetMapping("/branches/{externalId}")
     @ResponseStatus(HttpStatus.OK)
     public BranchResponseDto getBranchByExternalId(@PathVariable("externalId") UUID externalId) {
         log.info("Received a request to get branch by external id.");
         return branchService.getBranchResponseDtoByExternalId(externalId);
+    }
+
+
+    @ResponseStatus(HttpStatus.OK)
+    @RequestMapping(value = "/shopsystems/{externalId}/branches", method = RequestMethod.GET)
+    public Page<BranchResponseDto> getAllBranchesByShopSystemExternalId(@PageableDefault(size = 20) Pageable pageable,
+                                                                        @PathVariable("externalId") UUID externalId) {
+        log.info("Received a request to get paginated list of branches by shop systems externalId = %s ".formatted(externalId));
+        return branchService.getBranchesByShopSystem(externalId, pageable);
     }
 }

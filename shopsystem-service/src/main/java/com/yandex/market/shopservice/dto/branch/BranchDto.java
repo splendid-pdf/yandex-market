@@ -20,7 +20,7 @@ import java.util.UUID;
 public class BranchDto {
 
     @NotNull(message = "\"UUID of Shop System\" field must not be empty")
-    private UUID shopSystem;
+    private UUID shopSystemExternalId;
 
     @NotBlank(message = "\"Name\" field must not be empty")
     @Size(max = 128, message = "\"Name\" field can not be more than 128 characters")

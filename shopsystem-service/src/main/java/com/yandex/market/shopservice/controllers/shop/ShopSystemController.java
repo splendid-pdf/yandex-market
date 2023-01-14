@@ -1,9 +1,7 @@
 package com.yandex.market.shopservice.controllers.shop;
 
-import com.yandex.market.shopservice.dto.branch.BranchResponseDto;
 import com.yandex.market.shopservice.dto.shop.ShopSystemRequestDto;
 import com.yandex.market.shopservice.dto.shop.ShopSystemResponsesDto;
-import com.yandex.market.shopservice.service.branch.BranchService;
 import com.yandex.market.shopservice.service.shop.ShopSystemService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +21,6 @@ import java.util.UUID;
 @RequestMapping("${spring.application.url.shop}")
 public class ShopSystemController {
     private final ShopSystemService shopService;
-    private final BranchService branchService;
 
     @GetMapping()
     @ResponseStatus(HttpStatus.OK)
@@ -45,15 +42,6 @@ public class ShopSystemController {
     public ShopSystemResponsesDto getShopSystemByExternalId(@PathVariable("externalId") UUID externalId) {
         log.info("Received a request to get shop system by external id = %s".formatted(externalId));
         return shopService.getShopSystemDtoByExternalId(externalId);
-    }
-
-
-    @GetMapping("/{externalId}/branches")
-    @ResponseStatus(HttpStatus.OK)
-    public Page<BranchResponseDto> getAllBranchesByShopSystemExternalId(@PageableDefault(size = 20) Pageable pageable,
-                                                                        @PathVariable("externalId") UUID externalId){
-        log.info("Received a request to get paginated list of branches by shop systems.");
-        return branchService.getBranchesByShopSystem(externalId, pageable);
     }
 
     @DeleteMapping("/{externalId}")
