@@ -19,7 +19,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -53,33 +52,12 @@ public class BranchServiceImpl implements BranchService {
 
     @Override
     public BranchResponseDto getBranchResponseDtoByExternalId(UUID externalId) {
-//        TODO: ПРЕВДАТИТЬ БОЛЬШОЙ ЗАПРОС В ОДИН
-
-        BranchResponseProjection branchResponseDto = repository
-                .getBranchResponseByExternalId2(externalId);
-//                .orElseThrow(() -> {
-//                    throw new EntityNotFoundException("Branch by given externalId = \"" +
-//                            externalId + "\" was not found. Search canceled!");
-//                });
-
-        Optional<BranchResponseDto> branchResponseByExternalId = repository
-                .getBranchResponseByExternalId(externalId);
-//        BranchResponseDto branchResponseDto = branchResponseByExternalId.get();
-
-
-//        BranchResponseProjection branchResponseDto = repository
-//                .getBranchResponseByExternalId(externalId);
-//
-//        System.out.println(branchResponseDto);
-
-//        Branch branch = getBranchByExternalId(externalId);
-//        ShopSystem shopSystem = shopSystemService.getShopSystemByExternalId(branch.getShopSystem().getExternalId());
-//        ShopSystemBranchInfoDto shopSystemInfoForBranch = shopSystemService
-//                .getShopSystemInfoForBranch(shopSystem);
-
-//        Support support = shopSystem.getSupport();
-        return null;
-//        return mapper.toBranchDtoResponse(branch, shopSystemInfoForBranch, support);
+        BranchResponseProjection projection = repository.getBranchResponseByExternalid(externalId)
+                .orElseThrow(() -> {
+                    throw new EntityNotFoundException("Branch by given externalId = \"" +
+                            externalId + "\" was not found. Search canceled!");
+                });
+        return mapper.toBranchDtoResponse(projection);
     }
 
 
@@ -91,24 +69,19 @@ public class BranchServiceImpl implements BranchService {
         branch.setToken(dto.getToken());
         branch.setOgrn(dto.getOgrn());
         branch.setLocation(mapper.toLocationFromDto(dto.getLocation()));
-//        branch.setContact(mapper.tocContactFromDto(dto.getContact()));
         branch.setDelivery(mapper.toDeliveryFromDto(dto.getDelivery()));
     }
 
     @Override
     public Page<BranchResponseDto> getBranchesByShopSystem(UUID externalId, Pageable pageable) {
-        return getBranchPageImpl(pageable,
-                shopSystemService.getShopSystemByExternalId(externalId),
-                repository.findAllByShopSystemExternalId(externalId, pageable));
-    }
 
-    private PageImpl<BranchResponseDto> getBranchPageImpl(
-            Pageable pageable, ShopSystem shopSystem, Page<Branch> branches) {
+        Page<BranchResponseProjection> branches = repository
+                .findAllByShopSystemExternalId(externalId, pageable);
+
         return new PageImpl<>(
-                branches.getContent().stream()
-                        .map(br -> mapper.toBranchDtoResponse(br,
-                                shopSystemService.getShopSystemInfoForBranch(shopSystem),
-                                shopSystem.getSupport()))
+                branches.getContent()
+                        .stream()
+                        .map(mapper::toBranchDtoResponse)
                         .collect(Collectors.toList()),
                 pageable,
                 branches.getTotalElements()

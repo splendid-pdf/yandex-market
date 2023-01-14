@@ -2,7 +2,7 @@ package com.yandex.market.shopservice.util;
 
 import com.yandex.market.shopservice.dto.LocationDto;
 import com.yandex.market.shopservice.dto.branch.*;
-import com.yandex.market.shopservice.dto.shop.ShopSystemBranchInfoDto;
+import com.yandex.market.shopservice.dto.projections.BranchResponseProjection;
 import com.yandex.market.shopservice.dto.shop.ShopSystemRequestDto;
 import com.yandex.market.shopservice.dto.shop.ShopSystemResponsesDto;
 import com.yandex.market.shopservice.dto.shop.SpecialOfferDto;
@@ -32,13 +32,8 @@ public class ShopSystemMapper {
                 .support(toSupportFromDto(dto.getSupport()))
                 .legalEntityAddress(toLocationFromDto(dto.getLegalEntityAddress()))
                 .specialOffers(toSpecialOffersFromDto(dto.getSpecialOffers()))
-                .branches(toBranchesFromDto(dto.getBranches()))
                 .logoUrl(dto.getLogoUrl())
                 .build();
-    }
-
-    private Set<Branch> toBranchesFromDto(Set<BranchDto> branches) {
-        return null;
     }
 
     public ShopSystemResponsesDto toShopSystemResponseDto(ShopSystem shopSystem) {
@@ -48,14 +43,9 @@ public class ShopSystemMapper {
                 .support(toSupportDto(shopSystem.getSupport()))
                 .legalEntityAddress(toLocationDto(shopSystem.getLegalEntityAddress()))
                 .specialOffers(toSpecialOffersDto(shopSystem.getSpecialOffers()))
-                .branches(toBranchesDto(shopSystem.getBranches()))
                 .logoUrl(shopSystem.getLogoUrl())
                 .rating(shopSystem.getRating())
                 .build();
-    }
-
-    private Set<BranchDto> toBranchesDto(Set<Branch> branches) {
-        return null;
     }
 
     // >>> special offer
@@ -136,28 +126,17 @@ public class ShopSystemMapper {
                 .ogrn(dto.getOgrn())
                 .location(toLocationFromDto(dto.getLocation()))
                 .contact(tocContactFromDto(dto.getContact()))
+                .delivery(toDeliveryFromDto(dto.getDelivery()))
                 .paymentMethods(dto.getPaymentMethods())
                 .build();
     }
 
     private Contact tocContactFromDto(ContactDto contact) {
-        return null;
-    }
-
-    public BranchDto toBranchDto(Branch branch) {
-        return BranchDto.builder()
-                .shopSystemExternalId(branch.getShopSystem().getExternalId())
-                .name(branch.getName())
-                .token(branch.getToken())
-                .ogrn(branch.getOgrn())
-                .location(toLocationDto(branch.getLocation()))
-                .contact(toContactDto(branch.getContact()))
-                .delivery(toDeliveryDto(branch.getDelivery()))
+        return Contact.builder()
+                .hotlinePhone(contact.hotlinePhone())
+                .servicePhone(contact.servicePhone())
+                .email(contact.email())
                 .build();
-    }
-
-    private DeliveryDto toDeliveryDto(Delivery delivery) {
-        return null;
     }
 
     public Delivery toDeliveryFromDto(DeliveryDto dto) {
@@ -178,14 +157,6 @@ public class ShopSystemMapper {
         return delivery;
     }
 
-    private DeliveryInterval toDeliveryIntervalFromDto(DeliveryIntervalDto internal) {
-        return DeliveryInterval.builder()
-                .intervalId(internal.intervalId())
-                .periodStart(internal.periodStart())
-                .periodEnd(internal.periodEnd())
-                .build();
-    }
-
     private DeliveryZone toDeliveryZoneFromDto(DeliveryZoneDto zone) {
         return DeliveryZone.builder()
                 .zoneId(zone.zoneId())
@@ -195,32 +166,7 @@ public class ShopSystemMapper {
                 .build();
     }
 
-    public Set<DeliveryZone> toSetDeliveryZoneFromDto(Set<DeliveryZoneDto> dto) {
-        Set<DeliveryZone> deliveryZones = new HashSet<>();
-        for (DeliveryZoneDto deliveryZoneDto : dto) {
-            deliveryZones.add(toDeliveryZoneFromDto2(deliveryZoneDto));
-        }
-        return deliveryZones;
-    }
-
-    private DeliveryZone toDeliveryZoneFromDto2(DeliveryZoneDto deliveryZoneDto) {
-        return DeliveryZone.builder()
-                .zoneId(deliveryZoneDto.zoneId())
-                .radiusInMeters(deliveryZoneDto.radiusInMeters())
-                .standardDeliveryPrice(deliveryZoneDto.standardDeliveryPrice())
-                .expressDeliveryPrice(deliveryZoneDto.expressDeliveryPrice())
-                .build();
-    }
-
-    public Set<DeliveryInterval> toSetDeliveryIntervalFromDto(Set<DeliveryIntervalDto> dto) {
-        Set<DeliveryInterval> deliveryIntervals = new HashSet<>();
-        for (DeliveryIntervalDto delDto : dto) {
-            deliveryIntervals.add(toDeliveryIntervalFromDtoq(delDto));
-        }
-        return deliveryIntervals;
-    }
-
-    private DeliveryInterval toDeliveryIntervalFromDtoq(DeliveryIntervalDto internal) {
+    private DeliveryInterval toDeliveryIntervalFromDto(DeliveryIntervalDto internal) {
         return DeliveryInterval.builder()
                 .intervalId(internal.intervalId())
                 .periodStart(internal.periodStart())
@@ -228,16 +174,7 @@ public class ShopSystemMapper {
                 .build();
     }
 
-    public ContactDto toContactDto(Contact contact) {
-        return new ContactDto(
-                contact.getHotlinePhone(),
-                contact.getServicePhone(),
-                contact.getEmail()
-        );
-    }
-
-    private DeliveryResponseDto toDeliveryResponseDto(Branch branch) {
-        Delivery delivery = branch.getDelivery();
+    private DeliveryResponseDto toDeliveryResponseDto(Delivery delivery) {
         return DeliveryResponseDto.builder()
                 .pickupPointPartners(delivery.getPickupPointPartners())
                 .deliveryZones(toSetDeliveryZoneDto(delivery.getDeliveryZones()))
@@ -278,23 +215,6 @@ public class ShopSystemMapper {
                 .build();
     }
 
-    public BranchResponseDto toBranchDtoResponse(
-            Branch branch, ShopSystemBranchInfoDto shopSystem, Support support) {
-        return BranchResponseDto.builder()
-                .shopSystemExternalId(shopSystem.getShopSystemExternalId())
-                .branchExternalId(branch.getExternalId())
-                .companyName(shopSystem.getCompanyName())
-                .branchName(branch.getName())
-                .companyLogoUrl(shopSystem.getCompanyLogoUrl())
-                .ogrn(branch.getOgrn())
-                .location(toLocationDto(branch.getLocation()))
-                .contact(toContactResponseDto(branch.getContact(), support))
-                .delivery(toDeliveryResponseDto(branch))
-                .hasDeliveryToPickupPoint(branch.isPickup())
-                .paymentMethods(branch.getPaymentMethods())
-                .build();
-    }
-
     private ContactResponseDto toContactResponseDto(Contact contact, Support support) {
         return ContactResponseDto.builder()
                 .branchEmail(contact.getEmail())
@@ -302,6 +222,33 @@ public class ShopSystemMapper {
                 .companyEmail(support.getEmail())
                 .companyHotlinePhone(support.getNumber())
                 .branchServicePhone(contact.getServicePhone())
+                .build();
+    }
+
+//    >>> Projection
+    public BranchResponseDto toBranchDtoResponse(BranchResponseProjection projection) {
+        ShopSystem shopSystem = projection.getShopSystem();
+        Branch branch = projection.getBranch();
+        Delivery delivery = projection.getBranch().getDelivery();
+        return BranchResponseDto.builder()
+                .shopSystemExternalId(shopSystem.getExternalId())
+                .branchExternalId(branch.getExternalId())
+                .branchName(branch.getName())
+                .companyName(shopSystem.getName())
+                .companyLogoUrl(shopSystem.getLogoUrl())
+                .ogrn(branch.getOgrn())
+                .location(toLocationDto(branch.getLocation()))
+                .contact(toContactResponseDto(
+                        branch.getContact(),
+                        shopSystem.getSupport()))
+                .paymentMethods(SupportedPaymentMethods.builder()
+                        .online(branch.getPaymentMethods().isOnline())
+                        .cash(branch.getPaymentMethods().isCash())
+                        .build())
+                .hasDelivery(delivery.isHasDelivery())
+                .hasExpressDelivery(delivery.isHasExpressDelivery())
+                .hasDeliveryToPickupPoint(delivery.isHasDeliveryToPickupPoint())
+                .delivery(toDeliveryResponseDto(branch.getDelivery()))
                 .build();
     }
 }

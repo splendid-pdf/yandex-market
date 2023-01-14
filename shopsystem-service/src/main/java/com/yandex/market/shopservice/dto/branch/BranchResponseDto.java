@@ -26,5 +26,6 @@ public class BranchResponseDto {
     private boolean hasDeliveryToPickupPoint;
     private DeliveryResponseDto delivery;
 
+
     //    private Set<SpecialOffer> discounts = new HashSet<>();
 }
