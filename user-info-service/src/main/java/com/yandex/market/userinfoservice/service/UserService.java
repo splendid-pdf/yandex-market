@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Slf4j
@@ -98,14 +99,9 @@ public class UserService {
     }
 
     public List<UserResponseDto> getUsersByFilter (UserFilter userFilter) {
-
-        userRepository.findAll(UserSpecification.filter(userFilter)).forEach(user -> System.out.println(user.getFirstName()));
-
-
-
-
-        return new ArrayList<>();
-
+        return userRepository.findAll(UserSpecification.getSpecificationFromUserFilter(userFilter))
+                .stream().map(userResponseMapper::map)
+                .collect(Collectors.toList());
     }
 
 }
