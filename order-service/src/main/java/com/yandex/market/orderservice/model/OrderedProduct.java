@@ -11,8 +11,9 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "ordered_products")
 @EqualsAndHashCode(of = "id")
-public class ProductDetails {
+public class OrderedProduct {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "product-details-sequence")

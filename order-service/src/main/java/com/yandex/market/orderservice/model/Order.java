@@ -11,8 +11,9 @@ import java.util.UUID;
 @Getter
 @Setter
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
+@Table(name = "orders")
 @EqualsAndHashCode(of = "id")
 public class Order {
 
@@ -31,7 +32,7 @@ public class Order {
     private OrderStatus orderStatus;
 
     @OneToMany(mappedBy = "order", fetch = FetchType.LAZY, orphanRemoval = true)
-    private List<ProductDetails> productDetails;
+    private List<OrderedProduct> orderedProducts;
 
     @Enumerated(value = EnumType.STRING)
     private PaymentType paymentType;
