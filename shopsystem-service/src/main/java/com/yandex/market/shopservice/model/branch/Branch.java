@@ -41,10 +41,7 @@ public class Branch {
     @Embedded
     private Contact contact;
 
-    @OneToOne(cascade = CascadeType.ALL,
-            mappedBy = "branch")
-    @JoinColumn(name = "delivery_id")
-    @JsonIgnoreProperties(value = "delivery")
+    @OneToOne(mappedBy = "branch", cascade = CascadeType.ALL, orphanRemoval = true)
     private Delivery delivery;
 
     @Embedded
