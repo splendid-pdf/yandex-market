@@ -16,22 +16,26 @@ public interface BranchRepository extends JpaRepository<Branch, Long> {
             "WHERE b.externalId=:externalId AND b.isDisabled = false")
     Optional<Branch> findByExternalId(@Param("externalId") UUID externalId);
 
-    @Query(value = "SELECT " +
-            "b as branch, " +
-            "ss as shopSystem " +
-            "FROM Branch b " +
-            "INNER JOIN ShopSystem ss " +
-            "ON ss.id = b.shopSystem.id " +
-            "WHERE b.shopSystem.externalId=:externalId")
+    @Query(value = """
+                SELECT
+                b as branch,
+                ss as shopSystem
+                FROM Branch b
+                INNER JOIN ShopSystem ss
+                ON ss.id = b.shopSystem.id
+                WHERE b.shopSystem.externalId=:externalId
+            """)
     Page<BranchResponseProjection> findAllByShopSystemExternalId(@Param("externalId") UUID externalId,
                                                                  Pageable pageable);
 
-    @Query(value = "SELECT " +
-            "b as branch, " +
-            "ss as shopSystem " +
-            "FROM Branch b " +
-            "INNER JOIN ShopSystem ss " +
-            "ON ss.id = b.shopSystem.id " +
-            "WHERE b.externalId = :externalId")
+    @Query(value = """
+                SELECT
+                b as branch,
+                ss as shopSystem
+                FROM Branch b
+                INNER JOIN ShopSystem ss
+                ON ss.id = b.shopSystem.id
+                WHERE b.externalId = :externalId
+            """)
     Optional<BranchResponseProjection> getBranchResponseByExternalid(@Param("externalId") UUID externalId);
 }

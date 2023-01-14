@@ -45,7 +45,7 @@ public class BranchController {
 
 
     @ResponseStatus(HttpStatus.OK)
-    @RequestMapping(value = "/shopsystems/{externalId}/branches", method = RequestMethod.GET)
+    @GetMapping("/shopsystems/{externalId}/branches")
     public Page<BranchResponseDto> getAllBranchesByShopSystemExternalId(@PageableDefault(size = 20) Pageable pageable,
                                                                         @PathVariable("externalId") UUID externalId) {
         log.info("Received a request to get paginated list of branches by shop systems externalId = %s ".formatted(externalId));
