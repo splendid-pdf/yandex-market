@@ -8,12 +8,12 @@ import lombok.Setter;
 @Setter
 @Builder
 public class Filter {
+    //for cast
+    private Class<? extends Comparable> aClass;
     private String field;
     private QueryOperator operator;
-    private String value;
-//    private List<String> values;//Used in case of IN operator
+    private Object value;
 }
-
 
 
 

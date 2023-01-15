@@ -98,8 +98,9 @@ public class UserService {
                 .orElseThrow(() -> new EntityNotFoundException(USER_NOT_FOUND_MESSAGE_BY_VALUE + emailOrPhone)));
     }
 
-    public List<UserResponseDto> getUsersByFilter (UserFilter userFilter) {
-        return userRepository.findAll(UserSpecification.getSpecificationFromUserFilter(userFilter))
+    public List<UserResponseDto> getUsersByFilter(UserFilter userFilter) {
+        UserSpecification userSpecification = new UserSpecification();
+        return userRepository.findAll(userSpecification.getSpecificationFromUserFilter(userFilter))
                 .stream().map(userResponseMapper::map)
                 .collect(Collectors.toList());
     }
