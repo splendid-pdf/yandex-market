@@ -13,14 +13,9 @@ import java.util.List;
 import java.util.Optional;
 @RestController
 @RequiredArgsConstructor
-public class UserControllerPrivate implements PrivateApi {
+public class PrivateUserController implements PrivateApi {
 
     private final UserService userService;
-
-    @Override
-    public Optional<NativeWebRequest> getRequest() {
-        return PrivateApi.super.getRequest();
-    }
 
     @Override
     public ResponseEntity<List<UserResponseDto>> getUsersByFilter(UserFilter userFilter) {

@@ -27,6 +27,8 @@ app:
       BLANK_PASSWORD_CODE: 'Password can not be blank'
       BLANK_PHONE_CODE: 'Phone can not be blank'
       NULL_SEX_CODE: 'Sex should not be null'
+      NULL_LOCATION_CODE: 'Location can not be null'
+      NULL_NOTIFICATION_CODE: 'NotificationSettings can not be null'
 
 
 

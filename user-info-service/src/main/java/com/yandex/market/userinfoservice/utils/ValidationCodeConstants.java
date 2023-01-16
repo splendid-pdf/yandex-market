@@ -14,5 +14,8 @@ public class ValidationCodeConstants {
     public static final String BLANK_PASSWORD_CODE = "BLANK_PASSWORD_CODE";
     public static final String BLANK_PHONE_CODE = "BLANK_PHONE_CODE";
     public static final String NULL_SEX_CODE = "NULL_SEX_CODE";
+    public static final String NULL_LOCATION_CODE = "NULL_LOCATION_CODE";
+    public static final String NULL_NOTIFICATION_CODE = "NULL_NOTIFICATION_CODE";
+
 
 }

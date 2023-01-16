@@ -11,7 +11,7 @@ public class Filter {
     //for cast
     private Class<? extends Comparable> aClass;
     private String field;
-    private QueryOperator operator;
+    private QueryOperations operator;
     private Object value;
 }
 

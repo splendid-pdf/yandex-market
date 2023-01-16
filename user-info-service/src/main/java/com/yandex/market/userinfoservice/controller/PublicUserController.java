@@ -15,7 +15,7 @@ import java.util.UUID;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-public class UserController implements PublicApi {
+public class PublicUserController implements PublicApi {
 
     private final UserService userService;
 
