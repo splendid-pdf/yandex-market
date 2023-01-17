@@ -14,8 +14,3 @@ public class Filter {
     private QueryOperations operator;
     private Object value;
 }
-
-
-
-
-

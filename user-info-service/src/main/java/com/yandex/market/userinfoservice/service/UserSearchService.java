@@ -17,7 +17,7 @@ import static com.yandex.market.userinfoservice.utils.ValidationCodeConstants.NU
 import static com.yandex.market.userinfoservice.utils.ValidationCodeConstants.NULL_NOTIFICATION_CODE;
 @Service
 @RequiredArgsConstructor
-public class PrivateUserService {
+public class UserSearchService {
     private final UserRepository userRepository;
     private final UserSpecification userSpecification;
     private final UserResponseMapper userResponseMapper;

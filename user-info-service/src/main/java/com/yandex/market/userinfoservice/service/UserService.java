@@ -22,7 +22,7 @@ import static com.yandex.market.userinfoservice.utils.ExceptionMessagesConstants
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class PublicUserService {
+public class UserService {
     private final UserRepository userRepository;
     private final UserRequestMapper userRequestMapper;
     private final UserResponseMapper userResponseMapper;

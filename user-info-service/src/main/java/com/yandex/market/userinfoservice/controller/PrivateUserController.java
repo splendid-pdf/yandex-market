@@ -1,6 +1,6 @@
 package com.yandex.market.userinfoservice.controller;
 
-import com.yandex.market.userinfoservice.service.PrivateUserService;
+import com.yandex.market.userinfoservice.service.UserSearchService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.openapitools.api.controller.PrivateApi;
@@ -16,11 +16,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PrivateUserController implements PrivateApi {
 
-    private final PrivateUserService privateUserService;
+    private final UserSearchService userSearchService;
 
     @Override
     public ResponseEntity<List<UserResponseDto>> getUsersByFilter(UserFilter userFilter) {
         log.info("Received request to get users by filter(s): {}", userFilter);
-        return ResponseEntity.ok(privateUserService.getUsersByFilter(userFilter));
+        return ResponseEntity.ok(userSearchService.getUsersByFilter(userFilter));
     }
 }
