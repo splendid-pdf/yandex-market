@@ -22,5 +22,4 @@ public class NotificationSettingsMapper {
                 .isAllowedToReceiveOnAddress(notificationSettingsDto.getIsAllowedToReceiveOnAddress())
                 .build();
     }
-
 }

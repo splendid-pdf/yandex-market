@@ -8,6 +8,7 @@ import com.yandex.market.userinfoservice.validator.UserValidator;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.openapitools.api.model.UserRequestDto;
 import org.openapitools.api.model.UserResponseDto;
 import org.springframework.cache.annotation.CacheEvict;
@@ -18,22 +19,19 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Stream;
+
+import static com.yandex.market.userinfoservice.utils.ExceptionMessagesConstants.*;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserService {
-
-    public static final String USER_WITH_THE_SAME_EMAIL_IS_EXISTS_MESSAGE =
-            "User with similar email = %s is already exists";
-    private static final String USER_NOT_FOUND_MESSAGE_BY_ID = "User wasn't found by id =";
-    private static final String USER_NOT_FOUND_MESSAGE_BY_VALUE = "User wasn't found by value =";
     private final UserRepository userRepository;
     private final UserRequestMapper userRequestMapper;
-
     private final UserResponseMapper userResponseMapper;
-
     private final UserValidator userValidator;
 
     @Transactional
@@ -42,7 +40,7 @@ public class UserService {
 
         checkEmailToExist(userRequestDto);
         User user = userRequestMapper.map(userRequestDto);
-
+        user.setPhone(formatPhone(user.getPhone()));
         userRepository.save(user);
         return user.getExternalId();
     }
@@ -88,7 +86,7 @@ public class UserService {
         Stream.ofNullable(updatedUser.getContacts())
                 .flatMap(Collection::stream)
                 .forEach(storedUser::addContact);
-        storedUser.setPhone(updatedUser.getPhone());
+        storedUser.setPhone(formatPhone(updatedUser.getPhone()));
         storedUser.setSex(updatedUser.getSex());
         storedUser.setLocation(updatedUser.getLocation());
         storedUser.setLogin(updatedUser.getLogin());
@@ -110,6 +108,22 @@ public class UserService {
         return userResponseMapper.map(userRepository.findUserByPhone(emailOrPhone)
                 .orElseThrow(() -> new EntityNotFoundException(USER_NOT_FOUND_MESSAGE_BY_VALUE + emailOrPhone)));
     }
+
+    private String formatPhone(String phone) {
+        StringBuilder formattedPhone = new StringBuilder(phone.replaceAll("\\D", ""));
+        if (formattedPhone.length() == 10) {
+            formattedPhone.insert(0, "7");
+        }
+        formattedPhone.replace(0, 1, "7");
+        Pattern pattern = Pattern.compile("(\\d{1})(\\d{3})(\\d{3})(\\d{2})(\\d{2})");
+        Matcher matcher = pattern.matcher(formattedPhone);
+        if (matcher.find()) {
+            formattedPhone = new StringBuilder();
+            matcher.appendReplacement(formattedPhone, "+$1 ($2) $3-$4-$5");
+            matcher.appendTail(formattedPhone);
+            return formattedPhone.toString();
+        }
+        return StringUtils.EMPTY;
 
     private void checkEmailToExist(UserRequestDto userRequestDto) {
         if (userRepository.existsByEmail(userRequestDto.getEmail())) {

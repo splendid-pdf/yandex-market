@@ -8,10 +8,9 @@ import java.util.List;
 public enum UserFieldValidation {
     BIRTHDAY(UserValidator::validateBirthday),
     EMAIL(UserValidator::validateEmail),
-    NAME(UserValidator::validateFirstName),
+    NAME(UserValidator::validateName),
     PASSWORD(UserValidator::validatePassword),
-    PHONE(UserValidator::validatePhone),
-    SEX(UserValidator::validateSex);
+    PHONE(UserValidator::validatePhone);
 
     private final TriConsumer<UserValidator, UserRequestDto, List<String>> consumer;
 
