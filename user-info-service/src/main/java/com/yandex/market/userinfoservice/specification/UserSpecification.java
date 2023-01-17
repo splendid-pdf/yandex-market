@@ -21,6 +21,11 @@ public class UserSpecification {
     public Specification<User> getSpecificationFromUserFilter(@NotNull UserFilter userFilter) {
         //todo: change to queue?
         List<Filter> filters = getAllFilters(userFilter);
+
+        if (filters.isEmpty()) {
+            return null;
+        }
+
         Specification<User> specification = where(createSpecification(filters.remove(0)));
         for (Filter input : filters) {
             specification = specification.and(createSpecification(input));
@@ -77,7 +82,7 @@ public class UserSpecification {
 
             case NOTIFICATION_EQUALS:
                 return (root, query, criteriaBuilder) ->
-                        criteriaBuilder.equal(root.get("notification").get(filter.getField()),
+                        criteriaBuilder.equal(root.get("notificationSettings").get(filter.getField()),
                                 filter.getAClass().cast(filter.getValue()));
 
             case LIKE:

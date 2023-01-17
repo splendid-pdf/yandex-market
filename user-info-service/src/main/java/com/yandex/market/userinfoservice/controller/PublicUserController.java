@@ -1,6 +1,6 @@
 package com.yandex.market.userinfoservice.controller;
 
-import com.yandex.market.userinfoservice.service.UserService;
+import com.yandex.market.userinfoservice.service.PublicUserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.openapitools.api.controller.PublicApi;
@@ -17,38 +17,38 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class PublicUserController implements PublicApi {
 
-    private final UserService userService;
+    private final PublicUserService publicUserService;
 
     @Override
     public ResponseEntity<UUID> createUser(UserRequestDto userRequestDto) {
         log.info("Received request to create a user: {}", userRequestDto);
-        return ResponseEntity.ok(userService.create(userRequestDto));
+        return ResponseEntity.ok(publicUserService.create(userRequestDto));
     }
 
     @Override
     public ResponseEntity<Void> deleteUser(UUID externalId) {
         log.info("Received request to delete a user by externalId: {}", externalId);
-        userService.deleteUserByExternalId(externalId);
+        publicUserService.deleteUserByExternalId(externalId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @Override
     public ResponseEntity<UserResponseDto> getByExternalId(UUID externalId) {
         log.info("Received request to get a user by externalId: {}", externalId);
-        return ResponseEntity.ok(userService.findUserByExternalId(externalId));
+        return ResponseEntity.ok(publicUserService.findUserByExternalId(externalId));
     }
 
 
     @Override
     public ResponseEntity<UserResponseDto> getUserByEmailOrPhone(String emailOrPhone) {
         log.info("Received request to get a user by given value: {}", emailOrPhone);
-        return ResponseEntity.ok(userService.getUserDtoByEmailOrPhone(emailOrPhone));
+        return ResponseEntity.ok(publicUserService.getUserDtoByEmailOrPhone(emailOrPhone));
     }
 
     @Override
     public ResponseEntity<UserResponseDto> updateUser(UUID externalId, UserRequestDto userRequestDto) {
         log.info("Received request to update a user: {}", userRequestDto);
-        return ResponseEntity.ok(userService.update(externalId, userRequestDto));
+        return ResponseEntity.ok(publicUserService.update(externalId, userRequestDto));
     }
 
 }

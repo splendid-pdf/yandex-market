@@ -1,49 +1,32 @@
 package com.yandex.market.userinfoservice.service;
 
-import com.yandex.market.userinfoservice.config.properties.ErrorInfoProperties;
 import com.yandex.market.userinfoservice.mapper.UserRequestMapper;
 import com.yandex.market.userinfoservice.mapper.UserResponseMapper;
 import com.yandex.market.userinfoservice.model.User;
 import com.yandex.market.userinfoservice.repository.UserRepository;
-import com.yandex.market.userinfoservice.specification.UserSpecification;
 import com.yandex.market.userinfoservice.validator.UserValidator;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.openapitools.api.model.UserFilter;
 import org.openapitools.api.model.UserRequestDto;
 import org.openapitools.api.model.UserResponseDto;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static com.yandex.market.userinfoservice.utils.ValidationCodeConstants.NULL_LOCATION_CODE;
-import static com.yandex.market.userinfoservice.utils.ValidationCodeConstants.NULL_NOTIFICATION_CODE;
+import static com.yandex.market.userinfoservice.utils.ExceptionMessagesConstants.*;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class UserService {
-    //todo: вынести всю эту херь в constants
-    public static final String USER_WITH_THE_SAME_EMAIL_IS_EXISTS_MESSAGE =
-            "User with similar email = %s is already exists";
-    private static final String USER_NOT_FOUND_MESSAGE_BY_ID = "User wasn't found by id =";
-    private static final String USER_NOT_FOUND_MESSAGE_BY_VALUE = "User wasn't found by value =";
-
+public class PublicUserService {
     private final UserRepository userRepository;
     private final UserRequestMapper userRequestMapper;
     private final UserResponseMapper userResponseMapper;
     private final UserValidator userValidator;
-    private final UserSpecification userSpecification;
-
-    private final ErrorInfoProperties properties;
 
     @Transactional
     public UUID create(UserRequestDto userRequestDto) {
@@ -104,22 +87,4 @@ public class UserService {
         return userResponseMapper.map(userRepository.findUserByPhone(emailOrPhone)
                 .orElseThrow(() -> new EntityNotFoundException(USER_NOT_FOUND_MESSAGE_BY_VALUE + emailOrPhone)));
     }
-
-    public List<UserResponseDto> getUsersByFilter(UserFilter userFilter) {
-        filterValidate(userFilter);
-        return userRepository.findAll(userSpecification.getSpecificationFromUserFilter(userFilter))
-                .stream().map(userResponseMapper::map)
-                .collect(Collectors.toList());
-    }
-
-    private void filterValidate(UserFilter userFilter) {
-        if(Objects.isNull(userFilter.getLocation())){
-            throw new ValidationException(properties.getMessageByErrorCode(NULL_LOCATION_CODE));
-        }
-
-        if(Objects.isNull(userFilter.getNotificationSettings())){
-            throw new ValidationException(properties.getMessageByErrorCode(NULL_NOTIFICATION_CODE));
-        }
-    }
-
 }

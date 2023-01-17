@@ -28,7 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
 @TestPropertySource(locations = "classpath:application-test.yaml")
-public class UserServiceTest {
+public class PublicUserServiceTest {
 
 
     public static final String USER_EXTERNAL_ID = "8400ecc5-0821-4a11-ac70-2165333061dc";
