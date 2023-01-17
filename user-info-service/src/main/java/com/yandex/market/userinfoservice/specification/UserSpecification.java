@@ -2,6 +2,7 @@ package com.yandex.market.userinfoservice.specification;
 
 import com.yandex.market.userinfoservice.model.User;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.ObjectUtils;
 import org.jetbrains.annotations.NotNull;
 import org.openapitools.api.model.UserFilter;
 import org.springframework.data.jpa.domain.Specification;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 import static org.springframework.data.jpa.domain.Specification.where;
 
@@ -21,11 +23,7 @@ public class UserSpecification {
     public Specification<User> getSpecificationFromUserFilter(@NotNull UserFilter userFilter) {
         //todo: change to queue?
         List<Filter> filters = getAllFilters(userFilter);
-
-        if (filters.isEmpty()) {
-            return null;
-        }
-
+        if (filters.isEmpty()) return null;
         Specification<User> specification = where(createSpecification(filters.remove(0)));
         for (Filter input : filters) {
             specification = specification.and(createSpecification(input));
@@ -94,5 +92,4 @@ public class UserSpecification {
                 throw new RuntimeException("Operation not supported yet");
         }
     }
-
 }

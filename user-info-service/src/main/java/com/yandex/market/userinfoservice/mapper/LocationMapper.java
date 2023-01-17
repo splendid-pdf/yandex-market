@@ -19,7 +19,6 @@ public class LocationMapper {
                 .build();
     }
 
-
     public LocationDto mapToDto(Location location) {
         LocationDto locationDto = new LocationDto();
         locationDto.setCountry(location.getCountry());
@@ -32,4 +31,3 @@ public class LocationMapper {
         return locationDto;
     }
 }
-

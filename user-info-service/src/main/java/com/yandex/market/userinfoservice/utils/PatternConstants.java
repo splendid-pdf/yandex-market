@@ -9,7 +9,11 @@ public class PatternConstants {
 
     public Pattern EMAIL_PATTERN =
             Pattern.compile("^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$");
-    public Pattern NAME_PATTERN = Pattern.compile("[a-zA-Z]{2,100}");
+    public Pattern NAME_PATTERN = Pattern.compile("[а-яА-Яa-zA-Z]{2,100}");
 
-    public Pattern REG_VALID_PHONE = Pattern.compile("([7-8])?(9)(\\d){9}");
+    public Pattern REG_VALID_PHONE =
+            Pattern.compile("((\\+7)|[78])?((-9\\d{2}-)|(\\(9\\d{2}\\))|( 9\\d{2} )|(9\\d{2}))\\d{3}[- ]?\\d{2}[- ]?\\d{2}");
+
+    public Pattern PASSWORD_PATTERN =
+            Pattern.compile("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[#$@!%&*?])[A-Za-z\\d#$@!%&*?]{8,30}$");
 }

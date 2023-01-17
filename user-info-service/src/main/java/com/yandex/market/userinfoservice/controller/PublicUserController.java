@@ -50,5 +50,4 @@ public class PublicUserController implements PublicApi {
         log.info("Received request to update a user: {}", userRequestDto);
         return ResponseEntity.ok(userService.update(externalId, userRequestDto));
     }
-
 }

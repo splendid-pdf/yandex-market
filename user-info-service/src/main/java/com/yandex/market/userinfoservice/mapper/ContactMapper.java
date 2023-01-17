@@ -13,7 +13,6 @@ public class ContactMapper {
                 .type(SocialNetwork.valueOf(contactDto.getType().name()))
                 .build();
     }
-
     public ContactDto mapToDto(Contact contact) {
         ContactDto contactDto = new ContactDto();
         contactDto.setType(ContactDto.TypeEnum.valueOf(contact.getType().name()));

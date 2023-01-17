@@ -17,19 +17,14 @@ spring:
 app:
   validation:
     error-info:
-      INCORRECT_FIRST_NAME_CODE: 'Incorrect format firstname: %s'
-      INCORRECT_LAST_NAME_CODE: 'Incorrect format lastname'
-      INCORRECT_EMAIL_CODE: 'Incorrect format email: %s'
-      BLANK_EMAIL_CODE: 'Email can not be blank'
-      BLANK_BIRTHDAY_CODE: 'Birthday can not be blank!'
-      BLANK_FIRST_NAME_CODE: 'Firstname can not be blank'
-      BLANK_LAST_NAME_CODE: 'Lastname can not be blank'
-      BLANK_PASSWORD_CODE: 'Password can not be blank'
-      BLANK_PHONE_CODE: 'Phone can not be blank'
-      NULL_SEX_CODE: 'Sex should not be null'
-      NULL_LOCATION_CODE: 'Location can not be null'
-      NULL_NOTIFICATION_CODE: 'NotificationSettings can not be null'
-
-
-
-
+      BLANK_FIRST_NAME_VALIDATION_ERROR_CODE: 'Firstname can not be blank'
+      BLANK_LAST_NAME_VALIDATION_ERROR_CODE: 'Lastname can not be blank'
+      BLANK_EMAIL_VALIDATION_ERROR_CODE: 'Email can not be blank'
+      BLANK_PASSWORD_VALIDATION_ERROR_CODE: 'Password can not be blank'
+      BLANK_PHONE_VALIDATION_ERROR_CODE: 'Phone can not be blank'
+      BLANK_BIRTHDAY_VALIDATION_ERROR_CODE: 'Birthday can not be blank'
+      INCORRECT_FIRST_NAME_VALIDATION_ERROR_CODE: 'Incorrect firstname format: %s'
+      INCORRECT_LAST_NAME_VALIDATION_ERROR_CODE: 'Incorrect lastname format: %s'
+      INCORRECT_PHONE_VALIDATION_ERROR_CODE: 'Incorrect format for phone number: %s'
+      INCORRECT_EMAIL_VALIDATION_ERROR_CODE: 'Incorrect email format: %s'
+      INCORRECT_PASSWORD_VALIDATION_ERROR_CODE: 'Incorrect password format: %s. The correct password should contain:[at least 1 uppercase letter, at least 1 lowercase letter, at least 1 number, at least 1 special character]. Minimum 8 characters and maximum 30 characters.'

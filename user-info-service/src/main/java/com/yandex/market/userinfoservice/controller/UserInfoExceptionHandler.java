@@ -35,7 +35,6 @@ public class UserInfoExceptionHandler {
                 .timestamp(OffsetDateTime.now());
     }
 
-
     @ExceptionHandler(DateTimeParseException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleHttpMessageNotReadableException(DateTimeParseException ex) {
@@ -56,7 +55,6 @@ public class UserInfoExceptionHandler {
 
     }
 
-
     @ExceptionHandler(HttpMessageNotReadableException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleIllegalArgumentException(HttpMessageNotReadableException ex) {
@@ -66,6 +64,4 @@ public class UserInfoExceptionHandler {
                 .timestamp(OffsetDateTime.now());
 
     }
-
-
 }
