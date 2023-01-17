@@ -17,7 +17,7 @@ import java.util.Set;
 @NoArgsConstructor
 @EqualsAndHashCode
 @AllArgsConstructor
-public class ShopSystemResponsesDto {
+public class ShopSystemResponseDto {
     @NotBlank(message = "\"Name\" field must not be empty")
     private String name;
 

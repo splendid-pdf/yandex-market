@@ -1,7 +1,7 @@
 package com.yandex.market.shopservice.controllers.shop;
 
 import com.yandex.market.shopservice.dto.shop.ShopSystemRequestDto;
-import com.yandex.market.shopservice.dto.shop.ShopSystemResponsesDto;
+import com.yandex.market.shopservice.dto.shop.ShopSystemResponseDto;
 import com.yandex.market.shopservice.service.shop.ShopSystemService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +25,7 @@ public class ShopSystemController {
 
     @GetMapping()
     @ResponseStatus(HttpStatus.OK)
-    public Page<ShopSystemResponsesDto> getAllShopSystems(@PageableDefault(size = 20) Pageable pageable) {
+    public Page<ShopSystemResponseDto> getAllShopSystems(@PageableDefault(size = 20) Pageable pageable) {
         log.info("Received a request to get paginated list of shop systems. page = " + pageable +
                 ", size = " + pageable.getPageSize());
         return shopService.getAllShopSystems(pageable);
@@ -40,7 +40,7 @@ public class ShopSystemController {
 
     @GetMapping("/{externalId}")
     @ResponseStatus(HttpStatus.OK)
-    public ShopSystemResponsesDto getShopSystemByExternalId(@PathVariable("externalId") UUID externalId) {
+    public ShopSystemResponseDto getShopSystemByExternalId(@PathVariable("externalId") UUID externalId) {
         log.info("Received a request to get shop system by external id = %s".formatted(externalId));
         return shopService.getShopSystemDtoByExternalId(externalId);
     }
