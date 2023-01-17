@@ -8,10 +8,20 @@ spring:
       hibernate:
         generate_statistics: true
         format_sql: true
+
+  data:
+    redis:
+      host: redis
+      port: 6379
+      password: password
+
+  cache:
+    type: redis
+
   datasource:
-    url: jdbc:postgresql://localhost:5432/${DB_NAME}
-    username: ${POSTGRES_USER}
-    password: ${POSTGRES_PASSWORD}
+    url: jdbc:postgresql://postgres:5432/test2
+    username: postgres
+    password: admin
     driver-class-name: org.postgresql.Driver
 
 app:

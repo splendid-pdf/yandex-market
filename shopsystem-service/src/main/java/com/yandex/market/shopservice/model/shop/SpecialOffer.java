@@ -14,7 +14,6 @@ import lombok.*;
 public class SpecialOffer {
 
     @Id
-    @EqualsAndHashCode.Include
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "special_offer_seq")
     @SequenceGenerator(name = "special_offer_seq", sequenceName = "special_offer_sequence", allocationSize = 1)
     private Long id;
@@ -22,12 +21,14 @@ public class SpecialOffer {
     @ManyToOne(fetch = FetchType.LAZY)
     private ShopSystem shopSystem;
 
+    @EqualsAndHashCode.Include
     private String name;
 
     @Enumerated(EnumType.STRING)
     private SpecialOfferType type;
 
     private int value;
-    
+
     private String terms;
+
 }

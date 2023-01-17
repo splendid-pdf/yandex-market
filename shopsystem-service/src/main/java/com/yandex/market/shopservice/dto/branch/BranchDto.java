@@ -1,7 +1,6 @@
 package com.yandex.market.shopservice.dto.branch;
 
 import com.yandex.market.shopservice.dto.LocationDto;
-import com.yandex.market.shopservice.model.branch.Delivery;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -17,8 +16,6 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BranchDto {
-
-    @NotNull(message = "\"UUID of Shop System\" field must not be empty")
     private UUID shopSystem;
 
     @NotBlank(message = "\"Name\" field must not be empty")

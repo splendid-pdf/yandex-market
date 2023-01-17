@@ -13,4 +13,5 @@ public class AppConfig {
     public ErrorInfoProperties errorInfoProperties() {
         return new ErrorInfoProperties();
     }
+
 }

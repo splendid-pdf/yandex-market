@@ -11,6 +11,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.openapitools.api.model.UserRequestDto;
 import org.openapitools.api.model.UserResponseDto;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,21 +38,21 @@ public class UserService {
     public UUID create(UserRequestDto userRequestDto) {
         userValidator.validate(userRequestDto);
 
-        if (userRepository.existsByEmail(userRequestDto.getEmail())) {
-            throw new IllegalArgumentException(USER_WITH_THE_SAME_EMAIL_IS_EXISTS_MESSAGE.formatted(userRequestDto.getEmail()));
-        }
+        checkEmailToExist(userRequestDto);
         User user = userRequestMapper.map(userRequestDto);
         user.setPhone(formatPhone(user.getPhone()));
         userRepository.save(user);
         return user.getExternalId();
     }
 
+    @Cacheable(value = "users", key = "#externalId")
     public UserResponseDto findUserByExternalId(UUID externalId) throws EntityNotFoundException {
         User user = userRepository.findByExternalId(externalId)
                 .orElseThrow(() -> new EntityNotFoundException(USER_NOT_FOUND_MESSAGE_BY_ID + externalId));
         return userResponseMapper.map(user);
     }
 
+    @CacheEvict(value = "users", key = "#externalId")
     @Transactional
     public void deleteUserByExternalId(UUID externalId) throws EntityNotFoundException {
         userRepository.findByExternalId(externalId)
@@ -57,12 +60,25 @@ public class UserService {
         userRepository.deleteUserByExternalId(externalId);
     }
 
+    @CachePut(value = "users", key = "#externalId")
     @Transactional
     public UserResponseDto update(UUID externalId, UserRequestDto userRequestDto) {
+
+        userValidator.validate(userRequestDto);
+
         User storedUser = userRepository.findByExternalId(externalId)
                 .orElseThrow(() -> new EntityNotFoundException(USER_NOT_FOUND_MESSAGE_BY_ID + externalId));
         User updatedUser = userRequestMapper.map(userRequestDto);
-        storedUser.setEmail(updatedUser.getEmail());
+
+        //todo: delete unique constraint on email field
+
+
+        if(!storedUser.getEmail().equals(updatedUser.getEmail())){
+            checkEmailToExist(userRequestDto);
+            storedUser.setEmail(updatedUser.getEmail());
+        }
+
+        //to method
         storedUser.setFirstName(updatedUser.getFirstName());
         storedUser.setMiddleName(updatedUser.getMiddleName());
         storedUser.setLastName(updatedUser.getLastName());
@@ -79,6 +95,8 @@ public class UserService {
         return userResponseMapper.map(storedUser);
     }
 
+    //TODO: performance trouble, big big trouble!!!!!
+    @Cacheable(value = "users", key = "emailOrPhone")
     public UserResponseDto getUserDtoByEmailOrPhone(String emailOrPhone) {
         //todo: regex
 
@@ -107,5 +125,9 @@ public class UserService {
         }
         return StringUtils.EMPTY;
 
+    private void checkEmailToExist(UserRequestDto userRequestDto) {
+        if (userRepository.existsByEmail(userRequestDto.getEmail())) {
+            throw new IllegalArgumentException(USER_WITH_THE_SAME_EMAIL_IS_EXISTS_MESSAGE.formatted(userRequestDto.getEmail()));
+        }
     }
 }
