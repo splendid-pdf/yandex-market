@@ -124,6 +124,7 @@ public class UserService {
             return formattedPhone.toString();
         }
         return StringUtils.EMPTY;
+    }
 
     private void checkEmailToExist(UserRequestDto userRequestDto) {
         if (userRepository.existsByEmail(userRequestDto.getEmail())) {
