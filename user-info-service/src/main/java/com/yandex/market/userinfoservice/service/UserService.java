@@ -108,12 +108,13 @@ public class UserService {
 
         //todo: delete unique constraint on email field
 
-        if(!storedUser.getEmail().equals(updatedUser.getEmail())
-                && !storedUser.getPhone().equals(formatPhone(updatedUser.getPhone()))){
+        if(!storedUser.getEmail().equals(updatedUser.getEmail())) {
             checkEmailForUniqueness(userRequestDto);
-            checkPhoneForUniqueness(userRequestDto);
-
             storedUser.setEmail(updatedUser.getEmail());
+        }
+
+        if(!storedUser.getPhone().equals(formatPhone(updatedUser.getPhone()))) {
+            checkPhoneForUniqueness(userRequestDto);
             storedUser.setPhone(formatPhone(updatedUser.getPhone()));
         }
 
