@@ -38,15 +38,51 @@ public class UserService {
     public UUID create(UserRequestDto userRequestDto) {
         userValidator.validate(userRequestDto);
 
-        checkEmailToExist(userRequestDto);
+        String formattedPhone = checkPhoneForUniqueness(userRequestDto);
+        checkEmailForUniqueness(userRequestDto);
+
+        //todo: must pay attention!!
         User user = userRequestMapper.map(userRequestDto);
-        user.setPhone(formatPhone(user.getPhone()));
+        user.setPhone(formattedPhone);
         userRepository.save(user);
         return user.getExternalId();
     }
 
+    private void checkEmailForUniqueness(UserRequestDto userRequestDto) {
+        if (userRepository.existsByEmail(userRequestDto.getEmail())) {
+            throw new IllegalArgumentException(USER_WITH_THE_SAME_EMAIL_IS_EXISTS_MESSAGE
+                    .formatted(userRequestDto.getEmail()));
+        }
+    }
+
+    private String checkPhoneForUniqueness(UserRequestDto userRequestDto) {
+        String formattedPhone = formatPhone(userRequestDto.getPhone());
+        if (userRepository.existsByPhone(formattedPhone)) {
+            throw new IllegalArgumentException(USER_WITH_THE_SAME_PHONE_IS_EXISTS_MESSAGE
+                    .formatted(userRequestDto.getPhone()));
+        }
+        return formattedPhone;
+    }
+
+    private String formatPhone(String phone) {
+        StringBuilder formattedPhone = new StringBuilder(phone.replaceAll("\\D", ""));
+        if (formattedPhone.length() == 10) {
+            formattedPhone.insert(0, "7");
+        }
+        formattedPhone.replace(0, 1, "7");
+        Pattern pattern = Pattern.compile("(\\d{1})(\\d{3})(\\d{3})(\\d{2})(\\d{2})");
+        Matcher matcher = pattern.matcher(formattedPhone);
+        if (matcher.find()) {
+            formattedPhone = new StringBuilder();
+            matcher.appendReplacement(formattedPhone, "+$1($2)$3-$4-$5");
+            matcher.appendTail(formattedPhone);
+            return formattedPhone.toString();
+        }
+        return StringUtils.EMPTY;
+    }
+
     @Cacheable(value = "users", key = "#externalId")
-    public UserResponseDto findUserByExternalId(UUID externalId) throws EntityNotFoundException {
+    public UserResponseDto findUserByExternalId(UUID externalId) {
         User user = userRepository.findByExternalId(externalId)
                 .orElseThrow(() -> new EntityNotFoundException(USER_NOT_FOUND_MESSAGE_BY_ID + externalId));
         return userResponseMapper.map(user);
@@ -54,10 +90,10 @@ public class UserService {
 
     @CacheEvict(value = "users", key = "#externalId")
     @Transactional
-    public void deleteUserByExternalId(UUID externalId) throws EntityNotFoundException {
-        userRepository.findByExternalId(externalId)
+    public void deleteUserByExternalId(UUID externalId){
+        User user = userRepository.findByExternalId(externalId)
                 .orElseThrow(() -> new EntityNotFoundException(USER_NOT_FOUND_MESSAGE_BY_ID + externalId));
-        userRepository.deleteUserByExternalId(externalId);
+        user.setDeleted(true);
     }
 
     @CachePut(value = "users", key = "#externalId")
@@ -72,10 +108,13 @@ public class UserService {
 
         //todo: delete unique constraint on email field
 
+        if(!storedUser.getEmail().equals(updatedUser.getEmail())
+                && !storedUser.getPhone().equals(formatPhone(updatedUser.getPhone()))){
+            checkEmailForUniqueness(userRequestDto);
+            checkPhoneForUniqueness(userRequestDto);
 
-        if(!storedUser.getEmail().equals(updatedUser.getEmail())){
-            checkEmailToExist(userRequestDto);
             storedUser.setEmail(updatedUser.getEmail());
+            storedUser.setPhone(formatPhone(updatedUser.getPhone()));
         }
 
         //to method
@@ -86,7 +125,6 @@ public class UserService {
         Stream.ofNullable(updatedUser.getContacts())
                 .flatMap(Collection::stream)
                 .forEach(storedUser::addContact);
-        storedUser.setPhone(formatPhone(updatedUser.getPhone()));
         storedUser.setSex(updatedUser.getSex());
         storedUser.setLocation(updatedUser.getLocation());
         storedUser.setLogin(updatedUser.getLogin());
@@ -96,7 +134,8 @@ public class UserService {
     }
 
     //TODO: performance trouble, big big trouble!!!!!
-    @Cacheable(value = "users", key = "emailOrPhone")
+
+    @Cacheable(value = "users", key = "#emailOrPhone")
     public UserResponseDto getUserDtoByEmailOrPhone(String emailOrPhone) {
         //todo: regex
 
@@ -109,26 +148,4 @@ public class UserService {
                 .orElseThrow(() -> new EntityNotFoundException(USER_NOT_FOUND_MESSAGE_BY_VALUE + emailOrPhone)));
     }
 
-    private String formatPhone(String phone) {
-        StringBuilder formattedPhone = new StringBuilder(phone.replaceAll("\\D", ""));
-        if (formattedPhone.length() == 10) {
-            formattedPhone.insert(0, "7");
-        }
-        formattedPhone.replace(0, 1, "7");
-        Pattern pattern = Pattern.compile("(\\d{1})(\\d{3})(\\d{3})(\\d{2})(\\d{2})");
-        Matcher matcher = pattern.matcher(formattedPhone);
-        if (matcher.find()) {
-            formattedPhone = new StringBuilder();
-            matcher.appendReplacement(formattedPhone, "+$1 ($2) $3-$4-$5");
-            matcher.appendTail(formattedPhone);
-            return formattedPhone.toString();
-        }
-        return StringUtils.EMPTY;
-    }
-
-    private void checkEmailToExist(UserRequestDto userRequestDto) {
-        if (userRepository.existsByEmail(userRequestDto.getEmail())) {
-            throw new IllegalArgumentException(USER_WITH_THE_SAME_EMAIL_IS_EXISTS_MESSAGE.formatted(userRequestDto.getEmail()));
-        }
-    }
 }

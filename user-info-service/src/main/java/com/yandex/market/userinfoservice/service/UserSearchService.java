@@ -1,6 +1,5 @@
 package com.yandex.market.userinfoservice.service;
 
-import com.yandex.market.userinfoservice.config.properties.ErrorInfoProperties;
 import com.yandex.market.userinfoservice.mapper.UserResponseMapper;
 import com.yandex.market.userinfoservice.repository.UserRepository;
 import com.yandex.market.userinfoservice.specification.UserSpecification;
