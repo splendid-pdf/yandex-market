@@ -25,4 +25,9 @@ public class Contact {
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
+    @PrePersist
+    public void setDefaultSocialNetwork(){
+        type = SocialNetwork.NONE;
+    }
+
 }

@@ -4,6 +4,7 @@ import com.yandex.market.mapper.Mapper;
 import com.yandex.market.userinfoservice.model.Sex;
 import com.yandex.market.userinfoservice.model.User;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.ObjectUtils;
 import org.openapitools.api.model.UserRequestDto;
 import org.springframework.stereotype.Component;
 
@@ -31,12 +32,15 @@ public class UserRequestMapper implements Mapper<UserRequestDto, User> {
                 .login(trimEmailForLogin(userRequestDto))
                 .password(userRequestDto.getPassword())
                 .birthday(userRequestDto.getBirthday())
-                .sex(Sex.valueOf(userRequestDto.getSex().name()))
                 .location(locationMapper.map(userRequestDto.getLocation()))
                 .notificationSettings(
                         notificationSettingsMapper.mapNotificationSettings(userRequestDto.getNotificationSettings()))
                 .photoId(userRequestDto.getPhotoId())
                 .build();
+
+        if (ObjectUtils.isNotEmpty(userRequestDto.getSex())){
+            user.setSex(Sex.valueOf(userRequestDto.getSex().name()));
+        }
 
         Stream.ofNullable(userRequestDto.getContacts())
                 .flatMap(Collection::stream)

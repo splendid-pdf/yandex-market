@@ -319,13 +319,11 @@ components:
           type: string
           example: 'Ocean Drive'
         houseNumber:
-          type: integer
-          format: int32
-          example: 5
+          type: string
+          example: 'b4'
         apartNumber:
-          type: integer
-          format: int32
-          example: 12
+          type: string
+          example: '3'
         latitude:
           type: number
           format: double
@@ -348,6 +346,7 @@ components:
             - FACEBOOK
             - TELEGRAM
             - INSTAGRAM
+            - NONE
     ErrorResponse:
       type: object
       properties:

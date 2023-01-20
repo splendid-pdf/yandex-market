@@ -75,4 +75,9 @@ public class User {
     public void removeContact(Contact contact) {
         contacts.remove(contact);
     }
+
+    @PrePersist
+    public void setDefaultSex(){
+        sex = Sex.NONE;
+    }
 }
