@@ -101,7 +101,7 @@ public class UserValidator {
 
         if (StringUtils.isBlank(phone)) {
             exceptionMessages.add(properties.getMessageByErrorCode(BLANK_PHONE_VALIDATION_ERROR_CODE));
-        } else if (!REG_VALID_PHONE.matcher(phone).matches()) {
+        } else if (!PHONE_PATTERN.matcher(phone).matches()) {
             exceptionMessages
                     .add(properties.getMessageByErrorCode(INCORRECT_PHONE_VALIDATION_ERROR_CODE)
                             .formatted(phone));
