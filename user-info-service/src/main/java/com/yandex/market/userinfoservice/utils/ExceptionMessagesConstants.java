@@ -9,6 +9,7 @@ public class ExceptionMessagesConstants {
     public String USER_WITH_THE_SAME_PHONE_IS_EXISTS_MESSAGE =
             "User with similar phone = %s is already exists";
 
-    public String USER_NOT_FOUND_MESSAGE_BY_ID = "User was not found by given externalId = ";
-    public String USER_NOT_FOUND_MESSAGE_BY_VALUE = "User was not found by given value = ";
+    public String USER_NOT_FOUND_ERROR_MESSAGE = "User was not found by given externalId = ";
+    public String USER_NOT_FOUND_BY_EMAIL_ERROR_MESSAGE = "User was not found by given email = ";
+    public String USER_NOT_FOUND_BY_PHONE_ERROR_MESSAGE = "User was not found by given phone = ";
 }
