@@ -9,6 +9,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @Builder
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "ordered_products")
@@ -22,6 +23,8 @@ public class OrderedProduct {
 
     private UUID productId;
 
+    private double amount;
+
     private String name;
 
     private double price;
@@ -34,6 +37,7 @@ public class OrderedProduct {
 
     private UUID shopSystemId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Order order;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "order_id")
+//    private Order order;
 }

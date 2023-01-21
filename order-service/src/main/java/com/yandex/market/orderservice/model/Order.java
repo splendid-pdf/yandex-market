@@ -2,6 +2,7 @@ package com.yandex.market.orderservice.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.validator.constraints.UniqueElements;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -22,6 +23,7 @@ public class Order {
     @SequenceGenerator(name = "order-sequence", allocationSize = 1)
     private Long id;
 
+    @Column(unique = true)
     private UUID externalId;
 
     private UUID userId;
@@ -31,7 +33,9 @@ public class Order {
     @Enumerated(value = EnumType.STRING)
     private OrderStatus orderStatus;
 
-    @OneToMany(mappedBy = "order", fetch = FetchType.LAZY, orphanRemoval = true)
+    //@OneToMany(mappedBy = "order", fetch = FetchType.LAZY, orphanRemoval = true)
+    @OneToMany( fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
+    @JoinColumn(name = "order_id")
     private List<OrderedProduct> orderedProducts;
 
     @Enumerated(value = EnumType.STRING)
@@ -45,4 +49,19 @@ public class Order {
     private LocalDateTime paymentDateTime;
 
     private LocalDateTime creationTimestamp;
+
+    @Override
+    public String toString() {
+        return "Order{" +
+                "userId=" + userId +
+                ", price=" + price +
+                ", orderStatus=" + orderStatus +
+                ", orderedProducts=" + orderedProducts +
+                ", paymentType=" + paymentType +
+                ", receiptMethod=" + receiptMethod +
+                ", paid=" + paid +
+                ", paymentDateTime=" + paymentDateTime +
+                ", creationTimestamp=" + creationTimestamp +
+                '}';
+    }
 }
