@@ -15,9 +15,9 @@ import org.springframework.util.CollectionUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
-import static com.yandex.market.userinfoservice.utils.PatternConstants.EMAIL_PATTERN;
-import static com.yandex.market.userinfoservice.utils.PatternConstants.NAME_PATTERN;
+import static com.yandex.market.userinfoservice.utils.PatternConstants.*;
 import static com.yandex.market.userinfoservice.utils.ValidationCodeConstants.*;
 
 @Component
@@ -40,41 +40,59 @@ public class UserValidator {
         }
     }
 
-    public void validateBirthday(@NotNull UserRequestDto userRequestDto, @NotNull List<String> exceptionMessages) {
-        if (userRequestDto.getBirthday() == null) {
-            exceptionMessages.add(properties.getMessageByErrorCode(BLANK_BIRTHDAY_CODE));
+    public void validateName(@NotNull UserRequestDto userRequestDto, @NotNull List<String> exceptionMessages) {
+        val firstName = userRequestDto.getFirstName();
+        val lastName = userRequestDto.getLastName();
+
+        if (StringUtils.isBlank(firstName)) {
+            exceptionMessages.add(properties.getMessageByErrorCode(BLANK_FIRST_NAME_VALIDATION_ERROR_CODE));
+        } else if (!NAME_PATTERN.matcher(firstName).matches()) {
+            exceptionMessages
+                    .add(properties.getMessageByErrorCode(INCORRECT_FIRST_NAME_VALIDATION_ERROR_CODE)
+                            .formatted(firstName));
+        }
+
+        if (StringUtils.isBlank(lastName)) {
+            exceptionMessages.add(properties.getMessageByErrorCode(BLANK_LAST_NAME_VALIDATION_ERROR_CODE));
+        } else if (!NAME_PATTERN.matcher(lastName).matches()) {
+            exceptionMessages
+                    .add(properties.getMessageByErrorCode(INCORRECT_LAST_NAME_VALIDATION_ERROR_CODE)
+                            .formatted(lastName));
         }
     }
 
     public void validateEmail(@NotNull UserRequestDto userRequestDto, @NotNull List<String> exceptionMessages) {
         val email = userRequestDto.getEmail();
 
+//        if (userRepository.existsByEmail(email)) {
+//            throw new IllegalArgumentException(USER_WITH_THE_SAME_EMAIL_IS_EXISTS_MESSAGE.formatted(email));
+//        }
         if (StringUtils.isBlank(email)) {
-            exceptionMessages.add(properties.getMessageByErrorCode(BLANK_EMAIL_CODE));
+            exceptionMessages.add(properties.getMessageByErrorCode(BLANK_EMAIL_VALIDATION_ERROR_CODE));
         } else if (!EMAIL_PATTERN.matcher(email).matches()) {
-            exceptionMessages.add(properties.getMessageByErrorCode(INCORRECT_EMAIL_CODE).formatted(email));
-        }
-    }
-
-    public void validateFirstName(@NotNull UserRequestDto userRequestDto, @NotNull List<String> exceptionMessages) {
-        val firstName = userRequestDto.getFirstName();
-
-        if (StringUtils.isBlank(firstName)) {
-            exceptionMessages.add(properties.getMessageByErrorCode(BLANK_FIRST_NAME_CODE));
-        } else if (!NAME_PATTERN.matcher(firstName).matches()) {
-            exceptionMessages.add(properties.getMessageByErrorCode(INCORRECT_FIRST_NAME_CODE).formatted(firstName));
-        }
-
-        if (StringUtils.isBlank(userRequestDto.getLastName())) {
-            exceptionMessages.add(properties.getMessageByErrorCode(BLANK_LAST_NAME_CODE));
-        } else if (!NAME_PATTERN.matcher(userRequestDto.getLastName()).matches()) {
-            exceptionMessages.add(properties.getMessageByErrorCode(INCORRECT_LAST_NAME_CODE).formatted());
+            exceptionMessages
+                    .add(properties.getMessageByErrorCode(INCORRECT_EMAIL_VALIDATION_ERROR_CODE)
+                            .formatted(email));
         }
     }
 
     public void validatePassword(@NotNull UserRequestDto userRequestDto, @NotNull List<String> exceptionMessages) {
-        if (StringUtils.isBlank(userRequestDto.getPassword())) {
-            exceptionMessages.add(properties.getMessageByErrorCode(BLANK_PASSWORD_CODE));
+        val password = userRequestDto.getPassword();
+
+        if (StringUtils.isBlank(password)) {
+            exceptionMessages.add(properties.getMessageByErrorCode(BLANK_PASSWORD_VALIDATION_ERROR_CODE));
+        } else if (!PASSWORD_PATTERN.matcher(password).matches()) {
+            exceptionMessages
+                    .add(properties.getMessageByErrorCode(INCORRECT_PASSWORD_VALIDATION_ERROR_CODE)
+                            .formatted(password));
+        }
+    }
+
+    public void validateBirthday(@NotNull UserRequestDto userRequestDto, @NotNull List<String> exceptionMessages) {
+        val birthday = userRequestDto.getBirthday();
+
+        if (Objects.isNull(birthday)) {
+            exceptionMessages.add(properties.getMessageByErrorCode(BLANK_BIRTHDAY_VALIDATION_ERROR_CODE));
         }
     }
 
@@ -82,20 +100,11 @@ public class UserValidator {
         val phone = userRequestDto.getPhone();
 
         if (StringUtils.isBlank(phone)) {
-            exceptionMessages.add(properties.getMessageByErrorCode(BLANK_PHONE_CODE));
-            return;
-        }
-
-//        String phoneNumber = phone.replaceAll("\\D", "");
-//        if (!phoneNumber.matches(REG_VALID_PHONE)) {
-//            exceptionMessages.add("Incorrect format for phone number");
-//        }
-    }
-
-    public void validateSex(@NotNull UserRequestDto userRequestDto, @NotNull List<String> exceptionMessages) {
-        if (userRequestDto.getSex() == null) {
-            exceptionMessages.add(properties.getMessageByErrorCode(NULL_SEX_CODE));
+            exceptionMessages.add(properties.getMessageByErrorCode(BLANK_PHONE_VALIDATION_ERROR_CODE));
+        } else if (!PHONE_PATTERN.matcher(phone).matches()) {
+            exceptionMessages
+                    .add(properties.getMessageByErrorCode(INCORRECT_PHONE_VALIDATION_ERROR_CODE)
+                            .formatted(phone));
         }
     }
-
 }

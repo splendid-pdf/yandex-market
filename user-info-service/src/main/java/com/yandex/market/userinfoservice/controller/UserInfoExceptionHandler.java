@@ -4,6 +4,7 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ValidationException;
 import org.openapitools.api.model.ErrorResponse;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -34,7 +35,6 @@ public class UserInfoExceptionHandler {
                 .timestamp(OffsetDateTime.now());
     }
 
-
     @ExceptionHandler(DateTimeParseException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleHttpMessageNotReadableException(DateTimeParseException ex) {
@@ -55,4 +55,13 @@ public class UserInfoExceptionHandler {
 
     }
 
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleIllegalArgumentException(HttpMessageNotReadableException ex) {
+        return new ErrorResponse()
+                .statusCode(HttpStatus.BAD_REQUEST.name())
+                .message("JSON parse error! Your JSON has the wrong form")
+                .timestamp(OffsetDateTime.now());
+
+    }
 }

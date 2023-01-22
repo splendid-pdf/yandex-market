@@ -4,21 +4,29 @@ import com.yandex.market.shopservice.model.shop.SpecialOfferType;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 
 import java.util.UUID;
 
-public record SpecialOfferDto(
-        @NotNull(message = "\"UUID of Shop System\" field must not be empty")
-        UUID shopSystem,
+@Builder
+@Getter
+@AllArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+public class SpecialOfferDto {
+    private UUID shopSystem;
 
-        @NotBlank(message = "\"Name\" field must not be empty")
-        String name,
+    @EqualsAndHashCode.Include
+    @NotBlank(message = "\"Name\" field must not be empty")
+    private String name;
 
-        @NotNull(message = "\"Type of Special offer\" field must not be empty")
-        SpecialOfferType type,
+    @NotNull(message = "\"Type of Special offer\" field must not be empty")
+    private SpecialOfferType type;
 
-        @Positive(message = "\"Value of Special Offer\" field must not be negative")
-        int value,
+    @Positive(message = "\"Value of Special Offer\" field must not be negative")
+    private int value;
 
-        String terms) {
+    private String terms;
 }

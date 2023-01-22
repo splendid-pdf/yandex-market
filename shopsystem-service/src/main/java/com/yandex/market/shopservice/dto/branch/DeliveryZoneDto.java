@@ -1,24 +1,27 @@
 package com.yandex.market.shopservice.dto.branch;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 
 @Builder
-public record DeliveryZoneDto(
-        @NotBlank(message = "\"Zone ID\" field must not be empty")
-        String zoneId,
+@Getter
+@AllArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+public class DeliveryZoneDto {
+    @EqualsAndHashCode.Include
+    @NotBlank(message = "\"Zone ID\" field must not be empty")
+    private String zoneId;
 
-        @NotNull(message = "\"Delivery\" field must not be empty")
-        DeliveryDto delivery,
+    @Positive(message = "\"Radius\" field can not be negative")
+    private int radiusInMeters;
 
-        @Positive(message = "\"Radius\" field can not be negative")
-        int radiusInMeters,
+    @Positive(message = "\"Standard delivery price\" field can not be negative")
+    private double standardDeliveryPrice;
 
-        @Positive(message = "\"Standard delivery price\" field can not be negative")
-        double standardDeliveryPrice,
-
-        @Positive(message = "\"Express delivery price\" field can not be negative")
-        double expressDeliveryPrice) {
+    @Positive(message = "\"Express delivery price\" field can not be negative")
+    private double expressDeliveryPrice;
 }

@@ -15,7 +15,7 @@ import java.util.UUID;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-public class UserController implements PublicApi {
+public class PublicUserController implements PublicApi {
 
     private final UserService userService;
 
@@ -50,5 +50,4 @@ public class UserController implements PublicApi {
         log.info("Received request to update a user: {}", userRequestDto);
         return ResponseEntity.ok(userService.update(externalId, userRequestDto));
     }
-
 }

@@ -326,7 +326,7 @@ components:
           type: integer
           format: int32
           example: 12
-        latitide:
+        latitude:
           type: number
           format: double
           example: 59.938627
@@ -399,7 +399,7 @@ components:
         street:
           type: string
           example: 'Nevskii prospect'
-        streetNumber:
+        houseNumber:
           type: string
           example: '10'
         latitude:

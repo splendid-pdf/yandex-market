@@ -16,19 +16,26 @@ import java.util.UUID;
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
 @RequestMapping("${spring.application.url.branch}")
 public class BranchController {
+
     private final BranchService branchService;
 
-    @PostMapping()
+    @GetMapping("/{externalId}")
+    @ResponseStatus(HttpStatus.OK)
+    public BranchDto getBranchByExternalId(@PathVariable("externalId") UUID externalId) {
+        return branchService.getBranchDtoByExternalId(externalId);
+    }
+
+    @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public UUID createBranch(@RequestBody @Valid BranchDto branchDto) {
-        log.info("Received a request to create new branch for shop system: %s".formatted(branchDto));
+        log.info("Received a request to create new branch for shop system: %s" .formatted(branchDto));
         return branchService.createBranch(branchDto);
     }
 
     @PutMapping("/{externalId}")
     @ResponseStatus(HttpStatus.OK)
     public void updateBranchByExternalId(@PathVariable("externalId") UUID externalId, @RequestBody @Valid BranchDto dto) {
-        log.info("Received a request to update a branch by external id = %s".formatted(externalId));
+        log.info("Received a request to update a branch by external id = %s" .formatted(externalId));
         branchService.updateBranchByExternalId(externalId, dto);
     }
 }
