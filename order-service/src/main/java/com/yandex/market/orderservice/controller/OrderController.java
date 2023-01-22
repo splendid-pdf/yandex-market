@@ -1,17 +1,17 @@
 package com.yandex.market.orderservice.controller;
 
-import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
+import com.yandex.market.orderservice.dto.OrderPreviewDto;
 import com.yandex.market.orderservice.dto.OrderRequestDto;
 import com.yandex.market.orderservice.dto.OrderResponseDto;
-import com.yandex.market.orderservice.dto.PageableResponseOrderDto;
 import com.yandex.market.orderservice.service.OrderService;
-import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.InputStreamResource;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -28,7 +28,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/public/api/v1")
 @RequiredArgsConstructor
-@Api("Order Service controller")
+@Tag(name = "orders")
 public class OrderController {
 
     private final OrderService orderService;
@@ -49,8 +49,9 @@ public class OrderController {
     }
 
     @GetMapping("/users/{userId}/orders")
-    public List<PageableResponseOrderDto> getOrderByUserId(@PathVariable("userId") UUID userId,
-                                                           @PageableDefault(page = 0, size = 5, sort = "creationTimestamp", direction = Sort.Direction.DESC) Pageable pageable) {
+    public Page<OrderPreviewDto> getOrderByUserId(
+            @PathVariable("userId") UUID userId,
+            @PageableDefault(sort = "creationTimestamp", direction = Sort.Direction.DESC) Pageable pageable) {
         return orderService.getOrdersByUserId(userId, pageable);
     }
 
@@ -67,10 +68,10 @@ public class OrderController {
 
     @GetMapping("/orders/{externalId}/check")
     public ResponseEntity<InputStreamResource> createCheck(@PathVariable("externalId") UUID externalID) throws DocumentException, FileNotFoundException {
-      ByteArrayInputStream byteArrayInputStream =  orderService.createCheck(externalID);
+      ByteArrayInputStream byteArrayInputStream = orderService.createCheck(externalID);
       var headers = new HttpHeaders();
-      headers.add("Content-Disposition", "inline; filename=citiesreport.pdf");
-        return ResponseEntity
+      headers.add("Content-Disposition", "inline; filename=check.pdf");
+      return ResponseEntity
                 .ok()
                 .headers(headers)
                 .contentType(MediaType.APPLICATION_PDF)

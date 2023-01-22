@@ -1,9 +1,9 @@
 package com.yandex.market.orderservice.mapper;
 
 
+import com.yandex.market.orderservice.dto.OrderPreviewDto;
 import com.yandex.market.orderservice.dto.OrderRequestDto;
 import com.yandex.market.orderservice.dto.OrderResponseDto;
-import com.yandex.market.orderservice.dto.PageableResponseOrderDto;
 import com.yandex.market.orderservice.model.Order;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -15,7 +15,7 @@ public interface OrderMapper {
 
     OrderResponseDto toOrderResponseDto(Order order);
 
-    @Mapping(source = "order.orderedProducts", target = "orderedProductsResponseDto")
-    @Mapping(source = "order.receiptMethod", target = "receiptMethodDto")
-    PageableResponseOrderDto toPageableResponseOrderDto(Order order);
+    @Mapping(source = "order.orderedProducts", target = "orderedProductPreviews")
+    @Mapping(source = "order.receiptMethod", target = "receiptMethod")
+    OrderPreviewDto toOrderPreviewDto(Order order);
 }

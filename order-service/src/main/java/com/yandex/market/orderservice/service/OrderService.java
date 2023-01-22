@@ -4,9 +4,9 @@ import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
+import com.yandex.market.orderservice.dto.OrderPreviewDto;
 import com.yandex.market.orderservice.dto.OrderRequestDto;
 import com.yandex.market.orderservice.dto.OrderResponseDto;
-import com.yandex.market.orderservice.dto.PageableResponseOrderDto;
 import com.yandex.market.orderservice.mapper.OrderMapper;
 import com.yandex.market.orderservice.model.Order;
 import com.yandex.market.orderservice.model.OrderStatus;
@@ -15,19 +15,21 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class OrderService {
 
     private final OrderRepository orderRepository;
@@ -39,6 +41,7 @@ public class OrderService {
         order.setExternalId(UUID.randomUUID());
         order.setOrderStatus(OrderStatus.CREATED);
         order.setUserId(userId);
+        order.setCreationTimestamp(LocalDateTime.now());
         return orderMapper.toOrderResponseDto(orderRepository.save(order));
     }
 
@@ -51,9 +54,12 @@ public class OrderService {
         return orderMapper.toOrderResponseDto(order);
     }
 
-    public List<PageableResponseOrderDto> getOrdersByUserId(UUID userId, Pageable pageable) {
+    public Page<OrderPreviewDto> getOrdersByUserId(UUID userId, Pageable pageable) {
         Page<Order> pagedResult = orderRepository.getOrderByUserId(userId, pageable);
-        return pagedResult.getContent().stream().map(orderMapper::toPageableResponseOrderDto).collect(Collectors.toList());
+        return new PageImpl<>(pagedResult.getContent()
+                .stream()
+                .map(orderMapper::toOrderPreviewDto)
+                .collect(Collectors.toList()));
     }
 
     public String cancelOrder(UUID externalId) {
