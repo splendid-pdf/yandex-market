@@ -117,9 +117,9 @@ public class OrderService {
         document.add(new Paragraph("YANDEX MARKET =)", titleFont));
         document.add(new Paragraph(" "));
         document.add(new Paragraph("141004, Russia, Moscow, Mitishi, st.Selikatnaya 19", titleFont));
-        document.add(new Paragraph(""));
-        document.add(new Paragraph(""));
-        document.add(new Paragraph(""));
+        document.add(new Paragraph(" "));
+        document.add(new Paragraph(" "));
+        document.add(new Paragraph(" "));
         PdfPTable table = new PdfPTable(6);
         PdfPCell c1 = new PdfPCell(new Phrase("Number"));
         c1.setHorizontalAlignment(Element.ALIGN_CENTER);
@@ -155,9 +155,9 @@ public class OrderService {
         }
 
         document.add(new Paragraph("do"));
-        document.add(new Paragraph(""));
-        document.add(new Paragraph(""));
-        document.add(new Paragraph(""));
+        document.add(new Paragraph(" "));
+        document.add(new Paragraph(" "));
+        document.add(new Paragraph(" "));
         document.add(new Paragraph("table"));
         document.add(table);
         document.add(new Paragraph("posle"));

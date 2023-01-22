@@ -3,6 +3,7 @@ package com.yandex.market.orderservice.dto;
 import com.yandex.market.orderservice.model.OrderedProduct;
 import com.yandex.market.orderservice.model.PaymentType;
 import com.yandex.market.orderservice.model.ReceiptMethod;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,6 +18,7 @@ import java.util.List;
 @AllArgsConstructor
 public class OrderRequestDto {
 
+    @NotNull
     private PaymentType paymentType;
 
     private double price;
