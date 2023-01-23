@@ -2,7 +2,6 @@ package com.yandex.market.userinfoservice.specification;
 
 import com.yandex.market.userinfoservice.model.User;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.ObjectUtils;
 import org.jetbrains.annotations.NotNull;
 import org.openapitools.api.model.UserFilter;
 import org.springframework.data.jpa.domain.Specification;
@@ -11,7 +10,6 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
 import static org.springframework.data.jpa.domain.Specification.where;
 

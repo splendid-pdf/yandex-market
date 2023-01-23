@@ -64,6 +64,9 @@ public class UserValidator {
     public void validateEmail(@NotNull UserRequestDto userRequestDto, @NotNull List<String> exceptionMessages) {
         val email = userRequestDto.getEmail();
 
+//        if (userRepository.existsByEmail(email)) {
+//            throw new IllegalArgumentException(USER_WITH_THE_SAME_EMAIL_IS_EXISTS_MESSAGE.formatted(email));
+//        }
         if (StringUtils.isBlank(email)) {
             exceptionMessages.add(properties.getMessageByErrorCode(BLANK_EMAIL_VALIDATION_ERROR_CODE));
         } else if (!EMAIL_PATTERN.matcher(email).matches()) {
@@ -98,7 +101,7 @@ public class UserValidator {
 
         if (StringUtils.isBlank(phone)) {
             exceptionMessages.add(properties.getMessageByErrorCode(BLANK_PHONE_VALIDATION_ERROR_CODE));
-        } else if (!REG_VALID_PHONE.matcher(phone).matches()) {
+        } else if (!PHONE_PATTERN.matcher(phone).matches()) {
             exceptionMessages
                     .add(properties.getMessageByErrorCode(INCORRECT_PHONE_VALIDATION_ERROR_CODE)
                             .formatted(phone));

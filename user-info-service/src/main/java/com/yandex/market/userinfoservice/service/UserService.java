@@ -1,14 +1,19 @@
 package com.yandex.market.userinfoservice.service;
 
+import com.yandex.market.userinfoservice.gateway.TwoGisClient;
 import com.yandex.market.userinfoservice.mapper.UserRequestMapper;
 import com.yandex.market.userinfoservice.mapper.UserResponseMapper;
+import com.yandex.market.userinfoservice.model.Location;
 import com.yandex.market.userinfoservice.model.User;
 import com.yandex.market.userinfoservice.repository.UserRepository;
 import com.yandex.market.userinfoservice.validator.UserValidator;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.validator.routines.EmailValidator;
 import org.openapitools.api.model.UserRequestDto;
 import org.openapitools.api.model.UserResponseDto;
 import org.springframework.cache.annotation.CacheEvict;
@@ -20,93 +25,91 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Collection;
 import java.util.UUID;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 import static com.yandex.market.userinfoservice.utils.ExceptionMessagesConstants.*;
+import static com.yandex.market.userinfoservice.utils.PatternConstants.GROUPED_PHONE_NUMBERS_PATTERN;
+import static com.yandex.market.userinfoservice.utils.PatternConstants.PHONE_PATTERN;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserService {
+    private final TwoGisClient client;
+    private final UserValidator userValidator;
     private final UserRepository userRepository;
     private final UserRequestMapper userRequestMapper;
     private final UserResponseMapper userResponseMapper;
-    private final UserValidator userValidator;
-
     @Transactional
     public UUID create(UserRequestDto userRequestDto) {
         userValidator.validate(userRequestDto);
 
-        checkEmailToExist(userRequestDto);
-        User user = userRequestMapper.map(userRequestDto);
-        user.setPhone(formatPhone(user.getPhone()));
-        userRepository.save(user);
-        return user.getExternalId();
+        checkEmailForUniqueness(userRequestDto.getEmail());
+
+        val formattedPhone = formatPhone(userRequestDto.getPhone());
+        checkPhoneForUniqueness(formattedPhone);
+
+        val user = userRequestMapper.map(userRequestDto);
+        user.setPhone(formattedPhone);
+
+        val location = user.getLocation();
+        client.findCoordinatesByLocation(location)
+                .ifPresent(point -> setLocationCoordinates(location, point));
+
+        return userRepository.save(user).getExternalId();
     }
 
     @Cacheable(value = "users", key = "#externalId")
-    public UserResponseDto findUserByExternalId(UUID externalId) throws EntityNotFoundException {
-        User user = userRepository.findByExternalId(externalId)
-                .orElseThrow(() -> new EntityNotFoundException(USER_NOT_FOUND_MESSAGE_BY_ID + externalId));
+    public UserResponseDto findUserByExternalId(UUID externalId) {
+        val user = userRepository.findByExternalId(externalId)
+                .orElseThrow(() -> new EntityNotFoundException(USER_NOT_FOUND_ERROR_MESSAGE + externalId));
         return userResponseMapper.map(user);
     }
 
-    @CacheEvict(value = "users", key = "#externalId")
     @Transactional
-    public void deleteUserByExternalId(UUID externalId) throws EntityNotFoundException {
-        userRepository.findByExternalId(externalId)
-                .orElseThrow(() -> new EntityNotFoundException(USER_NOT_FOUND_MESSAGE_BY_ID + externalId));
-        userRepository.deleteUserByExternalId(externalId);
+    @CacheEvict(value = "users", key = "#externalId")
+    public void deleteUserByExternalId(UUID externalId){
+        val user = userRepository.findByExternalId(externalId)
+                .orElseThrow(() -> new EntityNotFoundException(USER_NOT_FOUND_ERROR_MESSAGE + externalId));
+        user.setDeleted(true);
     }
 
-    @CachePut(value = "users", key = "#externalId")
     @Transactional
+    @CachePut(value = "users", key = "#externalId")
     public UserResponseDto update(UUID externalId, UserRequestDto userRequestDto) {
-
         userValidator.validate(userRequestDto);
 
-        User storedUser = userRepository.findByExternalId(externalId)
-                .orElseThrow(() -> new EntityNotFoundException(USER_NOT_FOUND_MESSAGE_BY_ID + externalId));
-        User updatedUser = userRequestMapper.map(userRequestDto);
+        val storedUser = userRepository.findByExternalId(externalId)
+                .orElseThrow(() -> new EntityNotFoundException(USER_NOT_FOUND_ERROR_MESSAGE + externalId));
 
-        //todo: delete unique constraint on email field
+        val updatedUser = userRequestMapper.map(userRequestDto);
 
+        setEmailIfChangedAndRemainedUnique(storedUser, updatedUser);
+        setPhoneIfChangedAndRemainedUnique(storedUser, updatedUser);
 
-        if(!storedUser.getEmail().equals(updatedUser.getEmail())){
-            checkEmailToExist(userRequestDto);
-            storedUser.setEmail(updatedUser.getEmail());
-        }
+        updateUser(storedUser, updatedUser);
 
-        //to method
-        storedUser.setFirstName(updatedUser.getFirstName());
-        storedUser.setMiddleName(updatedUser.getMiddleName());
-        storedUser.setLastName(updatedUser.getLastName());
-        storedUser.setBirthday(updatedUser.getBirthday());
-        Stream.ofNullable(updatedUser.getContacts())
-                .flatMap(Collection::stream)
-                .forEach(storedUser::addContact);
-        storedUser.setPhone(formatPhone(updatedUser.getPhone()));
-        storedUser.setSex(updatedUser.getSex());
-        storedUser.setLocation(updatedUser.getLocation());
-        storedUser.setLogin(updatedUser.getLogin());
-        storedUser.setNotificationSettings(updatedUser.getNotificationSettings());
-        storedUser.setPhotoId(updatedUser.getPhotoId());
         return userResponseMapper.map(storedUser);
     }
 
-    //TODO: performance trouble, big big trouble!!!!!
-    @Cacheable(value = "users", key = "emailOrPhone")
+    @Cacheable(value = "users", key = "#emailOrPhone")
     public UserResponseDto getUserDtoByEmailOrPhone(String emailOrPhone) {
-        //todo: regex
-
-        if (emailOrPhone.contains("@")) {
-            return userResponseMapper.map(userRepository.findUserByEmail(emailOrPhone)
-                    .orElseThrow(() -> new EntityNotFoundException(USER_NOT_FOUND_MESSAGE_BY_VALUE + emailOrPhone)));
+        if (PHONE_PATTERN.matcher(emailOrPhone).matches()) {
+            val phone = formatPhone(emailOrPhone);
+            return userResponseMapper.map(getUserByPhone(phone));
+        } else if (EmailValidator.getInstance().isValid(emailOrPhone)) {
+            return userResponseMapper.map(getUserByEmail(emailOrPhone));
         }
 
-        return userResponseMapper.map(userRepository.findUserByPhone(emailOrPhone)
-                .orElseThrow(() -> new EntityNotFoundException(USER_NOT_FOUND_MESSAGE_BY_VALUE + emailOrPhone)));
+        log.error("Given email or phone is not valid: emailOrPhone - " + emailOrPhone);
+        throw new IllegalArgumentException("Invalid input data - " + emailOrPhone);
+    }
+
+    private void checkEmailForUniqueness(String email) {
+        if (userRepository.existsByEmail(email)) {
+            throw new IllegalArgumentException(USER_WITH_THE_SAME_EMAIL_IS_EXISTS_MESSAGE
+                    .formatted(email));
+        }
     }
 
     private String formatPhone(String phone) {
@@ -114,20 +117,67 @@ public class UserService {
         if (formattedPhone.length() == 10) {
             formattedPhone.insert(0, "7");
         }
+        // todo если уже начинается с 7, то все равно сделает замену
         formattedPhone.replace(0, 1, "7");
-        Pattern pattern = Pattern.compile("(\\d{1})(\\d{3})(\\d{3})(\\d{2})(\\d{2})");
-        Matcher matcher = pattern.matcher(formattedPhone);
+        Matcher matcher = GROUPED_PHONE_NUMBERS_PATTERN.matcher(formattedPhone);
         if (matcher.find()) {
             formattedPhone = new StringBuilder();
-            matcher.appendReplacement(formattedPhone, "+$1 ($2) $3-$4-$5");
+            matcher.appendReplacement(formattedPhone, "+$1($2)$3-$4-$5");
             matcher.appendTail(formattedPhone);
             return formattedPhone.toString();
         }
         return StringUtils.EMPTY;
+    }
 
-    private void checkEmailToExist(UserRequestDto userRequestDto) {
-        if (userRepository.existsByEmail(userRequestDto.getEmail())) {
-            throw new IllegalArgumentException(USER_WITH_THE_SAME_EMAIL_IS_EXISTS_MESSAGE.formatted(userRequestDto.getEmail()));
+    private void checkPhoneForUniqueness(String formattedPhone) {
+        if (userRepository.existsByPhone(formattedPhone)) {
+            throw new IllegalArgumentException(USER_WITH_THE_SAME_PHONE_IS_EXISTS_MESSAGE.formatted(formattedPhone));
         }
+    }
+
+    private static void setLocationCoordinates(Location location, TwoGisClient.Point point) {
+        location.setLatitude(point.lat());
+        location.setLongitude(point.lon());
+    }
+
+    private void updateUser(User storedUser, User updatedUser) {
+        storedUser.setFirstName(updatedUser.getFirstName());
+        storedUser.setMiddleName(updatedUser.getMiddleName());
+        storedUser.setLastName(updatedUser.getLastName());
+        storedUser.setBirthday(updatedUser.getBirthday());
+        Stream.ofNullable(updatedUser.getContacts())
+                .flatMap(Collection::stream)
+                .forEach(storedUser::addContact);
+        storedUser.setSex(updatedUser.getSex());
+        storedUser.setLocation(updatedUser.getLocation());
+        storedUser.setLogin(updatedUser.getLogin());
+        storedUser.setNotificationSettings(updatedUser.getNotificationSettings());
+        storedUser.setPhotoId(updatedUser.getPhotoId());
+    }
+
+    private void setEmailIfChangedAndRemainedUnique(User storedUser, User updatedUser) {
+        val email = updatedUser.getEmail();
+        if (ObjectUtils.notEqual(storedUser.getEmail(), email)) {
+            checkEmailForUniqueness(email);
+            storedUser.setEmail(email);
+        }
+    }
+
+    private void setPhoneIfChangedAndRemainedUnique(User storedUser, User updatedUser) {
+        val formattedPhone = formatPhone(updatedUser.getPhone());
+        if (ObjectUtils.notEqual(storedUser.getPhone(), formattedPhone)) {
+            checkPhoneForUniqueness(formattedPhone);
+            storedUser.setPhone(formattedPhone);
+        }
+    }
+
+    private User getUserByPhone(String emailOrPhone) {
+        return userRepository.findUserByPhone(emailOrPhone)
+                .orElseThrow(() -> new EntityNotFoundException(USER_NOT_FOUND_BY_PHONE_ERROR_MESSAGE + emailOrPhone));
+    }
+
+    private User getUserByEmail(String emailOrPhone) {
+        return userRepository.findUserByEmail(emailOrPhone)
+                .orElseThrow(() -> new EntityNotFoundException(USER_NOT_FOUND_BY_EMAIL_ERROR_MESSAGE + emailOrPhone));
     }
 }
