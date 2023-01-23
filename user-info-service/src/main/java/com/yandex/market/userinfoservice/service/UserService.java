@@ -28,8 +28,7 @@ import java.util.regex.Matcher;
 import java.util.stream.Stream;
 
 import static com.yandex.market.userinfoservice.utils.ExceptionMessagesConstants.*;
-import static com.yandex.market.userinfoservice.utils.PatternConstants.GROUPED_PHONE_NUMBERS_PATTERN;
-import static com.yandex.market.userinfoservice.utils.PatternConstants.PHONE_PATTERN;
+import static com.yandex.market.userinfoservice.utils.PatternConstants.*;
 
 @Slf4j
 @Service
@@ -40,6 +39,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final UserRequestMapper userRequestMapper;
     private final UserResponseMapper userResponseMapper;
+
     @Transactional
     public UUID create(UserRequestDto userRequestDto) {
         userValidator.validate(userRequestDto);
