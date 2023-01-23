@@ -94,7 +94,7 @@ public class UserService {
 
     @Cacheable(value = "users", key = "#emailOrPhone")
     public UserResponseDto getUserDtoByEmailOrPhone(String emailOrPhone) {
-        if (PHONE_PATTERN.matcher(emailOrPhone).matches()) {
+        if (PHONE_PATTERN.matcher(emailOrPhone.trim()).matches()) {
             val phone = formatPhone(emailOrPhone);
             return userResponseMapper.map(getUserByPhone(phone));
         } else if (EmailValidator.getInstance().isValid(emailOrPhone)) {

@@ -26,8 +26,8 @@ public class LocationMapper {
         locationDto.setCity(location.getCity());
         locationDto.setPostcode(location.getPostcode());
         locationDto.setStreet(location.getStreet());
-        locationDto.setHouseNumber(Integer.parseInt(location.getHouseNumber()));
-        locationDto.setApartNumber(Integer.parseInt(location.getApartmentNumber()));
+        locationDto.setHouseNumber(location.getHouseNumber());
+        locationDto.setApartNumber(location.getApartmentNumber());
         return locationDto;
     }
 }
