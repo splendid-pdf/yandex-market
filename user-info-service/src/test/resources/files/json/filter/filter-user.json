@@ -1,7 +1,7 @@
 {
   "firstName": null,
   "lastName": null,
-  "sex": null,
+  "sex": "MALE",
   "location": {
     "country": null,
     "city": null,
