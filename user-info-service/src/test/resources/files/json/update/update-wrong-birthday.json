@@ -1,11 +1,11 @@
 {
-  "firstName": "John",
-  "middleName": null,
-  "lastName": "Thompson",
-  "phone": "+79241249521",
-  "email": "john-thompson@email.com",
-  "password": "I_AMfr0mSpb259631!@#",
-  "birthday": "1967-01-02",
+  "firstName": "UpdateName",
+  "middleName": "UpdateMidName",
+  "lastName": "UpdateLastName",
+  "phone": "+79217459553",
+  "email": "update@mail.ru",
+  "password": "UpdatePassword1!",
+  "birthday": "2002-11-11-11",
   "sex": "MALE",
   "location": {
     "country": "USA",
