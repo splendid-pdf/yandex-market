@@ -3,12 +3,14 @@ package com.example.userinfoservice.controller;
 import com.yandex.market.userinfoservice.UserInfoServiceApplication;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ValidationException;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
@@ -33,10 +35,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @TestPropertySource(locations = "classpath:application-test.yaml")
 @ActiveProfiles("test")
 class UserInfoExceptionHandlerTest {
-
-    //todo ворнинги понять как от них избаваться
-    //todo довольно большой класс как его уменьшить
-    //todo: почистить код
     private final static String DB_FILLING = "classpath:files/sql/db-filling.sql";
     private final static String DB_RESET = "classpath:files/sql/reset.sql";
 
@@ -62,6 +60,15 @@ class UserInfoExceptionHandlerTest {
     private String UPDATE_USER;
     @Autowired
     private MockMvc mvc;
+    @Autowired
+    private RedisCacheManager cacheManager;
+
+    @BeforeEach
+    void beforeEach() {
+        for(String name : cacheManager.getCacheNames()) {
+            cacheManager.getCache(name).clear();
+        }
+    }
 
     @Test
     @SqlGroup({

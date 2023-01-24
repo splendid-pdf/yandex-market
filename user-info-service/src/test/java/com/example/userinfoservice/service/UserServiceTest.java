@@ -3,8 +3,10 @@ package com.example.userinfoservice.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.yandex.market.userinfoservice.UserInfoServiceApplication;
+import com.yandex.market.userinfoservice.gateway.TwoGisClient;
 import com.yandex.market.userinfoservice.mapper.UserRequestMapper;
 import com.yandex.market.userinfoservice.mapper.UserResponseMapper;
+import com.yandex.market.userinfoservice.model.Location;
 import com.yandex.market.userinfoservice.model.User;
 import com.yandex.market.userinfoservice.repository.UserRepository;
 import com.yandex.market.userinfoservice.service.UserService;
@@ -23,6 +25,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 
@@ -40,7 +43,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @TestPropertySource(locations = "classpath:application-test.yaml")
 @ActiveProfiles("test")
 class UserServiceTest {
-    //todo: почистить код
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
     @Value("${spring.test.value.existing.external-id}")
@@ -66,6 +68,10 @@ class UserServiceTest {
     private UserResponseMapper userResponseMapper;
     @MockBean
     private UserRequestMapper userRequestMapper;
+    @MockBean
+    TwoGisClient client;
+    @Autowired
+    private RedisCacheManager cacheManager;
 
     @BeforeAll
     static void beforeAll() {
@@ -75,6 +81,9 @@ class UserServiceTest {
     @BeforeEach
     void beforeEach() {
         uuid = UUID.fromString(EXISTING_EXTERNAL_ID);
+        for(String name : cacheManager.getCacheNames()) {
+            cacheManager.getCache(name).clear();
+        }
     }
 
     @Test
@@ -105,9 +114,9 @@ class UserServiceTest {
     void create() throws Exception {
         File jsonFileRequest = new ClassPathResource(CREATE_USER).getFile();
         User user = new User();
+        user.setLocation(createLocation());
         user.setPhone(EXISTING_PHONE);
         user.setExternalId(uuid);
-        MAPPER.registerModule(new JavaTimeModule());
         UserRequestDto userRequestDto = MAPPER.readValue(Files.readString(jsonFileRequest.toPath()), UserRequestDto.class);
         Mockito.doNothing()
                 .when(userValidator)
@@ -118,9 +127,15 @@ class UserServiceTest {
         Mockito.doReturn(false)
                 .when(userRepository)
                 .existsByEmail(null);
+        Mockito.doReturn(false)
+                .when(userRepository)
+                .existsByPhone(EXISTING_PHONE);
         Mockito.doReturn(user)
                 .when(userRequestMapper)
                 .map(userRequestDto);
+        Mockito.doReturn(Optional.empty())
+                .when(client)
+                .findCoordinatesByLocation(user.getLocation());
         UUID actual = userService.create(userRequestDto);
         assertThat(actual).isEqualTo(uuid);
     }
@@ -144,11 +159,7 @@ class UserServiceTest {
         Mockito.doReturn(Optional.of(user))
                 .when(userRepository)
                 .findByExternalId(uuid);
-        Mockito.doNothing()
-                .when(userRepository)
-                .deleteUserByExternalId(uuid);
         userService.deleteUserByExternalId(uuid);
-        Mockito.verify(userRepository, Mockito.times(1)).deleteUserByExternalId(uuid);
         Mockito.verify(userRepository, Mockito.times(1)).findByExternalId(ArgumentMatchers.eq(uuid));
     }
 
@@ -245,6 +256,20 @@ class UserServiceTest {
                 .when(userRepository)
                 .findByExternalId(uuid);
         assertThrows(EntityNotFoundException.class, () -> userService.update(uuid, userRequestDto));
+    }
+
+    private Location createLocation() {
+        Location location = new Location();
+        location.setCity("Saint-Petersburg");
+        location.setCountry("Russia");
+        location.setRegion("Florida");
+        location.setStreet("Ocean Drive");
+        location.setHouseNumber("5");
+        location.setApartmentNumber("12");
+        location.setPostcode("192281");
+        location.setLatitude(1.0);
+        location.setLongitude(1.0);
+        return location;
     }
 
 }

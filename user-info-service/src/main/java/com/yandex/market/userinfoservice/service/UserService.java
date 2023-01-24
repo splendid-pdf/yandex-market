@@ -28,8 +28,7 @@ import java.util.regex.Matcher;
 import java.util.stream.Stream;
 
 import static com.yandex.market.userinfoservice.utils.ExceptionMessagesConstants.*;
-import static com.yandex.market.userinfoservice.utils.PatternConstants.GROUPED_PHONE_NUMBERS_PATTERN;
-import static com.yandex.market.userinfoservice.utils.PatternConstants.PHONE_PATTERN;
+import static com.yandex.market.userinfoservice.utils.PatternConstants.*;
 
 @Slf4j
 @Service
@@ -94,7 +93,7 @@ public class UserService {
 
     @Cacheable(value = "users", key = "#emailOrPhone")
     public UserResponseDto getUserDtoByEmailOrPhone(String emailOrPhone) {
-        if (PHONE_PATTERN.matcher(emailOrPhone).matches()) {
+        if (PHONE_PATTERN.matcher(emailOrPhone.trim()).matches()) {
             val phone = formatPhone(emailOrPhone);
             return userResponseMapper.map(getUserByPhone(phone));
         } else if (EmailValidator.getInstance().isValid(emailOrPhone)) {

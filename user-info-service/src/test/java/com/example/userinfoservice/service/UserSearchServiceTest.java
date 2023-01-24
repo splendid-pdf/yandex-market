@@ -6,6 +6,7 @@ import com.yandex.market.userinfoservice.model.User;
 import com.yandex.market.userinfoservice.repository.UserRepository;
 import com.yandex.market.userinfoservice.service.UserSearchService;
 import com.yandex.market.userinfoservice.specification.UserSpecification;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.openapitools.api.model.UserFilter;
@@ -14,12 +15,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -37,7 +40,16 @@ class UserSearchServiceTest {
     private UserResponseMapper userResponseMapper;
     @Autowired
     private UserSearchService userSearchService;
-//todo доделай метод
+    @Autowired
+    private RedisCacheManager cacheManager;
+
+    @BeforeEach
+    void beforeEach() {
+        for(String name : cacheManager.getCacheNames()) {
+            cacheManager.getCache(name).clear();
+        }
+    }
+
     @Test
     void getUsersByFilter() throws Exception {
         UserFilter userFilter = new UserFilter();

@@ -46,7 +46,7 @@ INSERT INTO users (id,
             true,
             true,
             'TestPassword1!',
-            '+7 (924) 124-95-21',
+            '+7(924)124-95-21',
             'id2003104u48396',
             'MALE');
 INSERT INTO users (id,
@@ -96,7 +96,7 @@ INSERT INTO users (id,
             true,
             true,
             'TestPassword2!',
-            '+7 (924) 124-95-22',
+            '+7(924)124-95-22',
             'id2003104u48397',
             'MALE');
 INSERT INTO contacts (id, type, value, user_id) VALUES (1, 0, 'vk.com/id153215112412', 1);

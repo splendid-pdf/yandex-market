@@ -22,11 +22,11 @@ spring:
       wrong: "files/json/wrong.json"
     value:
       existing:
-        phone: "+7 (924) 124-95-21"
+        phone: "+7(924)124-95-21"
         email: "test_mail1@gmail.com"
         external-id: "f34c4cd3-6fe7-4d3e-b82c-f5d044e46091"
       not-existing:
-        phone: "+7 (000) 000-00-00"
+        phone: "+7(900)000-00-00"
         email: "not_existing@gmail.com"
         external-id: "a34c4cd3-6fe7-4d3e-b82c-f5d044e46091"
     request:

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
@@ -35,12 +36,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class PublicUserControllerTest {
 
-    //todo: подумать стоит ли экспешены тестировать тут или лучше в отедльном классе
-    //todo: написать модульные тесты
-    //todo: глянуть метод expectAll
-    //todo: файл наверное тоже может быть как - то можно получше создавать (методы на апдейт и создание)
-    //todo: почистить код
-    //todo: update contacts добавляет значение а не обновляет сказать мужикам, чтобы исправили или исправить самому
     private static final String DB_FILLING = "classpath:files/sql/db-filling.sql";
     private static final String DB_RESET = "classpath:files/sql/reset.sql";
     private static final String CONTENT_TYPE = "application/json";
@@ -61,9 +56,17 @@ class PublicUserControllerTest {
     private String UPDATE_USER;
     @Value("${spring.test.json.update.expected}")
     private String UPDATE_EXPECTED_RESPONSE;
-
     @Autowired
     private MockMvc mvc;
+    @Autowired
+    private RedisCacheManager cacheManager;
+
+    @BeforeEach
+    void beforeEach() {
+        for(String name : cacheManager.getCacheNames()) {
+            cacheManager.getCache(name).clear();
+        }
+    }
 
     @SqlGroup({
             @Sql(value = DB_FILLING, executionPhase = BEFORE_TEST_METHOD),

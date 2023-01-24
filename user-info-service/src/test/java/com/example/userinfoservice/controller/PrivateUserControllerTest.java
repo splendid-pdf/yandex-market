@@ -1,12 +1,14 @@
 package com.example.userinfoservice.controller;
 
 import com.yandex.market.userinfoservice.UserInfoServiceApplication;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
@@ -31,8 +33,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles("test")
 class PrivateUserControllerTest {
 
-    //todo эксепшены для фильтра тест
-    //todo тесты для мапперов и валидаторов и тесты закончены
     private static final String DB_FILLING = "classpath:files/sql/db-filling.sql";
     private static final String DB_RESET = "classpath:files/sql/reset.sql";
     private static final String CONTENT_TYPE = "application/json";
@@ -44,6 +44,15 @@ class PrivateUserControllerTest {
     private String PRIVATE_REQUEST_NAME;
     @Autowired
     private MockMvc mvc;
+    @Autowired
+    private RedisCacheManager cacheManager;
+
+    @BeforeEach
+    void beforeEach() {
+        for(String name : cacheManager.getCacheNames()) {
+            cacheManager.getCache(name).clear();
+        }
+    }
 
     @Test
     @SqlGroup({
