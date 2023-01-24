@@ -84,33 +84,6 @@ public class OrderService {
         return orderMapper.toOrderResponseDto(orderRepository.save(order));
     }
 
-//    public ResponseEntity<byte[]> createCheck(UUID externalId) throws FileNotFoundException, DocumentException {
-//        Order order = orderRepository.getOrderByExternalId(externalId);
-//        Document document = new Document();
-//        PdfWriter.getInstance(document,new FileOutputStream("c:/Users/AlekseiZhi/Desktop/itext.pdf"));
-//        document.open();
-//        Font font = FontFactory.getFont(FontFactory.COURIER,16, BaseColor.BLACK);
-//        Chunk chunk = new Chunk(order.getOrderStatus().toString(), font);
-//        document.add(chunk);
-//        document.close();
-//        File file = new File("c:/Users/AlekseiZhi/Desktop/itext.pdf");
-//        byte[] contents = document.getRole().getBytes();
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.setContentType(MediaType.APPLICATION_PDF);
-//        ResponseEntity<byte[]> response = new ResponseEntity<>(contents, headers, HttpStatus.OK);
-//        return response;
-//    }
-
-//    public ByteArrayInputStream check(List<Order> orders){
-//        Document document = new Document();
-//        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-//        Font font = FontFactory.getFont(FontFactory.COURIER,16, BaseColor.BLACK);
-//        PdfPCell hcell;
-//        hcell = new PdfPCell(new Phrase(orders.toString(), font));
-//
-//
-//    }
-
     public ByteArrayInputStream createCheck(UUID externalId) throws FileNotFoundException, DocumentException {
         Order order = orderRepository.getOrderByExternalId(externalId);
         Document document = new Document();
@@ -167,28 +140,7 @@ public class OrderService {
         document.add(new Paragraph("table"));
         document.add(table);
         document.add(new Paragraph("posle"));
-//        document.add(new Paragraph(" "));
-//        document.add(new Paragraph(order.getOrderStatus().toString(), titleFont));
-//        Chunk title = new Chunk("yndex market", titleFont);
-//        Chunk chunk = new Chunk(order.getOrderStatus().toString(), font);
-//        Chunk chunk1 = new Chunk(order.getPaymentType().toString(), font);
-//        Paragraph preface = new Paragraph();
-//        preface.add(new Paragraph("Яндекс Маркет", font));
-//        addEmptyLine(preface,1);
-//        preface.add(title);
-//        addEmptyLine(preface,1);
-//        preface.add(new Paragraph(chunk));
-//        addEmptyLine(preface, 1);
-//        preface.add(new Paragraph(chunk1));
-//        addEmptyLine(preface, 1);
-//        preface.add(new Phrase(order.getOrderedProducts().toString()));
-//        document.add(preface);
         document.close();
-//        File file = new File("c:/Users/AlekseiZhi/Desktop/itext.pdf");
-//        byte[] contents = document.getRole().getBytes();
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.setContentType(MediaType.APPLICATION_PDF);
-//        ResponseEntity<byte[]> response = new ResponseEntity<>(contents, headers, HttpStatus.OK);
         return new ByteArrayInputStream(outputStream.toByteArray());
     }
 

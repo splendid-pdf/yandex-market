@@ -23,7 +23,7 @@ public class OrderedProduct {
 
     private UUID productId;
 
-    private double amount;
+    private int amount;
 
     private String name;
 
@@ -36,8 +36,4 @@ public class OrderedProduct {
     private UUID branchId;
 
     private UUID shopSystemId;
-
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "order_id")
-//    private Order order;
 }

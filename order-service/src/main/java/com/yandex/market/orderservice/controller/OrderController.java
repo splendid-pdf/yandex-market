@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.data.domain.Page;
@@ -22,7 +23,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.ByteArrayInputStream;
 import java.io.FileNotFoundException;
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -39,7 +39,8 @@ public class OrderController {
             @ApiResponse(responseCode = "200", description = "Create new User"),
             @ApiResponse(responseCode = "400", description = "Bad request")
     })
-    public OrderResponseDto create(@RequestBody OrderRequestDto orderRequestDto, @PathVariable("userId") UUID userId) {
+    public OrderResponseDto create(@RequestBody @Valid OrderRequestDto orderRequestDto,
+                                   @PathVariable("userId") UUID userId) {
         return orderService.create(orderRequestDto, userId);
     }
 
@@ -61,17 +62,17 @@ public class OrderController {
     }
 
     @PutMapping("/orders/{externalId}")
-    public OrderResponseDto updateOrder(@RequestBody OrderRequestDto orderRequestDto,
+    public OrderResponseDto updateOrder(@RequestBody @Valid OrderRequestDto orderRequestDto,
                                         @PathVariable("externalId") UUID externalId) {
         return orderService.update(orderRequestDto, externalId);
     }
 
     @GetMapping("/orders/{externalId}/check")
     public ResponseEntity<InputStreamResource> createCheck(@PathVariable("externalId") UUID externalID) throws DocumentException, FileNotFoundException {
-      ByteArrayInputStream byteArrayInputStream = orderService.createCheck(externalID);
-      var headers = new HttpHeaders();
-      headers.add("Content-Disposition", "inline; filename=check.pdf");
-      return ResponseEntity
+        ByteArrayInputStream byteArrayInputStream = orderService.createCheck(externalID);
+        var headers = new HttpHeaders();
+        headers.add("Content-Disposition", "inline; filename=check.pdf");
+        return ResponseEntity
                 .ok()
                 .headers(headers)
                 .contentType(MediaType.APPLICATION_PDF)

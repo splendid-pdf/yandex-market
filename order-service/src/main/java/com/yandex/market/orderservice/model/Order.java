@@ -33,7 +33,6 @@ public class Order {
     @Enumerated(value = EnumType.STRING)
     private OrderStatus orderStatus;
 
-    //@OneToMany(mappedBy = "order", fetch = FetchType.LAZY, orphanRemoval = true)
     @OneToMany( fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
     @JoinColumn(name = "order_id")
     private List<OrderedProduct> orderedProducts;
