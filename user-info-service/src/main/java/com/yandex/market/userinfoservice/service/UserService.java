@@ -94,15 +94,16 @@ public class UserService {
 
     @Cacheable(value = "users", key = "#emailOrPhone")
     public UserResponseDto getUserDtoByEmailOrPhone(String emailOrPhone) {
-        if (PHONE_PATTERN.matcher(emailOrPhone.trim()).matches()) {
-            val phone = formatPhone(emailOrPhone);
+        val trimmedEmailOrPhone = emailOrPhone.trim();
+        if (PHONE_PATTERN.matcher(trimmedEmailOrPhone).matches()) {
+            val phone = formatPhone(trimmedEmailOrPhone);
             return userResponseMapper.map(getUserByPhone(phone));
-        } else if (EmailValidator.getInstance().isValid(emailOrPhone)) {
-            return userResponseMapper.map(getUserByEmail(emailOrPhone));
+        } else if (EmailValidator.getInstance().isValid(trimmedEmailOrPhone)) {
+            return userResponseMapper.map(getUserByEmail(trimmedEmailOrPhone));
         }
 
-        log.error("Given email or phone is not valid: emailOrPhone - " + emailOrPhone);
-        throw new IllegalArgumentException("Invalid input data - " + emailOrPhone);
+        log.error("Given email or phone is not valid: emailOrPhone - " + trimmedEmailOrPhone);
+        throw new IllegalArgumentException("Invalid input data - " + trimmedEmailOrPhone);
     }
 
     private void checkEmailForUniqueness(String email) {
