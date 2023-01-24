@@ -2,6 +2,7 @@ package com.yandex.market.userinfoservice.validator;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yandex.market.userinfoservice.config.properties.ErrorInfoProperties;
+import com.yandex.market.userinfoservice.validator.enums.UserFieldValidation;
 import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -15,7 +16,6 @@ import org.springframework.util.CollectionUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
 import static com.yandex.market.userinfoservice.utils.PatternConstants.*;
 import static com.yandex.market.userinfoservice.utils.ValidationCodeConstants.*;
@@ -43,6 +43,7 @@ public class UserValidator {
     public void validateName(@NotNull UserRequestDto userRequestDto, @NotNull List<String> exceptionMessages) {
         val firstName = userRequestDto.getFirstName();
         val lastName = userRequestDto.getLastName();
+        val middleName = userRequestDto.getMiddleName();
 
         if (StringUtils.isBlank(firstName)) {
             exceptionMessages.add(properties.getMessageByErrorCode(BLANK_FIRST_NAME_VALIDATION_ERROR_CODE));
@@ -50,6 +51,12 @@ public class UserValidator {
             exceptionMessages
                     .add(properties.getMessageByErrorCode(INCORRECT_FIRST_NAME_VALIDATION_ERROR_CODE)
                             .formatted(firstName));
+        }
+
+        if(!NAME_PATTERN.matcher(middleName).matches()){
+            exceptionMessages
+                    .add(properties.getMessageByErrorCode(INCORRECT_MIDDLE_NAME_VALIDATION_ERROR_CODE)
+                            .formatted(middleName));
         }
 
         if (StringUtils.isBlank(lastName)) {
@@ -85,14 +92,6 @@ public class UserValidator {
             exceptionMessages
                     .add(properties.getMessageByErrorCode(INCORRECT_PASSWORD_VALIDATION_ERROR_CODE)
                             .formatted(password));
-        }
-    }
-
-    public void validateBirthday(@NotNull UserRequestDto userRequestDto, @NotNull List<String> exceptionMessages) {
-        val birthday = userRequestDto.getBirthday();
-
-        if (Objects.isNull(birthday)) {
-            exceptionMessages.add(properties.getMessageByErrorCode(BLANK_BIRTHDAY_VALIDATION_ERROR_CODE));
         }
     }
 
