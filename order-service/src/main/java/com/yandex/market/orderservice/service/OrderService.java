@@ -23,7 +23,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -88,7 +87,6 @@ public class OrderService {
         Order order = orderRepository.getOrderByExternalId(externalId);
         Document document = new Document();
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        //PdfWriter.getInstance(document,new FileOutputStream("c:/Users/AlekseiZhi/Desktop/itext.pdf"));
         PdfWriter.getInstance(document, outputStream);
         document.open();
         Font font = FontFactory.getFont(FontFactory.COURIER, 16, BaseColor.BLACK);
@@ -142,11 +140,5 @@ public class OrderService {
         document.add(new Paragraph("posle"));
         document.close();
         return new ByteArrayInputStream(outputStream.toByteArray());
-    }
-
-    private static void addEmptyLine(Paragraph paragraph, int number) {
-        for (int i = 0; i < number; i++) {
-            paragraph.add(new Paragraph(" "));
-        }
     }
 }
