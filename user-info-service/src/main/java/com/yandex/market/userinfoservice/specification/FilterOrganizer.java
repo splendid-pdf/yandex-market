@@ -3,6 +3,7 @@ package com.yandex.market.userinfoservice.specification;
 import com.yandex.market.userinfoservice.model.Sex;
 import lombok.val;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.validator.routines.DateValidator;
 import org.jetbrains.annotations.NotNull;
 import org.openapitools.api.model.UserFilter;
 import org.springframework.stereotype.Component;
@@ -39,12 +40,12 @@ public class FilterOrganizer {
 
     void buildSexFilter(@NotNull UserFilter userFilter, @NotNull List<Filter> filters) {
         val sex = userFilter.getSex();
-        if (sex != null) {
+        if (StringUtils.isNotBlank(sex)) {
             filters.add(Filter.builder()
                     .aClass(Sex.class)
                     .field("sex")
                     .operator(QueryOperations.EQUALS)
-                    .value(Sex.valueOf(sex))
+                    .value(Sex.valueOf(sex.toUpperCase()))
                     .build());
         }
     }

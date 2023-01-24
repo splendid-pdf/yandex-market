@@ -1,14 +1,15 @@
-package com.yandex.market.userinfoservice.validator;
+package com.yandex.market.userinfoservice.validator.enums;
 
+import com.yandex.market.userinfoservice.validator.UserValidator;
 import org.apache.logging.log4j.util.TriConsumer;
 import org.openapitools.api.model.UserRequestDto;
 
 import java.util.List;
 
 public enum UserFieldValidation {
-    BIRTHDAY(UserValidator::validateBirthday),
     EMAIL(UserValidator::validateEmail),
     NAME(UserValidator::validateName),
+
     PASSWORD(UserValidator::validatePassword),
     PHONE(UserValidator::validatePhone);
 
