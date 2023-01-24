@@ -1,8 +1,58 @@
-user-controller:
-  path: /public/api/v1/users
+#SPRING CONFIGURATION
 spring:
+  sql:
+    reset: "classpath:files/sql/reset.sql"
+    fill: "classpath:files/sql/db-filling.sql"
+  test:
+    json:
+      create:
+        user: "files/json/create/create-user.json"
+        wrong-birthday: "files/json/create/create-wrong-birthday.json"
+        not-valid: "files/json/create/create-not-valid.json"
+      filter:
+        expected: "files/json/filter/filter-expected-response.json"
+        user: "files/json/filter/filter-user.json"
+      get:
+        expected: "files/json/get/get-expected-response.json"
+      update:
+        expected: "files/json/update/update-expected-response.json"
+        user: "files/json/update/update-user.json"
+        wrong-birthday: "files/json/update/update-wrong-birthday.json"
+        not-valid: "files/json/update/update-not-valid.json"
+      wrong: "files/json/wrong.json"
+    value:
+      existing:
+        phone: "+7(924)124-95-21"
+        email: "test_mail1@gmail.com"
+        external-id: "f34c4cd3-6fe7-4d3e-b82c-f5d044e46091"
+      not-existing:
+        phone: "+7(900)000-00-00"
+        email: "not_existing@gmail.com"
+        external-id: "a34c4cd3-6fe7-4d3e-b82c-f5d044e46091"
+    request:
+      public: "/public/api/v1/users"
+      private: "/private/api/v1/users/search"
+  flyway:
+    enabled: false
   datasource:
-    url: jdbc:postgresql://localhost:5432/user_info_db3
-    username: postgres
-    password: 123
-    driver-class-name: org.postgresql.Driver
+    driver-class-name: "org.h2.Driver"
+    url: "jdbc:h2:mem:test;DB_CLOSE_ON_EXIT=FALSE;NON_KEYWORDS=VALUE"
+    username: "sa"
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: create
+    defer-datasource-initialization: true
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: "org.hibernate.dialect.H2Dialect"
+        format_sql: true
+
+
+#LOGGING CONFIGURATION
+logging:
+  level:
+    org:
+      hibernate:
+        sql: info

@@ -1,0 +1,21 @@
+{
+  "firstName": null,
+  "lastName": null,
+  "sex": "MALE",
+  "location": {
+    "country": null,
+    "city": null,
+    "street": null,
+    "streetNumber": null,
+    "latitude": null,
+    "longitude": null,
+    "radius": null
+  },
+  "birthdayFrom": null,
+  "birthdayTo": null,
+  "notificationSettings": {
+    "isAllowedToReceiveOnAddress": null,
+    "isAllowedToSendPromotionsAndMailingLists": null,
+    "isAllowedToSendPopularArticles": null
+  }
+}

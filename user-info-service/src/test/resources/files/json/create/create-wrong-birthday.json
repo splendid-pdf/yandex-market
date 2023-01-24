@@ -1,0 +1,31 @@
+{
+  "firstName": "CreateTest",
+  "middleName": "Test",
+  "lastName": "Test",
+  "phone": "+79217459553",
+  "email": "1@mail.ru",
+  "password": "Test0310!",
+  "birthday": "2002-11-11-11",
+  "sex": "NONE",
+  "location": {
+    "country": "USA",
+    "region": "Florida",
+    "city": "Saint-Petersburg",
+    "postcode": "33112",
+    "street": "Ocean Drive",
+    "houseNumber": 5,
+    "apartNumber": 12
+  },
+  "contacts": [
+    {
+      "value": "vk.com/id153215112412",
+      "type": "VK"
+    }
+  ],
+  "notificationSettings": {
+    "isAllowedToReceiveOnAddress": true,
+    "isAllowedToSendPromotionsAndMailingLists": true,
+    "isAllowedToSendPopularArticles": true
+  },
+  "photoId": "id2003104u48396"
+}
