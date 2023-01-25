@@ -42,8 +42,8 @@ public class UserValidator {
 
     public void validateName(@NotNull UserRequestDto userRequestDto, @NotNull List<String> exceptionMessages) {
         val firstName = userRequestDto.getFirstName();
-        val lastName = userRequestDto.getLastName();
         val middleName = userRequestDto.getMiddleName();
+        val lastName = userRequestDto.getLastName();
 
         if (StringUtils.isBlank(firstName)) {
             exceptionMessages.add(properties.getMessageByErrorCode(BLANK_FIRST_NAME_VALIDATION_ERROR_CODE));
@@ -53,7 +53,7 @@ public class UserValidator {
                             .formatted(firstName));
         }
 
-        if(!NAME_PATTERN.matcher(middleName).matches()){
+        if(StringUtils.isNotEmpty(middleName) && !NAME_PATTERN.matcher(middleName).matches()){
             exceptionMessages
                     .add(properties.getMessageByErrorCode(INCORRECT_MIDDLE_NAME_VALIDATION_ERROR_CODE)
                             .formatted(middleName));
