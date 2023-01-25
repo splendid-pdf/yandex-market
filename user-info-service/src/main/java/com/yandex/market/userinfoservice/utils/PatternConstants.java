@@ -12,7 +12,7 @@ public class PatternConstants {
     public Pattern NAME_PATTERN = Pattern.compile("[а-яА-Яa-zA-Z]{2,100}");
 
     public Pattern PHONE_PATTERN =
-            Pattern.compile("((\\+7)|[78])?((-9\\d{2}-)|(\\(9\\d{2}\\))|( 9\\d{2} )|(9\\d{2}))\\d{3}[- ]?\\d{2}[- ]?\\d{2}");
+            Pattern.compile("((\\+7)|(\\+8)|[78])?((-\\d{3}-)|(\\(\\d{3}\\))|( \\d{3} )|(\\d{3}))\\d{3}[- ]?\\d{2}[- ]?\\d{2}");
 
     public Pattern GROUPED_PHONE_NUMBERS_PATTERN = Pattern.compile("(\\d{1})(\\d{3})(\\d{3})(\\d{2})(\\d{2})");
 
