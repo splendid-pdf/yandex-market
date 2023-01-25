@@ -19,7 +19,7 @@ spring:
     type: redis
 
   datasource:
-    url: jdbc:postgresql://postgres:5432/test_2
+    url: jdbc:postgresql://postgres:5432/test2
     username: postgres
     password: admin
     driver-class-name: org.postgresql.Driver
