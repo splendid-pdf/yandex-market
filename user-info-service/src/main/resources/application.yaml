@@ -11,7 +11,7 @@ spring:
 
   data:
     redis:
-      host: localhost
+      host: redis
       port: 6379
       password: password
 
@@ -19,9 +19,9 @@ spring:
     type: redis
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/user_info_db
+    url: jdbc:postgresql://postgres:5432/test_2
     username: postgres
-    password: 123
+    password: admin
     driver-class-name: org.postgresql.Driver
 
 app:
