@@ -9,6 +9,7 @@ import org.openapitools.api.model.UserRequestDto;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Stream;
 
@@ -32,17 +33,12 @@ public class UserRequestMapper implements Mapper<UserRequestDto, User> {
                 .login(trimEmailForLogin(userRequestDto))
                 .password(userRequestDto.getPassword())
                 .birthday(userRequestDto.getBirthday())
+                .sex(getSex(userRequestDto))
                 .location(locationMapper.map(userRequestDto.getLocation()))
                 .notificationSettings(
                         notificationSettingsMapper.mapNotificationSettings(userRequestDto.getNotificationSettings()))
                 .photoId(userRequestDto.getPhotoId())
                 .build();
-
-        if (userRequestDto.getSex() == null) {
-            user.setSex(Sex.NONE);
-        } else {
-            user.setSex(Sex.valueOf(userRequestDto.getSex()));
-        }
 
         Stream.ofNullable(userRequestDto.getContacts())
                 .flatMap(Collection::stream)
@@ -54,5 +50,11 @@ public class UserRequestMapper implements Mapper<UserRequestDto, User> {
 
     private String trimEmailForLogin(UserRequestDto userRequestDto) {
         return userRequestDto.getEmail().replaceAll("@[a-zA-Z0-9.-]+$", "");
+    }
+
+    private Sex getSex(UserRequestDto userRequestDto) {
+       return Optional.ofNullable(userRequestDto.getSex())
+               .map(Sex::valueOf)
+               .orElse(Sex.NONE);
     }
 }
