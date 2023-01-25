@@ -14,8 +14,8 @@
       "city": "Saint-Petersburg",
       "postcode": "192281",
       "street": "Ocean Drive",
-      "houseNumber": 5,
-      "apartNumber": 12,
+      "houseNumber": "5",
+      "apartNumber": "12",
       "latitude": null,
       "longitude": null
     },
@@ -47,8 +47,8 @@
       "city": "Saint-Petersburg",
       "postcode": "192281",
       "street": "Ocean Drive",
-      "houseNumber": 5,
-      "apartNumber": 12,
+      "houseNumber": "5",
+      "apartNumber": "12",
       "latitude": null,
       "longitude": null
     },

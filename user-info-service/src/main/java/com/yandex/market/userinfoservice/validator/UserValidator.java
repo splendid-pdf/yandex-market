@@ -116,22 +116,24 @@ public class UserValidator {
     }
 
     public void validateContact(@NotNull UserRequestDto userRequestDto, @NotNull List<String> exceptionMessages) {
-        userRequestDto.getContacts().forEach(contactDto -> {
-            val networkValue = contactDto.getValue();
-            val socialNetwork = contactDto.getType();
+        if (!CollectionUtils.isEmpty(userRequestDto.getContacts())) {
+            userRequestDto.getContacts().forEach(contactDto -> {
+                val networkValue = contactDto.getValue();
+                val socialNetwork = contactDto.getType();
 
-            if (!EnumUtils.isValidEnum(SocialNetwork.class, socialNetwork) && socialNetwork != null) {
-                exceptionMessages.add(properties.getMessageByErrorCode(INCORRECT_SOCIAL_NETWORK_ERROR_CODE)
-                        .formatted(socialNetwork));
-                if (StringUtils.isBlank(networkValue) && networkValue != null) {
-                    exceptionMessages.add(properties.getMessageByErrorCode(INCORRECT_SOCIAL_NETWORK_VALUE_ERROR_CODE)
-                            .formatted(networkValue));
+                if (!EnumUtils.isValidEnum(SocialNetwork.class, socialNetwork) && socialNetwork != null) {
+                    exceptionMessages.add(properties.getMessageByErrorCode(INCORRECT_SOCIAL_NETWORK_ERROR_CODE)
+                            .formatted(socialNetwork));
+                    if (StringUtils.isBlank(networkValue) && networkValue != null) {
+                        exceptionMessages.add(properties.getMessageByErrorCode(INCORRECT_SOCIAL_NETWORK_VALUE_ERROR_CODE)
+                                .formatted(networkValue));
+                    }
+                } else if (StringUtils.isBlank(networkValue) && socialNetwork != null) {
+                    exceptionMessages.add(properties.getMessageByErrorCode(BLANK_SOCIAL_NETWORK_VALUE_ERROR_CODE));
+                } else if (networkValue != null && StringUtils.isBlank(socialNetwork)) {
+                    exceptionMessages.add(properties.getMessageByErrorCode(BLANK_SOCIAL_NETWORK_ERROR_CODE));
                 }
-            } else if (StringUtils.isBlank(networkValue) && socialNetwork != null) {
-                exceptionMessages.add(properties.getMessageByErrorCode(BLANK_SOCIAL_NETWORK_VALUE_ERROR_CODE));
-            } else if (networkValue != null && StringUtils.isBlank(socialNetwork)) {
-                exceptionMessages.add(properties.getMessageByErrorCode(BLANK_SOCIAL_NETWORK_ERROR_CODE));
-            }
-        });
+            });
+        }
     }
 }

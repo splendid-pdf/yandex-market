@@ -33,7 +33,7 @@ public class UserRequestMapper implements Mapper<UserRequestDto, User> {
                 .login(trimEmailForLogin(userRequestDto))
                 .password(userRequestDto.getPassword())
                 .birthday(userRequestDto.getBirthday())
-                .sex(getSex(userRequestDto))
+                .sex(getSex(userRequestDto.getSex()))
                 .location(locationMapper.map(userRequestDto.getLocation()))
                 .notificationSettings(
                         notificationSettingsMapper.mapNotificationSettings(userRequestDto.getNotificationSettings()))
@@ -52,8 +52,8 @@ public class UserRequestMapper implements Mapper<UserRequestDto, User> {
         return userRequestDto.getEmail().replaceAll("@[a-zA-Z0-9.-]+$", "");
     }
 
-    private Sex getSex(UserRequestDto userRequestDto) {
-       return Optional.ofNullable(userRequestDto.getSex())
+    private Sex getSex(String sex) {
+       return Optional.ofNullable(sex)
                .map(Sex::valueOf)
                .orElse(Sex.NONE);
     }
