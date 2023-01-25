@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.val;
 import org.apache.commons.lang3.EnumUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.openapitools.api.model.UserFilter;
 import org.springframework.stereotype.Component;
@@ -41,7 +42,7 @@ public class UserFilterValidator {
 
     public void validateSex(@NotNull UserFilter userFilter, @NotNull List<String> exceptionMessages) {
         val sex = userFilter.getSex();
-        if (sex != null && !EnumUtils.isValidEnumIgnoreCase(Sex.class, sex)) {
+        if (StringUtils.isNotBlank(sex) && !EnumUtils.isValidEnumIgnoreCase(Sex.class, sex)) {
             exceptionMessages
                     .add(properties.getMessageByErrorCode(INCORRECT_SEX_TYPE_ERROR_CODE)
                             .formatted(sex));
