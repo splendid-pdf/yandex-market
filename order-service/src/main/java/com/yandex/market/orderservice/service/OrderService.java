@@ -7,6 +7,7 @@ import com.itextpdf.text.pdf.PdfWriter;
 import com.yandex.market.orderservice.dto.OrderPreviewDto;
 import com.yandex.market.orderservice.dto.OrderRequestDto;
 import com.yandex.market.orderservice.dto.OrderResponseDto;
+import com.yandex.market.orderservice.exceptionHandler.OrderCompletedException;
 import com.yandex.market.orderservice.mapper.OrderMapper;
 import com.yandex.market.orderservice.model.Order;
 import com.yandex.market.orderservice.model.OrderStatus;
@@ -14,17 +15,20 @@ import com.yandex.market.orderservice.repository.OrderRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.EnumUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.FileNotFoundException;
 import java.time.LocalDateTime;
 import java.util.UUID;
 import java.util.stream.Collectors;
+
+import static com.yandex.market.orderservice.utils.ExceptionMessagesConstants.*;
 
 @Slf4j
 @Service
@@ -35,6 +39,7 @@ public class OrderService {
 
     private final OrderMapper orderMapper;
 
+    @Transactional
     public OrderResponseDto create(OrderRequestDto orderRequestDto, UUID userId) {
         Order order = orderMapper.toOrder(orderRequestDto);
         order.setExternalId(UUID.randomUUID());
@@ -45,11 +50,8 @@ public class OrderService {
     }
 
     public OrderResponseDto getByExternalId(UUID externalId) {
-        if (!orderRepository.existsOrderByExternalId(externalId)) {
-            log.error("this order is not found");
-            throw new EntityNotFoundException("this order is not found");
-        }
-        Order order = orderRepository.getOrderByExternalId(externalId);
+        Order order = orderRepository.getOrderByExternalId(externalId)
+                .orElseThrow(() -> new EntityNotFoundException(ORDER_NOT_FOUND_ERROR_MESSAGE + externalId));
         return orderMapper.toOrderResponseDto(order);
     }
 
@@ -62,29 +64,33 @@ public class OrderService {
     }
 
     public String cancelOrder(UUID externalId) {
-        Order order = orderRepository.getOrderByExternalId(externalId);
+        Order order = orderRepository.getOrderByExternalId(externalId)
+                .orElseThrow(() -> new EntityNotFoundException(ORDER_NOT_FOUND_ERROR_MESSAGE + externalId));
         if (order.getOrderStatus().equals(OrderStatus.COMPLETED)) {
-            log.error("order is completed");
-            throw new RuntimeException();
+            log.error("Order service: order is completed");
+            throw new OrderCompletedException(ORDER_COMPLETED_ERROR_MESSAGE);
         }
         order.setOrderStatus(OrderStatus.CANCELED);
         orderRepository.save(order);
         return "order is cancel";
     }
 
+    @Transactional
     public OrderResponseDto update(OrderRequestDto orderRequestDto, UUID externalId) {
-        Order orderByExternalId = orderRepository.getOrderByExternalId(externalId);
+        Order orderByExternalId = orderRepository.getOrderByExternalId(externalId)
+                .orElseThrow(() -> new EntityNotFoundException(ORDER_NOT_FOUND_ERROR_MESSAGE + externalId));
         Order order = orderMapper.toOrder(orderRequestDto);
         order.setId(orderByExternalId.getId());
         if (orderByExternalId.getOrderStatus().equals(OrderStatus.COMPLETED)) {
-            log.error("order is completed");
-            throw new RuntimeException();
+            log.error("Order service: order is completed");
+            throw new OrderCompletedException(ORDER_COMPLETED_ERROR_MESSAGE);
         }
         return orderMapper.toOrderResponseDto(orderRepository.save(order));
     }
 
-    public ByteArrayInputStream createCheck(UUID externalId) throws FileNotFoundException, DocumentException {
-        Order order = orderRepository.getOrderByExternalId(externalId);
+    public ByteArrayInputStream createReceiptForUser(UUID externalId) throws DocumentException {
+        Order order = orderRepository.getOrderByExternalId(externalId)
+                .orElseThrow(() -> new EntityNotFoundException(ORDER_NOT_FOUND_ERROR_MESSAGE + externalId));
         Document document = new Document();
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         PdfWriter.getInstance(document, outputStream);

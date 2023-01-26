@@ -40,6 +40,8 @@ dependencies {
 
 	// lombok
 	compileOnly 'org.projectlombok:lombok'
+	testCompileOnly 'org.projectlombok:lombok:1.18.24'
+	testAnnotationProcessor 'org.projectlombok:lombok:1.18.24'
 
 	// db
 	runtimeOnly 'org.postgresql:postgresql'

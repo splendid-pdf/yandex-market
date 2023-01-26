@@ -19,6 +19,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.ByteArrayInputStream;
@@ -29,6 +30,7 @@ import java.util.UUID;
 @RequestMapping("/public/api/v1")
 @RequiredArgsConstructor
 @Tag(name = "orders")
+@Validated
 public class OrderController {
 
     private final OrderService orderService;
@@ -69,7 +71,7 @@ public class OrderController {
 
     @GetMapping("/orders/{externalId}/check")
     public ResponseEntity<InputStreamResource> createCheck(@PathVariable("externalId") UUID externalID) throws DocumentException, FileNotFoundException {
-        ByteArrayInputStream byteArrayInputStream = orderService.createCheck(externalID);
+        ByteArrayInputStream byteArrayInputStream = orderService.createReceiptForUser(externalID);
         var headers = new HttpHeaders();
         headers.add("Content-Disposition", "inline; filename=check.pdf");
         return ResponseEntity
