@@ -4,10 +4,6 @@ plugins {
 	id 'io.spring.dependency-management' version '1.1.0'
 }
 
-group = 'com.yandex.market'
-version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '17'
-
 configurations {
 	compileOnly {
 		extendsFrom annotationProcessor
@@ -19,6 +15,7 @@ repositories {
 }
 
 dependencies {
+	implementation project(':commons')
 	// spring
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'

@@ -1,11 +1,12 @@
 package com.yandex.market.orderservice.controller;
 
-import com.itextpdf.text.DocumentException;
 import com.yandex.market.orderservice.dto.OrderPreviewDto;
 import com.yandex.market.orderservice.dto.OrderRequestDto;
 import com.yandex.market.orderservice.dto.OrderResponseDto;
 import com.yandex.market.orderservice.service.OrderService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -17,61 +18,81 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.ByteArrayInputStream;
-import java.io.FileNotFoundException;
 import java.util.UUID;
 
+import static com.yandex.market.util.HttpUtils.PUBLIC_API_V1;
+
 @RestController
-@RequestMapping("/public/api/v1")
+@RequestMapping(PUBLIC_API_V1)
 @RequiredArgsConstructor
 @Tag(name = "orders")
-@Validated
+@ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Successful operation",
+                content = @Content(mediaType = "application/json")),
+        @ApiResponse(responseCode = "400", description = "Invalid data provided to the server",
+                content = @Content(mediaType = "application/json"))})
 public class OrderController {
 
     private final OrderService orderService;
 
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/users/{userId}/orders")
-    @Operation(summary = "Create new order")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Create new User"),
-            @ApiResponse(responseCode = "400", description = "Bad request")
-    })
-    public OrderResponseDto create(@RequestBody @Valid OrderRequestDto orderRequestDto,
-                                   @PathVariable("userId") UUID userId) {
+    @Operation(operationId = "createOrder", summary = "Create new order for the user")
+    public UUID createOrder(@Parameter(name = "orderRequestDto", description = "Representation of a created order")
+                                @RequestBody @Valid OrderRequestDto orderRequestDto,
+                            @Parameter(name = "userId", description = "User's identifier")
+                                @PathVariable("userId") UUID userId) {
         return orderService.create(orderRequestDto, userId);
     }
 
+    @ResponseStatus(HttpStatus.OK)
     @GetMapping("/orders/{externalId}")
-    public OrderResponseDto getByExternalId(@PathVariable("externalId") UUID externalId) {
-        return orderService.getByExternalId(externalId);
+    @Operation(operationId = "getByExternalId", summary = "Get order information by it is external id")
+    public OrderResponseDto getByExternalId(
+            @Parameter(name = "externalId", description = "Order's identifier")
+                @PathVariable("externalId") UUID externalId) {
+        return orderService.getOrderResponseDtoByExternalId(externalId);
     }
 
+    @ResponseStatus(HttpStatus.OK)
     @GetMapping("/users/{userId}/orders")
+    @Operation(operationId = "getOrderByUserId", summary = "Get user orders by user identifier")
     public Page<OrderPreviewDto> getOrderByUserId(
-            @PathVariable("userId") UUID userId,
+            @Parameter(name = "userId", description = "User's identifier")
+                @PathVariable("userId") UUID userId,
             @PageableDefault(sort = "creationTimestamp", direction = Sort.Direction.DESC) Pageable pageable) {
         return orderService.getOrdersByUserId(userId, pageable);
     }
 
-    @PutMapping("/orders/{externalId}/cancelation")
-    public String cancelOrder(@PathVariable("externalId") UUID externalId) {
-        return orderService.cancelOrder(externalId);
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PutMapping("/orders/{externalId}/cancellation")
+    @Operation(operationId = "cancelOrder", summary = "Cancel order by it's external id")
+    public void cancelOrder(@Parameter(name = "externalId", description = "Order's identifier")
+                                @PathVariable("externalId") UUID externalId) {
+        orderService.cancelOrder(externalId);
     }
 
+    @ResponseStatus(HttpStatus.OK)
     @PutMapping("/orders/{externalId}")
-    public OrderResponseDto updateOrder(@RequestBody @Valid OrderRequestDto orderRequestDto,
-                                        @PathVariable("externalId") UUID externalId) {
+    @Operation(operationId = "updateOrder", summary = "Update order by it's external id")
+    public OrderResponseDto updateOrder(
+            @Parameter(name = "orderRequestDto", description = "Representation of a updated order")
+                @RequestBody @Valid OrderRequestDto orderRequestDto,
+            @Parameter(name = "externalId", description = "Order's identifier")
+                @PathVariable("externalId") UUID externalId) {
         return orderService.update(orderRequestDto, externalId);
     }
 
+    @ResponseStatus(HttpStatus.OK)
     @GetMapping("/orders/{externalId}/check")
-    public ResponseEntity<InputStreamResource> createCheck(@PathVariable("externalId") UUID externalID) throws DocumentException, FileNotFoundException {
-        ByteArrayInputStream byteArrayInputStream = orderService.createReceiptForUser(externalID);
+    public ResponseEntity<InputStreamResource> receiveOrderCheck(@PathVariable("externalId") UUID externalID) {
+        ByteArrayInputStream byteArrayInputStream = orderService.createCheck(externalID);
         var headers = new HttpHeaders();
         headers.add("Content-Disposition", "inline; filename=check.pdf");
         return ResponseEntity
