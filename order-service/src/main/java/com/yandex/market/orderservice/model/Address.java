@@ -7,6 +7,7 @@ import lombok.*;
 @Setter
 @Builder
 @Embeddable
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 public class Address {
