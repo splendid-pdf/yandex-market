@@ -1,29 +1,27 @@
 package com.yandex.market.orderservice.dto;
 
 import com.yandex.market.orderservice.model.PaymentType;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.FutureOrPresent;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.PastOrPresent;
-import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Schema
 public record OrderRequestDto(
-        @NotNull(message = "PaymentType field must not be empty")
+        @NotNull(message = "Способ оплаты должен быть заполнен")
         PaymentType paymentType,
-        @Positive(message = "Price must be greater than 0")
+        @PositiveOrZero(message = "Цена заказа не может быть отрицательной")
         double price,
         boolean paid,
-        @NotNull(message = "PaymentDateTime field must not be empty")
-        @FutureOrPresent(message = "PaymentDateTime delivery field must be future or present")
         LocalDateTime paymentDateTime,
-        @NotNull(message = "CreationTimestamp field must not be empty")
-        @PastOrPresent(message = "End time delivery field must be past or present")
+        @NotNull(message = "Дата создания заказа должна быть заполнена")
+        @PastOrPresent(message = "Дата создания не может быть позже текущего дня")
         LocalDateTime creationTimestamp,
-        @NotNull(message = "ReceiptMethod field must not be empty")
         @Valid
+        @NotNull(message = "Способ получения должен быть заполнен")
         ReceiptMethodRequestDto receiptMethod,
+        @NotNull(message = "Заказанный пользователем продукт должен быть заполнен")
         List<@Valid OrderedProductDto> orderedProducts) {
 }

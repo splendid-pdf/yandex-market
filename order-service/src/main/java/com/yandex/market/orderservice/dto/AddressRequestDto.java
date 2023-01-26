@@ -1,22 +1,24 @@
 package com.yandex.market.orderservice.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import org.springframework.validation.annotation.Validated;
 
+@Schema
 public record AddressRequestDto(
-        @NotBlank(message = "Country field must not be empty")
+        @NotBlank(message = "Страна получателя должна быть заполнена")
         String country,
-        @NotBlank(message = "Region field must not be empty")
+        @NotBlank(message = "Регион получателя должен быть заполнен")
         String region,
-        @NotBlank(message = "City field must not be empty")
+        @NotBlank(message = "Город получателя должен быть заполнен")
         String city,
-        @NotBlank(message = "Postcode field must not be empty")
-        @Size(max = 6, min = 6, message = "Address: Postcode field must be 6 characters long")
+        @Size(max = 6, min = 6, message = "Длина почтового кода должна состовлять ровно 6 цифр. postCode - ${postCode}")
         String postCode,
-        @NotBlank(message = "Street field must not be empty")
+        @NotBlank(message = "Улица получателя должна быть заполнена")
         String street,
-        @NotBlank(message = "House number field must not be empty")
+        @NotBlank(message = "Номер дома должен быть заполнен")
         String houseNumber,
-        @NotBlank(message = "Office number field must not be empty")
-        String officeNumber) {
+        @NotBlank(message = "Номер квартиры должен быть заполнен")
+        String apartNumber) {
 }

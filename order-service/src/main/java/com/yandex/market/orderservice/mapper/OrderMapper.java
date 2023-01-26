@@ -11,6 +11,9 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring", uses = {OrderedProductMapper.class, ReceiptMethodMapper.class})
 public interface OrderMapper {
 
+    @Mapping(target = "orderStatus", constant = "CREATED")
+    @Mapping(target = "externalId", expression = "java(UUID.randomUUID())")
+    @Mapping(target = "creationTimestamp", expression = "java(LocalDateTime.now())")
     Order toOrder(OrderRequestDto orderRequestDto);
 
     OrderResponseDto toOrderResponseDto(Order order);
