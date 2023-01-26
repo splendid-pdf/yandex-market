@@ -6,7 +6,9 @@ import com.yandex.market.orderservice.dto.OrderResponseDto;
 import com.yandex.market.orderservice.service.OrderService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -33,8 +35,6 @@ import static com.yandex.market.util.HttpUtils.PUBLIC_API_V1;
 @RequiredArgsConstructor
 @Tag(name = "orders")
 @ApiResponses({
-        @ApiResponse(responseCode = "200", description = "Successful operation",
-                content = @Content(mediaType = "application/json")),
         @ApiResponse(responseCode = "400", description = "Invalid data provided to the server",
                 content = @Content(mediaType = "application/json"))})
 public class OrderController {
@@ -44,6 +44,8 @@ public class OrderController {
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/users/{userId}/orders")
     @Operation(operationId = "createOrder", summary = "Create new order for the user")
+    @ApiResponse(responseCode = "201", description = "Successful operation",
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = UUID.class)))
     public UUID createOrder(@Parameter(name = "orderRequestDto", description = "Representation of a created order")
                                 @RequestBody @Valid OrderRequestDto orderRequestDto,
                             @Parameter(name = "userId", description = "User's identifier")
@@ -54,6 +56,8 @@ public class OrderController {
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/orders/{externalId}")
     @Operation(operationId = "getByExternalId", summary = "Get order information by it is external id")
+    @ApiResponse(responseCode = "200", description = "Successful operation", content =
+        @Content(mediaType = "application/json", schema = @Schema(implementation = OrderResponseDto.class)))
     public OrderResponseDto getByExternalId(
             @Parameter(name = "externalId", description = "Order's identifier")
                 @PathVariable("externalId") UUID externalId) {
@@ -63,6 +67,9 @@ public class OrderController {
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/users/{userId}/orders")
     @Operation(operationId = "getOrderByUserId", summary = "Get user orders by user identifier")
+    @ApiResponse(responseCode = "200", description = "Successful operation",
+            content = @Content(mediaType = "application/json",
+            array = @ArraySchema(schema = @Schema(implementation = OrderResponseDto.class))))
     public Page<OrderPreviewDto> getOrderByUserId(
             @Parameter(name = "userId", description = "User's identifier")
                 @PathVariable("userId") UUID userId,
@@ -73,6 +80,7 @@ public class OrderController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PutMapping("/orders/{externalId}/cancellation")
     @Operation(operationId = "cancelOrder", summary = "Cancel order by it's external id")
+    @ApiResponse(responseCode = "204", description = "Successful operation")
     public void cancelOrder(@Parameter(name = "externalId", description = "Order's identifier")
                                 @PathVariable("externalId") UUID externalId) {
         orderService.cancelOrder(externalId);
@@ -81,6 +89,7 @@ public class OrderController {
     @ResponseStatus(HttpStatus.OK)
     @PutMapping("/orders/{externalId}")
     @Operation(operationId = "updateOrder", summary = "Update order by it's external id")
+    @ApiResponse(responseCode = "200", description = "Successful operation")
     public OrderResponseDto updateOrder(
             @Parameter(name = "orderRequestDto", description = "Representation of a updated order")
                 @RequestBody @Valid OrderRequestDto orderRequestDto,
