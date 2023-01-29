@@ -15,5 +15,4 @@ public class ErrorResponse {
     private String statusCode;
     private String message;
     private LocalDateTime timestamp;
-    private String StatusCode;
 }

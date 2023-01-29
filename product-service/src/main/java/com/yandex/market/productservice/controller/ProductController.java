@@ -42,7 +42,7 @@ public class ProductController {
 
     @DeleteMapping("{externalId}")
     @ResponseStatus(HttpStatus.OK)
-    public void getDeleteProductByExternalId(@PathVariable UUID externalId) {
+    public void deleteProductByExternalId(@PathVariable UUID externalId) {
         log.info("Received request to get a product by given value: {}", externalId);
         productService.deleteProductByExternalId(externalId);
     }

@@ -17,6 +17,7 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final ProductMapper productMapper;
 
+    @Transactional(readOnly = true)
     public ProductResponseDto getProductByExternalId(UUID externalId) {
         Product product = productRepository.findByExternalId(externalId)
                 .orElseThrow(() -> new EntityNotFoundException("ERROR_MESSAGE" + externalId));
@@ -30,11 +31,13 @@ public class ProductService {
         product.setDeleted(true);
     }
 
+    @Transactional
     public String createProduct(ProductRequestDto productRequestDto) {
         Product product = productMapper.toProduct(productRequestDto);
         return productRepository.save(product).getExternalId();
     }
 
+    @Transactional
     public ProductResponseDto updateProductByExternalId(UUID externalId, ProductRequestDto productRequestDto) {
         Product storedProduct = productRepository.findByExternalId(externalId)
                 .orElseThrow(() -> new EntityNotFoundException("ERROR_MESSAGE" + externalId));
