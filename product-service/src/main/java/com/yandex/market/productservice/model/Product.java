@@ -12,13 +12,13 @@ import java.util.UUID;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "product")
+@Table(name = "products")
 @EqualsAndHashCode(of = "id")
 public class Product {
 
     @Id
-    @SequenceGenerator(name = "product-generator", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "product-generator")
+    @SequenceGenerator(name = "products-generator", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "products-generator")
     private Long id;
 
     private UUID externalId;
