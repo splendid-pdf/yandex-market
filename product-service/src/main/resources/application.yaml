@@ -1,0 +1,28 @@
+spring:
+  controller:
+    url: "/public/api/v1/products"
+
+  jpa:
+    show-sql: true
+    hibernate:
+      dialect: org.hibernate.dialect.PostgreSQLDialect
+      ddl-auto: validate
+    properties:
+      hibernate:
+        generate_statistics: true
+        format_sql: true
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/test2
+    username: postgres
+    password: admin
+    driver-class-name: org.postgresql.Driver
+
+app:
+  api:
+    rest:
+      connection-timeout-in-ms: 1000
+      read-connection-timeout-in-ms: 1000
+      geocoder:
+        url: https://catalog.api.2gis.com/3.0/items/geocode?q=%s&fields=items.point&key=%s
+        api-key: ${api-key:ruogpy7686}
