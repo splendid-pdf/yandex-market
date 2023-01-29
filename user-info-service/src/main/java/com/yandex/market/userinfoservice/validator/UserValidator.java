@@ -109,7 +109,7 @@ public class UserValidator {
 
     public void validateSex(@NotNull UserRequestDto userRequestDto, @NotNull List<String> exceptionMessages) {
         val sex = userRequestDto.getSex();
-        if (sex != null && !EnumUtils.isValidEnumIgnoreCase(Sex.class, sex)) {
+        if (StringUtils.isNotEmpty(sex) && !EnumUtils.isValidEnumIgnoreCase(Sex.class, sex)) {
             exceptionMessages.add(properties.getMessageByErrorCode(INCORRECT_SEX_TYPE_ERROR_CODE)
                     .formatted(sex));
         }
@@ -121,7 +121,7 @@ public class UserValidator {
                 val networkValue = contactDto.getValue();
                 val socialNetwork = contactDto.getType();
 
-                if (!EnumUtils.isValidEnum(SocialNetwork.class, socialNetwork) && socialNetwork != null) {
+                if (!EnumUtils.isValidEnumIgnoreCase(SocialNetwork.class, socialNetwork) && socialNetwork != null) {
                     exceptionMessages.add(properties.getMessageByErrorCode(INCORRECT_SOCIAL_NETWORK_ERROR_CODE)
                             .formatted(socialNetwork));
                     if (StringUtils.isBlank(networkValue) && networkValue != null) {

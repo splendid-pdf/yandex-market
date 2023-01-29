@@ -5,6 +5,7 @@ import com.yandex.market.userinfoservice.model.Sex;
 import com.yandex.market.userinfoservice.model.User;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.openapitools.api.model.UserRequestDto;
 import org.springframework.stereotype.Component;
 
@@ -53,8 +54,6 @@ public class UserRequestMapper implements Mapper<UserRequestDto, User> {
     }
 
     private Sex getSex(String sex) {
-       return Optional.ofNullable(sex)
-               .map(Sex::valueOf)
-               .orElse(Sex.NONE);
+        return StringUtils.isNotEmpty(sex) ? Sex.valueOf(sex) : Sex.NONE;
     }
 }
