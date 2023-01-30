@@ -31,5 +31,6 @@ public record ProductRequestDto(
 
         //todo: features хз что это у нас в модели этого нет, но на миро есть, надо разобраться
 
-    )
-{}
+) {
+
+}

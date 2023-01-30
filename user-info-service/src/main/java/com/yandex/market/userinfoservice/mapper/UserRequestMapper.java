@@ -31,7 +31,7 @@ public class UserRequestMapper implements Mapper<UserRequestDto, User> {
                 .login(trimEmailForLogin(userRequestDto))
                 .password(userRequestDto.getPassword())
                 .birthday(userRequestDto.getBirthday())
-                .sex(Sex.valueOf(userRequestDto.getSex().name()))
+                .sex(Sex.valueOf(userRequestDto.getSex()))
                 .location(locationMapper.map(userRequestDto.getLocation()))
                 .notificationSettings(
                         notificationSettingsMapper.mapNotificationSettings(userRequestDto.getNotificationSettings()))
