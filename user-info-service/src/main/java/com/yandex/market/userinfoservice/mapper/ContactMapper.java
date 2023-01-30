@@ -10,12 +10,13 @@ public class ContactMapper {
     public Contact map(ContactDto contactDto) {
         return Contact.builder()
                 .value(contactDto.getValue())
-                .type(SocialNetwork.valueOf(contactDto.getType().name()))
+                .type(SocialNetwork.valueOf(contactDto.getType()))
                 .build();
     }
+
     public ContactDto mapToDto(Contact contact) {
         ContactDto contactDto = new ContactDto();
-        contactDto.setType(ContactDto.TypeEnum.valueOf(contact.getType().name()));
+        contactDto.setType(contact.getType().name());
         contactDto.setValue(contact.getValue());
         return contactDto;
     }
