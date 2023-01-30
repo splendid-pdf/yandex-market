@@ -7,5 +7,6 @@ public enum OrderStatus {
     TRANSFERRED_TO_DELIVERY,
     ON_THE_WAY,
     DELIVERED_TO_PICKUP_POINT,
-    COMPLETED
+    COMPLETED,
+    CANCELED
 }

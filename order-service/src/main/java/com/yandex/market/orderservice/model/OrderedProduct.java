@@ -9,10 +9,12 @@ import java.util.UUID;
 @Getter
 @Setter
 @Builder
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "ordered_products")
 @EqualsAndHashCode(of = "id")
-public class ProductDetails {
+public class OrderedProduct {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "product-details-sequence")
@@ -20,6 +22,8 @@ public class ProductDetails {
     private Long id;
 
     private UUID productId;
+
+    private int amount;
 
     private String name;
 
@@ -32,7 +36,4 @@ public class ProductDetails {
     private UUID branchId;
 
     private UUID shopSystemId;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Order order;
 }
