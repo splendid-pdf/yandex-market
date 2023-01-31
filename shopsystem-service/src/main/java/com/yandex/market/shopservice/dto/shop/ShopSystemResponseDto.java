@@ -12,7 +12,8 @@ import java.util.Set;
 @NoArgsConstructor
 @EqualsAndHashCode
 @AllArgsConstructor
-public class ShopSystemResponsesDto {
+
+public class ShopSystemResponseDto {
     private String name;
 
     private String token;

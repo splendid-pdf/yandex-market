@@ -1,0 +1,58 @@
+{
+  "name": "Eldorado Ohta Moll",
+  "token": "0d305bfS05e74beS8fe9cedfaf4f6003",
+  "ogrn": "1227700339492",
+  "location": {
+    "country": "этого не должно быть тут",
+    "region": "этого не должно быть тут",
+    "street": "Brantovskaya d.",
+    "city": "Saint-Petersburg",
+    "houseNumber": "5B",
+    "officeNumber": "1",
+    "postcode": "195027",
+    "latitude": 50.2,
+    "longitude": 30.4
+  },
+  "contact": {
+    "hotlinePhone": "8(937)640-9999",
+    "servicePhone": "8(939)640-8888",
+    "email": "eldorado-ohta@eldorado.ru"
+  },
+  "delivery": {
+    "hasDelivery": true,
+    "hasExpressDelivery": true,
+    "hasDeliveryToPickupPoint": true,
+    "pickupPointPartners": [
+      "OZON",
+      "CDEK",
+      "YANDEX_MARKET"
+    ],
+    "deliveryZones": [
+      {
+        "zoneId": "id742100",
+        "radiusInMeters": 2000,
+        "standardDeliveryPrice": 399,
+        "expressDeliveryPrice": 599
+      },
+      {
+        "zoneId": "id742101",
+        "radiusInMeters": 5000,
+        "standardDeliveryPrice": 799,
+        "expressDeliveryPrice": 599
+      }
+    ],
+    "deliveryIntervals": [
+      {
+        "intervalId": "126600302",
+        "periodStart": "10:00",
+        "periodEnd": "12:00"
+      },
+      {
+        "intervalId": "126600303",
+        "periodStart": "12:00",
+        "periodEnd": "18:00"
+      }
+    ]
+  },
+  "hasBranchPickupPoint": true
+}
