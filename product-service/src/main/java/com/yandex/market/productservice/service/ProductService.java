@@ -3,6 +3,7 @@ package com.yandex.market.productservice.service;
 import com.yandex.market.productservice.dto.ProductRequestDto;
 import com.yandex.market.productservice.dto.ProductResponseDto;
 import com.yandex.market.productservice.mapper.ProductMapper;
+import com.yandex.market.productservice.model.Product;
 import com.yandex.market.productservice.repository.ProductRepository;
 import com.yandex.market.productservice.utils.ExceptionMessagesConstants;
 import jakarta.persistence.EntityNotFoundException;
@@ -35,7 +36,7 @@ public class ProductService {
     }
 
     @Transactional
-    public String createProduct(ProductRequestDto productRequestDto) {
+    public UUID createProduct(ProductRequestDto productRequestDto) {
         Product product = productMapper.toProduct(productRequestDto);
         return productRepository.save(product).getExternalId();
     }

@@ -29,7 +29,8 @@ public class Product {
 
     private String description;
 
-    private String productType;
+    @Enumerated(value = EnumType.STRING)
+    private ProductType productType;
 
     private String manufacturer;
 
@@ -38,7 +39,7 @@ public class Product {
     private String imageUrl;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Characteristics> characteristics;
+    private List<Characteristic> characteristics;
 
     @Embedded
     private Dimensions dimensions;

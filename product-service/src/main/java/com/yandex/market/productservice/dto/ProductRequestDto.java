@@ -1,16 +1,14 @@
 package com.yandex.market.productservice.dto;
 
+import com.yandex.market.productservice.model.Dimensions;
+import com.yandex.market.productservice.model.ProductType;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import lombok.*;
 
 import java.util.List;
 
-@Getter
-@Setter
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
+
 public record ProductRequestDto(
         @NotBlank(message = "Наименование товара должно быть указано")
         @Size(min = 3, max = 30, message = "Наименование товара должно быть в интервале от 3 до 30 символов")
@@ -28,7 +26,7 @@ public record ProductRequestDto(
         Double weight,
         List<@Valid CharacteristicDto> characteristics,
         @Valid
-        Dimmensions dimmensions,
+        Dimensions dimensions,
         Boolean isVisible
 
         //todo: features хз что это у нас в модели этого нет, но на миро есть, надо разобраться

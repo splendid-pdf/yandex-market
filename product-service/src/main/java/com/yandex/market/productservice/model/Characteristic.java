@@ -11,7 +11,7 @@ import lombok.*;
 @AllArgsConstructor
 @Table(name = "characteristics")
 @EqualsAndHashCode(of = "id")
-public class Characteristics {
+public class Characteristic {
 
     @Id
     @SequenceGenerator(name = "characteristic-generator", allocationSize = 1)

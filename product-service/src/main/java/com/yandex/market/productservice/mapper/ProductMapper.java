@@ -2,6 +2,7 @@ package com.yandex.market.productservice.mapper;
 
 import com.yandex.market.productservice.dto.ProductRequestDto;
 import com.yandex.market.productservice.dto.ProductResponseDto;
+import com.yandex.market.productservice.model.Product;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

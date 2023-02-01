@@ -13,14 +13,14 @@ import java.util.UUID;
 
 @Slf4j
 @RestController
-@RequestMapping("{$spring.controller.url}")
+@RequestMapping("${spring.controller.url}")
 @RequiredArgsConstructor
 public class ProductController {
     private final ProductService productService;
 
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
-    public String createProduct(@RequestBody @Valid ProductRequestDto productRequestDto) {
+    public UUID createProduct(@RequestBody @Valid ProductRequestDto productRequestDto) {
         log.info("Received request to create a product by given value: {}", productRequestDto);
         return productService.createProduct(productRequestDto);
     }

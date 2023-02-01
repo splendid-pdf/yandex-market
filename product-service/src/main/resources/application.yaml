@@ -6,7 +6,7 @@ spring:
     show-sql: true
     hibernate:
       dialect: org.hibernate.dialect.PostgreSQLDialect
-      ddl-auto: validate
+      ddl-auto: create
     properties:
       hibernate:
         generate_statistics: true

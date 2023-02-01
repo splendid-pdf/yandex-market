@@ -39,6 +39,5 @@ public class ProductExceptionHandler {
                 .message(ex.getMessage())
                 .timestamp(LocalDateTime.now())
                 .build();
-
     }
 }
