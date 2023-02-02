@@ -10,7 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.UUID;
+import java.util.*;
 
 import static com.yandex.market.productservice.utils.ExceptionMessagesConstants.USER_NOT_FOUND_ERROR_MESSAGE;
 

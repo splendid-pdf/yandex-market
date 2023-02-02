@@ -8,15 +8,25 @@ import java.util.UUID;
 
 public record ProductResponseDto(
         UUID externalId,
+
         String name,
+
         String description,
+
         ProductType productType,
+
         String manufacturer,
+
         String imageUrl,
+
         Double weight,
+
         List<CharacteristicDto> characteristics,
+
         Dimensions dimensions,
+
         Boolean isVisible,
+
         Double rating
 ) {
 }

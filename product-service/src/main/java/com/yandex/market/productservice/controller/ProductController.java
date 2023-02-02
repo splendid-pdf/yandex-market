@@ -13,7 +13,7 @@ import java.util.UUID;
 
 @Slf4j
 @RestController
-@RequestMapping("${spring.controller.url}")
+@RequestMapping("${spring.app.product-controller.url}")
 @RequiredArgsConstructor
 public class ProductController {
     private final ProductService productService;
