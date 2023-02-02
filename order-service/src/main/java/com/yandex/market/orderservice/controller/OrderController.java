@@ -109,7 +109,7 @@ public class OrderController {
     @GetMapping("/orders/{externalId}/check")
     public ResponseEntity<InputStreamResource> receiveOrderCheck(@PathVariable("externalId") UUID externalID) {
         ByteArrayInputStream byteArrayInputStream = orderService.createCheck(externalID);
-        log.info("Received a request to generate of check the order: %s" .formatted(externalID));
+        log.info("Received a request to generate of check of order: %s" .formatted(externalID));
 
         var headers = new HttpHeaders();
         headers.add("Content-Disposition", "inline; filename=check.pdf");

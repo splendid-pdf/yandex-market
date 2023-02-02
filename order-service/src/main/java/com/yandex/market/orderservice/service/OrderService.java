@@ -7,7 +7,7 @@ import com.yandex.market.orderservice.mapper.OrderMapper;
 import com.yandex.market.orderservice.model.Order;
 import com.yandex.market.orderservice.model.OrderStatus;
 import com.yandex.market.orderservice.repository.OrderRepository;
-import com.yandex.market.orderservice.utils.GeneratorOfCheck;
+import com.yandex.market.orderservice.utils.GeneratorOrderCheck;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -29,7 +29,6 @@ public class OrderService {
 
     private static final String COMPLETED_ORDER_CAN_NOT_BE_UPDATED = "Completed order can not be updated";
     private static final String ORDER_BY_EXTERNAL_ID_IS_NOT_FOUND_MESSAGE = "Order not found by external id = '%s'";
-
     private final OrderMapper orderMapper;
     private final OrderRepository orderRepository;
 
@@ -77,7 +76,7 @@ public class OrderService {
 
     @SneakyThrows
     public ByteArrayInputStream createCheck(UUID externalId) {
-        return GeneratorOfCheck.generate(getOrderByExternalId(externalId));
+        return GeneratorOrderCheck.generate(getOrderByExternalId(externalId));
     }
 
     private Order getOrderByExternalId(UUID externalId) {
