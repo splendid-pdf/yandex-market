@@ -42,7 +42,7 @@ public class GeneratorOrderCheck {
 
             title.add("Кассовый чек № " + order.getId() + "\n");
             title.add(dateFormat.format(order.getPaymentDateTime())+ "\n");
-            title.add("Marketplace");
+            title.add("Marketplace\n");
             title.add("ИНН 12345678" + "\n"); //TODO привязать название поставщика, ИНН
             title.add("Вид налогообложения: ОСН\n");
             title.add("Приход\n");
