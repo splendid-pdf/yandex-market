@@ -3,6 +3,7 @@ package com.yandex.market.productservice.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -39,7 +40,7 @@ public class Product {
     private String imageUrl;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Characteristic> characteristics;
+    private List<Characteristic> characteristics = new ArrayList<>();
 
     @Embedded
     private Dimensions dimensions;
@@ -51,4 +52,13 @@ public class Product {
     private Boolean isVisible;
 
     private Boolean isDeleted;
+
+    public void addCharacteristic(Characteristic characteristic) {
+        characteristic.setProduct(this);
+        characteristics.add(characteristic);
+    }
+
+    public void removeCharacteristic(Characteristic characteristic) {
+        characteristics.remove(characteristic);
+    }
 }

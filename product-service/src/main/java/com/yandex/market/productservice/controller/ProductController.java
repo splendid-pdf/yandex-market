@@ -9,8 +9,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 @Slf4j
@@ -22,7 +20,7 @@ public class ProductController {
 
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
-    public UUID createProduct(@RequestBody ProductRequestDto productRequestDto) {
+    public UUID createProduct(@RequestBody @Valid ProductRequestDto productRequestDto) {
         log.info("Received request to create a product by given value: {}", productRequestDto);
         return productService.createProduct(productRequestDto);
     }

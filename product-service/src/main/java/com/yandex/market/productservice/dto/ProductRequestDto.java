@@ -2,7 +2,6 @@ package com.yandex.market.productservice.dto;
 
 import com.yandex.market.productservice.model.ProductType;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
@@ -14,6 +13,7 @@ public record ProductRequestDto(
         @NotBlank(message = "Наименование товара должно быть указано")
         @Size(min = 3, max = 30, message = "Наименование товара должно быть в интервале от 3 до 30 символов")
         String name,
+        @Size(min = 10, max = 200, message = "Описание товара должно быть в интервале от 10 до 200 символов")
         String description,
         ProductType productType,
         @NotBlank(message = "Производитель товара должен быть указан")
@@ -23,8 +23,8 @@ public record ProductRequestDto(
         String imageUrl,
         @PositiveOrZero(message = "Вес не может быть отрицательным")
         Double weight,
-        List<CharacteristicDto> characteristics,
-
+        List<@Valid CharacteristicDto> characteristics,
+        @Valid
         DimensionsDto dimensions,
         Boolean isVisible
 
