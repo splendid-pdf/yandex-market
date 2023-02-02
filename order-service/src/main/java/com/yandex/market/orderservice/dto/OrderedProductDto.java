@@ -15,14 +15,15 @@ public record OrderedProductDto(
         UUID productId,
         @Positive(message = "Количество заказанного товара не может быть отрицательным")
         int amount,
+        UUID branchId,
+        UUID shopSystemId,
         @NotBlank(message = "Наименование товара должна быть заполнено")
         @Size(min = 1, max = 200, message = "Длина названия товара не может быть меньше 1 и больше 200")
         String name,
+        String description,
         @Positive(message = "Цена товара не может быть отрицательной")
         double price,
-        String description,
-        String photoUrl,
-        UUID branchId,
-        UUID shopSystemId) {
+        String photoUrl
+        ) {
 
 }
