@@ -56,7 +56,7 @@ public class UserValidator {
                             .formatted(firstName));
         }
 
-        if (!NAME_PATTERN.matcher(middleName).matches()) {
+        if (middleName != null && !NAME_PATTERN.matcher(middleName).matches()) {
             exceptionMessages
                     .add(properties.getMessageByErrorCode(INCORRECT_MIDDLE_NAME_VALIDATION_ERROR_CODE)
                             .formatted(middleName));
