@@ -28,7 +28,7 @@ public class UserResponseMapper implements Mapper<User, UserResponseDto> {
         userResponseDto.setLastName(user.getLastName());
         userResponseDto.setPhone(user.getPhone());
         userResponseDto.setPhotoId(user.getPhotoId());
-        userResponseDto.setSex(UserResponseDto.SexEnum.valueOf(user.getSex().name()));
+        userResponseDto.setSex(user.getSex().name());
         userResponseDto.setBirthday(user.getBirthday());
         userResponseDto.setContacts(Stream.ofNullable(user.getContacts())
                 .flatMap(Collection::stream)

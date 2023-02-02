@@ -241,10 +241,7 @@ components:
           example: 1967-01-02
         sex:
           type: string
-          enum:
-            - MALE
-            - FEMALE
-            - NONE
+          example: 'MALE'
         location:
           $ref: '#/components/schemas/LocationDto'
         contacts:
@@ -285,10 +282,7 @@ components:
           example: 1967-01-02
         sex:
           type: string
-          enum:
-            - MALE
-            - FEMALE
-            - NONE
+          example: 'MALE'
         location:
           $ref: '#/components/schemas/LocationDto'
         contacts:
@@ -340,12 +334,7 @@ components:
           example: 'vk.com/id153215112412'
         type:
           type: string
-          enum:
-            - VK
-            - TWITTER
-            - FACEBOOK
-            - TELEGRAM
-            - INSTAGRAM
+          example: 'VK'
     ErrorResponse:
       type: object
       properties:
