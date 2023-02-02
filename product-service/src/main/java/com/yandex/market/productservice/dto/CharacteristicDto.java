@@ -2,7 +2,6 @@ package com.yandex.market.productservice.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import lombok.*;
 
 public record CharacteristicDto(
         @NotBlank(message = "Название характеристики должно быть указано")

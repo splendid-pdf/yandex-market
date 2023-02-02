@@ -34,7 +34,7 @@ public class Product {
 
     private String manufacturer;
 
-    private double weight;
+    private Double weight;
 
     private String imageUrl;
 
@@ -48,7 +48,7 @@ public class Product {
 
     private Double rating;
 
-    private boolean isVisible;
+    private Boolean isVisible;
 
-    private boolean isDeleted;
+    private Boolean isDeleted;
 }

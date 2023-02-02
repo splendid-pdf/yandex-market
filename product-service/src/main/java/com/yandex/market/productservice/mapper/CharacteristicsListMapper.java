@@ -8,6 +8,6 @@ import java.util.List;
 
 @Mapper(componentModel = "spring", uses = CharacteristicMapper.class)
 public interface CharacteristicsListMapper {
-    List<CharacteristicDto> toDtoList(List<Characteristic> charachteristicsList);
-    List<Characteristic> toCharachteristicsList(List<CharacteristicDto> characteristicDto);
+    List<CharacteristicDto> toDtoList(List<Characteristic> characteristicsList);
+    List<Characteristic> toCharacteristicList(List<CharacteristicDto> characteristicDto);
 }

@@ -6,7 +6,7 @@ import com.yandex.market.productservice.model.ProductType;
 import java.util.List;
 import java.util.UUID;
 
-public record ProductResponseDto (
+public record ProductResponseDto(
         UUID externalId,
         String name,
         String description,
@@ -18,7 +18,5 @@ public record ProductResponseDto (
         Dimensions dimensions,
         Boolean isVisible,
         Double rating
-)
-
-
-{}
+) {
+}
