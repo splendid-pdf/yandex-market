@@ -11,6 +11,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import static com.yandex.market.productservice.utils.ExceptionMessagesConstants.USER_NOT_FOUND_ERROR_MESSAGE;
