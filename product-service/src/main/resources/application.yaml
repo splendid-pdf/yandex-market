@@ -1,0 +1,24 @@
+spring:
+  app:
+    product-controller:
+      url: "/public/api/v1/products"
+
+  jpa:
+    show-sql: true
+    hibernate:
+      dialect: org.hibernate.dialect.PostgreSQLDialect
+      ddl-auto: create
+#    properties:
+#      hibernate:
+#        generate_statistics: true
+#        format_sql: true
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/${DB_NAME}
+    username: ${POSTGRES_USER}
+    password: ${PASSWORD}
+    driver-class-name: org.postgresql.Driver
+
+#server:
+#  port: 9090
+
