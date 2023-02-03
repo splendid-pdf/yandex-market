@@ -9,7 +9,7 @@ public record CharacteristicDto(
         String name,
 
         @NotBlank(message = "Значение характеристики должно быть указано")
-        @Size(min = 3, max = 100, message = "Значение характеристики должно быть в интервале от 3 до 100 символов")
+        @Size(max = 100, message = "Значение характеристики должно быть до 100 символов")
         String value
 ) {
 

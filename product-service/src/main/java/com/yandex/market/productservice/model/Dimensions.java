@@ -11,5 +11,8 @@ import lombok.*;
 @AllArgsConstructor
 public class Dimensions {
     private String length;
+
     private String width;
+
+    private String height;
 }

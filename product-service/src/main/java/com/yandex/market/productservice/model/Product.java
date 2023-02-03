@@ -18,8 +18,8 @@ import java.util.UUID;
 public class Product {
 
     @Id
-    @SequenceGenerator(name = "products-generator", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "products-generator")
+    @SequenceGenerator(name = "products_sequence", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "products_sequence")
     private Long id;
 
     private UUID externalId;
