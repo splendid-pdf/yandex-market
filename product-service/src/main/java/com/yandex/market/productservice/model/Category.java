@@ -11,13 +11,13 @@ import java.util.UUID;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "category")
+@Table(name = "categories")
 @EqualsAndHashCode(of = "id")
 public class Category {
 
     @Id
-    @SequenceGenerator(name = "category-generator", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "category-generator")
+    @SequenceGenerator(name = "category_sequence", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "category_sequence")
     private Long id;
 
     private UUID externalId;
