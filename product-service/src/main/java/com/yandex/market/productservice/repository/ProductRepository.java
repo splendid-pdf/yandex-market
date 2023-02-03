@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Stream;
 
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
@@ -18,5 +19,5 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     Optional<Product> findByExternalId(@Param("externalId") UUID externalId);
 
     @Query( "FROM Product p WHERE p.externalId in :externals AND p.isDeleted=false" )
-    List<Product> findByExternalId(@Param("externals") Set<UUID> uuidSet, Pageable pageable);
+    Stream<Product> findByExternalId(@Param("externals") Set<UUID> uuidSet, Pageable pageable);
 }

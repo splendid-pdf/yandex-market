@@ -7,6 +7,7 @@ import com.yandex.market.productservice.model.Product;
 import com.yandex.market.productservice.repository.ProductRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -48,4 +49,11 @@ public class ProductService {
         product.setIsDeleted(true);
     }
 
+    @Transactional(readOnly = true)
+    public List<ProductResponseDto> getProductsBySetExternalId(Set<UUID> uuidSet, Pageable pageable) {
+        return productRepository
+                .findByExternalId(uuidSet, pageable)
+                .map(productMapper::toResponseDto)
+                .toList();
+    }
 }
