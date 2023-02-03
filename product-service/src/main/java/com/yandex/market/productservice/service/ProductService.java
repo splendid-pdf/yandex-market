@@ -50,9 +50,9 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public List<ProductResponseDto> getProductsBySetExternalId(Set<UUID> uuidSet, Pageable pageable) {
+    public List<ProductResponseDto> getProductsBySetExternalId(Set<UUID> externalIdSet, Pageable pageable) {
         return productRepository
-                .findByExternalId(uuidSet, pageable)
+                .findByExternalId(externalIdSet, pageable)
                 .map(productMapper::toResponseDto)
                 .toList();
     }
