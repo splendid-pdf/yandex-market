@@ -6,16 +6,16 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Stream;
 
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @Query("FROM Product p WHERE p.externalId=:externalId AND p.isDeleted=false")
     Optional<Product> findByExternalId(@Param("externalId") UUID externalId);
 
-    @Query("FROM Product p WHERE p.externalId in :externals AND p.isDeleted=false")
-    List<Product> findByExternalId(@Param("externals") Set<UUID> uuidSet, Pageable pageable);
+    @Query( "FROM Product p WHERE p.externalId in :externals AND p.isDeleted=false" )
+    Stream<Product> findByExternalId(@Param("externals") Set<UUID> uuidSet, Pageable pageable);
 }

@@ -6,9 +6,14 @@ import com.yandex.market.productservice.service.ProductService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Slf4j
@@ -45,6 +50,15 @@ public class ProductController {
     public void deleteProductByExternalId(@PathVariable UUID externalId) {
         log.info("Received request to get a product by given value: {}", externalId);
         productService.deleteProductByExternalId(externalId);
+    }
+
+    @GetMapping()
+    @ResponseStatus(HttpStatus.OK)
+    public List<ProductResponseDto> getProductsBySetExternalId(@RequestParam(name = "extId") Set<UUID> externalIdSet,
+                                                               @PageableDefault(sort = {"name"}, direction = Sort.Direction.ASC)
+                                                               Pageable pageable) {
+        log.info("Received request to get a products list by given values: {}", externalIdSet);
+        return productService.getProductsBySetExternalId(externalIdSet, pageable);
     }
 
 }
