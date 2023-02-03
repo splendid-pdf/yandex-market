@@ -1,0 +1,48 @@
+{
+  "paymentType" : "CARD_ONLINE",
+  "price" : 1000.00,
+  "paid" : false,
+  "paymentDateTime" : "2023-05-13T10:14:33",
+  "creationTimestamp" : "2023-01-13T10:14:33",
+  "receiptMethod" : {
+    "deliveryMethod" : "HOME_DELIVERY",
+    "address" : {
+      "country" : "Russia",
+      "region" : "Len Obl",
+      "city" : "St Pets",
+      "postCode" : "171717",
+      "street" : "nevsk prspkt",
+      "houseNumber" : "45",
+      "officeNumber" : "123"
+    },
+    "receiverName" : "Ivan",
+    "receiverPhone" : "+79193545678",
+    "receiverEmail" : "asdsad@mail.ru",
+    "deliveryDate" : "2023-05-14",
+    "deliveryStart" : "11:00:00",
+    "deliveryEnd" : "20:00:00",
+    "deliveryCost" : 2.00
+  },
+  "orderedProducts" : [
+    {
+      "productId" : "9b114634-56d7-4660-801f-b18b1806f137",
+      "amount" : 1,
+      "branchId" : "e0e738a2-a2e0-4e15-bd73-c39f9ef0ece0",
+      "shopSystemId" : "118cb1f0-cb45-4ec7-89c3-f253a73d0d03",
+      "name" : "графич планшет",
+      "description" : "мощный хороший",
+      "price" : 1000.00,
+      "photoUrl" : "https://asd.asfds.yandex.ru"
+    },
+    {
+      "productId" : "9b114634-56d7-4660-801f-b18b1806f137",
+      "amount" : 2,
+      "branchId" : "e0e738a2-a2e0-4e15-bd73-c39f9ef0ece0",
+      "shopSystemId" : "118cb1f0-cb45-4ec7-89c3-f253a73d0d03",
+      "name" : "графич планшет",
+      "description" : "мощный хороший",
+      "price" : 1000.00,
+      "photoUrl" : "https://asd.asfds.yandex.ru"
+    }
+  ]
+}
