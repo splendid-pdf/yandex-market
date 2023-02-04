@@ -123,7 +123,7 @@ public class OrderReceiptGenerator {
         initCell(total, fontBigText, "ИТОГ", LEFT);
         initCell(total, fontBigText, "=" + doubleFormat.format(order.getPrice()), RIGHT);
         initCell(total, fontSmallText, "в т.ч. НДС " + TAX + "%", LEFT);
-        initCell(total, fontSmallText, "=" + doubleFormat.format(order.getTaxProducts()), RIGHT);
+        initCell(total, fontSmallText, "=" + doubleFormat.format(order.getTotalPriceWithTax()), RIGHT);
         initCell(total, fontSmallText, "Полный расчет ", LEFT);
         initCell(total, fontSmallText, "=" + doubleFormat.format(order.getPrice()), RIGHT);
         return total;
