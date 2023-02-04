@@ -62,4 +62,10 @@ public class Order {
                 ", creationTimestamp=" + creationTimestamp +
                 '}';
     }
+
+    public Double getTotalPriceWithTax() {
+        return orderedProducts.stream()
+                .mapToDouble(product ->
+                        product.getPrice() - ((product.getPrice() * 100) / (100 + 20))).sum();
+    }
 }
