@@ -7,7 +7,7 @@ import com.yandex.market.orderservice.mapper.OrderMapper;
 import com.yandex.market.orderservice.model.Order;
 import com.yandex.market.orderservice.model.OrderStatus;
 import com.yandex.market.orderservice.repository.OrderRepository;
-import com.yandex.market.orderservice.utils.GeneratorOrderCheck;
+import com.yandex.market.orderservice.utils.OrderReceiptGenerator;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -76,7 +76,7 @@ public class OrderService {
 
     @SneakyThrows
     public ByteArrayInputStream createCheck(UUID externalId) {
-        return GeneratorOrderCheck.generate(getOrderByExternalId(externalId));
+        return OrderReceiptGenerator.generate(getOrderByExternalId(externalId));
     }
 
     private Order getOrderByExternalId(UUID externalId) {

@@ -6,7 +6,6 @@ import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.yandex.market.orderservice.model.Order;
-import com.yandex.market.orderservice.model.OrderedProduct;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.ByteArrayInputStream;
@@ -16,7 +15,7 @@ import java.text.DecimalFormat;
 import java.time.format.DateTimeFormatter;
 
 @Slf4j
-public class GeneratorOrderCheck {
+public class OrderReceiptGenerator {
     private final static int FONT_SIZE_SMALLER = 10;
     private final static int FONT_SIZE_BIGGER = 16;
     private final static int TAX = 20;
@@ -124,16 +123,9 @@ public class GeneratorOrderCheck {
         initCell(total, fontBigText, "ИТОГ", LEFT);
         initCell(total, fontBigText, "=" + doubleFormat.format(order.getPrice()), RIGHT);
         initCell(total, fontSmallText, "в т.ч. НДС " + TAX + "%", LEFT);
-        initCell(total, fontSmallText, "=" + doubleFormat.format(sumTaxProducts(order)), RIGHT);
+        initCell(total, fontSmallText, "=" + doubleFormat.format(order.getTaxProducts()), RIGHT);
         initCell(total, fontSmallText, "Полный расчет ", LEFT);
         initCell(total, fontSmallText, "=" + doubleFormat.format(order.getPrice()), RIGHT);
         return total;
-    }
-
-    private static Double sumTaxProducts(Order order) {
-        return order.getOrderedProducts().stream()
-                .mapToDouble(OrderedProduct::getPrice)
-                .map(price -> price - ((price * 100) / (100 + TAX)))
-                .sum();
     }
 }

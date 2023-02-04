@@ -2,7 +2,6 @@ package com.yandex.market.orderservice.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.validator.constraints.UniqueElements;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -62,5 +61,11 @@ public class Order {
                 ", paymentDateTime=" + paymentDateTime +
                 ", creationTimestamp=" + creationTimestamp +
                 '}';
+    }
+
+    public Double getTaxProducts() {
+        return orderedProducts.stream()
+                .mapToDouble(product ->
+                        product.getPrice() - ((product.getPrice() * 100) / (100 + 20))).sum();
     }
 }
