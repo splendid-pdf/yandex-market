@@ -4,6 +4,7 @@ import com.yandex.market.orderservice.model.PaymentType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
+import lombok.Data;
 
 import java.time.LocalDateTime;
 import java.util.List;

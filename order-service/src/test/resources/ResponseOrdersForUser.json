@@ -1,0 +1,57 @@
+{
+  "content": [
+    {
+      "externalId": "37678201-f3c8-4d5c-a628-2344eef50c54",
+      "orderStatus": "CREATED",
+      "price": 1000.0,
+      "paid": true,
+      "quantity": 0,
+      "creationTimestamp": "2023-05-13T10:14:33",
+      "receiptMethod": {
+        "deliveryDate": "2023-05-14",
+        "deliveryStart": "14:00:00",
+        "deliveryEnd": "20:00:00"
+      },
+      "orderedProductPreviews": [
+        {
+          "productId": "77d6a446-a377-4ad2-86f9-b864cca5e9d7",
+          "amount": 1,
+          "name": "planshet",
+          "photoUrl": "photo.ru"
+        },
+        {
+          "productId": "77d6a446-a377-4ad2-86f9-b864cca5e9d6",
+          "amount": 2,
+          "name": "planshet",
+          "photoUrl": "photo.ru"
+        },
+        {
+          "productId": "77d6a446-a377-4ad2-86f9-b864cca5e9d5",
+          "amount": 3,
+          "name": "planshet",
+          "photoUrl": "photo.ru"
+        },
+        {
+          "productId": "77d6a446-a377-4ad2-86f9-b864cca5e9d4",
+          "amount": 4,
+          "name": "planshet",
+          "photoUrl": "photo.ru"
+        }
+      ]
+    }
+  ],
+  "pageable": "INSTANCE",
+  "last": true,
+  "totalPages": 1,
+  "totalElements": 1,
+  "size": 1,
+  "number": 0,
+  "sort": {
+    "empty": true,
+    "sorted": false,
+    "unsorted": true
+  },
+  "numberOfElements": 1,
+  "first": true,
+  "empty": false
+}

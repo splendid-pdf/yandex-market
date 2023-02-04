@@ -27,7 +27,7 @@ public record ReceiptMethodRequestDto(
         @Email(message = "Почта получателя не соответствует стандарту")
         String receiverEmail,
         @NotNull(message = "Дата доставки должна быть заполнена")
-        @FutureOrPresent(message = "Дата доставки должна быть не раньше сегодняшнего дня. deliveryDate - ${deliveryDate}")
+        @FutureOrPresent(message = "Дата доставки должна быть не раньше сегодняшнего дня")
         LocalDate deliveryDate,
         @NotNull(message = "Время начала периода доставки должно быть заполнено")
         LocalTime deliveryStart,

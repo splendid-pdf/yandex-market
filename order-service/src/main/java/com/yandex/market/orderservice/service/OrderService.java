@@ -29,6 +29,7 @@ public class OrderService {
 
     private static final String COMPLETED_ORDER_CAN_NOT_BE_UPDATED = "Completed order can not be updated";
     private static final String ORDER_BY_EXTERNAL_ID_IS_NOT_FOUND_MESSAGE = "Order not found by external id = '%s'";
+    private static final String USER_BY_EXTERNAL_ID_IS_NOT_FOUND_MESSAGE = "Order not found by user external id = '%s'";
     private final OrderMapper orderMapper;
     private final OrderRepository orderRepository;
 
@@ -47,6 +48,10 @@ public class OrderService {
     @Transactional(readOnly = true)
     public Page<OrderPreviewDto> getOrdersByUserId(UUID userId, Pageable pageable) {
         Page<Order> pagedResult = orderRepository.getOrderByUserId(userId, pageable);
+        if (pagedResult.getContent().isEmpty()) {
+            throw new EntityNotFoundException(
+                    USER_BY_EXTERNAL_ID_IS_NOT_FOUND_MESSAGE.formatted(userId));
+        }
         return new PageImpl<>(pagedResult.getContent()
                 .stream()
                 .map(orderMapper::toOrderPreviewDto)
@@ -70,8 +75,14 @@ public class OrderService {
 
         Order order = orderMapper.toOrder(orderRequestDto);
         order.setId(storedOrder.getId());
+        order.setUserId(storedOrder.getUserId());
+        order.setExternalId(storedOrder.getExternalId());
+        for (int i = 0; i < storedOrder.getOrderedProducts().size(); i++) {
+            order.getOrderedProducts().get(i).setId(storedOrder.getOrderedProducts().get(i).getId());
+        }
 
-        return orderMapper.toOrderResponseDto(orderRepository.save(order));
+        orderRepository.save(order);
+        return orderMapper.toOrderResponseDto(order);
     }
 
     @SneakyThrows
