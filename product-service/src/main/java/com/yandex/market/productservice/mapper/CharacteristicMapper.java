@@ -8,9 +8,12 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface CharacteristicMapper {
 
+
     CharacteristicDto toDto(Characteristic charachteristic);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "product", ignore = true)
     Characteristic toCharachteristic(CharacteristicDto characteristicDto);
+
+
 }

@@ -1,4 +1,4 @@
-package com.yandex.market.productservice.controller.response;
+package com.yandex.market.orderservice.exceptionHandler;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,9 +11,9 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ErrorResponse {
+public class ExceptionResponse {
 
-    private String statusCode;
+    private LocalDateTime timeStamped;
     private String message;
-    private LocalDateTime timestamp;
+    private int errorCode;
 }

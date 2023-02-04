@@ -9,10 +9,11 @@ import org.mapstruct.*;
         uses = {CharacteristicsListMapper.class, DimensionsMapper.class},
         collectionMappingStrategy = CollectionMappingStrategy.ADDER_PREFERRED,
         builder = @Builder(disableBuilder = true)
-        )
+)
 public interface ProductMapper {
 
     ProductResponseDto toResponseDto(Product product);
+
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "externalId", expression = "java(UUID.randomUUID())")
@@ -31,6 +32,5 @@ public interface ProductMapper {
     @Mapping(target = "rating", ignore = true)
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     Product toProduct(ProductRequestDto productRequestDto, @MappingTarget Product product);
-
 
 }
