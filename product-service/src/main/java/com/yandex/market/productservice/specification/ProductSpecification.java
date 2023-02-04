@@ -14,7 +14,8 @@ import java.util.List;
 public class ProductSpecification {
 
     public Specification<Product> getSpecificationFromUserFilter(ProductFilterDto productFilterDto) {
-        List<Specification> specifications = new ArrayList<>();
+        List<Specification<Product>> specifications = new ArrayList<>();
+
         if(productFilterDto == null)
             return null;
 
@@ -28,16 +29,36 @@ public class ProductSpecification {
                     criteriaBuilder.lessThan(root.get("weight"), productFilterDto.maxWeight()));
         }
 
-        if(productFilterDto.maxWeight() != null) {
+        if(productFilterDto.minWeight() != null) {
             specifications.add((root, query, criteriaBuilder) ->
                     criteriaBuilder.greaterThan(root.get("weight"), productFilterDto.minWeight()));
         }
 
-        if(specifications.isEmpty()) {
+        if(productFilterDto.minRating() != null) {
+            specifications.add((root, query, criteriaBuilder) ->
+                    criteriaBuilder.greaterThan(root.get("rating"), productFilterDto.minRating()));
+        }
+
+        if(productFilterDto.manufacturers() != null) {
+            productFilterDto.manufacturers()
+                    .forEach(manufacturer ->
+                            specifications.add((root, query, criteriaBuilder) ->
+                                    criteriaBuilder.equal(root.get("manufacturer"), manufacturer)));
+        }
+
+        if(productFilterDto.productTypes() != null) {
+            productFilterDto.productTypes()
+                    .forEach(productType ->
+                            specifications.add((root, query, criteriaBuilder) ->
+                                    criteriaBuilder.equal(root.get("productType"), productType)));
+        }
+
+        if(specifications.isEmpty())
             return null;
-        }
 
-
-        }
+       return specifications
+               .stream()
+               .reduce(Specification::and)
+               .orElse(null);
     }
 }

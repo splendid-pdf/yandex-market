@@ -1,18 +1,16 @@
 package com.yandex.market.productservice.dto;
 
-import com.yandex.market.productservice.model.Dimensions;
 import com.yandex.market.productservice.model.ProductType;
 
-import java.util.List;
 import java.util.Set;
 
 public record ProductFilterDto(
 
         String name,
 
-        Set<ProductType> productType,
+        Set<ProductType> productTypes,
 
-        Set<String> manufacturer,
+        Set<String> manufacturers,
 
         String minWidth,
 
@@ -21,6 +19,10 @@ public record ProductFilterDto(
         String minLength,
 
         String maxLength,
+
+        String minHeight,
+
+        String maxHeight,
 
         Double minWeight,
 
