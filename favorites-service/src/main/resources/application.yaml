@@ -1,0 +1,38 @@
+server:
+  port: 8082
+  error:
+    include-message: always
+
+spring:
+  application:
+    name: favorites-service
+    url: /public/api/v1/users/
+
+  jackson:
+    serialization:
+      fail-on-empty-beans: false
+
+  flyway:
+    baseline-on-migrate: true
+
+  jpa:
+    database: POSTGRESQL
+    show-sql: true
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+        schema_update:
+          unique_constraint_strategy: RECREATE_QUIETLY
+        connection:
+          provider_disables_autocommit: true
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/favorites
+    username: postgres
+    password: admin
+    driverClassName: org.postgresql.Driver
+    hikari:
+      auto-commit: false
