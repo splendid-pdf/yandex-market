@@ -6,15 +6,18 @@ spring:
     show-sql: true
     hibernate:
       dialect: org.hibernate.dialect.PostgreSQLDialect
-      ddl-auto: create
-    properties:
-      hibernate:
-        generate_statistics: true
-        format_sql: true
+      ddl-auto: validate
+  #    properties:
+  #      hibernate:
+  #        generate_statistics: true
+  #        format_sql: true
+
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/test2
+    url: jdbc:postgresql://localhost:5432/product_service_db
     username: postgres
-    password: admin
+    password: 123
     driver-class-name: org.postgresql.Driver
 
+server:
+  port: 9090

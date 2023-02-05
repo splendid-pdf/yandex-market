@@ -49,4 +49,11 @@ public class ProductController {
         productService.deleteProductByExternalId(externalId);
     }
 
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    public List<ProductResponseDto> getProductsByListUUID(@RequestBody Set<UUID> productIdentifiers) {
+        log.info("Received request to get a product by given value: {}", productIdentifiers);
+        return productService.getProductsByListUUID(productIdentifiers);
+    }
+
 }
