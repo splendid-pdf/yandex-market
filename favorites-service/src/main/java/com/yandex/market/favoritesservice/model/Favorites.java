@@ -17,8 +17,8 @@ import java.util.UUID;
 public class Favorites {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "favorites-sequence")
-    @SequenceGenerator(name = "favorites-sequence", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "favorites_sequence")
+    @SequenceGenerator(name = "favorites_sequence", allocationSize = 1)
     private Long id;
 
     @Column(unique = true)
@@ -28,5 +28,5 @@ public class Favorites {
 
     private UUID userId;
 
-    private LocalDateTime timeStamp;
+    private LocalDateTime additionTimestamp;
 }

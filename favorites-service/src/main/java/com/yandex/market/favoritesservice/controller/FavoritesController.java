@@ -36,8 +36,8 @@ public class FavoritesController {
 
     private final FavoritesService favoritesService;
 
-    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/{userId}/favorites")
+    @ResponseStatus(HttpStatus.CREATED)
     @Operation(operationId = "createFavorites", summary = "Add product in favorites for user")
     @ApiResponse(responseCode = "201", description = "CREATED",
             content = @Content(mediaType = "application/json",
@@ -52,8 +52,8 @@ public class FavoritesController {
         return favoritesService.createFavorites(favoritesRequestDto, userId);
     }
 
-    @ResponseStatus(HttpStatus.OK)
     @GetMapping("/{userId}/favorites")
+    @ResponseStatus(HttpStatus.OK)
     @Operation(operationId = "getFavorites", summary = "Get favorites product of user")
     @ApiResponse(responseCode = "200", description = "OK",
             content = @Content(mediaType = "application/json",
@@ -61,13 +61,13 @@ public class FavoritesController {
     private Page<FavoritesResponseDto> getFavorites(
             @Parameter(name = "userId", description = "User's identifier")
             @PathVariable("userId") UUID userId,
-            @PageableDefault(sort = "timeStamp", direction = Sort.Direction.DESC) Pageable page) {
+            @PageableDefault(sort = "additionTimestamp", direction = Sort.Direction.DESC) Pageable page) {
         log.info("Received a request to get favorites products of user: \"%s\"".formatted(userId));
         return favoritesService.getFavoritesByUserId(userId, page);
     }
 
-    @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{userId}/favorites/{productId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(operationId = "deleteFavorites", summary = "Delete favorites product of user")
     @ApiResponse(responseCode = "204", description = "NO_CONTENT")
     private void deleteFavorites(

@@ -12,5 +12,5 @@ public record FavoritesRequestDto(
         @NotNull(message = "\"Product\" field must not be null")
         UUID productId,
 
-        LocalDateTime timeStamp) {
+        LocalDateTime additionTimestamp) {
 }

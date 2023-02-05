@@ -10,7 +10,7 @@ import org.mapstruct.Mapping;
 public interface FavoritesMapper {
 
     @Mapping(target = "externalId", expression = "java(UUID.randomUUID())")
-    @Mapping(target = "timeStamp", expression = "java(LocalDateTime.now())")
+    @Mapping(target = "additionTimestamp", expression = "java(LocalDateTime.now())")
     Favorites toFavorites(FavoritesRequestDto favoritesRequestDto);
 
     FavoritesResponseDto toFavoritesResponseDto(Favorites favorites);

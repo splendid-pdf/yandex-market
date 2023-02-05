@@ -12,5 +12,5 @@ public record FavoritesResponseDto(
 
         UUID userId,
 
-        LocalDateTime timeStamp) {
+        LocalDateTime additionTimestamp) {
 }

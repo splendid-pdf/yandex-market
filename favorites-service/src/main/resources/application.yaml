@@ -30,9 +30,9 @@ spring:
           provider_disables_autocommit: true
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/favorites
-    username: postgres
-    password: admin
+    url: jdbc:postgresql://localhost:5432/${DB_NAME}
+    username: ${POSTGRES_USER}
+    password: ${PASSWORD}
     driverClassName: org.postgresql.Driver
     hikari:
       auto-commit: false
