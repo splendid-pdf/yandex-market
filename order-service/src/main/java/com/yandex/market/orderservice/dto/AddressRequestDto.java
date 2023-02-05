@@ -20,5 +20,5 @@ public record AddressRequestDto(
         @NotBlank(message = "Номер дома должен быть заполнен")
         String houseNumber,
         @NotBlank(message = "Номер квартиры должен быть заполнен")
-        String apartNumber) {
+        String officeNumber) {
 }

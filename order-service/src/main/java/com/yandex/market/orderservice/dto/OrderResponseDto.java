@@ -1,7 +1,6 @@
 package com.yandex.market.orderservice.dto;
 
 import com.yandex.market.orderservice.model.OrderStatus;
-import com.yandex.market.orderservice.model.OrderedProduct;
 import com.yandex.market.orderservice.model.PaymentType;
 import com.yandex.market.orderservice.model.ReceiptMethod;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -21,5 +20,5 @@ public record OrderResponseDto(
         LocalDateTime paymentDateTime,
         LocalDateTime creationTimestamp,
         ReceiptMethod receiptMethod,
-        List<OrderedProduct> orderedProducts) {
+        List<OrderedProductDto> orderedProducts) {
 }
