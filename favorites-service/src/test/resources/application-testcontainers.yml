@@ -11,7 +11,7 @@ spring:
       ddl-auto: create-drop
 
   datasource:
-    url: jdbc:tc:postgresql:14.1:///${TEST_DB_NAME}
+    url: jdbc:tc:postgresql:14.1:///testDB
     driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
 
   flyway:
