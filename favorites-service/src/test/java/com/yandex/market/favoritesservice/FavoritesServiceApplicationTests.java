@@ -20,6 +20,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.transaction.annotation.Transactional;
@@ -55,7 +56,7 @@ class FavoritesServiceApplicationTests {
 
     @Test
     @Order(1)
-    @Transactional(readOnly = true)
+    @Transactional
     public void createFavorites_returnFavoritesExternalIdAnd201Created() throws Exception {
         UUID userId = UUID.fromString("5728bd51-996c-4ddf-a97d-57855203450d");
 
@@ -73,6 +74,8 @@ class FavoritesServiceApplicationTests {
 
     @Test
     @Order(2)
+    @Transactional
+    @Sql("/db/insertFavoritesQuery.sql")
     public void getFavoritesByUserId_returnPageFavoritesAnd200_Ok() throws Exception {
         UUID userId = UUID.fromString("5728bd51-996c-4ddf-a97d-57855203450d");
 
@@ -82,8 +85,8 @@ class FavoritesServiceApplicationTests {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        Page<FavoritesResponseDto> page = objectMapper
-                .readValue(mvcResult.getResponse().getContentAsString(),
+        Page<FavoritesResponseDto> page =
+                objectMapper.readValue(mvcResult.getResponse().getContentAsString(),
                         new TypeReference<RestPageImpl<FavoritesResponseDto>>() {
                         });
 
@@ -98,6 +101,8 @@ class FavoritesServiceApplicationTests {
 
     @Test
     @Order(3)
+    @Transactional
+    @Sql("/db/insertFavoritesQuery.sql")
     public void deleteFavorites_return204NoContent() throws Exception {
         UUID userId = UUID.fromString("5728bd51-996c-4ddf-a97d-57855203450d");
         UUID productId = UUID.fromString("5728bd51-996c-4ddf-a97d-57855203720d");
@@ -110,8 +115,35 @@ class FavoritesServiceApplicationTests {
         Assertions.assertNull(repository.findById(1L).orElse(null));
     }
 
+    @Test
+    @Order(4)
+    @Transactional
+    @Sql("/db/insertFavoritesQuery.sql")
+    public void deleteFavoritesNegative_return404NotFound() throws Exception {
+        UUID userId = UUID.fromString("5728bd51-996c-4ddf-a97d-57854234450d");
+        UUID productId = UUID.fromString("5728bd51-996c-4ddf-a97d-57355203720d");
+
+        mockMvc.perform(delete(PUBLIC_API + "/{userId}/favorites/{productId}", userId, productId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
+    @Order(5)
+    @Transactional
+    @Sql("/db/insertFavoritesQuery.sql")
+    public void getFavoritesByUserIdNegative_returnPageFavoritesAnd200_Ok() throws Exception {
+        UUID userId = UUID.fromString("5728bd51-996c-4ddf-a97d-57565203450d");
+
+        mockMvc.perform(get(PUBLIC_API + "/{userId}/favorites", userId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().is2xxSuccessful());
+    }
+
     private FavoritesRequestDto jsonToFavoritesRequestDto() throws IOException {
-        String json = Files.readString(Path.of("src/test/resources/CreateFavoritesRequestDto.json"));
+        String json = Files.readString(Path.of("src/test/resources/json/CreateFavoritesRequestDto.json"));
         return objectMapper.readValue(json, FavoritesRequestDto.class);
     }
 
