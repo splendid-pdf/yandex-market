@@ -17,8 +17,8 @@ import java.util.UUID;
 public class OrderedProduct {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "product-details-sequence")
-    @SequenceGenerator(name = "product-details-sequence", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ordered-product-sequence")
+    @SequenceGenerator(name = "ordered-product-sequence", allocationSize = 1)
     private Long id;
 
     private UUID productId;

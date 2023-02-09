@@ -1,4 +1,8 @@
 spring:
+  application:
+    name: user-info-service
+  config:
+    import: "optional:configserver:"
   jpa:
     show-sql: true
     hibernate:
