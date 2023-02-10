@@ -1,6 +1,6 @@
 plugins {
 	id 'java'
-	id 'org.springframework.boot' version '3.0.0'
+	id 'org.springframework.boot' version '3.0.2'
 	id 'io.spring.dependency-management' version '1.1.0'
 }
 
@@ -19,7 +19,10 @@ repositories {
 }
 
 dependencies {
+	implementation project(':commons')
+	implementation 'commons-io:commons-io:2.11.0'
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	implementation 'jakarta.validation:jakarta.validation-api:3.0.2'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'com.amazonaws:aws-java-sdk-s3:1.12.400'
 	compileOnly 'org.projectlombok:lombok'
