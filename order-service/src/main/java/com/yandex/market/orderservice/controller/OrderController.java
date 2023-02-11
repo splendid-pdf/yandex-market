@@ -3,7 +3,6 @@ package com.yandex.market.orderservice.controller;
 import com.yandex.market.orderservice.dto.OrderPreviewDto;
 import com.yandex.market.orderservice.dto.OrderRequestDto;
 import com.yandex.market.orderservice.dto.OrderResponseDto;
-import com.yandex.market.orderservice.repository.OrderRepository;
 import com.yandex.market.orderservice.service.OrderService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -52,8 +51,8 @@ public class OrderController {
     public UUID createOrder(@Parameter(name = "orderRequestDto", description = "Representation of a created order")
                             @RequestBody @Valid OrderRequestDto orderRequestDto,
                             @Parameter(name = "userId", description = "User's identifier")
-                                @PathVariable("userId") UUID userId) {
-        log.info("Received a request to create new order %s for user: %s" .formatted(orderRequestDto, userId));
+                            @PathVariable("userId") UUID userId) {
+        log.info("Received a request to create new order %s for user: %s".formatted(orderRequestDto, userId));
         return orderService.create(orderRequestDto, userId);
     }
 
@@ -64,8 +63,8 @@ public class OrderController {
     @Content(mediaType = "application/json", schema = @Schema(implementation = OrderResponseDto.class)))
     public OrderResponseDto getByExternalId(
             @Parameter(name = "externalId", description = "Order's identifier")
-                @PathVariable("externalId") UUID externalId) {
-        log.info("Received a request to get orders by order identifier: %s" .formatted(externalId));
+            @PathVariable("externalId") UUID externalId) {
+        log.info("Received a request to get orders by order identifier: %s".formatted(externalId));
         return orderService.getOrderResponseDtoByExternalId(externalId);
     }
 
@@ -79,7 +78,7 @@ public class OrderController {
             @Parameter(name = "userId", description = "User's identifier")
             @PathVariable("userId") UUID userId,
             @PageableDefault(sort = "creationTimestamp", direction = Sort.Direction.DESC) Pageable pageable) {
-        log.info("Received a request to get orders by user identifier: %s" .formatted(userId));
+        log.info("Received a request to get orders by user identifier: %s".formatted(userId));
         return orderService.getOrdersByUserId(userId, pageable);
     }
 
@@ -88,8 +87,8 @@ public class OrderController {
     @Operation(operationId = "cancelOrder", summary = "Cancel order by it's external id")
     @ApiResponse(responseCode = "204", description = "Successful operation")
     public void cancelOrder(@Parameter(name = "externalId", description = "Order's identifier")
-                                @PathVariable("externalId") UUID externalId) {
-        log.info("Received a request to cancel an order: %s" .formatted(externalId));
+                            @PathVariable("externalId") UUID externalId) {
+        log.info("Received a request to cancel an order: %s".formatted(externalId));
         orderService.cancelOrder(externalId);
     }
 
@@ -101,8 +100,8 @@ public class OrderController {
             @Parameter(name = "orderRequestDto", description = "Representation of a updated order")
             @RequestBody @Valid OrderRequestDto orderRequestDto,
             @Parameter(name = "externalId", description = "Order's identifier")
-                @PathVariable("externalId") UUID externalId) {
-        log.info("Received a request to update an order: %s" .formatted(externalId));
+            @PathVariable("externalId") UUID externalId) {
+        log.info("Received a request to update an order: %s".formatted(externalId));
         return orderService.update(orderRequestDto, externalId);
     }
 
@@ -110,7 +109,7 @@ public class OrderController {
     @GetMapping("/orders/{externalId}/check")
     public ResponseEntity<InputStreamResource> receiveOrderCheck(@PathVariable("externalId") UUID externalID) {
         ByteArrayInputStream byteArrayInputStream = orderService.createCheck(externalID);
-        log.info("Received a request to generate of check of order: %s" .formatted(externalID));
+        log.info("Received a request to generate of check of order: %s".formatted(externalID));
 
         var headers = new HttpHeaders();
         headers.add("Content-Disposition", "inline; filename=check.pdf");
