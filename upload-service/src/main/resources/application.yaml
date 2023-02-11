@@ -1,14 +1,25 @@
 application:
+  validation:
+    maximum_files_count: 5
   object-storage:
     host: storage.yandexcloud.net
     region: ru-central1
     bucket-name: marketplace-object-storage
     credentials:
+      secret-key: YCM_cp6q_WfD97OPLsAXsVT5eVxEiO7Qma_0jMfE
+      access-key: YCAJEed9o_kAS76-bPBVqqrte
     expiration-time: 60 # in minutes
-
 spring:
   application:
     name: upload-service
 
 server:
   port: 9001
+
+logging:
+  level:
+    org:
+      springframework:
+        web:
+          filter:
+            CommonsRequestLoggingFilter: DEBUG

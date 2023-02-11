@@ -1,5 +1,8 @@
 package com.yandex.market.uploadservice.controller;
 
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.AmazonS3Exception;
+import com.yandex.market.exception.BadRequestException;
 import com.yandex.market.exception.SizeLimitFileExceededException;
 import com.yandex.market.model.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -7,6 +10,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import java.io.IOException;
 import java.time.OffsetDateTime;
 import java.util.UUID;
 
@@ -25,5 +29,35 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return errorResponse;
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ErrorResponse handleIllegalArgumentException(IllegalArgumentException e) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                e.getMessage(),
+                UUID.randomUUID(),
+                OffsetDateTime.now()
+        );
+        log.info("Error processed with incorrect data entered with this id = {}", errorResponse.errorId());
+        return errorResponse;
+    }
 
+    @ExceptionHandler(AmazonS3Exception.class)
+    public ErrorResponse handleAmazonS3Exception(AmazonS3Exception e) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                e.getErrorMessage(),
+                UUID.randomUUID(),
+                OffsetDateTime.now()
+        );
+        return errorResponse;
+    }
+
+    @ExceptionHandler(BadRequestException.class)
+    public ErrorResponse handleBadRequestException(BadRequestException e) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                e.getMessage(),
+                UUID.randomUUID(),
+                OffsetDateTime.now()
+        );
+        log.info("");
+        return errorResponse;
+    }
 }

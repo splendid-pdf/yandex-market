@@ -1,8 +1,13 @@
 package com.yandex.market.uploadservice.controller;
 
 import com.amazonaws.services.s3.Headers;
+import com.yandex.market.uploadservice.model.FileInformation;
 import com.yandex.market.uploadservice.model.FileType;
 import com.yandex.market.uploadservice.service.StorageService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -13,8 +18,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.net.URL;
+import java.util.List;
+import java.util.Set;
 
 @Slf4j
+@Tag(name = "files")
 @RestController
 @RequestMapping("public/api/v1")
 @RequiredArgsConstructor
@@ -22,6 +30,9 @@ public class FileController {
 
     private final StorageService storageService;
 
+    @Operation(operationId = "upload", summary = "Upload file")
+    @ApiResponse(responseCode = "200", description = "Successful operation",
+            content = @Content())
     @PostMapping(
             value = "/upload",
             produces = MediaType.APPLICATION_JSON_VALUE,
@@ -33,17 +44,15 @@ public class FileController {
             @RequestParam("fileId") String fileId,
             @RequestParam("fileType") FileType fileType
     ) {
-        log.info("Uploading a file with name = {}", file.getOriginalFilename());
         return storageService.uploadFile(file, fileId, fileType);
     }
 
-    @GetMapping(value = "/getFileUrlById")
+    @GetMapping(value = "/url")
     @ResponseStatus(HttpStatus.OK)
     public URL getFileUrlById(
             @RequestParam("fileId") String fileId,
             @RequestParam("fileType") FileType fileType
     ) {
-        log.info("Getting a file url with name = {}", fileId);
         return storageService.getFileUrlById(fileId, fileType);
     }
 
@@ -53,11 +62,11 @@ public class FileController {
             @RequestParam("fileId") String fileId,
             @RequestParam("fileType") FileType fileType
     ) {
+        FileInformation fileInformation = storageService.downloadFile(fileId, fileType);
         HttpHeaders headers = new HttpHeaders();
-        headers.add(Headers.CONTENT_DISPOSITION, "attachment; filename=" + fileId);
-        headers.add("Content-Type", fileType.getMediaType());
-        log.info("Downloading a file with name = {}", fileId);
-        return new ResponseEntity<>(storageService.downloadFile(fileId, fileType), headers, HttpStatus.OK);
+        headers.add(Headers.CONTENT_DISPOSITION, "attachment; filename=" + fileInformation.getFilename());
+        headers.add(Headers.CONTENT_TYPE, fileType.getMediaType());
+        return new ResponseEntity<>(fileInformation.getContent(), headers, HttpStatus.OK);
     }
 
     @DeleteMapping(value = "/delete")
@@ -66,7 +75,25 @@ public class FileController {
             @RequestParam("fileId") String fileId,
             @RequestParam("fileType") FileType fileType
     ) {
-       log.info("Deleting a file with name = {}", fileId);
-       storageService.deleteFile(fileId, fileType);
+        storageService.deleteFile(fileId, fileType);
     }
+
+    @GetMapping(value = "/urls")
+    @ResponseStatus(HttpStatus.OK)
+    public Set<URL> getUrlsByIds(
+            @RequestBody List<String> fileIds,
+            @RequestParam("fileType") FileType fileType
+    ) {
+        return storageService.getUrlsByObjectIds(fileIds, fileType);
+    }
+
+//    @GetMapping(value = "/objectIds")
+//    @ResponseStatus(HttpStatus.OK)
+//    public List<String> getMultipleIdsByFileIdsAndType(
+//            @RequestBody List<String> fileIds,
+//            @RequestParam("fileType") FileType fileType
+//    ) {
+//        log.info("Getting multiple ids from a list of fileIds");
+//        return storageService.getObjectIdsByFileIdsAndType(fileIds, fileType);
+//    }
 }
