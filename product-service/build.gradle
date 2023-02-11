@@ -6,17 +6,6 @@ plugins {
     id 'io.spring.dependency-management' version '1.1.0'
 }
 
-ext {
-    set('flywayCoreVersion', '9.10.2')
-    set('swaggerVersion', '2.2.7')
-    set('mockitoInlineVersion', '4.10.0')
-    set('apacheCommonsLangVersion', '3.12.0')
-    set('jetbrainsAnnotationsVersion', '23.1.0')
-    set('openapitoolsJacksonDatabindVersion', '0.2.4')
-    set('apacheCommonsValidator', '1.7')
-
-}
-
 group = 'com.yandex.market'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '17'
@@ -31,44 +20,58 @@ repositories {
     mavenCentral()
 }
 
+ext {
+    set('flywayCoreVersion', '9.10.2')
+    set('swaggerVersion', '2.2.7')
+    set('mockitoInlineVersion', '4.10.0')
+    set('apacheCommonsLangVersion', '3.12.0')
+    set('jetbrainsAnnotationsVersion', '23.1.0')
+    set('openapitoolsJacksonDatabindVersion', '0.2.4')
+    set('apacheCommonsValidator', '1.7')
+    set('mapStructVersion', '1.5.3.Final')
+    set('h2dbVersion', '2.1.214')
+}
+
 dependencies {
     // spring
-    implementation 'org.springframework.boot:spring-boot-starter-actuator'
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.springframework.boot:spring-boot-starter-validation'
-    implementation 'org.springframework:spring-jdbc'
-    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation "org.springframework.boot:spring-boot-starter-actuator"
+    implementation "org.springframework.boot:spring-boot-starter-data-jpa"
+    implementation "org.springframework.boot:spring-boot-starter-validation"
+    implementation "org.springframework:spring-jdbc"
+    implementation "org.springframework.boot:spring-boot-starter-web"
 
 
     // db
     implementation "org.flywaydb:flyway-core:${flywayCoreVersion}"
-    runtimeOnly 'org.postgresql:postgresql'
-    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    runtimeOnly "org.postgresql:postgresql"
+    implementation "org.springframework.boot:spring-boot-starter-data-redis"
 
     // utils
     compileOnly "org.jetbrains:annotations:${jetbrainsAnnotationsVersion}"
     implementation "org.apache.commons:commons-lang3:${apacheCommonsLangVersion}"
     implementation "commons-validator:commons-validator:${apacheCommonsValidator}"
-    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    developmentOnly "org.springframework.boot:spring-boot-devtools"
 
     // mapper
-    implementation 'org.mapstruct:mapstruct:1.5.3.Final'
+    implementation "org.mapstruct:mapstruct:${mapStructVersion}"
 
     // lombok
-    compileOnly 'org.projectlombok:lombok'
+    compileOnly "org.projectlombok:lombok"
 
     // monitoring
-    runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
+    runtimeOnly "io.micrometer:micrometer-registry-prometheus"
 
     // tests
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation "org.springframework.boot:spring-boot-starter-test"
     testImplementation "org.mockito:mockito-inline:${mockitoInlineVersion}"
-    testImplementation 'com.h2database:h2:2.1.214'
+    testImplementation "com.h2database:h2:${h2dbVersion}"
+    testCompileOnly "org.projectlombok:lombok"
+    testAnnotationProcessor "org.projectlombok:lombok"
 
     // annotation processor
-    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
-    annotationProcessor 'org.projectlombok:lombok'
-    annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.3.Final'
+    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+    annotationProcessor "org.projectlombok:lombok"
+    annotationProcessor "rg.mapstruct:mapstruct-processor:${mapStructVersion}"
 
 }
 

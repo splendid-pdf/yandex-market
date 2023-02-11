@@ -1,24 +1,32 @@
 spring:
   app:
+    shops:
+      url: /public/api/v1/
     product-controller:
-      url: "/public/api/v1/products"
-
-  jpa:
-    show-sql: true
-    hibernate:
-      dialect: org.hibernate.dialect.PostgreSQLDialect
-      ddl-auto: create
-#    properties:
-#      hibernate:
-#        generate_statistics: true
-#        format_sql: true
+      url: /public/api/v1/products
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/${DB_NAME}
-    username: ${POSTGRES_USER}
-    password: ${PASSWORD}
-    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://51.250.102.12:5432/test2
+    username: user
+    password: password
+    driverClassName: org.postgresql.Driver
+    hikari:
+      auto-commit: false
 
-#server:
-#  port: 9090
+  jpa:
+    database: POSTGRESQL
+    show-sql: true
+    hibernate:
+      ddl-auto: update # далее validate
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+        schema_update:
+          unique_constraint_strategy: RECREATE_QUIETLY
+        connection:
+          provider_disables_autocommit: true
+    open-in-view: false
 
+  flyway:
+    enabled: false

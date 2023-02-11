@@ -3,7 +3,6 @@ package com.yandex.market.productservice.model;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -40,7 +39,7 @@ public class Product {
     private String imageUrl;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Characteristic> characteristics = new ArrayList<>();
+    private List<Characteristic> characteristics;
 
     @Embedded
     private Dimensions dimensions;

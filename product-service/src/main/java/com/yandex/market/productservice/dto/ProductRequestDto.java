@@ -31,7 +31,7 @@ public record ProductRequestDto(
 
         List<@Valid CharacteristicDto> characteristics,
 
-        @Valid
+//        @Valid
         DimensionsDto dimensions,
 
         Boolean isVisible
