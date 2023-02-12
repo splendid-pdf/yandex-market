@@ -52,7 +52,7 @@ public class OrderController {
                             @RequestBody @Valid OrderRequestDto orderRequestDto,
                             @Parameter(name = "userId", description = "User's identifier")
                             @PathVariable("userId") UUID userId) {
-        log.info("Received a request to create new order %s for user: %s".formatted(orderRequestDto, userId));
+        log.info("Received a request to create new order {} for user: {}}", orderRequestDto, userId);
         return orderService.create(orderRequestDto, userId);
     }
 
@@ -64,7 +64,7 @@ public class OrderController {
     public OrderResponseDto getByExternalId(
             @Parameter(name = "externalId", description = "Order's identifier")
             @PathVariable("externalId") UUID externalId) {
-        log.info("Received a request to get orders by order identifier: %s".formatted(externalId));
+        log.info("Received a request to get orders by order identifier: {}",externalId);
         return orderService.getOrderResponseDtoByExternalId(externalId);
     }
 
@@ -78,7 +78,7 @@ public class OrderController {
             @Parameter(name = "userId", description = "User's identifier")
             @PathVariable("userId") UUID userId,
             @PageableDefault(sort = "creationTimestamp", direction = Sort.Direction.DESC) Pageable pageable) {
-        log.info("Received a request to get orders by user identifier: %s".formatted(userId));
+        log.info("Received a request to get orders by user identifier: {}", userId);
         return orderService.getOrdersByUserId(userId, pageable);
     }
 
@@ -88,7 +88,7 @@ public class OrderController {
     @ApiResponse(responseCode = "204", description = "Successful operation")
     public void cancelOrder(@Parameter(name = "externalId", description = "Order's identifier")
                             @PathVariable("externalId") UUID externalId) {
-        log.info("Received a request to cancel an order: %s".formatted(externalId));
+        log.info("Received a request to cancel an order: {}", externalId);
         orderService.cancelOrder(externalId);
     }
 
@@ -101,7 +101,7 @@ public class OrderController {
             @RequestBody @Valid OrderRequestDto orderRequestDto,
             @Parameter(name = "externalId", description = "Order's identifier")
             @PathVariable("externalId") UUID externalId) {
-        log.info("Received a request to update an order: %s".formatted(externalId));
+        log.info("Received a request to update an order: {}",externalId);
         return orderService.update(orderRequestDto, externalId);
     }
 
@@ -109,7 +109,7 @@ public class OrderController {
     @GetMapping("/orders/{externalId}/check")
     public ResponseEntity<InputStreamResource> receiveOrderCheck(@PathVariable("externalId") UUID externalID) {
         ByteArrayInputStream byteArrayInputStream = orderService.createCheck(externalID);
-        log.info("Received a request to generate of check of order: %s".formatted(externalID));
+        log.info("Received a request to generate of check of order: {}", externalID);
 
         var headers = new HttpHeaders();
         headers.add("Content-Disposition", "inline; filename=check.pdf");
