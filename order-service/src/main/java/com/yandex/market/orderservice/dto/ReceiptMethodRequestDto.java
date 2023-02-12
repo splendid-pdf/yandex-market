@@ -18,7 +18,7 @@ public record ReceiptMethodRequestDto(
         @NotNull(message = "Адрес доставки должен быть заполнен")
         @Valid
         AddressRequestDto address,
-        @NotBlank(message = "Имя получателя должны быть заполнены")
+        @NotBlank(message = "Имя получателя должно быть заполнено")
         @Size(min = 4, max = 201, message = "Длина имени получателя должна находиться в пределе от 4 до 201 символа")
         @ReceiverNameConstraint
         String receiverName,
