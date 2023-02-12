@@ -13,7 +13,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = ReceiverEmailConstraintValidator.class)
 public @interface ReceiverEmailConstraint {
-    String message() default "Введеённая электронная почта получателя некорректна";
+    String message() default "Введённая электронная почта получателя некорректна";
 
     Class<?>[] groups() default {};
 

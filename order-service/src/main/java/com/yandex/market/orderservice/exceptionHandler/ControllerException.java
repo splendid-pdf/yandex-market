@@ -28,6 +28,4 @@ public class ControllerException {
                 .message("EntityNotFoundException: entity does not found in datasource")
                 .build();
     }
-
-
 }

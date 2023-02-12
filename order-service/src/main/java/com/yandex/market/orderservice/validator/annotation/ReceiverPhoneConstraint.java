@@ -13,7 +13,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = ReceiverPhoneConstraintValidator.class)
 public @interface ReceiverPhoneConstraint {
-    String message() default "Введеённый номер телефона получателя некорректный";
+    String message() default "Введённый номер телефона получателя некорректный";
 
     Class<?>[] groups() default {};
 

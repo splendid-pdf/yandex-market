@@ -13,7 +13,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = ReceiverNameConstraintValidator.class)
 public @interface ReceiverNameConstraint {
-    String message() default "Введеённое имя получателя некорректное";
+    String message() default "Введённое имя получателя некорректное";
 
     Class<?>[] groups() default {};
 

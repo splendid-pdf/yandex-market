@@ -5,6 +5,7 @@ import com.yandex.market.orderservice.validator.annotation.ReceiverEmailConstrai
 import com.yandex.market.orderservice.validator.annotation.ReceiverNameConstraint;
 import com.yandex.market.orderservice.validator.annotation.ReceiverPhoneConstraint;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 
 import java.time.LocalDate;
@@ -15,6 +16,7 @@ public record ReceiptMethodRequestDto(
         @NotNull(message = "Способ доставки должен быть указан")
         DeliveryMethod deliveryMethod,
         @NotNull(message = "Адрес доставки должен быть заполнен")
+        @Valid
         AddressRequestDto address,
         @NotBlank(message = "Имя получателя должны быть заполнены")
         @Size(min = 4, max = 201, message = "Длина имени получателя должна находиться в пределе от 4 до 201 символа")
@@ -25,7 +27,7 @@ public record ReceiptMethodRequestDto(
         @ReceiverPhoneConstraint
         String receiverPhone,
         @NotBlank
-        @Email(message = "Введеённый адресс электронной почты является некорректным")
+        @Email(message = "Введённый адресс электронной почты является некорректным")
         @ReceiverEmailConstraint
         String receiverEmail,
         @NotNull(message = "Дата доставки должна быть заполнена")
