@@ -52,10 +52,15 @@ public class Product {
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ProductSpecialPrice> productSpecialPrices = new HashSet<>();
 
-    @ManyToMany(mappedBy = "products")
-    private Set<Category> categories = new HashSet<>();
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Category category;
 
-    @ManyToMany(mappedBy = "products")
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+    @JoinTable(
+            name = "product_type",
+            joinColumns = {@JoinColumn(name = "product_id")},
+            inverseJoinColumns = {@JoinColumn(name = "type_id")}
+    )
     private Set<Type> types = new HashSet<>();
 
     @Embedded
@@ -94,20 +99,14 @@ public class Product {
         productSpecialPrices.remove(productSpecialPrice);
     }
 
-    public void addCategory(Category category) {
-        categories.add(category);
-    }
-
-    public void removeCategory(Category category) {
-        categories.remove(category);
-    }
-
     public void addType(Type type) {
         types.add(type);
+        type.getProducts().add(this);
     }
 
     public void removeType(Type type) {
         types.remove(type);
+        type.getProducts().remove(this);
     }
 
 }

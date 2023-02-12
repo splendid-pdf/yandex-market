@@ -16,8 +16,8 @@ import java.time.LocalDateTime;
 public class ProductSpecialPrice {
 
     @Id
-    @SequenceGenerator(name = "special_product_prices_sequence", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "special_product_prices_sequence")
+    @SequenceGenerator(name = "product_special_prices_sequence", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "product_special_prices_sequence")
     private Long id;
 
     private Long discountedPrice;

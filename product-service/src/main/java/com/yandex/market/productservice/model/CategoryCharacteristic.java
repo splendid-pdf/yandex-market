@@ -20,6 +20,7 @@ public class CategoryCharacteristic {
 
     private String name;
 
+    @Enumerated(value = EnumType.STRING)
     private ValueType valueType;
 
     @ManyToOne(fetch = FetchType.LAZY)

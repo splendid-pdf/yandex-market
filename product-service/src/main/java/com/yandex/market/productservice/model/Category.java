@@ -31,12 +31,7 @@ public class Category {
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<CategoryCharacteristic> categoryCharacteristics = new HashSet<>();
 
-    @ManyToMany(cascade = {CascadeType.ALL})
-    @JoinTable(
-            name = "product_category",
-            joinColumns = {@JoinColumn(name = "category_id")},
-            inverseJoinColumns = {@JoinColumn(name = "product_id")}
-    )
+    @OneToMany(mappedBy = "category", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     private Set<Product> products = new HashSet<>();
 
     public void addCategoryCharacteristic(CategoryCharacteristic categoryCharacteristic) {
@@ -47,14 +42,5 @@ public class Category {
     public void removeCategoryCharacteristic(CategoryCharacteristic categoryCharacteristic) {
         categoryCharacteristics.remove(categoryCharacteristic);
     }
-
-    public void addProduct(Product product) {
-        products.add(product);
-    }
-
-    public void removeProduct(Product product) {
-        products.remove(product);
-    }
-
 
 }

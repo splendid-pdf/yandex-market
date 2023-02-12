@@ -26,7 +26,7 @@ public class Type {
 
     private UUID externalId;
 
-    @ManyToMany(cascade = {CascadeType.ALL})
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     @JoinTable(
             name = "product_type",
             joinColumns = {@JoinColumn(name = "type_id")},
@@ -36,10 +36,12 @@ public class Type {
 
     public void addProduct(Product product) {
         products.add(product);
+        product.getTypes().add(this);
     }
 
     public void removeProduct(Product product) {
         products.remove(product);
+        product.getTypes().remove(this);
     }
 
 }
