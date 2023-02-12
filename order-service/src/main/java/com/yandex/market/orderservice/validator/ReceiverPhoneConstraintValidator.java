@@ -7,6 +7,8 @@ import jakarta.validation.ConstraintValidatorContext;
 import java.util.regex.Pattern;
 
 public class ReceiverPhoneConstraintValidator implements ConstraintValidator<ReceiverPhoneConstraint, String> {
+    private static final Pattern REGEX_PATTERN_RECEIVER_PHONE = Pattern
+            .compile("^[0-9+]+$");
 
     @Override
     public void initialize(ReceiverPhoneConstraint constraintAnnotation) {
@@ -18,9 +20,7 @@ public class ReceiverPhoneConstraintValidator implements ConstraintValidator<Rec
     }
 
     private boolean doReceiverPhoneFormatCheck(String receiverPhone) {
-        String regexPatternReceiverPhone = "^[0-9+]+$";
-
-        return Pattern.compile(regexPatternReceiverPhone)
+        return REGEX_PATTERN_RECEIVER_PHONE
                 .matcher(receiverPhone)
                 .matches();
     }

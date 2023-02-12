@@ -7,7 +7,8 @@ import jakarta.validation.ConstraintValidatorContext;
 import java.util.regex.Pattern;
 
 public class ReceiverEmailConstraintValidator implements ConstraintValidator<ReceiverEmailConstraint, String> {
-
+    private static final Pattern REGEX_PATTERN_RECEIVER_EMAIL = Pattern
+            .compile("^(?=.{1,50}@)[a-zA-Z0-9_!#$%&'+=?`{|}~^.-]+@[a-zA-Z0-9.-]+$");
     @Override
     public void initialize(ReceiverEmailConstraint constraintAnnotation) {
     }
@@ -18,9 +19,7 @@ public class ReceiverEmailConstraintValidator implements ConstraintValidator<Rec
     }
 
     private boolean doReceiverEmailFormatCheck(String receiverEmail) {
-        String regexPatternReceiverEmail = "^(?=.{1,50}@)[a-zA-Z0-9_!#$%&'+=?`{|}~^.-]+@[a-zA-Z0-9.-]+$";
-
-        return Pattern.compile(regexPatternReceiverEmail)
+        return REGEX_PATTERN_RECEIVER_EMAIL
                 .matcher(receiverEmail)
                 .matches();
     }

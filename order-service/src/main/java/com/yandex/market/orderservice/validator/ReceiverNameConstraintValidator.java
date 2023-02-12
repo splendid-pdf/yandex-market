@@ -7,7 +7,8 @@ import jakarta.validation.ConstraintValidatorContext;
 import java.util.regex.Pattern;
 
 public class ReceiverNameConstraintValidator implements ConstraintValidator<ReceiverNameConstraint, String> {
-
+    private static final Pattern REGEX_PATTERN_RECEIVER_NAME = Pattern
+            .compile("^[а-яА-Яa-zA-Z-]+$");
     @Override
     public void initialize(ReceiverNameConstraint constraintAnnotation) {
     }
@@ -18,9 +19,7 @@ public class ReceiverNameConstraintValidator implements ConstraintValidator<Rece
     }
 
     private boolean doReceiverNameFormatCheck(String receiverName) {
-        String regexPatternReceiverName = "^[а-яА-Яa-zA-Z-]+$";
-
-        return Pattern.compile(regexPatternReceiverName)
+        return REGEX_PATTERN_RECEIVER_NAME
                 .matcher(receiverName)
                 .matches();
     }
