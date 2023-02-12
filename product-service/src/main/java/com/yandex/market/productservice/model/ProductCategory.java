@@ -9,20 +9,19 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "product_type")
+@Table(name = "product_category")
 @EqualsAndHashCode(of = "id")
-public class ProductType {
+public class ProductCategory {
 
     @Id
-    @SequenceGenerator(name = "product_type_sequence", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "product_type_sequence")
+    @SequenceGenerator(name = "product_category_sequence", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "product_category_sequence")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Product product;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private Type type;
-
+    private Category category;
 
 }

@@ -3,6 +3,8 @@ package com.yandex.market.productservice.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -16,23 +18,43 @@ import java.util.UUID;
 public class Category {
 
     @Id
-    @SequenceGenerator(name = "category_sequence", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "category_sequence")
+    @SequenceGenerator(name = "categories_sequence", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "categories_sequence")
     private Long id;
 
     private UUID externalId;
 
     private String name;
 
-    private String description;
+    private UUID parentCategoryExternalId;
 
-    private Long parentId;
+    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<CategoryCharacteristic> categoryCharacteristics = new HashSet<>();
 
-    private Long sortingFactor;
+    @ManyToMany(cascade = {CascadeType.ALL})
+    @JoinTable(
+            name = "product_category",
+            joinColumns = {@JoinColumn(name = "category_id")},
+            inverseJoinColumns = {@JoinColumn(name = "product_id")}
+    )
+    private Set<Product> products = new HashSet<>();
 
-    private String imageUrl;
+    public void addCategoryCharacteristic(CategoryCharacteristic categoryCharacteristic) {
+        categoryCharacteristic.setCategory(this);
+        categoryCharacteristics.add(categoryCharacteristic);
+    }
 
-    private boolean isVisible;
+    public void removeCategoryCharacteristic(CategoryCharacteristic categoryCharacteristic) {
+        categoryCharacteristics.remove(categoryCharacteristic);
+    }
 
-    private boolean isDeleted;
+    public void addProduct(Product product) {
+        products.add(product);
+    }
+
+    public void removeProduct(Product product) {
+        products.remove(product);
+    }
+
+
 }
