@@ -1,13 +1,12 @@
 package com.yandex.market.orderservice.dto;
 
 import com.yandex.market.orderservice.model.DeliveryMethod;
+import com.yandex.market.orderservice.validator.annotation.ReceiverEmailConstraint;
+import com.yandex.market.orderservice.validator.annotation.ReceiverNameConstraint;
+import com.yandex.market.orderservice.validator.annotation.ReceiverPhoneConstraint;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.FutureOrPresent;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.PositiveOrZero;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -17,14 +16,19 @@ public record ReceiptMethodRequestDto(
         @NotNull(message = "Способ доставки должен быть указан")
         DeliveryMethod deliveryMethod,
         @NotNull(message = "Адрес доставки должен быть заполнен")
+        @Valid
         AddressRequestDto address,
-        @NotBlank(message = "Имя и фамилия получателя должны быть заполнены")
+        @NotBlank(message = "Имя получателя должно быть заполнено")
         @Size(min = 4, max = 201, message = "Длина имени получателя должна находиться в пределе от 4 до 201 символа")
+        @ReceiverNameConstraint
         String receiverName,
         @NotBlank(message = "Телефон получателя должен быть заполнен")
         @Size(min = 11, max = 12, message = "Длина телефона должна составлять от 11 до 12 символов")
+        @ReceiverPhoneConstraint
         String receiverPhone,
-        @Email(message = "Почта получателя не соответствует стандарту")
+        @NotBlank
+        @Email(message = "Введённый адресс электронной почты является некорректным")
+        @ReceiverEmailConstraint
         String receiverEmail,
         @NotNull(message = "Дата доставки должна быть заполнена")
         @FutureOrPresent(message = "Дата доставки должна быть не раньше сегодняшнего дня")
