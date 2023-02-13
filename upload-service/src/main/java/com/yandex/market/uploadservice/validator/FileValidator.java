@@ -5,10 +5,10 @@ import com.yandex.market.exception.SizeLimitFileExceededException;
 import com.yandex.market.uploadservice.model.ExtensionPropertiesInfo;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Arrays;
 import java.util.Objects;
 
 import static com.yandex.market.uploadservice.utils.Constants.*;
@@ -26,7 +26,7 @@ public class FileValidator {
             throw new IllegalArgumentException(EMPTY_FILE_EXCEPTION_MESSAGE);
         }
 
-        if (!Arrays.asList(SUPPORTED_CONTENT_TYPES).contains(file.getContentType())) {
+        if (!ArrayUtils.contains(SUPPORTED_CONTENT_TYPES, file.getContentType())) {
             throw new BadRequestException(PERMITTED_FILE_TYPES_EXCEPTION_MESSAGE);
         }
 

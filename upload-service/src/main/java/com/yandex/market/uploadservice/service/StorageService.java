@@ -51,6 +51,7 @@ public class StorageService {
             val objectId = createObjectId(fileId, fileType);
             val inputStream = file.getInputStream();
             val metadata = createMetadata(file);
+
             amazonS3.putObject(
                     bucketName,
                     objectId,
@@ -76,9 +77,8 @@ public class StorageService {
                         objectId,
                         expirationTime
                 );
-            } else {
-                return amazonS3.generatePresignedUrl(new GeneratePresignedUrlRequest(bucketName, objectId));
             }
+            return amazonS3.generatePresignedUrl(new GeneratePresignedUrlRequest(bucketName, objectId));
         } catch (AmazonS3Exception exception) {
             log.error("Failed to retrieve a file by fileId = {}", fileId);
             throw new BadRequestException(GET_FILE_URL_EXCEPTION_MESSAGE.formatted(fileId));

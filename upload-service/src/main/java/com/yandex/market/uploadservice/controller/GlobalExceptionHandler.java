@@ -45,7 +45,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 UUID.randomUUID(),
                 OffsetDateTime.now()
         );
-        log.debug("");
+        log.debug("", errorResponse.errorId());
         return errorResponse;
     }
 
@@ -56,7 +56,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 UUID.randomUUID(),
                 OffsetDateTime.now()
         );
-        log.debug("");
+        log.debug("Error in incorrectly transmitted data with this id = {}", errorResponse.errorId());
         return errorResponse;
     }
 }
