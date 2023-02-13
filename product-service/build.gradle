@@ -14,7 +14,7 @@ ext {
     set('jetbrainsAnnotationsVersion', '23.1.0')
     set('openapitoolsJacksonDatabindVersion', '0.2.4')
     set('apacheCommonsValidator', '1.7')
-
+    set("springCloudConfigVersion", "2022.0.1");
 }
 
 group = 'com.yandex.market'
