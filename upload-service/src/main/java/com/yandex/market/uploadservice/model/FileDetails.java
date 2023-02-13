@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class DownloadFileInfo {
+public class FileDetails {
     private byte[] content;
     private String filename;
     private String contentType;

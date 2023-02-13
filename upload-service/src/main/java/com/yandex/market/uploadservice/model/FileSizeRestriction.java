@@ -5,6 +5,6 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class ExtensionMaxSizeInfo {
+public class FileSizeRestriction {
     private Long maxFileSizeInBytes;
 }

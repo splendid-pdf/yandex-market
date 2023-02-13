@@ -1,5 +1,6 @@
-package com.yandex.market.uploadservice.model;
+package com.yandex.market.uploadservice.config.properties;
 
+import com.yandex.market.uploadservice.model.FileSizeRestriction;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -11,6 +12,6 @@ import java.util.Map;
 @Getter
 @Setter
 @ConfigurationProperties(prefix = "application")
-public class ExtensionPropertiesInfo {
-    private Map<String, ExtensionMaxSizeInfo> extension;
+public class FileRestrictionProperties {
+    private Map<String, FileSizeRestriction> extension;
 }

@@ -2,14 +2,13 @@ package com.yandex.market.uploadservice.validator;
 
 import com.yandex.market.exception.BadRequestException;
 import com.yandex.market.exception.SizeLimitFileExceededException;
-import com.yandex.market.uploadservice.model.ExtensionPropertiesInfo;
+import com.yandex.market.uploadservice.config.properties.FileRestrictionProperties;
 import lombok.RequiredArgsConstructor;
+import lombok.val;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.util.Objects;
 
 import static com.yandex.market.uploadservice.utils.Constants.*;
 
@@ -18,47 +17,25 @@ import static com.yandex.market.uploadservice.utils.Constants.*;
 @RequiredArgsConstructor
 public class FileValidator {
 
-    private final ExtensionPropertiesInfo extensionPropertiesInfo;
+    private final FileRestrictionProperties properties;
 
     public void validate(MultipartFile file) {
 
         if (file.isEmpty()) {
             throw new IllegalArgumentException(EMPTY_FILE_EXCEPTION_MESSAGE);
-        }
-
-        if (!ArrayUtils.contains(SUPPORTED_CONTENT_TYPES, file.getContentType())) {
+        } else if (!ArrayUtils.contains(SUPPORTED_CONTENT_TYPES, file.getContentType())) {
             throw new BadRequestException(PERMITTED_FILE_TYPES_EXCEPTION_MESSAGE);
         }
 
-        Long maxFileSizeInBytes = getMaxFileSizeInBytes(file);
+        val maxFileSizeInBytes = getMaxFileSizeInBytes(file);
 
-        if (Objects.equals(getExtension(file.getOriginalFilename()), "pdf")
-                && file.getSize() > maxFileSizeInBytes) {
+        if (file.getSize() > maxFileSizeInBytes) {
             throw new SizeLimitFileExceededException(
                     MAX_FILE_SIZE_EXCEPTION_MESSAGE,
                     file.getSize(),
                     maxFileSizeInBytes
             );
         }
-
-        if (Objects.equals(getExtension(file.getOriginalFilename()), "jpg")
-                && file.getSize() > maxFileSizeInBytes) {
-            throw new SizeLimitFileExceededException(
-                    MAX_FILE_SIZE_EXCEPTION_MESSAGE,
-                    file.getSize(),
-                    maxFileSizeInBytes
-            );
-        }
-
-        if (Objects.equals(getExtension(file.getOriginalFilename()), "png")
-                && file.getSize() > maxFileSizeInBytes) {
-            throw new SizeLimitFileExceededException(
-                    MAX_FILE_SIZE_EXCEPTION_MESSAGE,
-                    file.getSize(),
-                    maxFileSizeInBytes
-            );
-        }
-
     }
 
     private String getExtension(String filename) {
@@ -66,7 +43,7 @@ public class FileValidator {
     }
 
     private Long getMaxFileSizeInBytes(MultipartFile file) {
-        return extensionPropertiesInfo
+        return properties
                 .getExtension()
                 .get(getExtension(file.getOriginalFilename())).getMaxFileSizeInBytes();
     }

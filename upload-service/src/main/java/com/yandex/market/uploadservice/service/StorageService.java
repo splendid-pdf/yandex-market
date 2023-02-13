@@ -7,7 +7,7 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.S3Object;
 import com.yandex.market.exception.BadRequestException;
 import com.yandex.market.uploadservice.config.properties.ObjectStorageProperties;
-import com.yandex.market.uploadservice.model.DownloadFileInfo;
+import com.yandex.market.uploadservice.model.FileDetails;
 import com.yandex.market.uploadservice.model.FileType;
 import com.yandex.market.uploadservice.validator.FileValidator;
 import jakarta.activation.MimetypesFileTypeMap;
@@ -34,15 +34,14 @@ import static com.yandex.market.uploadservice.utils.Constants.*;
 @RequiredArgsConstructor
 public class StorageService {
 
-    private final AmazonS3 amazonS3;
-    private final ObjectStorageProperties properties;
+    private final static String EXTENSION = "extension";
 
+    private final AmazonS3 amazonS3;
     private final FileValidator validator;
+    private final ObjectStorageProperties properties;
 
     @Value("${application.validation.maximum_files_count}")
     private Integer maxFilesCount;
-
-    private final static String EXTENSION = "extension";
 
     public String uploadFile(MultipartFile file, String fileId, FileType fileType) {
         validator.validate(file);
@@ -85,21 +84,20 @@ public class StorageService {
         }
     }
 
-    public DownloadFileInfo downloadFile(String fileId, FileType fileType) {
+    public FileDetails downloadFile(String fileId, FileType fileType) {
         val objectId = createObjectId(fileId, fileType);
-        val information = new DownloadFileInfo();
         val s3Object = amazonS3.getObject(properties.getBucketName(), objectId);
-
-        information.setFilename(fileId + getFileExtensionByS3Object(s3Object));
-        information.setContentType(new MimetypesFileTypeMap().getContentType(information.getFilename()));
+        val fileDetails = new FileDetails();
+        fileDetails.setFilename(fileId + getFileExtension(s3Object));
+        fileDetails.setContentType(new MimetypesFileTypeMap().getContentType(fileDetails.getFilename()));
 
         try {
-            information.setContent(s3Object.getObjectContent().readAllBytes());
+            fileDetails.setContent(s3Object.getObjectContent().readAllBytes());
         } catch (IOException e) {
             log.error("Failed to download a file by key = {}", objectId);
             throw new BadRequestException(DOWNLOAD_FILE_EXCEPTION_MESSAGE.formatted(objectId));
         }
-        return information;
+        return fileDetails;
     }
 
     public void deleteFile(String fileId, FileType fileType) {
@@ -134,8 +132,11 @@ public class StorageService {
         return metadata;
     }
 
-    private static String getFileExtensionByS3Object(S3Object s3Object) {
-        return s3Object.getObjectMetadata().getUserMetadata().get(EXTENSION);
+    private String getFileExtension(S3Object s3Object) {
+        return s3Object
+                .getObjectMetadata()
+                .getUserMetadata()
+                .get(EXTENSION);
     }
 
     private void checkListIfSizeGreaterThanMaxFilesCount(List<String> fileIds) {

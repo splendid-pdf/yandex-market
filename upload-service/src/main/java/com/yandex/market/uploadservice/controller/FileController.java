@@ -1,7 +1,7 @@
 package com.yandex.market.uploadservice.controller;
 
 import com.amazonaws.services.s3.Headers;
-import com.yandex.market.uploadservice.model.DownloadFileInfo;
+import com.yandex.market.uploadservice.model.FileDetails;
 import com.yandex.market.uploadservice.model.FileType;
 import com.yandex.market.uploadservice.service.StorageService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -56,9 +56,9 @@ public class FileController {
             @RequestParam("fileId") String fileId,
             @RequestParam("fileType") FileType fileType
     ) {
-        DownloadFileInfo downloadFileInfo = storageService.downloadFile(fileId, fileType);
-        HttpHeaders headers = createFileDownloadHeaders(downloadFileInfo);
-        return new ResponseEntity<>(downloadFileInfo.getContent(), headers, HttpStatus.OK);
+        FileDetails fileDetails = storageService.downloadFile(fileId, fileType);
+        HttpHeaders headers = createFileDownloadHeaders(fileDetails);
+        return new ResponseEntity<>(fileDetails.getContent(), headers, HttpStatus.OK);
     }
 
     @DeleteMapping(value = "/delete")
@@ -79,10 +79,10 @@ public class FileController {
         return storageService.getUrlsByObjectIds(fileIds, fileType);
     }
 
-    private HttpHeaders createFileDownloadHeaders(DownloadFileInfo downloadFileInfo) {
+    private HttpHeaders createFileDownloadHeaders(FileDetails fileDetails) {
         HttpHeaders headers = new HttpHeaders();
-        headers.add(Headers.CONTENT_DISPOSITION, "attachment; filename=" + downloadFileInfo.getFilename());
-        headers.add(Headers.CONTENT_TYPE, downloadFileInfo.getContentType());
+        headers.add(Headers.CONTENT_DISPOSITION, "attachment; filename=" + fileDetails.getFilename());
+        headers.add(Headers.CONTENT_TYPE, fileDetails.getContentType());
         return headers;
     }
 }
