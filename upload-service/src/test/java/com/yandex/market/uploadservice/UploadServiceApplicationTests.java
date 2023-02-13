@@ -74,23 +74,23 @@ class UploadServiceApplicationTests {
     @Test
     void getFileUrlByIdStatus200() throws Exception {
 
-//        Mockito.when(aws.generatePresignedUrl(
-//                ArgumentMatchers.anyString(),
-//                ArgumentMatchers.anyString(),
-//                ArgumentMatchers.any(Date.class)
-//        )).thenReturn(new URL("https://stackoverflow.com/questions/7692298/inputstream-from-relative-path"));
-//
-//        mvc.perform(MockMvcRequestBuilders.get("/public/api/v1/getFileUrlById")
-//                        .param("fileId", "id0000")
-//                        .param("fileType", "CHECK"))
-//                .andExpect(MockMvcResultMatchers.status().isOk())
-//                .andExpect(MockMvcResultMatchers.content().string("\"https://stackoverflow.com/questions/7692298/inputstream-from-relative-path\""));
-//
-//        Mockito.verify(aws, Mockito.times(1)).generatePresignedUrl(
-//                ArgumentMatchers.anyString(),
-//                ArgumentMatchers.anyString(),
-//                ArgumentMatchers.any(Date.class)
-//        );
+        Mockito.when(aws.generatePresignedUrl(
+                ArgumentMatchers.anyString(),
+                ArgumentMatchers.anyString(),
+                ArgumentMatchers.any(Date.class)
+        )).thenReturn(new URL("https://stackoverflow.com/questions/7692298/inputstream-from-relative-path"));
+
+        mvc.perform(MockMvcRequestBuilders.get("/public/api/v1/getFileUrlById")
+                        .param("fileId", "id0000")
+                        .param("fileType", "CHECK"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().string("\"https://stackoverflow.com/questions/7692298/inputstream-from-relative-path\""));
+
+        Mockito.verify(aws, Mockito.times(1)).generatePresignedUrl(
+                ArgumentMatchers.anyString(),
+                ArgumentMatchers.anyString(),
+                ArgumentMatchers.any(Date.class)
+        );
     }
 
     @Test
