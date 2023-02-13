@@ -8,9 +8,7 @@ import com.yandex.market.favoritesservice.repository.FavoritesRepository;
 import com.yandex.market.util.RestPageImpl;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -37,9 +35,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Testcontainers
 @AutoConfigureMockMvc
 @ActiveProfiles("testcontainers")
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-class FavoritesServiceApplicationTests {
+public class FavoritesServiceApplicationTests {
 
     @Value("${spring.application.url}")
     private String PUBLIC_API;

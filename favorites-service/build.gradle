@@ -10,7 +10,9 @@ ext {
     set('commonslang3', '3.12.0')
     set('projectlombok', '1.18.24')
     set('testcontainersjunit', '1.17.6')
+    set('mockitoInlineVersion', '4.10.0')
     set('testcontainerspostgresql', '1.17.6')
+    set('H2', '2.1.214')
 }
 
 group = 'com.yandex.market'
@@ -64,8 +66,10 @@ dependencies {
     // tests
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.amqp:spring-rabbit-test'
+    testImplementation "org.mockito:mockito-inline:${mockitoInlineVersion}"
     testImplementation "org.testcontainers:junit-jupiter:${testcontainersjunit}"
     testImplementation "org.testcontainers:postgresql:${testcontainerspostgresql}"
+    testImplementation "com.h2database:h2:${H2}"
 }
 
 tasks.named('test') {
