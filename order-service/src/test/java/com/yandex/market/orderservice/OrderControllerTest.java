@@ -109,7 +109,7 @@ public class OrderControllerTest {
     @Sql("/db/insertTestOrder.sql")
     public void getOrderByUserId() throws Exception {
         UUID userExternalId = UUID.fromString("cd8ae5aa-ebea-4922-b3c2-8ba8a296ef04");
-        MvcResult mvcResult = mockMvc.perform(get("/public/api/v1//users/{userId}/orders", userExternalId)
+        MvcResult mvcResult = mockMvc.perform(get("/public/api/v1/users/{userId}/orders", userExternalId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();
@@ -129,7 +129,7 @@ public class OrderControllerTest {
     @Sql("/db/insertTestOrder.sql")
     public void getOrderByUserIdNegative() throws Exception {
         UUID userExternalId = UUID.fromString("cd8ae5aa-ebea-4922-b3c2-8ba8a296ef0");
-        mockMvc.perform(get("/public/api/v1//users/{userId}/orders", userExternalId)
+        mockMvc.perform(get("/public/api/v1/users/{userId}/orders", userExternalId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
                 .andReturn();

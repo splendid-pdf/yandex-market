@@ -1,3 +1,7 @@
+create sequence "order-sequence" start with 1 increment by 1;
+
+create sequence "ordered-product-sequence" start with 1 increment by 1;
+
 create table orders
 (
     id                 bigint       not null,
@@ -5,9 +9,7 @@ create table orders
     user_id            uuid         not null,
     price              float        not null,
     order_status       varchar(255) not null,
-    ordered_products   varchar(255) not null,
     payment_type       varchar(255) not null,
-    receipt_method     varchar(255) not null,
     paid               boolean      not null,
     payment_date_time  timestamp,
     creation_timestamp timestamp,
@@ -35,6 +37,7 @@ create table ordered_products
     id             bigint       not null,
     product_id     uuid         not null,
     name           varchar(255) not null,
+    amount         integer      not null,
     price          float        not null,
     description    varchar(255) not null,
     photo_url      varchar(255) not null,
