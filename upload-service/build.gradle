@@ -20,6 +20,7 @@ repositories {
 
 dependencies {
 	implementation project(':commons')
+	implementation 'org.eclipse.angus:angus-mail:2.0.1'
 	implementation 'commons-io:commons-io:2.11.0'
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'jakarta.validation:jakarta.validation-api:3.0.2'

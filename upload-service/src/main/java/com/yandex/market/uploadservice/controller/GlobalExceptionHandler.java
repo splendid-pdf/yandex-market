@@ -1,6 +1,5 @@
 package com.yandex.market.uploadservice.controller;
 
-import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.AmazonS3Exception;
 import com.yandex.market.exception.BadRequestException;
 import com.yandex.market.exception.SizeLimitFileExceededException;
@@ -10,7 +9,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import java.io.IOException;
 import java.time.OffsetDateTime;
 import java.util.UUID;
 
@@ -36,7 +34,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 UUID.randomUUID(),
                 OffsetDateTime.now()
         );
-        log.info("Error processed with incorrect data entered with this id = {}", errorResponse.errorId());
+        log.debug("Error processed with incorrect data entered with this id = {}", errorResponse.errorId());
         return errorResponse;
     }
 
@@ -47,6 +45,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 UUID.randomUUID(),
                 OffsetDateTime.now()
         );
+        log.debug("");
         return errorResponse;
     }
 
@@ -57,7 +56,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 UUID.randomUUID(),
                 OffsetDateTime.now()
         );
-        log.info("");
+        log.debug("");
         return errorResponse;
     }
 }

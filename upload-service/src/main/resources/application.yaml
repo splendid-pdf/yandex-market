@@ -1,4 +1,11 @@
 application:
+  extension:
+    jpg:
+      max_file_size_in_bytes: 153600
+    png:
+      max_file_size_in_bytes: 1000000
+    pdf:
+      max_file_size_in_bytes: 50000
   validation:
     maximum_files_count: 5
   object-storage:

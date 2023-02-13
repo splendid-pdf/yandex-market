@@ -5,8 +5,6 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class FileInformation {
-    private byte[] content;
-    private String filename;
-
+public class ExtensionMaxSizeInfo {
+    private Long maxFileSizeInBytes;
 }

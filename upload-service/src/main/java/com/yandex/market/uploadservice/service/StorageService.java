@@ -4,11 +4,13 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.AmazonS3Exception;
 import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.S3Object;
 import com.yandex.market.exception.BadRequestException;
 import com.yandex.market.uploadservice.config.properties.ObjectStorageProperties;
-import com.yandex.market.uploadservice.model.FileInformation;
+import com.yandex.market.uploadservice.model.DownloadFileInfo;
 import com.yandex.market.uploadservice.model.FileType;
 import com.yandex.market.uploadservice.validator.FileValidator;
+import jakarta.activation.MimetypesFileTypeMap;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -25,6 +27,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static com.yandex.market.uploadservice.utils.Constants.*;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -37,6 +41,8 @@ public class StorageService {
 
     @Value("${application.validation.maximum_files_count}")
     private Integer maxFilesCount;
+
+    private final static String EXTENSION = "extension";
 
     public String uploadFile(MultipartFile file, String fileId, FileType fileType) {
         validator.validate(file);
@@ -55,7 +61,7 @@ public class StorageService {
             return objectId;
         } catch (IOException e) {
             log.error("Failed to upload a file = {}", file);
-            throw new BadRequestException("Unable to upload a file = %s".formatted(file.getName()));
+            throw new BadRequestException(UPLOAD_FILE_EXCEPTION_MESSAGE.formatted(file.getName()));
         }
     }
 
@@ -75,21 +81,23 @@ public class StorageService {
             }
         } catch (AmazonS3Exception exception) {
             log.error("Failed to retrieve a file by fileId = {}", fileId);
-            throw new BadRequestException("Unable to find a file by fileId = %s".formatted(fileId));
+            throw new BadRequestException(GET_FILE_URL_EXCEPTION_MESSAGE.formatted(fileId));
         }
     }
 
-    public FileInformation downloadFile(String fileId, FileType fileType) {
+    public DownloadFileInfo downloadFile(String fileId, FileType fileType) {
         val objectId = createObjectId(fileId, fileType);
-        val information = new FileInformation();
+        val information = new DownloadFileInfo();
         val s3Object = amazonS3.getObject(properties.getBucketName(), objectId);
 
-        information.setFilename(fileId + s3Object.getObjectMetadata().getUserMetadata().get("extension"));
+        information.setFilename(fileId + getFileExtensionByS3Object(s3Object));
+        information.setContentType(new MimetypesFileTypeMap().getContentType(information.getFilename()));
+
         try {
             information.setContent(s3Object.getObjectContent().readAllBytes());
         } catch (IOException e) {
             log.error("Failed to download a file by key = {}", objectId);
-            throw new BadRequestException("Unable to find a file by key = %s".formatted(objectId));
+            throw new BadRequestException(DOWNLOAD_FILE_EXCEPTION_MESSAGE.formatted(objectId));
         }
         return information;
     }
@@ -114,23 +122,27 @@ public class StorageService {
         return fileType.getFolder() + fileId;
     }
 
+    private String getExtension(String filename) {
+        return FilenameUtils.getExtension(filename);
+    }
+
     private ObjectMetadata createMetadata(MultipartFile file) {
         ObjectMetadata metadata = new ObjectMetadata();
         metadata.setContentType(file.getContentType());
         metadata.setContentLength(file.getSize());
-        metadata.setUserMetadata(Map.of("extension", getExtension(file.getOriginalFilename())));
+        metadata.setUserMetadata(Map.of(EXTENSION, "." + getExtension(file.getOriginalFilename())));
         return metadata;
+    }
+
+    private static String getFileExtensionByS3Object(S3Object s3Object) {
+        return s3Object.getObjectMetadata().getUserMetadata().get(EXTENSION);
     }
 
     private void checkListIfSizeGreaterThanMaxFilesCount(List<String> fileIds) {
         if (fileIds.size() > maxFilesCount) {
             throw new IllegalArgumentException(
-                    "Maximum number of files to work with must be less or equal to " + maxFilesCount
+                    NUMBER_OF_FILES_UPLOADED_EXCEEDED_EXCEPTION_MESSAGE + maxFilesCount
             );
         }
-    }
-
-    private String getExtension(String filename) {
-        return "." + FilenameUtils.getExtension(filename);
     }
 }
