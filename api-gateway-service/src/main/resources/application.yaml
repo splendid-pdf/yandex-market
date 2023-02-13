@@ -25,6 +25,10 @@ spring:
           uri: http://localhost:8082
           predicates:
             - Path=/*/*/*/*/*/favorites, /*/*/*/*/*/favorites/{externalId}
+        - id: upload-service-route
+          uri: http://localhost:9001
+          predicates:
+            - Path=/*/*/*/upload, /*/*/*/download, /*/*/*/url, /*/*/*/delete, /*/*/*/urls
 management:
   endpoint:
     gateway:

@@ -11,20 +11,32 @@ ext {
 
 dependencies {
 	implementation project(':commons')
+
+	// Spring
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+
+	// Cloud
+	implementation 'org.springframework.cloud:spring-cloud-config-client'
+
 	implementation 'org.eclipse.angus:angus-mail:2.0.1'
 	implementation 'commons-io:commons-io:2.11.0'
-	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'jakarta.validation:jakarta.validation-api:3.0.2'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
+
+	// Amazon web services
 	implementation 'com.amazonaws:aws-java-sdk-s3:1.12.400'
-	implementation 'org.springframework.cloud:spring-cloud-config-client'
-	compileOnly 'org.projectlombok:lombok'
-	developmentOnly 'org.springframework.boot:spring-boot-devtools'
-	runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
-	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
-	annotationProcessor 'org.projectlombok:lombok'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+	// Swagger
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
+
+	// Lombok
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+
+	runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
 }
 
 dependencyManagement {
