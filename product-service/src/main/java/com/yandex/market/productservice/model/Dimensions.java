@@ -10,9 +10,11 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Dimensions {
-    private String length;
+    private Double weight;
 
-    private String width;
+    private Double length;
 
-    private String height;
+    private Double width;
+
+    private Double height;
 }
