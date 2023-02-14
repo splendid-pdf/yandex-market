@@ -15,15 +15,20 @@ dependencies {
 	// Spring
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework:spring-context-support:6.0.4'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+
 
 	// Cloud
 	implementation 'org.springframework.cloud:spring-cloud-config-client'
 
 	implementation 'org.eclipse.angus:angus-mail:2.0.1'
+
 	implementation 'commons-io:commons-io:2.11.0'
+
+	// Validation
 	implementation 'jakarta.validation:jakarta.validation-api:3.0.2'
 
 	// Amazon web services
