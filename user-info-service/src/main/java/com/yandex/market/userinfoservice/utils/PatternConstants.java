@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 public class PatternConstants {
 
     public Pattern EMAIL_PATTERN =
-            Pattern.compile("^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$");
+            Pattern.compile("^[a-zA-Z0-9_!#$%&'+=?`{|}~^.-]+@[a-zA-Z0-9.-]+$");
     public Pattern NAME_PATTERN = Pattern.compile("[а-яА-Яa-zA-Z]{2,100}");
 
     public Pattern PHONE_PATTERN =
