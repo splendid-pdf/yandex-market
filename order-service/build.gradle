@@ -1,4 +1,5 @@
 plugins {
+	id 'pmd'
 	id 'java'
 	id "org.flywaydb.flyway" version "9.14.1"
 	id 'org.springframework.boot' version '3.0.2'
