@@ -2,7 +2,9 @@ package com.yandex.market.productservice.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -24,8 +26,6 @@ public class Product {
 
     private UUID externalId;
 
-    private UUID manufacturerExternalId;
-
     private UUID sellerExternalId;
 
     private String articleNumber;
@@ -38,10 +38,20 @@ public class Product {
 
     private Long count;
 
+    private String articleFromSeller;
+
+    private Boolean isVisible;
+
+    private Boolean isDeleted;
+
+    @CreationTimestamp
+    private LocalDate creationDate;
+
     @Enumerated(value = EnumType.STRING)
     private TaxType taxType;
 
-    private String articleFromSeller;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Type type;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ProductCharacteristic> productCharacteristics = new HashSet<>();
@@ -51,26 +61,6 @@ public class Product {
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ProductSpecialPrice> productSpecialPrices = new HashSet<>();
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Category category;
-
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
-    @JoinTable(
-            name = "product_type",
-            joinColumns = {@JoinColumn(name = "product_id")},
-            inverseJoinColumns = {@JoinColumn(name = "type_id")}
-    )
-    private Set<Type> types = new HashSet<>();
-
-    @Embedded
-    private Dimensions dimensions;
-
-    private Double rating;
-
-    private Boolean isVisible;
-
-    private Boolean isDeleted;
 
     public void addProductCharacteristic(ProductCharacteristic characteristic) {
         characteristic.setProduct(this);
@@ -97,16 +87,6 @@ public class Product {
 
     public void removeProductSpecialPrice(ProductSpecialPrice productSpecialPrice) {
         productSpecialPrices.remove(productSpecialPrice);
-    }
-
-    public void addType(Type type) {
-        types.add(type);
-        type.getProducts().add(this);
-    }
-
-    public void removeType(Type type) {
-        types.remove(type);
-        type.getProducts().remove(this);
     }
 
 }

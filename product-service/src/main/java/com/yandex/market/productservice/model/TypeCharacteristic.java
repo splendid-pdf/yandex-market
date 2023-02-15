@@ -9,13 +9,13 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "category_characteristics")
+@Table(name = "type_characteristics")
 @EqualsAndHashCode(of = "id")
-public class CategoryCharacteristic {
+public class TypeCharacteristic {
 
     @Id
-    @SequenceGenerator(name = "category_characteristics_sequence", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "category_characteristics_sequence")
+    @SequenceGenerator(name = "type_characteristics_sequence", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "type_characteristics_sequence")
     private Long id;
 
     private String name;
@@ -24,5 +24,5 @@ public class CategoryCharacteristic {
     private ValueType valueType;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private Category category;
+    private Type type;
 }
