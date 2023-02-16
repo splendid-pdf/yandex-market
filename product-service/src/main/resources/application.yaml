@@ -1,24 +1,32 @@
-spring:
-  app:
-    product-controller:
-      url: "/public/api/v1/products"
+server:
+  port: 9090
 
-  jpa:
-    show-sql: true
-    hibernate:
-      dialect: org.hibernate.dialect.PostgreSQLDialect
-      ddl-auto: create
-#    properties:
-#      hibernate:
-#        generate_statistics: true
-#        format_sql: true
+spring:
+  flyway:
+    enabled: false #  дальше убрать эту и строку повыше
+  app:
+    product:
+      url: /public/api/v1/products/
+    seller:
+      url: /public/api/v1/sellers/
 
   datasource:
     url: jdbc:postgresql://localhost:5432/${DB_NAME}
     username: ${POSTGRES_USER}
-    password: ${PASSWORD}
+    password: ${POSTGRES_PASSWORD}
     driver-class-name: org.postgresql.Driver
 
-#server:
-#  port: 9090
+  jpa:
+    database: POSTGRESQL
+    show-sql: true
+    hibernate:
+      ddl-auto: update # далее validate
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+#        schema_update:
+#          unique_constraint_strategy: RECREATE_QUIETLY
+#        connection:
+#          provider_disables_autocommit: true
 
