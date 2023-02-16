@@ -2,6 +2,7 @@ package com.yandex.market.reviewservice.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -19,8 +20,10 @@ import java.util.UUID;
 public class Review {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "review-sequence")
-    @SequenceGenerator(name = "review-sequence", allocationSize = 1)
+//    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "review-sequence")
+//    @SequenceGenerator(name = "review-sequence", allocationSize = 1)
+    @SequenceGenerator(name = "review_seq", sequenceName = "review_id_seq", allocationSize = 1)
+    @GeneratedValue(generator = "review_seq", strategy = GenerationType.SEQUENCE)
     private Long id;
 
     private UUID externalId;
@@ -38,9 +41,12 @@ public class Review {
 
     private String commentary;
 
-    private int score;
+    private int rating;
 
-    private LocalDateTime timestamp;
+    @CreationTimestamp
+    private LocalDateTime creationTimestamp;
+
+    private LocalDateTime updateTimestamp;
 
     @ElementCollection
     @CollectionTable(name = "review_photo_ids", joinColumns = @JoinColumn(name = "review_id"))

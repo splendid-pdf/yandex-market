@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -37,6 +38,8 @@ public class ReviewService {
         review.setId(storedReview.getId());
         review.setUserId(storedReview.getUserId());
         review.setExternalId(storedReview.getExternalId());
+        review.setCreationTimestamp(storedReview.getCreationTimestamp());
+        review.setUpdateTimestamp(LocalDateTime.now());
         return reviewMapper.toReviewDto(reviewRepository.save(review));
     }
 
@@ -66,7 +69,9 @@ public class ReviewService {
         reviewRepository.deleteById(review.getId());
     }
 
-    public ReviewDto getByExternalId(UUID reviewExternalId){
-        return reviewMapper.toReviewDto(reviewRepository.getReviewByExternalId(reviewExternalId));
+    public ReviewDto getByExternalId(UUID reviewExternalId) {
+        return reviewMapper.toReviewDto(reviewRepository.getReviewByExternalId(reviewExternalId)
+                .orElseThrow(() -> new EntityNotFoundException("Review not found by external id = '%s'"
+                        .formatted(reviewExternalId))));
     }
 }

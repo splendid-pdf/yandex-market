@@ -79,8 +79,8 @@ public class ReviewControllerTest {
 
         Assertions.assertEquals(2L, reviewDtoPage.getTotalElements());
         Assertions.assertEquals(1L, reviewDtoPage.getTotalPages());
-        Assertions.assertEquals(4, reviewDtoPage.getContent().get(0).score());
-        Assertions.assertEquals(5, reviewDtoPage.getContent().get(1).score());
+        Assertions.assertEquals(4, reviewDtoPage.getContent().get(0).rating());
+        Assertions.assertEquals(5, reviewDtoPage.getContent().get(1).rating());
     }
 
     @Test
@@ -98,8 +98,8 @@ public class ReviewControllerTest {
 
         Assertions.assertEquals(2L, reviewDtoPage.getTotalElements());
         Assertions.assertEquals(1L, reviewDtoPage.getTotalPages());
-        Assertions.assertEquals(4, reviewDtoPage.getContent().get(0).score());
-        Assertions.assertEquals(5, reviewDtoPage.getContent().get(1).score());
+        Assertions.assertEquals(4, reviewDtoPage.getContent().get(0).rating());
+        Assertions.assertEquals(5, reviewDtoPage.getContent().get(1).rating());
     }
 
     @Test
@@ -117,7 +117,7 @@ public class ReviewControllerTest {
                 .andReturn();
 
         ReviewDto actualReviewDto = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), ReviewDto.class);
-        int actualScore = actualReviewDto.score();
+        int actualScore = actualReviewDto.rating();
         Assertions.assertEquals(2, actualScore);
     }
 

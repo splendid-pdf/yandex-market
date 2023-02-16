@@ -9,7 +9,6 @@ import org.mapstruct.Mapping;
 public interface ReviewMapper {
 
     @Mapping(target = "externalId", expression = "java(UUID.randomUUID())")
-    @Mapping(target = "timestamp", expression = "java(LocalDateTime.now())")
     Review toReview(ReviewDto reviewDto);
 
     ReviewDto toReviewDto(Review review);

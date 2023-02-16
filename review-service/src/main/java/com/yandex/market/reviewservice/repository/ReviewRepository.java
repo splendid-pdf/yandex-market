@@ -15,5 +15,5 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
 
     Page<Review> getReviewsByProductId(UUID productId, Pageable pageable);
 
-    Review getReviewByExternalId(UUID reviewExternalId);
+    Optional<Review> getReviewByExternalId(UUID reviewExternalId);
 }

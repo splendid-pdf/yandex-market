@@ -17,7 +17,9 @@ public record ReviewDto(
         String commentary,
         @Min(value = 1, message = "Оценка товара должна быть больше 0")
         @Max(value = 5, message = "Оценка товара должна быть меньше 6")
-        int score,
-        LocalDateTime timestamp,
+        int rating,
+        LocalDateTime creationTimestamp,
+
+        LocalDateTime updateTimestamp,
         List<String> photoIds) {
 }

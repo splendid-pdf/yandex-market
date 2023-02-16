@@ -67,7 +67,6 @@ dependencies {
     testImplementation 'org.testcontainers:postgresql:1.17.6'
 }
 
-
 dependencyManagement {
     imports {
         mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudConfigVersion}"
