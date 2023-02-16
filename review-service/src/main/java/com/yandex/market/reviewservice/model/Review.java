@@ -20,8 +20,6 @@ import java.util.UUID;
 public class Review {
 
     @Id
-//    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "review-sequence")
-//    @SequenceGenerator(name = "review-sequence", allocationSize = 1)
     @SequenceGenerator(name = "review_seq", sequenceName = "review_id_seq", allocationSize = 1)
     @GeneratedValue(generator = "review_seq", strategy = GenerationType.SEQUENCE)
     private Long id;
