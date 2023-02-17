@@ -1,11 +1,14 @@
 package com.yandex.market.userinfoservice.service;
 
+import com.yandex.market.userinfoservice.dto.UserRegistrationDto;
 import com.yandex.market.userinfoservice.gateway.TwoGisClient;
 import com.yandex.market.userinfoservice.mapper.UserRequestMapper;
 import com.yandex.market.userinfoservice.mapper.UserResponseMapper;
 import com.yandex.market.userinfoservice.model.Location;
+import com.yandex.market.userinfoservice.model.Role;
 import com.yandex.market.userinfoservice.model.User;
 import com.yandex.market.userinfoservice.repository.UserRepository;
+import com.yandex.market.userinfoservice.validator.UserRegistrationValidator;
 import com.yandex.market.userinfoservice.validator.UserValidator;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +22,7 @@ import org.openapitools.api.model.UserResponseDto;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,7 +32,8 @@ import java.util.regex.Matcher;
 import java.util.stream.Stream;
 
 import static com.yandex.market.userinfoservice.utils.ExceptionMessagesConstants.*;
-import static com.yandex.market.userinfoservice.utils.PatternConstants.*;
+import static com.yandex.market.userinfoservice.utils.PatternConstants.GROUPED_PHONE_NUMBERS_PATTERN;
+import static com.yandex.market.userinfoservice.utils.PatternConstants.PHONE_PATTERN;
 
 @Slf4j
 @Service
@@ -37,8 +42,11 @@ public class UserService {
     private final TwoGisClient client;
     private final UserValidator userValidator;
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
     private final UserRequestMapper userRequestMapper;
     private final UserResponseMapper userResponseMapper;
+    private final UserRegistrationValidator userRegistrationValidator;
+
 
     @Transactional
     public UUID create(UserRequestDto userRequestDto) {
@@ -52,11 +60,26 @@ public class UserService {
         val user = userRequestMapper.map(userRequestDto);
         user.setPhone(formattedPhone);
 
+
         val location = user.getLocation();
         client.findCoordinatesByLocation(location)
                 .ifPresent(point -> setLocationCoordinates(location, point));
 
         return userRepository.save(user).getExternalId();
+    }
+
+    public void signUp(UserRegistrationDto userDto) {
+        userRegistrationValidator.validate(userDto);
+
+        checkEmailForUniqueness(userDto.email());
+
+        val user = new User();
+        user.setExternalId(UUID.randomUUID());
+        user.setRole(Role.USER);
+        user.setEmail(userDto.email());
+        user.setPassword(passwordEncoder.encode(userDto.password()));
+
+        userRepository.save(user);
     }
 
     @Cacheable(value = "users", key = "#externalId")
@@ -68,7 +91,7 @@ public class UserService {
 
     @Transactional
     @CacheEvict(value = "users", key = "#externalId")
-    public void deleteUserByExternalId(UUID externalId){
+    public void deleteUserByExternalId(UUID externalId) {
         val user = userRepository.findByExternalId(externalId)
                 .orElseThrow(() -> new EntityNotFoundException(USER_NOT_FOUND_ERROR_MESSAGE + externalId));
         user.setDeleted(true);
