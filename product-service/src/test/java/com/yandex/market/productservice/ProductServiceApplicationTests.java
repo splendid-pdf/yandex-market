@@ -18,7 +18,10 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.jdbc.SqlGroup;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
@@ -31,13 +34,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@Sql(
-        value = {"classpath:db/insert_tests_fields.sql"},
-        executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-@Sql(
-        value = {"classpath:db/delete_test_date.sql"},
-        executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+@ActiveProfiles("test")
+@TestPropertySource(locations = "classpath:application-test.yaml")
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
+@SqlGroup({
+        @Sql(value = "classpath:db/insert_tests_fields.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD),
+        @Sql(value = "classpath:db/delete_test_date.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+})
 class ProductServiceApplicationTests {
 
     private final MockMvc mockMvc;
@@ -66,7 +69,6 @@ class ProductServiceApplicationTests {
         Assertions.assertNotNull(productsBySellerId);
         Assertions.assertEquals(expectedTotalElements, productsBySellerId.getTotalElements());
     }
-
 
 
     @Test
@@ -114,3 +116,4 @@ class ProductServiceApplicationTests {
         }
     }
 }
+
