@@ -13,30 +13,18 @@ ext {
     set('mockitoInlineVersion', '4.10.0')
     set('testcontainerspostgresql', '1.17.6')
     set('H2', '2.1.214')
-}
-
-group = 'com.yandex.market'
-version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '17'
-
-configurations {
-    compileOnly {
-        extendsFrom annotationProcessor
-    }
-}
-
-repositories {
-    mavenCentral()
+    set('assertJVersion', '3.24.2')
 }
 
 dependencies {
+    implementation project(':commons')
+
     // spring
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
-    testImplementation project(path: ':commons')
 
     // mapper
     implementation "org.mapstruct:mapstruct:${mapstruct}"
@@ -66,6 +54,7 @@ dependencies {
     // tests
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.amqp:spring-rabbit-test'
+    testImplementation "org.assertj:assertj-core:${assertJVersion}"
     testImplementation "org.mockito:mockito-inline:${mockitoInlineVersion}"
     testImplementation "org.testcontainers:junit-jupiter:${testcontainersjunit}"
     testImplementation "org.testcontainers:postgresql:${testcontainerspostgresql}"

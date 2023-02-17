@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Schema
-public record FavoritesResponseDto(
+public record FavoriteItemResponseDto(
 
         UUID productId,
 
