@@ -32,6 +32,9 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
 
+    //spring cloud
+    implementation 'org.springframework.cloud:spring-cloud-config-client'
+
     //redis
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 

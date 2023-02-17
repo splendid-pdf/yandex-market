@@ -1,13 +1,13 @@
-package com.yandex.market.uploadservice;
+package com.marketplace.gateway;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class UploadServiceApplication {
+public class ApiGatewayServiceApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(UploadServiceApplication.class, args);
+        SpringApplication.run(ApiGatewayServiceApplication.class, args);
     }
 
 }

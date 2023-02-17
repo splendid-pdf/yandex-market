@@ -1,0 +1,43 @@
+server:
+  port: 7777
+
+spring:
+  application:
+    name: api-gateway-service
+  config:
+    import: "optional:configserver:"
+  cloud:
+    gateway:
+      routes:
+        - id: order-service-route
+          uri: http://localhost:8081
+          predicates:
+            - Path=/*/*/*/orders, /*/*/*/orders/**
+        - id: user-info-service-route
+          uri: http://localhost:8080
+          predicates:
+            - Path=/*/*/*/users, /*/*/*/users/{externalId}, /*/*/*/users/search
+        - id: product-service-route
+          uri: http://localhost:9090
+          predicates:
+            - Path=/*/*/*/products, /*/*/*/products/{externalId}, /*/*/*/products/search, /*/*/*/*/*/products, /*/*/*/*/*/products/categories, /*/*/*/*/*/products/categories/**, /*/*/*/*/*/products/search/by-name
+        - id: favorite-service-route
+          uri: http://localhost:8082
+          predicates:
+            - Path=/*/*/*/*/*/favorites, /*/*/*/*/*/favorites/{externalId}
+        - id: upload-service-route
+          uri: http://localhost:9001
+          predicates:
+            - Path=/*/*/*/upload, /*/*/*/download, /*/*/*/url, /*/*/*/delete, /*/*/*/urls
+management:
+  endpoint:
+    gateway:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: gateway
+
+logging:
+  level:
+    web: DEBUG
