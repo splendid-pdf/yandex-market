@@ -1,7 +1,7 @@
 package com.yandex.market.productservice.service;
 
 import com.yandex.market.productservice.dto.ProductRequestDto;
-import com.yandex.market.productservice.dto.ProductResponseDto;
+import com.yandex.market.productservice.dto.response.ProductResponseDto;
 import com.yandex.market.productservice.mapper.ProductMapper;
 import com.yandex.market.productservice.model.Product;
 import com.yandex.market.productservice.repository.ProductRepository;

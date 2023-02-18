@@ -30,7 +30,7 @@ public class Type {
     private Set<Product> products = new HashSet<>();
 
     @OneToMany(mappedBy = "type", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<TypeCharacteristic> typeCharacteristics  = new HashSet<>();
+    private Set<TypeCharacteristic> typeCharacteristics = new HashSet<>();
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     @JoinTable(
