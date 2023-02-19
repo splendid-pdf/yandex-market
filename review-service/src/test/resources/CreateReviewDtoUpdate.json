@@ -3,8 +3,8 @@
   "advantages": "TEXT",
   "disadvantages": "TEXT",
   "commentary": "TEXT",
-  "score": 2,
-  "timestamp": "2023-01-13T10:14:33",
+  "rating": 2,
+  "creationTimestamp": "2023-01-13T10:14:33",
   "photoIds": [
     "123",
     "2513",
