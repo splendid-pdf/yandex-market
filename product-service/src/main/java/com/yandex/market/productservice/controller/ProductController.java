@@ -48,7 +48,7 @@ public class ProductController {
     @DeleteMapping("{externalId}")
     @ResponseStatus(HttpStatus.OK)
     public void deleteProductByExternalId(@PathVariable UUID externalId) {
-        log.info("Received request to get a product by given value: {}", externalId);
+        log.info("Received request to delete a product by external id: {}", externalId);
         productService.deleteProductByExternalId(externalId);
     }
 
@@ -60,5 +60,4 @@ public class ProductController {
         log.info("Received request to get a products list by given values: {}", externalIdSet);
         return productService.getProductsBySetExternalId(externalIdSet, pageable);
     }
-
 }

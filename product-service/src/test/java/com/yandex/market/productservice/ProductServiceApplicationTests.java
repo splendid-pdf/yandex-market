@@ -6,6 +6,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yandex.market.productservice.dto.response.ProductResponseDto;
+import com.yandex.market.productservice.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -29,8 +30,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -47,8 +51,14 @@ class ProductServiceApplicationTests {
 
     private final ObjectMapper objectMapper;
 
+    private final ProductService productService;
+
     @Value("${spring.app.seller.url}")
     private String PATH_TO_SELLER;
+
+    @Value("${spring.app.product.url}")
+    private String PATH_TO_PRODUCTS;
+
 
     @Test
     void findPageProductsBySellerId_successfulSearch() throws Exception {
@@ -84,6 +94,44 @@ class ProductServiceApplicationTests {
         boolean isEmpty = mvcResult.getResponse().getContentAsString().contains("\"empty\":true");
 
         Assertions.assertTrue(isEmpty);
+    }
+
+    @Test
+    void deleteProductByExternalId_userFoundAndSuccessfullyDeleted() throws Exception {
+        UUID externalId = UUID.fromString("301c5370-be41-421e-9b15-f1e80a7074f5");
+        // isDeleted = false, isVisible = true
+        mockMvc.perform(delete(PATH_TO_PRODUCTS + "/{externalId}", externalId))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        ProductResponseDto product = productService.getProductNoLimitsByExternalId(externalId);
+
+        Assertions.assertNotNull(product);
+        Assertions.assertTrue(product.isDeleted());
+        Assertions.assertFalse(product.isVisible());
+    }
+
+    @Test
+    void deleteProductByExternalId_userIsNotFound() throws Exception {
+        UUID externalId = UUID.fromString("301c5370-be41-421e-9b15-f1e80a7074f9");
+        mockMvc.perform(delete(PATH_TO_PRODUCTS + "/{externalId}", externalId))
+                .andDo(print())
+                .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    void deleteProductByExternalId_userFoundAndButHasAlreadyBeenDeleted() throws Exception {
+        UUID externalId = UUID.fromString("301c5370-be41-421e-9b15-f1e80a7074f7");
+        // isDeleted = true, isVisible = false
+        mockMvc.perform(delete(PATH_TO_PRODUCTS + "/{externalId}", externalId))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        ProductResponseDto product = productService.getProductNoLimitsByExternalId(externalId);
+
+        Assertions.assertNotNull(product);
+        Assertions.assertTrue(product.isDeleted());
+        Assertions.assertFalse(product.isVisible());
     }
 
     static class RestPageImpl<T> extends PageImpl<T> {

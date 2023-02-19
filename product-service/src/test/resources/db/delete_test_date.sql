@@ -1,3 +1,3 @@
 delete
 from products
-WHERE id between 1000001 and 1000010;
+WHERE id between 1000000 and 1000100;

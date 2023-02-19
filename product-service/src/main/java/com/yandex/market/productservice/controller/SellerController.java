@@ -25,7 +25,7 @@ public class SellerController {
     @ResponseStatus(HttpStatus.OK)
     public Page<ProductResponseDto> findPageProductsBySellerId(@PathVariable UUID sellerId,
                                                                @PageableDefault(size = 20, sort = "creationDate", direction = Sort.Direction.DESC)
-                                                    Pageable pageable) {
+                                                               Pageable pageable) {
         log.info("Received a request to get Page list for products by sellerId = " + sellerId);
         return sellerService.getPageOfProductsBySellerId(sellerId, pageable);
     }

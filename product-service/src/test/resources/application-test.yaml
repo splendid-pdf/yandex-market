@@ -3,6 +3,8 @@ spring:
   app:
     seller:
       url: /public/api/v1/sellers/
+    product:
+      url: /public/api/v1/products/
   flyway:
     enabled: false
   datasource:
@@ -12,7 +14,7 @@ spring:
     password:
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
     defer-datasource-initialization: true
     show-sql: true
     properties:

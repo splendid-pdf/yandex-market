@@ -12,10 +12,10 @@ import java.util.UUID;
 public interface SellerRepository extends JpaRepository<Product, Long> {
 
     @Query(value = """
-            FROM Product p 
-            WHERE p.sellerExternalId = :sellerId AND 
-            p.isDeleted = false AND 
-            p.isVisible = true
+            FROM Product p
+            WHERE p.sellerExternalId = :sellerId AND
+                p.isDeleted = false AND
+                p.isVisible = true
             """)
     Page<Product> getPageOfProductsBySellerId(@Param("sellerId") UUID sellerId, Pageable pageable);
 }
