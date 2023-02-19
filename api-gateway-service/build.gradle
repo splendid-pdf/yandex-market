@@ -1,9 +1,6 @@
-import com.google.cloud.tools.jib.api.buildplan.ImageFormat
-
 plugins {
     id 'java'
     id 'org.springframework.boot' version '3.0.2'
-    id 'com.google.cloud.tools.jib' version '3.3.1'
     id 'io.spring.dependency-management' version '1.1.0'
 }
 
@@ -37,17 +34,18 @@ dependencyManagement {
     }
 }
 
-jib {
-    var tag = project.version
-    from {
-        image = "gcr.io/distroless/java17-debian11"
-    }
-    to {
-        image = "splendidpdf/${project.name}:$tag"
-    }
-    container {
-        creationTime = Instant.now().toString()
-        format = ImageFormat.OCI
+bootBuildImage {
+    def account = rootProject.property('githubUsername')
+    imageName = "${account}/${project.name}:${project.version}"
+    publish = true
+    environment = [
+            "BP_JVM_VERSION" : "${compileJava.sourceCompatibility}",
+    ]
+    docker {
+        publishRegistry {
+            username = account
+            password = rootProject.property('githubPassword')
+        }
     }
 }
 
