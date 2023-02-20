@@ -6,6 +6,25 @@ spring:
     name: api-gateway-service
   config:
     import: "optional:configserver:"
+  security:
+    oauth2:
+      client:
+        registration:
+            myoauth2:
+              provider: spring
+              client-id: client
+              client-secret: secret
+              authorization-grant-type: authorization_code
+              redirect-uri: http://127.0.0.1:7777/login/oauth2/code/myoauth2
+              scope: openid
+              client-name: myoauth2
+              client-authentication-method: client-secret-basic
+
+        provider:
+          spring:
+            issuer-uri: http://localhost:9000
+
+
   cloud:
     gateway:
       routes:
