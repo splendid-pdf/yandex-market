@@ -224,44 +224,6 @@ class ProductServiceApplicationTests {
         assertFalse(product2.isDeleted());
     }
 
-//    @Test
-//    void deleteProductByExternalId_userFoundAndSuccessfullyDeleted() throws Exception {
-//        UUID externalId = UUID.fromString("301c5370-be41-421e-9b15-f1e80a7074f5");
-//        // isDeleted = false, isVisible = true
-//        mockMvc.perform(delete(PATH_TO_PRODUCTS + "/{externalId}", externalId))
-//                .andDo(print())
-//                .andExpect(status().isOk());
-//
-//        ProductResponseDto product = productService.getProductNoLimitsByExternalId(externalId);
-//
-//        Assertions.assertNotNull(product);
-//        Assertions.assertTrue(product.isDeleted());
-//        Assertions.assertFalse(product.isVisible());
-//    }
-//
-//    @Test
-//    void deleteProductByExternalId_userIsNotFound() throws Exception {
-//        UUID externalId = UUID.fromString("301c5370-be41-421e-9b15-f1e80a7074f9");
-//        mockMvc.perform(delete(PATH_TO_PRODUCTS + "/{externalId}", externalId))
-//                .andDo(print())
-//                .andExpect(status().is4xxClientError());
-//    }
-//
-//    @Test
-//    void deleteProductByExternalId_userFoundAndButHasAlreadyBeenDeleted() throws Exception {
-//        UUID externalId = UUID.fromString("301c5370-be41-421e-9b15-f1e80a7074f7");
-//        // isDeleted = true, isVisible = false
-//        mockMvc.perform(delete(PATH_TO_PRODUCTS + "/{externalId}", externalId))
-//                .andDo(print())
-//                .andExpect(status().isOk());
-//
-//        ProductResponseDto product = productService.getProductNoLimitsByExternalId(externalId);
-//
-//        Assertions.assertNotNull(product);
-//        Assertions.assertTrue(product.isDeleted());
-//        Assertions.assertFalse(product.isVisible());
-//    }
-
     static class RestPageImpl<T> extends PageImpl<T> {
 
         @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
