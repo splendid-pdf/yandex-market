@@ -53,15 +53,6 @@ public class ProductService {
         return productMapper.toResponseDto(productRepository.save(storedProduct));
     }
 
-//    @Transactional
-//    public void deleteProductByExternalId(UUID externalId) {
-//        Product product = productRepository
-//                .findNoLimitsByExternalId(externalId)
-//                .orElseThrow(() -> new EntityNotFoundException(PRODUCT_NOT_FOUND_ERROR_MESSAGE + externalId));
-//        product.setIsDeleted(true);
-//        product.setIsVisible(false);
-//    }
-
     @Transactional(readOnly = true)
     public List<ProductResponseDto> getProductsBySetExternalId(Set<UUID> externalIdSet, Pageable pageable) {
         return productRepository
