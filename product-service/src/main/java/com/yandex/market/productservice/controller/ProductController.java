@@ -45,13 +45,6 @@ public class ProductController {
         return productService.updateProductByExternalId(externalId, productRequestDto);
     }
 
-    @DeleteMapping("{externalId}")
-    @ResponseStatus(HttpStatus.OK)
-    public void deleteProductByExternalId(@PathVariable UUID externalId) {
-        log.info("Received request to delete a product by external id: {}", externalId);
-        productService.deleteProductByExternalId(externalId);
-    }
-
     @GetMapping()
     @ResponseStatus(HttpStatus.OK)
     public List<ProductResponseDto> getProductsBySetExternalId(@RequestParam(name = "extId") Set<UUID> externalIdSet,
