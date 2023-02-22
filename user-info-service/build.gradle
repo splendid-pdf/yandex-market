@@ -25,17 +25,16 @@ dependencies {
 
     // spring
     implementation "org.flywaydb:flyway-core:${flywayCoreVersion}"
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
-    implementation 'org.springframework.boot:spring-boot-starter-security'
 
-    // security
-    implementation 'org.springframework.security:spring-security-oauth2-client:6.0.1'
-
+    implementation 'org.springframework.cloud:spring-cloud-config-client'
 
     //redis
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
