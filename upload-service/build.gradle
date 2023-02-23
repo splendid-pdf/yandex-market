@@ -52,17 +52,16 @@ dependencyManagement {
 }
 
 bootBuildImage {
-	def account = rootProject.property('githubUsername')
+	def account = rootProject.property('dockerHubUsername')
 	imageName = "${account}/${project.name}:${project.version}"
 	publish = true
 	environment = [
-			"BP_JVM_VERSION" : "${compileJava.sourceCompatibility}",
-
+			"BP_JVM_VERSION" : "${compileJava.sourceCompatibility}"
 	]
 	docker {
 		publishRegistry {
 			username = account
-			password = rootProject.property('githubPassword')
+			password = rootProject.property('dockerHubPassword')
 		}
 	}
 }
