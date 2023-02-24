@@ -30,36 +30,4 @@
 
             (1000013, '000000008', '99001108', 18, '2023-02-16', 'new description: 08',
             '301c5370-be41-421e-9b15-f1e80a7074b4',
-            false, true, 'NAME PRODUCT 8', 14, '301c5370-be41-421e-9b15-f1e80a7074a1', 'MIN'),
-
-            (1000051, '000000001', '99001101', 10, '2023-02-14', 'description: 01',
-            '301c5370-be41-421e-9b15-f1e80a7074d1',
-            true, false, 'NAME PRODUCT DELETE 1', 1234, '301c5370-be41-421e-9b15-f1e80a7071d1', 'MAX'),
-
-           (1000052, '000000002', '99001102', 12, '2023-02-15', 'description: 02',
-            '301c5370-be41-421e-9b15-f1e80a7074d2',
-            true, false, 'NAME PRODUCT DELETE 2', 4564, '301c5370-be41-421e-9b15-f1e80a7071d1', 'MAX'),
-
-           (1000053, '000000003', '99001103', 13, '2023-02-16', 'description: 03',
-            '301c5370-be41-421e-9b15-f1e80a7074d3',
-            true, false, 'NAME PRODUCT DELETE 3', 7894, '301c5370-be41-421e-9b15-f1e80a7071d1', 'ABSENT'),
-
-           (1000054, '000000004', '99001104', 14, '2023-02-16', 'description: 04',
-            '301c5370-be41-421e-9b15-f1e80a7074d4',
-            true, false, 'NAME PRODUCT DELETE 4', 14, '301c5370-be41-421e-9b15-f1e80a7071d1', 'MIN'),
-
-           (1000060, '000000006', '99001105', 15, '2023-02-16', 'description: 05',
-            '301c5370-be41-421e-9b15-f1e80a7074d5',
-            false, false, 'NAME PRODUCT DELETE 5', 104, '301c5370-be41-421e-9b15-f1e80a7071d1', 'MIN'),
-
-           (1000061, '000000006', '99001106', 16, '2023-02-16', 'description: 06',
-            '301c5370-be41-421e-9b15-f1e80a7074d6',
-            false, false, 'NAME PRODUCT DELETE 6', 14, '301c5370-be41-421e-9b15-f1e80a7071d1', 'MAX'),
-
-            (1000062, '000000007', '99001107', 17, '2023-02-16', 'description: 07',
-            '301c5370-be41-421e-9b15-f1e80a7074d7',
-            true, false, 'NAME PRODUCT DELETE 7', 14, '301c5370-be41-421e-9b15-f1e80a7071d1', 'MIN'),
-
-            (1000063, '000000008', '99001108', 18, '2023-02-16', 'new description: 08',
-            '301c5370-be41-421e-9b15-f1e80a7074d8',
-            false, false, 'NAME PRODUCT DELETE 8', 14, '301c5370-be41-421e-9b15-f1e80a7071d1', 'MIN');
+            false, true, 'NAME PRODUCT 8', 14, '301c5370-be41-421e-9b15-f1e80a7074a1', 'MIN');
