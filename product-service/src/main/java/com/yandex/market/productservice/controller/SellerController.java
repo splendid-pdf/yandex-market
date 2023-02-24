@@ -60,4 +60,14 @@ public class SellerController {
         log.info("A request was received to {} for a specific seller with sellerId: {}"
                  + " and a list of goods in the number of {} entries.", methodName, sellerId, productIds.size());
     }
+
+
+    @DeleteMapping("{sellerId}/products")
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteListProductBySellerId(@PathVariable(value = "sellerId") UUID sellerId,
+                                            @RequestBody List<UUID> productIds) {
+        log.info("Request for the complete removal of the product(s) in the amount of {} pieces " +
+                 "for the seller with externalId = {}", productIds.size(), sellerId);
+        sellerService.deleteFromArchiveListProductBySellerId(productIds, sellerId);
+    }
 }

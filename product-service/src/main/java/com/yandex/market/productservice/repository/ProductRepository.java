@@ -64,4 +64,20 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
                 WHERE p.sellerExternalId=:sellerId AND p.externalId IN :productIds
             """)
     void returnListOfGoodsFromArchiveToSeller(List<UUID> productIds, UUID sellerId);
+
+    @Modifying
+    @Query(value = """
+                DELETE FROM Product p
+                WHERE p.sellerExternalId=:sellerId AND
+                 p.isDeleted=true AND
+                 p.externalId IN :productIds
+            """)
+    void deleteProductsBySellerId(List<UUID> productIds, UUID sellerId);
+
+    @Query(value = """
+            FROM Product p
+            WHERE p.sellerExternalId = :sellerId AND
+                p.isDeleted = true
+            """)
+    Page<Product> getArchiveProductPageBySellerId(UUID sellerId, Pageable pageable);
 }

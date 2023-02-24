@@ -8,7 +8,9 @@ import java.util.List;
 import java.util.UUID;
 
 public interface SellerService {
-    Page<ProductResponseDto> getPageOfProductsBySellerId (UUID sellerId, Pageable pageable);
+    Page<ProductResponseDto> getPageOfProductsBySellerId(UUID sellerId, Pageable pageable);
+
+    Page<ProductResponseDto> getArchiveProductPageBySellerId(UUID sellerId, Pageable pageable);
 
     void hideProductListForSeller(List<UUID> productIds, UUID sellerId);
 
@@ -17,4 +19,6 @@ public interface SellerService {
     void addListOfGoodsToArchiveForSeller(List<UUID> productIds, UUID sellerId);
 
     void returnListOfGoodsFromArchiveToSeller(List<UUID> productIds, UUID sellerId);
+
+    void deleteFromArchiveListProductBySellerId(List<UUID> productIds, UUID sellerId);
 }

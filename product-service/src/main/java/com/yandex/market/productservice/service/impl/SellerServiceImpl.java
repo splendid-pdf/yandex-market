@@ -34,6 +34,18 @@ public class SellerServiceImpl implements SellerService {
         );
     }
 
+    @Transactional(readOnly = true)
+    public Page<ProductResponseDto> getArchiveProductPageBySellerId(UUID sellerId, Pageable pageable) {
+        Page<Product> productsBySellerId = productRepository.getArchiveProductPageBySellerId(sellerId, pageable);
+
+        return new PageImpl<>(
+                productsBySellerId
+                        .stream()
+                        .map(productMapper::toResponseDto)
+                        .toList()
+        );
+    }
+
     @Override
     @Transactional
     public void hideProductListForSeller(List<UUID> productIds, UUID sellerId) {
@@ -56,5 +68,11 @@ public class SellerServiceImpl implements SellerService {
     @Transactional
     public void returnListOfGoodsFromArchiveToSeller(List<UUID> productIds, UUID sellerId) {
         productRepository.returnListOfGoodsFromArchiveToSeller(productIds, sellerId);
+    }
+
+    @Override
+    @Transactional
+    public void deleteFromArchiveListProductBySellerId(List<UUID> productIds, UUID sellerId) {
+        productRepository.deleteProductsBySellerId(productIds, sellerId);
     }
 }
