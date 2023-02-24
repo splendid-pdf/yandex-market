@@ -46,11 +46,6 @@ public class AuthorizationServerConfig {
     private final SecurityProperties securityProperties;
 
     @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
-    @Bean
     @Order(1)
     public SecurityFilterChain authorizationServerSecurityFilterChain(HttpSecurity http)
             throws Exception {
@@ -88,14 +83,14 @@ public class AuthorizationServerConfig {
     @Bean
     public RegisteredClientRepository registeredClientRepository() {
         RegisteredClient registeredClient = RegisteredClient.withId(UUID.randomUUID().toString())
-                .clientId(securityProperties.getClientId())
-                .clientSecret(passwordEncoder().encode(securityProperties.getClientSecret()))
+                .clientId("client")
+                .clientSecret("{noop}secret")
                 .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
                 .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
                 .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
-                .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
-                .redirectUri("http://127.0.0.1:9000/login/oauth2/code/spring-auth")
-                .redirectUri("http://127.0.0.1:9000/authorized")
+                .authorizationGrantType(AuthorizationGrantType.PASSWORD)
+                .redirectUri("http://127.0.0.1:7777/login/oauth2/code/custom-oidc")
+                .redirectUri("http://127.0.0.1:7777/authorized")
                 .scope(OidcScopes.OPENID)
                 .scope(OidcScopes.PROFILE)
                 .scope("read")
@@ -138,13 +133,7 @@ public class AuthorizationServerConfig {
 
     @Bean
     public AuthorizationServerSettings authorizationServerSettings() {
-        return AuthorizationServerSettings.builder()
-                .authorizationEndpoint("/authorize")
-                .tokenEndpoint("/token")
-                .tokenIntrospectionEndpoint("/introspect")
-                .tokenRevocationEndpoint("/revoke")
-                .jwkSetEndpoint("/jwks")
-                .build();
+        return AuthorizationServerSettings.builder().build();
     }
 
     private TokenSettings tokenSettings() {

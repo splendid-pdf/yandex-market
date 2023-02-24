@@ -20,7 +20,6 @@ import java.util.Map;
 public class UserAuthenticationProvider implements AuthenticationProvider {
 
     private final UserDetailsService userDetailsService;
-    private final PasswordEncoder passwordEncoder;
     private final AuthenticationManagerBuilder auth;
 
     @PostConstruct
@@ -33,7 +32,7 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
         String email = authentication.getName();
         String password = authentication.getCredentials().toString();
         СustomUserDetails userDetails = (СustomUserDetails) userDetailsService.loadUserByUsername(email);
-        if (passwordEncoder.matches(password, userDetails.getPassword())) {
+        if (password.equals(userDetails.getPassword())) {
             UsernamePasswordAuthenticationToken token =
                     new UsernamePasswordAuthenticationToken(email, password, userDetails.getAuthorities());
             token.setDetails(Map.of("external-id", userDetails.getExternalId()));

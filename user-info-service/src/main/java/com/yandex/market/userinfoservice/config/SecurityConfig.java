@@ -29,7 +29,7 @@ public class SecurityConfig {
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
         return (web) -> web.ignoring()
-                .requestMatchers( "/public/api/v1/users/**")
+                .requestMatchers("/public/api/v1/users/signup")
                 .requestMatchers("/private/api/v1/users/auth-details/**");
     }
 
@@ -44,6 +44,7 @@ public class SecurityConfig {
                 );
         return http.build();
     }
+
 
     @Bean
     public JwtDecoder jwtDecoder() {
