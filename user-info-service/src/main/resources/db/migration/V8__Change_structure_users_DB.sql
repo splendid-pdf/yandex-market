@@ -1,4 +1,5 @@
 ALTER TABLE users
-ALTER COLUMN first_name TYPE varchar(100) using null,
-ALTER COLUMN last_name TYPE varchar(100) using null,
-ALTER COLUMN phone TYPE varchar(20) using null
+ALTER COLUMN first_name DROP NOT NULL ,
+ALTER COLUMN last_name DROP NOT NULL,
+ALTER COLUMN phone DROP NOT NULL,
+ALTER COLUMN login DROP NOT NULL

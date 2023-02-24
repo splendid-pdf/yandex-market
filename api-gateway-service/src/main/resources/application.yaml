@@ -16,7 +16,7 @@ spring:
         - id: user-info-service-route
           uri: http://127.0.0.1:8080
           predicates:
-            - Path=/*/*/*/users, /*/*/*/users/{externalId}, /*/*/*/users/search
+            - Path=/*/*/*/users, /*/*/*/users/{externalId}, /*/*/*/users/search, /*/*/*/users/signup, /*/*/*/users/auth-details/{email}
         - id: product-service-route
           uri: http://127.0.0.1:9090
           predicates:

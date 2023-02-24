@@ -1,6 +1,5 @@
-package com.yandex.market.userinfoservice.controller;
+package com.yandex.market.userinfoservice.controller.publicapi;
 
-import com.yandex.market.userinfoservice.dto.UserRegistrationDto;
 import com.yandex.market.userinfoservice.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -9,7 +8,6 @@ import org.openapitools.api.model.UserRequestDto;
 import org.openapitools.api.model.UserResponseDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.UUID;
@@ -17,7 +15,7 @@ import java.util.UUID;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-public class PublicUserController implements PublicApi {
+public class UserController implements PublicApi {
 
     private final UserService userService;
 
@@ -25,11 +23,6 @@ public class PublicUserController implements PublicApi {
     public ResponseEntity<UUID> createUser(UserRequestDto userRequestDto) {
         log.info("Received request to create a user: {}", userRequestDto);
         return ResponseEntity.ok(userService.create(userRequestDto));
-    }
-
-    @PostMapping("/signup")
-    public void signUp(UserRegistrationDto userRegistrationDto) {
-        userService.signUp(userRegistrationDto);
     }
 
     @Override

@@ -1,6 +1,15 @@
 server:
   port: 9000
 
+app:
+  security:
+    client-settings:
+      client-id: client
+      client-secret: secret
+    token-settings:
+      access-token-life-time-in-minutes: 30
+      refresh-token-lifetime-in-minutes: 60
+
 logging:
   level:
     org: debug

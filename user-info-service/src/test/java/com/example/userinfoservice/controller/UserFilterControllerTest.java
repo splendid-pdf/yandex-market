@@ -34,7 +34,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @TestPropertySource(locations = "classpath:application-test.yaml")
 @ActiveProfiles("test")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-class PublicUserControllerTest {
+class UserFilterControllerTest {
 
     private static final String DB_FILLING = "classpath:files/sql/db-filling.sql";
     private static final String DB_RESET = "classpath:files/sql/reset.sql";
@@ -63,7 +63,7 @@ class PublicUserControllerTest {
 
     @BeforeEach
     void beforeEach() {
-        for(String name : cacheManager.getCacheNames()) {
+        for (String name : cacheManager.getCacheNames()) {
             cacheManager.getCache(name).clear();
         }
     }
@@ -114,7 +114,7 @@ class PublicUserControllerTest {
     void createUserStatus200() throws Exception {
         File jsonFile = new ClassPathResource(CREATE_USER).getFile();
         UUID uuid = UUID.fromString(EXISTING_EXTERNAL_ID);
-        try(MockedStatic<UUID> mockedStatic = Mockito.mockStatic(UUID.class)){
+        try (MockedStatic<UUID> mockedStatic = Mockito.mockStatic(UUID.class)) {
             mockedStatic.when(UUID::randomUUID).thenReturn(uuid);
             mvc.perform(post(PUBLIC_REQUEST_NAME)
                             .contentType(APPLICATION_JSON)

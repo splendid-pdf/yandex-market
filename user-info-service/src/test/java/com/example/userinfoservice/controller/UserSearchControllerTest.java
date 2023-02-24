@@ -31,7 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @TestPropertySource(locations = "classpath:application-test.yaml")
 @ActiveProfiles("test")
-class PrivateUserControllerTest {
+class UserSearchControllerTest {
 
     private static final String DB_FILLING = "classpath:files/sql/db-filling.sql";
     private static final String DB_RESET = "classpath:files/sql/reset.sql";
