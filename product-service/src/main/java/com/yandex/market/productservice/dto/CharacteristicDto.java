@@ -1,5 +1,6 @@
 package com.yandex.market.productservice.dto;
 
+import com.yandex.market.productservice.model.ValueType;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
@@ -10,7 +11,6 @@ public record CharacteristicDto(
 
         @NotBlank(message = "Значение характеристики должно быть указано")
         @Size(max = 100, message = "Значение характеристики должно быть до 100 символов")
-        String value
+        ValueType valueType
 ) {
-
 }

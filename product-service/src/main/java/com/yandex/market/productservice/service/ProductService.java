@@ -24,8 +24,9 @@ public class ProductService {
     private final ProductMapper productMapper;
 
     @Transactional
-    public UUID createProduct(ProductRequestDto productRequestDto) {
-        Product product = productMapper.toProduct(productRequestDto);
+    public UUID createProduct(ProductRequestDto productRequestDto, UUID sellerExternalId) {
+        Product product = productMapper.toProduct1(productRequestDto);
+        product.setSellerExternalId(sellerExternalId);
         return productRepository.save(product).getExternalId();
     }
 

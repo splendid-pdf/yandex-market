@@ -23,27 +23,28 @@ import java.util.UUID;
 public class ProductController {
     private final ProductService productService;
 
-    @PostMapping()
+    @PostMapping("/{sellerExternalId}/products")
     @ResponseStatus(HttpStatus.CREATED)
-    public UUID createProduct(@RequestBody @Valid ProductRequestDto productRequestDto) {
+    public UUID createProduct(@RequestBody @Valid ProductRequestDto productRequestDto,
+                              @PathVariable("sellerExternalId") UUID sellerExternalId) {
         log.info("Received request to create a product by given value: {}", productRequestDto);
-        return productService.createProduct(productRequestDto);
+        return productService.createProduct(productRequestDto, sellerExternalId);
     }
 
     @GetMapping("{externalId}")
     @ResponseStatus(HttpStatus.OK)
-    public ProductResponseDto getProductByExternalId(@PathVariable UUID externalId) {
+    public ProductResponseDto getProductByExternalId(@PathVariable("externalId") UUID externalId) {
         log.info("Received request to get a product by given value: {}", externalId);
         return productService.getProductByExternalId(externalId);
     }
 
-    @PutMapping("{externalId}")
-    @ResponseStatus(HttpStatus.OK)
-    public ProductResponseDto updateProductByExternalId(@PathVariable UUID externalId,
-                                                        @RequestBody @Valid ProductRequestDto productRequestDto) {
-        log.info("Received request to update a product:{} by given value: {}", externalId, productRequestDto);
-        return productService.updateProductByExternalId(externalId, productRequestDto);
-    }
+//    @PutMapping("{externalId}")
+//    @ResponseStatus(HttpStatus.OK)
+//    public ProductResponseDto updateProductByExternalId(@PathVariable UUID externalId,
+//                                                        @RequestBody @Valid ProductRequestDto productRequestDto) {
+//        log.info("Received request to update a product:{} by given value: {}", externalId, productRequestDto);
+//        return productService.updateProductByExternalId(externalId, productRequestDto);
+//    }
 
     @DeleteMapping("{externalId}")
     @ResponseStatus(HttpStatus.OK)

@@ -3,16 +3,14 @@ package com.yandex.market.productservice.model;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Entity
 @Getter
 @Setter
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "types")
 @EqualsAndHashCode(of = "id")
 public class Type {
@@ -30,7 +28,7 @@ public class Type {
     private Set<Product> products = new HashSet<>();
 
     @OneToMany(mappedBy = "type", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<TypeCharacteristic> typeCharacteristics = new HashSet<>();
+    private Set<Characteristic> characteristics = new HashSet<>();
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     @JoinTable(
@@ -45,27 +43,26 @@ public class Type {
         products.add(product);
     }
 
+    public void addCharacteristic(Characteristic characteristic) {
+        characteristic.setType(this);
+        characteristics.add(characteristic);
+    }
+
     public void removeProduct(Product product) {
         products.remove(product);
     }
 
-    public void addTypeCharacteristic(TypeCharacteristic typeCharacteristic) {
-        typeCharacteristic.setType(this);
-        typeCharacteristics.add(typeCharacteristic);
+    public void removeTypeCharacteristic(Characteristic characteristic) {
+        characteristics.remove(characteristic);
     }
 
-    public void removeTypeCharacteristic(TypeCharacteristic typeCharacteristic) {
-        typeCharacteristics.remove(typeCharacteristic);
-    }
-
-    public void addRoom(Room room) {
-        room.getTypes().add(this);
-        rooms.add(room);
-    }
+//    public void addRoom(Room room) {
+//        room.getTypes().add(this);
+//        rooms.add(room);
+//    }
 
     public void removeRoom(Room room) {
         room.getTypes().remove(this);
         rooms.remove(room);
     }
-
 }

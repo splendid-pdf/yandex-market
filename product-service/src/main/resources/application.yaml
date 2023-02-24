@@ -11,16 +11,16 @@ spring:
       url: /public/api/v1/sellers/
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/${DB_NAME}
-    username: ${POSTGRES_USER}
-    password: ${POSTGRES_PASSWORD}
+    url: jdbc:postgresql://localhost:5432/${DB_NAME:postgres}
+    username: ${POSTGRES_USER:postgres}
+    password: ${POSTGRES_PASSWORD:navvrks9}
     driver-class-name: org.postgresql.Driver
 
   jpa:
     database: POSTGRESQL
     show-sql: true
     hibernate:
-      ddl-auto: update # далее validate
+      ddl-auto: create # далее validate
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
