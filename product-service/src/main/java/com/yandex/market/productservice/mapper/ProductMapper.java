@@ -7,7 +7,8 @@ import org.mapstruct.*;
 
 @Mapper(componentModel = "spring",
         collectionMappingStrategy = CollectionMappingStrategy.ADDER_PREFERRED,
-        builder = @Builder(disableBuilder = true)
+        builder = @Builder(disableBuilder = true),
+        unmappedTargetPolicy = ReportingPolicy.IGNORE
 )
 public interface ProductMapper {
 

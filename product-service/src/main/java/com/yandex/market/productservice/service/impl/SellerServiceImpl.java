@@ -33,4 +33,16 @@ public class SellerServiceImpl implements SellerService {
                         .toList()
         );
     }
+
+    @Override
+    public Page<ProductResponseDto> getArchivePageOfProductsBySellerId(UUID sellerId, Pageable pageable) {
+        Page<Product> productsBySellerId = repository.getArchivePageOfProductsBySellerId(sellerId, pageable);
+
+        return new PageImpl<>(
+                productsBySellerId
+                        .stream()
+                        .map(productMapper::toResponseDto)
+                        .toList()
+        );
+    }
 }

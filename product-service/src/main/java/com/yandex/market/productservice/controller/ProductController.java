@@ -3,6 +3,7 @@ package com.yandex.market.productservice.controller;
 import com.yandex.market.productservice.dto.ProductRequestDto;
 import com.yandex.market.productservice.dto.response.ProductResponseDto;
 import com.yandex.market.productservice.service.ProductService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +21,7 @@ import java.util.UUID;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("${spring.app.product.url}")
+@Tag(name = "API for working with the Product entity")
 public class ProductController {
     private final ProductService productService;
 

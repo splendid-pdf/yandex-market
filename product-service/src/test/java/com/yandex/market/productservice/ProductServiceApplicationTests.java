@@ -56,6 +56,7 @@ class ProductServiceApplicationTests {
 
         MvcResult mvcResult = mockMvc.perform(get(
                         PATH_TO_SELLER + "{shopId}/products", sellerId, PageRequest.of(0, 20))
+                        .param("method", "PRODUCT_LIST")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();
@@ -64,12 +65,11 @@ class ProductServiceApplicationTests {
                 mvcResult.getResponse().getContentAsString(), new TypeReference<RestPageImpl<ProductResponseDto>>() {
                 });
 
-        long expectedTotalElements = 3;
+        long expectedTotalElements = 2;
 
         Assertions.assertNotNull(productsBySellerId);
         Assertions.assertEquals(expectedTotalElements, productsBySellerId.getTotalElements());
     }
-
 
     @Test
     void findPageProductsBySellerId_noSellerFoundForCurrentId() throws Exception {
@@ -77,6 +77,7 @@ class ProductServiceApplicationTests {
 
         MvcResult mvcResult = mockMvc.perform(get(
                         PATH_TO_SELLER + "{shopId}/products", sellerId, PageRequest.of(0, 20))
+                        .param("method", "PRODUCT_LIST")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();
@@ -85,6 +86,28 @@ class ProductServiceApplicationTests {
 
         Assertions.assertTrue(isEmpty);
     }
+
+    @Test
+    void findArchivePageOfProductsBySellerId_successfulSearch() throws Exception {
+        UUID sellerId = UUID.fromString("301c5370-be41-421e-9b15-f1e80a7074f2");
+
+        MvcResult mvcResult = mockMvc.perform(get(
+                        PATH_TO_SELLER + "{shopId}/products", sellerId, PageRequest.of(0, 20))
+                        .param("method", "DELETED")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        Page<ProductResponseDto> productsBySellerId = objectMapper.readValue(
+                mvcResult.getResponse().getContentAsString(), new TypeReference<RestPageImpl<ProductResponseDto>>() {
+                });
+
+        long expectedTotalElements = 1;
+
+        Assertions.assertNotNull(productsBySellerId);
+        Assertions.assertEquals(expectedTotalElements, productsBySellerId.getTotalElements());
+    }
+
 
     static class RestPageImpl<T> extends PageImpl<T> {
 

@@ -9,6 +9,7 @@ plugins {
 ext {
     set('flywayCoreVersion', '9.10.2')
     set('swaggerVersion', '2.2.7')
+    set('springfoxVersion', '3.0.0')
     set('mockitoInlineVersion', '4.10.0')
     set('apacheCommonsLangVersion', '3.12.0')
     set('jetbrainsAnnotationsVersion', '23.1.0')
@@ -30,6 +31,15 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework:spring-jdbc'
     implementation 'org.springframework.boot:spring-boot-starter-web'
+
+    // swagger
+//    implementation "io.swagger.core.v3:swagger-annotations:${swaggerVersion}"
+//    implementation "io.springfox:springfox-boot-starter:${springfoxVersion}"
+//    implementation "io.springfox:springfox-swagger2:${springfoxVersion}"
+//    implementation "io.springfox:springfox-swagger-ui:${springfoxVersion}"
+
+    // open api
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
 
 
     // db
