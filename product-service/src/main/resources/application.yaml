@@ -3,7 +3,7 @@ server:
 
 spring:
   flyway:
-    enabled: false #  дальше убрать эту и строку повыше
+    enabled: false
   app:
     product:
       url: /public/api/v1/products/
@@ -11,7 +11,7 @@ spring:
       url: /public/api/v1/sellers/
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/${DB_NAME}
+    url: jdbc:postgresql://51.250.102.12:5432/${DB_NAME}
     username: ${POSTGRES_USER}
     password: ${POSTGRES_PASSWORD}
     driver-class-name: org.postgresql.Driver
@@ -25,8 +25,11 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
-#        schema_update:
-#          unique_constraint_strategy: RECREATE_QUIETLY
-#        connection:
-#          provider_disables_autocommit: true
-
+  data:
+    redis:
+      jedis:
+        pool:
+          enabled: false
+      host: 51.250.102.12
+      port: 6379
+      database: 0

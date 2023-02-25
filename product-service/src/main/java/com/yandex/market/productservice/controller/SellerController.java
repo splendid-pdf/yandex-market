@@ -3,6 +3,12 @@ package com.yandex.market.productservice.controller;
 import com.yandex.market.productservice.dto.response.ProductResponseDto;
 import com.yandex.market.productservice.model.VisibleMethod;
 import com.yandex.market.productservice.service.SellerService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -19,6 +25,7 @@ import java.util.UUID;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("${spring.app.seller.url}")
+@Tag(name = "API for working with the Product entity for Seller")
 public class SellerController {
 
     private final SellerService sellerService;
@@ -34,6 +41,13 @@ public class SellerController {
 
     @PatchMapping("{sellerId}/products")
     @ResponseStatus(HttpStatus.OK)
+    @Operation(operationId = "deleteOrVisibleProductList",
+            summary = "Change product visibility for sellerId",
+            description = "Remove or remove / return from sale a list of goods by sellers")
+    @ApiResponse(responseCode = "200",
+            description = "OK",
+            content = @Content(mediaType = "application/json",
+                    array = @ArraySchema(schema = @Schema(implementation = ProductResponseDto.class))))
     public void changeProductVisibilityForSeller(@PathVariable(value = "sellerId") UUID sellerId,
                                                  @RequestBody List<UUID> productIds,
                                                  @RequestParam VisibleMethod method,
