@@ -32,12 +32,6 @@ dependencies {
     implementation 'org.springframework:spring-jdbc'
     implementation 'org.springframework.boot:spring-boot-starter-web'
 
-    // swagger
-//    implementation "io.swagger.core.v3:swagger-annotations:${swaggerVersion}"
-//    implementation "io.springfox:springfox-boot-starter:${springfoxVersion}"
-//    implementation "io.springfox:springfox-swagger2:${springfoxVersion}"
-//    implementation "io.springfox:springfox-swagger-ui:${springfoxVersion}"
-
     // open api
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
 
@@ -81,7 +75,7 @@ bootBuildImage {
     imageName = "${account}/${project.name}:${project.version}"
     publish = true
     environment = [
-            "BP_JVM_VERSION" : "${compileJava.sourceCompatibility}"
+            "BP_JVM_VERSION": "${compileJava.sourceCompatibility}"
     ]
     docker {
         publishRegistry {
@@ -94,4 +88,4 @@ bootBuildImage {
 tasks.named('test') {
     useJUnitPlatform()
 }
-tasks.register("prepareKotlinBuildScriptModel"){}
+tasks.register("prepareKotlinBuildScriptModel") {}
