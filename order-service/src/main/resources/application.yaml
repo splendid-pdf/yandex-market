@@ -18,7 +18,7 @@ spring:
       hibernate:
         format_sql: true
   datasource:
-    url: jdbc:postgresql://localhost:5432/postgres
+    url: ${POSTGRES_URL:jdbc:postgresql://localhost:5432/postgres}
     username: ${POSTGRES_USER:postgres}
     password: ${POSTGRES_PASSWORD:navvrks9}
     driver-class-name: org.postgresql.Driver
