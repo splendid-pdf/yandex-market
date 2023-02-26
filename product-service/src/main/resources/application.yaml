@@ -3,7 +3,7 @@ server:
 
 spring:
   flyway:
-    enabled: false #  дальше убрать эту и строку повыше
+    enabled: false
   app:
     product:
       url: /public/api/v1/products/
@@ -25,8 +25,3 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
-#        schema_update:
-#          unique_constraint_strategy: RECREATE_QUIETLY
-#        connection:
-#          provider_disables_autocommit: true
-

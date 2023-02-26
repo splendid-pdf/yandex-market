@@ -43,7 +43,7 @@ dependencies {
 
 
     // db
-    //implementation "org.flywaydb:flyway-core:${flywayCoreVersion}"
+    implementation "org.flywaydb:flyway-core:${flywayCoreVersion}"
     runtimeOnly 'org.postgresql:postgresql'
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 

@@ -12,23 +12,11 @@ public record ProductRequestDto(
 
         @Size(min = 10, max = 200, message = "Описание товара должно быть в интервале от 10 до 200 символов")
         String description,
-
-        @NotBlank(message = "Производитель товара должен быть указан")
-        @Size(min = 3, max = 30, message = "Название производителя должно быть в интервале от 3 до 30 символов")
-        String manufacturer,
-
-        boolean isVisible,
-
-        boolean isDeleted,
-
-        @NotNull
-        TaxType taxType,
+        @NotBlank
+        String articleFromSeller,
 
         @PositiveOrZero
         Long price,
-
-        @NotBlank
-        String articleFromSeller,
 
         @Positive
         Long count,
@@ -39,8 +27,19 @@ public record ProductRequestDto(
         @NotEmpty
         Set<ProductCharacteristicDto> productCharacteristicDto,
 
+        @NotBlank(message = "Производитель товара должен быть указан")
+        @Size(min = 3, max = 30, message = "Название производителя должно быть в интервале от 3 до 30 символов")
+        String manufacturer,
+
+        @NotNull
+        TaxType taxType,
+
         @NotEmpty
         Set<ProductImageDto> productImageDto,
+
+        boolean isVisible,
+
+        boolean isDeleted,
 
         @NotEmpty
         Set<ProductSpecialPriceDto> productSpecialPriceDto

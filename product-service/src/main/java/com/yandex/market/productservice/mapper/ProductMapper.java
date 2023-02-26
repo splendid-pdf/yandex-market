@@ -8,21 +8,14 @@ import org.mapstruct.*;
 @Mapper(componentModel = "spring",
         collectionMappingStrategy = CollectionMappingStrategy.ADDER_PREFERRED,
         builder = @Builder(disableBuilder = true),
-        uses = {ProductCharacteristicMapper.class, ProductImageMapper.class, ProductSpecialPriceMapper.class, TypeMapper.class}
+        uses = {ProductCharacteristicMapper.class, ProductImageMapper.class, ProductSpecialPriceMapper.class, TypeMapper.class},
+        unmappedTargetPolicy = ReportingPolicy.IGNORE
 )
 public interface ProductMapper {
 
     ProductResponseDto toResponseDto(Product product);
 
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "externalId", expression = "java(UUID.randomUUID())")
-    @Mapping(target = "isDeleted", constant = "false")
-    //@Mapping(target = "articleNumber", ignore = true)
-    @Mapping(target = "isVisible", defaultValue = "true")
-    Product toProduct(ProductRequestDto productRequestDto);
-
     @Mapping(target = "isDeleted", ignore = true)
-    //@Mapping(target = "articleNumber", ignore = true)
     @Mapping(target = "externalId", expression = "java(UUID.randomUUID())")
     @Mapping(target = "articleNumber", expression = "java(UUID.randomUUID())")
     @Mapping(source = "productRequestDto.productCharacteristicDto", target = "productCharacteristics")
