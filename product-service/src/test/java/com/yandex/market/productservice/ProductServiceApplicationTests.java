@@ -87,6 +87,8 @@ class ProductServiceApplicationTests {
         Assertions.assertTrue(isEmpty);
     }
 
+
+
     static class RestPageImpl<T> extends PageImpl<T> {
 
         @Serial

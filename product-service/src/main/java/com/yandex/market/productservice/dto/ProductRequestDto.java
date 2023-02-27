@@ -1,11 +1,13 @@
 package com.yandex.market.productservice.dto;
 
 import com.yandex.market.productservice.model.TaxType;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 
 import java.util.Set;
 
+@Schema
 public record ProductRequestDto(
         @NotBlank(message = "Наименование товара должно быть указано")
         @Size(min = 3, max = 30, message = "Наименование товара должно быть в интервале от 3 до 30 символов")

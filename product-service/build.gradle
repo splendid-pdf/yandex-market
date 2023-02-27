@@ -53,6 +53,9 @@ dependencies {
     implementation "commons-validator:commons-validator:${apacheCommonsValidator}"
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
+    // open api
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
+
     // mapper
     implementation "org.mapstruct:mapstruct:${mapstructVersion}"
 
