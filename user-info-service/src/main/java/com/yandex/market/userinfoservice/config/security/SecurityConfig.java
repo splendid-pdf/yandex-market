@@ -28,7 +28,7 @@ public class SecurityConfig {
     //TODO заменить код с 30-34
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
-        return (web) -> web.ignoring()
+        return web -> web.ignoring()
                 .requestMatchers("/public/api/v1/users/signup")
                 .requestMatchers("/private/api/v1/users/auth-details/**")
                 .requestMatchers("/actuator/**")
@@ -41,15 +41,11 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/public/api/v1/users/**").hasRole("ROLE_USER")
-                )
                 .oauth2ResourceServer(resourceServer -> resourceServer
                         .jwt().decoder(jwtDecoder())
                 );
         return http.build();
     }
-
 
     @Bean
     public JwtDecoder jwtDecoder() {

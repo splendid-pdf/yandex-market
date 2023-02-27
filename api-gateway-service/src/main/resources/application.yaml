@@ -34,7 +34,7 @@ spring:
         registration:
           custom-oidc:
             provider: custom-oidc
-            scope: openid,read
+            scope: openid
             client-id: client
             client-secret: secret
             authorization-grant-type: authorization_code

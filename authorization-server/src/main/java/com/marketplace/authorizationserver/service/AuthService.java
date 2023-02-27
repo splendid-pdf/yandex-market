@@ -25,6 +25,29 @@ public class AuthService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        UserAuthDto userAuthDto = getUserAuthDto(email);
+
+        return new СustomUserDetails(
+                userAuthDto.email(),
+                userAuthDto.password(),
+                Set.of(new SimpleGrantedAuthority(ROLE_PREFIX.concat(userAuthDto.role()))),
+                userAuthDto.uuid().toString()
+        );
+    }
+
+    public String getExternalId(String email) {
+        UserAuthDto userAuthDto = getUserAuthDto(email);
+
+        СustomUserDetails userDetails = new СustomUserDetails(
+                userAuthDto.email(),
+                userAuthDto.password(),
+                Set.of(new SimpleGrantedAuthority(ROLE_PREFIX.concat(userAuthDto.role()))),
+                userAuthDto.uuid().toString());
+
+        return userDetails.getExternalId();
+    }
+
+    private UserAuthDto getUserAuthDto(String email) {
         UserAuthDto userAuthDto = restTemplate.getForObject(
                 securityProperties.getDataProviderUri() + email,
                 UserAuthDto.class
@@ -34,11 +57,6 @@ public class AuthService implements UserDetailsService {
             throw new UsernameNotFoundException("User not found by email: " + email);
         }
 
-        return new СustomUserDetails(
-                userAuthDto.email(),
-                userAuthDto.password(),
-                Set.of(new SimpleGrantedAuthority(ROLE_PREFIX.concat(userAuthDto.role()))),
-                userAuthDto.uuid().toString()
-        );
+        return userAuthDto;
     }
 }
