@@ -25,8 +25,8 @@ public interface ProductMapper {
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     Product toProduct(ProductRequestDto productRequestDto, @MappingTarget Product product);
 
-    @Mapping(target = "externalId", expression = "java(UUID.randomUUID())")
-    @Mapping(target = "articleNumber", expression = "java(UUID.randomUUID())")
+    @Mapping(target = "externalId", expression = "java(java.util.UUID.randomUUID())")
+    @Mapping(target = "articleNumber", expression = "java(java.util.UUID.randomUUID())")
     @Mapping(source = "productRequestDto.productCharacteristicDto", target = "productCharacteristics")
     @Mapping(source = "productRequestDto.productImageDto", target = "productImages")
     @Mapping(source = "productRequestDto.productSpecialPriceDto", target = "productSpecialPrices")

@@ -38,13 +38,13 @@ public class ProductController {
         return productService.getProductByExternalId(externalId);
     }
 
-//    @PutMapping("{externalId}")
-//    @ResponseStatus(HttpStatus.OK)
-//    public ProductResponseDto updateProductByExternalId(@PathVariable UUID externalId,
-//                                                        @RequestBody @Valid ProductRequestDto productRequestDto) {
-//        log.info("Received request to update a product:{} by given value: {}", externalId, productRequestDto);
-//        return productService.updateProductByExternalId(externalId, productRequestDto);
-//    }
+    @PutMapping("{externalId}")
+    @ResponseStatus(HttpStatus.OK)
+    public ProductResponseDto updateProductByExternalId(@PathVariable UUID externalId,
+                                                        @RequestBody @Valid ProductRequestDto productRequestDto) {
+        log.info("Received request to update a product:{} by given value: {}", externalId, productRequestDto);
+        return productService.updateProductByExternalId(externalId, productRequestDto);
+    }
 
     @DeleteMapping("{externalId}")
     @ResponseStatus(HttpStatus.OK)

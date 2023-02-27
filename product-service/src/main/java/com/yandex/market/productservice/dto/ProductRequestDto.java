@@ -1,6 +1,7 @@
 package com.yandex.market.productservice.dto;
 
 import com.yandex.market.productservice.model.TaxType;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 
 import java.util.Set;
@@ -25,7 +26,7 @@ public record ProductRequestDto(
         TypeDto typeDto,
 
         @NotEmpty
-        Set<ProductCharacteristicDto> productCharacteristicDto,
+        Set<@Valid ProductCharacteristicDto> productCharacteristicDto,
 
         @NotBlank(message = "Производитель товара должен быть указан")
         @Size(min = 3, max = 30, message = "Название производителя должно быть в интервале от 3 до 30 символов")
@@ -35,13 +36,12 @@ public record ProductRequestDto(
         TaxType taxType,
 
         @NotEmpty
-        Set<ProductImageDto> productImageDto,
+        Set<@Valid ProductImageDto> productImageDto,
 
         boolean isVisible,
 
         boolean isDeleted,
 
-        @NotEmpty
-        Set<ProductSpecialPriceDto> productSpecialPriceDto
+        Set<@Valid ProductSpecialPriceDto> productSpecialPriceDto
 ) {
 }
