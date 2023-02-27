@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.yandex.market.productservice.dto.response.ProductResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Assertions;
@@ -25,6 +26,7 @@ import org.springframework.test.context.jdbc.SqlGroup;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
+import java.io.Serial;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -70,7 +72,6 @@ class ProductServiceApplicationTests {
         Assertions.assertEquals(expectedTotalElements, productsBySellerId.getTotalElements());
     }
 
-
     @Test
     void findPageProductsBySellerId_noSellerFoundForCurrentId() throws Exception {
         UUID sellerId = UUID.fromString("301c5370-be41-421e-9b15-f1e80a7074f9");
@@ -88,6 +89,8 @@ class ProductServiceApplicationTests {
 
     static class RestPageImpl<T> extends PageImpl<T> {
 
+        @Serial
+        private static final long serialVersionUID = 867755909294344407L;
         @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
         public RestPageImpl(@JsonProperty("content") List<T> content,
                             @JsonProperty("number") int number,
