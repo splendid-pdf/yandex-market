@@ -30,7 +30,12 @@ public class SecurityConfig {
     public WebSecurityCustomizer webSecurityCustomizer() {
         return (web) -> web.ignoring()
                 .requestMatchers("/public/api/v1/users/signup")
-                .requestMatchers("/private/api/v1/users/auth-details/**");
+                .requestMatchers("/private/api/v1/users/auth-details/**")
+                .requestMatchers("/actuator/**")
+                .requestMatchers("/v3/api-docs/**")
+                .requestMatchers("/swagger-ui*/**")
+                .requestMatchers("/swagger-resources/**")
+                .requestMatchers("/webjars/**");
     }
 
     @Bean
