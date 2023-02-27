@@ -5,7 +5,7 @@ import java.util.UUID;
 public record UserAuthDto(
         UUID uuid,
         String email,
-        String encodedPassword,
+        String password,
         String role
 ) {
 }

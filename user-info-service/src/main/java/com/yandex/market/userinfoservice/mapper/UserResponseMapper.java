@@ -1,10 +1,14 @@
 package com.yandex.market.userinfoservice.mapper;
 
 import com.yandex.market.mapper.Mapper;
+import com.yandex.market.userinfoservice.model.Sex;
 import com.yandex.market.userinfoservice.model.User;
+import io.micrometer.common.util.StringUtils;
+import io.netty.util.internal.ObjectUtil;
 import lombok.RequiredArgsConstructor;
 import org.openapitools.api.model.UserResponseDto;
 import org.springframework.stereotype.Component;
+import org.springframework.util.ObjectUtils;
 
 import java.util.Collection;
 import java.util.stream.Stream;
@@ -28,15 +32,28 @@ public class UserResponseMapper implements Mapper<User, UserResponseDto> {
         userResponseDto.setLastName(user.getLastName());
         userResponseDto.setPhone(user.getPhone());
         userResponseDto.setPhotoId(user.getPhotoId());
-        userResponseDto.setSex(user.getSex().name());
+
+        if (user.getSex() == null) {
+            userResponseDto.setSex(Sex.NONE.name());
+        } else {
+            userResponseDto.setSex(user.getSex().name());
+        }
+
         userResponseDto.setBirthday(user.getBirthday());
         userResponseDto.setContacts(Stream.ofNullable(user.getContacts())
                 .flatMap(Collection::stream)
                 .map(contactMapper::mapToDto)
                 .toList());
-        userResponseDto.setLocation(locationMapper.mapToDto(user.getLocation()));
-        userResponseDto.setNotificationSettings(notificationSettingsMapper
-                .notificationSettingsToDto(user.getNotificationSettings()));
+
+        if (user.getLocation() != null) {
+            userResponseDto.setLocation(locationMapper.mapToDto(user.getLocation()));
+        }
+
+        if (user.getNotificationSettings() != null) {
+            userResponseDto.setNotificationSettings(notificationSettingsMapper
+                    .notificationSettingsToDto(user.getNotificationSettings()));
+        }
+
         return userResponseDto;
     }
 }

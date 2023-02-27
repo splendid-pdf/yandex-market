@@ -1,4 +1,4 @@
-package com.yandex.market.userinfoservice.config;
+package com.yandex.market.userinfoservice.config.security;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -37,7 +37,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/public/api/v1/users/**").hasAuthority("SCOPE_read")
+                        .requestMatchers("/public/api/v1/users/**").hasRole("ROLE_USER")
                 )
                 .oauth2ResourceServer(resourceServer -> resourceServer
                         .jwt().decoder(jwtDecoder())

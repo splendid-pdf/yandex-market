@@ -36,6 +36,7 @@ public class UserSearchService {
     public UserAuthenticationDto authenticate(String email) {
         User user = userRepository.findUserByEmail(email)
                 .orElseThrow(() -> new EntityNotFoundException(USER_NOT_FOUND_BY_EMAIL_ERROR_MESSAGE + email));
+
         return new UserAuthenticationDto(
                 user.getExternalId(),
                 user.getEmail(),

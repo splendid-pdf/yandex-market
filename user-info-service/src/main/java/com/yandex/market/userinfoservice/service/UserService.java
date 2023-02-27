@@ -48,26 +48,6 @@ public class UserService {
     private final UserRegistrationValidator userRegistrationValidator;
 
 
-    @Transactional
-    public UUID create(UserRequestDto userRequestDto) {
-        userValidator.validate(userRequestDto);
-
-        checkEmailForUniqueness(userRequestDto.getEmail());
-
-        val formattedPhone = formatPhone(userRequestDto.getPhone());
-        checkPhoneForUniqueness(formattedPhone);
-
-        val user = userRequestMapper.map(userRequestDto);
-        user.setPhone(formattedPhone);
-
-
-        val location = user.getLocation();
-        client.findCoordinatesByLocation(location)
-                .ifPresent(point -> setLocationCoordinates(location, point));
-
-        return userRepository.save(user).getExternalId();
-    }
-
     public void signUp(UserRegistrationDto userDto) {
         userRegistrationValidator.validate(userDto);
 
@@ -77,7 +57,7 @@ public class UserService {
         user.setExternalId(UUID.randomUUID());
         user.setRole(Role.USER);
         user.setEmail(userDto.email());
-        user.setPassword(passwordEncoder.encode(userDto.password()));
+        user.setPassword(userDto.password());
 
         userRepository.save(user);
     }

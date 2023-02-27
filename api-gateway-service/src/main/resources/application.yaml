@@ -42,11 +42,11 @@ spring:
             redirect-uri: "http://127.0.0.1:7777/login/oauth2/code/custom-oidc"
         provider:
           custom-oidc:
-            issuer-uri: "http://localhost:9000"
-            token-uri: "http://localhost:9000/oauth2/token"
-            authorization-uri: "http://localhost:9000/oauth2/authorize"
-            jwk-set-uri: "http://localhost:9000/oauth2/jwks"
-            user-info-uri: "http://localhost:9000/userinfo"
+            issuer-uri: "http://127.0.0.1:9000"
+            token-uri: "http://127.0.0.1:9000/oauth2/token"
+            authorization-uri: "http://127.0.0.1:9000/oauth2/authorize"
+            jwk-set-uri: "http://127.0.0.1:9000/oauth2/jwks"
+            user-info-uri: "http://127.0.0.1:9000/userinfo"
 
 management:
   endpoint:

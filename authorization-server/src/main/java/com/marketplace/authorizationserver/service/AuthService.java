@@ -1,5 +1,6 @@
 package com.marketplace.authorizationserver.service;
 
+import com.marketplace.authorizationserver.config.properties.SecurityProperties;
 import com.marketplace.authorizationserver.dto.UserAuthDto;
 import com.marketplace.authorizationserver.model.СustomUserDetails;
 import lombok.RequiredArgsConstructor;
@@ -16,17 +17,27 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class AuthService implements UserDetailsService {
 
+    private static final String ROLE_PREFIX = "ROLE_";
+
+    private final SecurityProperties securityProperties;
+
     private final RestTemplate restTemplate;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         UserAuthDto userAuthDto = restTemplate.getForObject(
-                "http://localhost:8080/private/api/v1/users/auth-details/" + email, UserAuthDto.class
+                securityProperties.getDataProviderUri() + email,
+                UserAuthDto.class
         );
+
+        if (userAuthDto == null) {
+            throw new UsernameNotFoundException("User not found by email: " + email);
+        }
+
         return new СustomUserDetails(
                 userAuthDto.email(),
-                userAuthDto.encodedPassword(),
-                Set.of(new SimpleGrantedAuthority(userAuthDto.role())),
+                userAuthDto.password(),
+                Set.of(new SimpleGrantedAuthority(ROLE_PREFIX.concat(userAuthDto.role()))),
                 userAuthDto.uuid().toString()
         );
     }

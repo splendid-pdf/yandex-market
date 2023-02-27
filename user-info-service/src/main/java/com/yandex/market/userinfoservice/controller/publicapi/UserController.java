@@ -8,6 +8,9 @@ import org.openapitools.api.model.UserRequestDto;
 import org.openapitools.api.model.UserResponseDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.UUID;
@@ -19,12 +22,7 @@ public class UserController implements PublicApi {
 
     private final UserService userService;
 
-    @Override
-    public ResponseEntity<UUID> createUser(UserRequestDto userRequestDto) {
-        log.info("Received request to create a user: {}", userRequestDto);
-        return ResponseEntity.ok(userService.create(userRequestDto));
-    }
-
+    @PreAuthorize("#externalId == authentication.details")
     @Override
     public ResponseEntity<Void> deleteUser(UUID externalId) {
         log.info("Received request to delete a user by externalId: {}", externalId);
