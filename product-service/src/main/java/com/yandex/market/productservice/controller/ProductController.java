@@ -43,7 +43,6 @@ public class ProductController {
                               @RequestBody @Valid ProductRequestDto productRequestDto,
                               @Parameter(name = "sellerExternalId", description = "Seller's identifier")
                               @PathVariable("sellerExternalId") UUID sellerExternalId) {
-        log.info("Received request to create a product by given value: {}", productRequestDto);
         return productService.createProduct(productRequestDto, sellerExternalId);
     }
 
@@ -77,5 +76,4 @@ public class ProductController {
         log.info("Received request to get a products list by given values: {}", externalIdSet);
         return productService.getProductsBySetExternalId(externalIdSet, pageable);
     }
-
 }

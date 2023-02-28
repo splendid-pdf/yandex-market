@@ -3,7 +3,9 @@ package com.yandex.market.productservice.model;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
 
 @Entity
 @Getter
@@ -28,7 +30,7 @@ public class Type {
     private Set<Product> products = new HashSet<>();
 
     @OneToMany(mappedBy = "type", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Characteristic> characteristics = new HashSet<>();
+    private Set<TypeCharacteristic> typeCharacteristics = new HashSet<>();
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     @JoinTable(
@@ -43,23 +45,18 @@ public class Type {
         products.add(product);
     }
 
-    public void addCharacteristic(Characteristic characteristic) {
-        characteristic.setType(this);
-        characteristics.add(characteristic);
+    public void addCharacteristic(TypeCharacteristic typeCharacteristic) {
+        typeCharacteristic.setType(this);
+        typeCharacteristics.add(typeCharacteristic);
     }
 
     public void removeProduct(Product product) {
         products.remove(product);
     }
 
-    public void removeTypeCharacteristic(Characteristic characteristic) {
-        characteristics.remove(characteristic);
+    public void removeTypeCharacteristic(TypeCharacteristic typeCharacteristic) {
+        typeCharacteristics.remove(typeCharacteristic);
     }
-
-//    public void addRoom(Room room) {
-//        room.getTypes().add(this);
-//        rooms.add(room);
-//    }
 
     public void removeRoom(Room room) {
         room.getTypes().remove(this);

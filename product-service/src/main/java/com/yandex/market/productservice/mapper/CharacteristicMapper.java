@@ -1,15 +1,13 @@
 package com.yandex.market.productservice.mapper;
 
-import com.yandex.market.productservice.dto.CharacteristicDto;
-import com.yandex.market.productservice.model.Characteristic;
-import org.mapstruct.Builder;
-import org.mapstruct.CollectionMappingStrategy;
+import com.yandex.market.productservice.dto.TypeCharacteristicDto;
+import com.yandex.market.productservice.model.TypeCharacteristic;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
 public interface CharacteristicMapper {
 
-    Characteristic toCharacteristic(CharacteristicDto characteristicDto);
+    TypeCharacteristic toCharacteristic(TypeCharacteristicDto typeCharacteristicDto);
 
-    CharacteristicDto toCharacteristicDto(Characteristic characteristic);
+    TypeCharacteristicDto toCharacteristicDto(TypeCharacteristic typeCharacteristic);
 }

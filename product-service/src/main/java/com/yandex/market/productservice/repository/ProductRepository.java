@@ -18,6 +18,4 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @Query("FROM Product p WHERE p.externalId in :externals AND p.isDeleted=false")
     Stream<Product> findByExternalId(@Param("externals") Set<UUID> uuidSet, Pageable pageable);
-
-    Product getProductBySellerExternalId(UUID externalId);
 }

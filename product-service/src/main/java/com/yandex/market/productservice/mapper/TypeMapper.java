@@ -13,7 +13,7 @@ import org.mapstruct.Mapping;
 public interface TypeMapper {
 
     @Mapping(target = "externalId", expression = "java(java.util.UUID.randomUUID())")
-    @Mapping(source = "typeDto.characteristicDto", target = "characteristics")
+    @Mapping(source = "typeDto.typeCharacteristicDto", target = "typeCharacteristics")
     @Mapping(source = "typeDto.roomDto", target = "rooms")
     Type toType(TypeDto typeDto);
 
