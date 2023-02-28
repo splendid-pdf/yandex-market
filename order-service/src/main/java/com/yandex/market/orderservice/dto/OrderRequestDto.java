@@ -17,9 +17,6 @@ public record OrderRequestDto(
         double price,
         boolean paid,
         LocalDateTime paymentDateTime,
-        @NotNull(message = "Дата создания заказа должна быть заполнена")
-        @PastOrPresent(message = "Дата создания не может быть позже текущего дня")
-        LocalDateTime creationTimestamp,
         @Valid
         @NotNull(message = "Способ получения должен быть заполнен")
         ReceiptMethodRequestDto receiptMethod,

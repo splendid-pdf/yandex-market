@@ -1,6 +1,5 @@
 package com.yandex.market.orderservice.mapper;
 
-
 import com.yandex.market.orderservice.dto.OrderPreviewDto;
 import com.yandex.market.orderservice.dto.OrderRequestDto;
 import com.yandex.market.orderservice.dto.OrderResponseDto;

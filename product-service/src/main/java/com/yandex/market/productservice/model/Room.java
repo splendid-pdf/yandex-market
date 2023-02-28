@@ -43,7 +43,4 @@ public class Room {
         type.getRooms().remove(this);
         types.remove(type);
     }
-
-
-
 }

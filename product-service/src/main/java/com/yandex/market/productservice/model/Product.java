@@ -26,32 +26,31 @@ public class Product {
 
     private UUID externalId;
 
-    private UUID sellerExternalId;
-
-    private String articleNumber;
+    private UUID articleNumber;
 
     private String name;
 
     private String description;
 
-    private Long price;
-
-    private Long count;
-
-    private String articleFromSeller;
-
     private Boolean isVisible;
 
     private Boolean isDeleted;
 
-    @CreationTimestamp
-    private LocalDate creationDate;
+    private UUID sellerExternalId;
 
     @Enumerated(value = EnumType.STRING)
     private TaxType taxType;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    private Long price;
+
+    private String articleFromSeller;
+
+    private Long count;
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Type type;
+
+    @CreationTimestamp
+    private LocalDate creationDate;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ProductCharacteristic> productCharacteristics = new HashSet<>();

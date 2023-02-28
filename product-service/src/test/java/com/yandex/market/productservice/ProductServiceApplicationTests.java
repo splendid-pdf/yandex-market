@@ -6,6 +6,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yandex.market.productservice.dto.response.ProductResponseDto;
+import com.yandex.market.productservice.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -24,12 +25,17 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlGroup;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.io.Serial;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -46,6 +52,8 @@ class ProductServiceApplicationTests {
     private final MockMvc mockMvc;
 
     private final ObjectMapper objectMapper;
+
+    private final ProductService productService;
 
     @Value("${spring.app.seller.url}")
     private String PATH_TO_SELLER;
@@ -70,7 +78,6 @@ class ProductServiceApplicationTests {
         Assertions.assertEquals(expectedTotalElements, productsBySellerId.getTotalElements());
     }
 
-
     @Test
     void findPageProductsBySellerId_noSellerFoundForCurrentId() throws Exception {
         UUID sellerId = UUID.fromString("301c5370-be41-421e-9b15-f1e80a7074f9");
@@ -86,7 +93,36 @@ class ProductServiceApplicationTests {
         Assertions.assertTrue(isEmpty);
     }
 
+    @Test
+    @Transactional
+    public void create() throws Exception {
+        UUID sellerExternalId = UUID.fromString("cd8ae5aa-ebea-4922-b3c2-8ba8a296ef04");
+        MvcResult mvcResult = mockMvc.perform(post("/public/api/v1/products/{sellerExternalId}/products", sellerExternalId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(Files.readString(Path.of("src/test/resources/CreateProductRequestDto.json"))))
+                .andExpect(status().isCreated())
+                .andReturn();
+
+        UUID actualProductExternalId = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), UUID.class);
+
+        Assertions.assertNotNull(productService.getProductByExternalId(actualProductExternalId));
+    }
+
+    @Test
+    @Transactional
+    public void createNegative() throws Exception {
+        UUID sellerExternalId = UUID.fromString("cd8ae5aa-ebea-4922-b3c2-8ba8a296ef04");
+        mockMvc.perform(post("/public/api/v1/products/{sellerExternalId}/products", sellerExternalId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(Files.readString(Path.of("src/test/resources/CreateProductRequestDtoNegative.json"))))
+                .andExpect(status().isBadRequest())
+                .andReturn();
+    }
+
     static class RestPageImpl<T> extends PageImpl<T> {
+
+        @Serial
+        private static final long serialVersionUID = 867755909294344407L;
 
         @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
         public RestPageImpl(@JsonProperty("content") List<T> content,
@@ -116,4 +152,3 @@ class ProductServiceApplicationTests {
         }
     }
 }
-

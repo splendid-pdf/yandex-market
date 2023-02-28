@@ -2,8 +2,10 @@ server:
   port: 9090
 
 spring:
+  application:
+    name: product-service
   flyway:
-    enabled: false #  дальше убрать эту и строку повыше
+    enabled: false
   app:
     product:
       url: /public/api/v1/products/
@@ -11,22 +13,17 @@ spring:
       url: /public/api/v1/sellers/
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/${DB_NAME}
-    username: ${POSTGRES_USER}
-    password: ${POSTGRES_PASSWORD}
+    url: jdbc:postgresql://localhost:5432/${DB_NAME:postgres}
+    username: ${POSTGRES_USER:postgres}
+    password: ${POSTGRES_PASSWORD:navvrks9}
     driver-class-name: org.postgresql.Driver
 
   jpa:
     database: POSTGRESQL
     show-sql: true
     hibernate:
-      ddl-auto: update # далее validate
+      ddl-auto: create # далее validate
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
-#        schema_update:
-#          unique_constraint_strategy: RECREATE_QUIETLY
-#        connection:
-#          provider_disables_autocommit: true
-
