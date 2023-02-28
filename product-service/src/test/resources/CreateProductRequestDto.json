@@ -8,7 +8,7 @@
   "count": 10,
   "typeDto": {
     "name": "кухня",
-    "characteristicDto": [{
+    "typeCharacteristicDto": [{
       "name": "объем",
       "valueType": "LONG"
     }],

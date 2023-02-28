@@ -11,7 +11,7 @@ public record TypeDto(
         @NotBlank
         String name,
         @NotNull
-        Set<CharacteristicDto> characteristicDto,
+        Set<TypeCharacteristicDto> typeCharacteristicDto,
         @NotNull
         Set<RoomDto> roomDto) {
 }
