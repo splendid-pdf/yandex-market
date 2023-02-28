@@ -71,6 +71,7 @@ dependencies {
     testImplementation "com.h2database:h2:${h2databaseVersion}"
     testCompileOnly "org.projectlombok:lombok"
     testAnnotationProcessor "org.projectlombok:lombok"
+    testImplementation 'org.testcontainers:postgresql:1.17.6'
 
     // annotation processor
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'

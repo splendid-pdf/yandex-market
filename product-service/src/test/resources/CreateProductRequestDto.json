@@ -1,0 +1,34 @@
+{
+  "name": "топ кружка программиста",
+  "description": "хоршая, красивая кружка, много чая",
+  "manufacturer": "cuproduct",
+  "taxType": "ABSENT",
+  "price": 600,
+  "articleFromSeller": "cup1234",
+  "count": 10,
+  "typeDto": {
+    "name": "кухня",
+    "characteristicDto": [{
+      "name": "объем",
+      "valueType": "LONG"
+    }],
+    "roomDto": [{
+      "name": "комната кружки"
+    }]
+  },
+  "productCharacteristicDto": [
+    {
+      "name": "объем",
+      "value": "1 литр",
+      "valueType": "LONG"
+    }
+  ],
+  "productImageDto": [{
+    "url": "путь к картинке"
+  }],
+  "productSpecialPriceDto": [{
+    "specialPriceFromDate": "2023-06-13T10:14:33",
+    "specialPriceToDate": "2023-06-14T10:14:33",
+    "specialPrice": 300
+  }]
+}

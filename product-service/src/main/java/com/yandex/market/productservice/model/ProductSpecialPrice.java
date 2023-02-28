@@ -24,7 +24,7 @@ public class ProductSpecialPrice {
 
     private LocalDateTime specialPriceToDate;
 
-    private double specialPrice;
+    private Long specialPrice;
 
     @ManyToOne(fetch = FetchType.LAZY)
     Product product;
