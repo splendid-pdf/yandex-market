@@ -21,6 +21,21 @@ dependencies {
     compileOnly 'org.projectlombok:lombok'
 }
 
+bootBuildImage {
+    def account = rootProject.property('dockerHubUsername')
+    imageName = "${account}/${project.name}:${project.version}"
+    publish = true
+    environment = [
+            "BP_JVM_VERSION" : "${compileJava.sourceCompatibility}"
+    ]
+    docker {
+        publishRegistry {
+            username = account
+            password = rootProject.property('dockerHubPassword')
+        }
+    }
+}
+
 tasks.named('test') {
     useJUnitPlatform()
 }
