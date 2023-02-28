@@ -26,22 +26,46 @@ public class Type {
 
     private UUID externalId;
 
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
-    @JoinTable(
-            name = "product_type",
-            joinColumns = {@JoinColumn(name = "type_id")},
-            inverseJoinColumns = {@JoinColumn(name = "product_id")}
-    )
+    @OneToMany(mappedBy = "type", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     private Set<Product> products = new HashSet<>();
 
+    @OneToMany(mappedBy = "type", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<TypeCharacteristic> typeCharacteristics = new HashSet<>();
+
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+    @JoinTable(
+            name = "room_type",
+            joinColumns = {@JoinColumn(name = "type_id")},
+            inverseJoinColumns = {@JoinColumn(name = "room_id")}
+    )
+    private Set<Room> rooms = new HashSet<>();
+
     public void addProduct(Product product) {
+        product.setType(this);
         products.add(product);
-        product.getTypes().add(this);
     }
 
     public void removeProduct(Product product) {
         products.remove(product);
-        product.getTypes().remove(this);
+    }
+
+    public void addTypeCharacteristic(TypeCharacteristic typeCharacteristic) {
+        typeCharacteristic.setType(this);
+        typeCharacteristics.add(typeCharacteristic);
+    }
+
+    public void removeTypeCharacteristic(TypeCharacteristic typeCharacteristic) {
+        typeCharacteristics.remove(typeCharacteristic);
+    }
+
+    public void addRoom(Room room) {
+        room.getTypes().add(this);
+        rooms.add(room);
+    }
+
+    public void removeRoom(Room room) {
+        room.getTypes().remove(this);
+        rooms.remove(room);
     }
 
 }

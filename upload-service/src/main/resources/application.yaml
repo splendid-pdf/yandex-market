@@ -13,6 +13,8 @@ application:
     region: ru-central1
     bucket-name: marketplace-object-storage
     credentials:
+      secret-key: ${SECRET_KEY}
+      access-key: ${ACCESS_KEY}
     expiration-time: 60 # in minutes
 
 spring:

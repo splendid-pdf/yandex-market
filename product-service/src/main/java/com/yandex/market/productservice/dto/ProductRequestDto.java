@@ -1,6 +1,6 @@
 package com.yandex.market.productservice.dto;
 
-import com.yandex.market.productservice.model.ProductType;
+//import com.yandex.market.productservice.model.ProductType;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.PositiveOrZero;
@@ -17,7 +17,7 @@ public record ProductRequestDto(
         @Size(min = 10, max = 200, message = "Описание товара должно быть в интервале от 10 до 200 символов")
         String description,
 
-        ProductType productType,
+//        ProductType productType,
 
         @NotBlank(message = "Производитель товара должен быть указан")
         @Size(min = 3, max = 30, message = "Название производителя должно быть в интервале от 3 до 30 символов")

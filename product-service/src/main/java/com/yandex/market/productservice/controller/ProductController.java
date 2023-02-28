@@ -1,7 +1,7 @@
 package com.yandex.market.productservice.controller;
 
 import com.yandex.market.productservice.dto.ProductRequestDto;
-import com.yandex.market.productservice.dto.ProductResponseDto;
+import com.yandex.market.productservice.dto.response.ProductResponseDto;
 import com.yandex.market.productservice.service.ProductService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -18,8 +18,8 @@ import java.util.UUID;
 
 @Slf4j
 @RestController
-@RequestMapping("${spring.app.product-controller.url}")
 @RequiredArgsConstructor
+@RequestMapping("${spring.app.product.url}")
 public class ProductController {
     private final ProductService productService;
 

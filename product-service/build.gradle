@@ -14,17 +14,9 @@ ext {
     set('jetbrainsAnnotationsVersion', '23.1.0')
     set('openapitoolsJacksonDatabindVersion', '0.2.4')
     set('apacheCommonsValidator', '1.7')
-    set("springCloudConfigVersion", "2022.0.1");
-}
-
-group = 'com.yandex.market'
-version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '17'
-
-configurations {
-    compileOnly {
-        extendsFrom annotationProcessor
-    }
+    set("springCloudConfigVersion", "2022.0.1")
+    set("mapstructVersion", "1.5.3.Final")
+    set("h2databaseVersion", "2.1.214")
 }
 
 repositories {
@@ -52,7 +44,7 @@ dependencies {
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
     // mapper
-    implementation 'org.mapstruct:mapstruct:1.5.3.Final'
+    implementation "org.mapstruct:mapstruct:${mapstructVersion}"
 
     // lombok
     compileOnly 'org.projectlombok:lombok'
@@ -63,13 +55,30 @@ dependencies {
     // tests
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation "org.mockito:mockito-inline:${mockitoInlineVersion}"
-    testImplementation 'com.h2database:h2:2.1.214'
+    testImplementation "com.h2database:h2:${h2databaseVersion}"
+    testCompileOnly "org.projectlombok:lombok"
+    testAnnotationProcessor "org.projectlombok:lombok"
 
     // annotation processor
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
     annotationProcessor 'org.projectlombok:lombok'
-    annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.3.Final'
+    annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
 
+}
+
+bootBuildImage {
+    def account = rootProject.property('dockerHubUsername')
+    imageName = "${account}/${project.name}:${project.version}"
+    publish = true
+    environment = [
+            "BP_JVM_VERSION" : "${compileJava.sourceCompatibility}"
+    ]
+    docker {
+        publishRegistry {
+            username = account
+            password = rootProject.property('dockerHubPassword')
+        }
+    }
 }
 
 tasks.named('test') {

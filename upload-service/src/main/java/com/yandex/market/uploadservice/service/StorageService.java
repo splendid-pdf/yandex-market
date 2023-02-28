@@ -17,6 +17,7 @@ import lombok.val;
 import org.apache.commons.io.FilenameUtils;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.javamail.ConfigurableMimeFileTypeMap;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -89,7 +90,7 @@ public class StorageService {
         val s3Object = amazonS3.getObject(properties.getBucketName(), objectId);
         val fileDetails = new FileDetails();
         fileDetails.setFilename(fileId + getFileExtension(s3Object));
-        fileDetails.setContentType(new MimetypesFileTypeMap().getContentType(fileDetails.getFilename()));
+        fileDetails.setContentType(new ConfigurableMimeFileTypeMap().getContentType(fileDetails.getFilename()));
 
         try {
             fileDetails.setContent(s3Object.getObjectContent().readAllBytes());

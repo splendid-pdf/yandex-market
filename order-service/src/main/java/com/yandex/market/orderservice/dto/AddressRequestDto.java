@@ -3,7 +3,6 @@ package com.yandex.market.orderservice.dto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import org.springframework.validation.annotation.Validated;
 
 @Schema
 public record AddressRequestDto(
@@ -14,6 +13,7 @@ public record AddressRequestDto(
         @NotBlank(message = "Город получателя должен быть заполнен")
         String city,
         @Size(max = 6, min = 6, message = "Длина почтового кода должна состовлять ровно 6 цифр. postCode - ${postCode}")
+        @NotBlank(message = "Почтовый индекс должен быть заполнен")
         String postCode,
         @NotBlank(message = "Улица получателя должна быть заполнена")
         String street,

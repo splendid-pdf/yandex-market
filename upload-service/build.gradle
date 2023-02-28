@@ -1,4 +1,5 @@
 plugins {
+	id 'pmd'
 	id 'java'
 	id 'org.springframework.boot' version '3.0.2'
 	id 'io.spring.dependency-management' version '1.1.0'
@@ -11,25 +12,57 @@ ext {
 
 dependencies {
 	implementation project(':commons')
-	implementation 'org.eclipse.angus:angus-mail:2.0.1'
-	implementation 'commons-io:commons-io:2.11.0'
+
+	// Spring
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
-	implementation 'jakarta.validation:jakarta.validation-api:3.0.2'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'com.amazonaws:aws-java-sdk-s3:1.12.400'
-	implementation 'org.springframework.cloud:spring-cloud-config-client'
-	compileOnly 'org.projectlombok:lombok'
+	implementation 'org.springframework:spring-context-support:6.0.4'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
-	runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
-	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
-	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+
+
+	// Cloud
+	implementation 'org.springframework.cloud:spring-cloud-config-client'
+
+	implementation 'org.eclipse.angus:angus-mail:2.0.1'
+
+	implementation 'commons-io:commons-io:2.11.0'
+
+	// Validation
+	implementation 'jakarta.validation:jakarta.validation-api:3.0.2'
+
+	// Amazon web services
+	implementation 'com.amazonaws:aws-java-sdk-s3:1.12.400'
+
+	// Swagger
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
+
+	// Lombok
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+
+	runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
 }
 
 dependencyManagement {
 	imports {
 		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+	}
+}
+
+bootBuildImage {
+	def account = rootProject.property('dockerHubUsername')
+	imageName = "${account}/${project.name}:${project.version}"
+	publish = true
+	environment = [
+			"BP_JVM_VERSION" : "${compileJava.sourceCompatibility}"
+	]
+	docker {
+		publishRegistry {
+			username = account
+			password = rootProject.property('dockerHubPassword')
+		}
 	}
 }
 
