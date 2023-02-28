@@ -22,8 +22,8 @@ public class AppConfig {
     @Bean
     public RestTemplate restTemplate(RestProperties properties) {
         return new RestTemplateBuilder()
-//                .setReadTimeout(Duration.ofMillis(properties.getReadConnectionTimeoutInMs()))
-//                .setConnectTimeout(Duration.ofMillis(properties.getConnectionTimeoutInMs()))
+                .setReadTimeout(Duration.ofMillis(properties.getReadConnectionTimeoutInMs()))
+                .setConnectTimeout(Duration.ofMillis(properties.getConnectionTimeoutInMs()))
                 .build();
     }
 }

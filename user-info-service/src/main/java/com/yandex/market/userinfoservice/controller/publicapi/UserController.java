@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.UUID;
@@ -22,7 +23,7 @@ public class UserController implements PublicApi {
 
     private final UserService userService;
 
-    @PreAuthorize("@userAuthenticationManager.externalIdMatches(authentication, #externalId)")
+    @PreAuthorize("@permissionService.hasPermission(#externalId)")
     @Override
     public ResponseEntity<Void> deleteUser(UUID externalId) {
         log.info("Received request to delete a user by externalId: {}", externalId);
@@ -30,22 +31,14 @@ public class UserController implements PublicApi {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @PreAuthorize("@userAuthenticationManager.externalIdMatches(authentication, #externalId)")
+    @PreAuthorize("@permissionService.hasPermission(#externalId)")
     @Override
-    public ResponseEntity<UserResponseDto> getByExternalId(UUID externalId) {
+    public ResponseEntity<UserResponseDto> getByExternalId(@PathVariable("externalId") UUID externalId) {
         log.info("Received request to get a user by externalId: {}", externalId);
         return ResponseEntity.ok(userService.findUserByExternalId(externalId));
     }
 
-
-    @PreAuthorize("@userAuthenticationManager.externalIdMatchesByEmailOrPhone(authentication, #emailOrPhone)")
-    @Override
-    public ResponseEntity<UserResponseDto> getUserByEmailOrPhone(String emailOrPhone) {
-        log.info("Received request to get a user by given value: {}", emailOrPhone);
-        return ResponseEntity.ok(userService.getUserDtoByEmailOrPhone(emailOrPhone));
-    }
-
-    @PreAuthorize("@userAuthenticationManager.externalIdMatches(authentication, #externalId)")
+    @PreAuthorize("@permissionService.hasPermission(#externalId)")
     @Override
     public ResponseEntity<UserResponseDto> updateUser(UUID externalId, UserRequestDto userRequestDto) {
         log.info("Received request to update a user: {}", userRequestDto);

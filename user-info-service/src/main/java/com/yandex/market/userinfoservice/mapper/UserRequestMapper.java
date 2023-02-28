@@ -10,7 +10,6 @@ import org.openapitools.api.model.UserRequestDto;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Stream;
 

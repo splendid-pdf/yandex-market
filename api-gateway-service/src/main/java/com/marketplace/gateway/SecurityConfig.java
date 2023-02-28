@@ -15,7 +15,15 @@ public class SecurityConfig {
                 .csrf().disable()
                 .cors().disable()
                 .authorizeExchange()
-                .pathMatchers("/hello", "/login", "/public/api/v1/users/signup").permitAll()
+                .pathMatchers(
+                        "/login",
+                        "/actuator/**",
+                        "/webjars/**",
+                        "/v3/api-docs/**",
+                        "/swagger-ui*/**",
+                        "/swagger-resources/**",
+                        "/public/api/v1/users/signup")
+                .permitAll()
                 .anyExchange().authenticated()
                 .and().oauth2Login()
                 .and().build();

@@ -20,9 +20,6 @@ public class LocationMapper {
     }
 
     public LocationDto mapToDto(Location location) {
-        if (location == null) {
-
-        }
         LocationDto locationDto = new LocationDto();
         locationDto.setCountry(location.getCountry());
         locationDto.setRegion(location.getRegion());

@@ -16,7 +16,6 @@ import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.validator.routines.EmailValidator;
 import org.openapitools.api.model.UserRequestDto;
 import org.openapitools.api.model.UserResponseDto;
 import org.springframework.cache.annotation.CacheEvict;
@@ -33,7 +32,6 @@ import java.util.stream.Stream;
 
 import static com.yandex.market.userinfoservice.utils.ExceptionMessagesConstants.*;
 import static com.yandex.market.userinfoservice.utils.PatternConstants.GROUPED_PHONE_NUMBERS_PATTERN;
-import static com.yandex.market.userinfoservice.utils.PatternConstants.PHONE_PATTERN;
 
 @Slf4j
 @Service
@@ -48,6 +46,7 @@ public class UserService {
     private final UserRegistrationValidator userRegistrationValidator;
 
 
+    @Transactional
     public void signUp(UserRegistrationDto userDto) {
         userRegistrationValidator.validate(userDto);
 
@@ -93,20 +92,6 @@ public class UserService {
         updateUser(storedUser, updatedUser);
 
         return userResponseMapper.map(storedUser);
-    }
-
-    @Cacheable(value = "users", key = "#emailOrPhone")
-    public UserResponseDto getUserDtoByEmailOrPhone(String emailOrPhone) {
-        val trimmedEmailOrPhone = emailOrPhone.trim();
-        if (PHONE_PATTERN.matcher(trimmedEmailOrPhone).matches()) {
-            val phone = formatPhone(trimmedEmailOrPhone);
-            return userResponseMapper.map(getUserByPhone(phone));
-        } else if (EmailValidator.getInstance().isValid(trimmedEmailOrPhone)) {
-            return userResponseMapper.map(getUserByEmail(trimmedEmailOrPhone));
-        }
-
-        log.error("Given email or phone is not valid: emailOrPhone - " + trimmedEmailOrPhone);
-        throw new IllegalArgumentException("Invalid input data - " + trimmedEmailOrPhone);
     }
 
     private void checkEmailForUniqueness(String email) {
@@ -173,15 +158,5 @@ public class UserService {
             checkPhoneForUniqueness(formattedPhone);
             storedUser.setPhone(formattedPhone);
         }
-    }
-
-    private User getUserByPhone(String emailOrPhone) {
-        return userRepository.findUserByPhone(emailOrPhone)
-                .orElseThrow(() -> new EntityNotFoundException(USER_NOT_FOUND_BY_PHONE_ERROR_MESSAGE + emailOrPhone));
-    }
-
-    private User getUserByEmail(String emailOrPhone) {
-        return userRepository.findUserByEmail(emailOrPhone)
-                .orElseThrow(() -> new EntityNotFoundException(USER_NOT_FOUND_BY_EMAIL_ERROR_MESSAGE + emailOrPhone));
     }
 }

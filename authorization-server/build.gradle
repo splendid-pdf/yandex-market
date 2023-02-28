@@ -5,15 +5,20 @@ plugins {
 }
 
 dependencies {
+    //security
+    testImplementation 'org.springframework.security:spring-security-test'
     implementation 'org.springframework.security:spring-security-oauth2-authorization-server:1.0.0'
-    implementation 'org.springframework.boot:spring-boot-starter-security'
+
+    //spring
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    //utils
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
     annotationProcessor 'org.projectlombok:lombok'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation 'org.springframework.security:spring-security-test'
+    compileOnly 'org.projectlombok:lombok'
 }
 
 tasks.named('test') {

@@ -10,10 +10,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.oauth2.server.resource.OAuth2ResourceServerConfigurer;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
 import org.springframework.security.oauth2.core.oidc.OidcScopes;
@@ -28,6 +30,8 @@ import org.springframework.security.oauth2.server.authorization.settings.Authori
 import org.springframework.security.oauth2.server.authorization.settings.ClientSettings;
 import org.springframework.security.oauth2.server.authorization.settings.OAuth2TokenFormat;
 import org.springframework.security.oauth2.server.authorization.settings.TokenSettings;
+import org.springframework.security.oauth2.server.authorization.token.JwtEncodingContext;
+import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenCustomizer;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 
@@ -36,6 +40,8 @@ import java.security.KeyPairGenerator;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 import java.time.Duration;
+import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 
 @Configuration
@@ -50,15 +56,12 @@ public class AuthorizationServerConfig {
             throws Exception {
         OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(http);
         http.getConfigurer(OAuth2AuthorizationServerConfigurer.class)
-                .oidc(Customizer.withDefaults());    // Enable OpenID Connect 1.0
+                .oidc(Customizer.withDefaults());
         http
-                // Redirect to the login page when not authenticated from the
-                // authorization endpoint
-                .exceptionHandling((exceptions) -> exceptions
+                .exceptionHandling(exceptions -> exceptions
                         .authenticationEntryPoint(
                                 new LoginUrlAuthenticationEntryPoint("/login"))
                 )
-                // Accept access tokens for User Info and/or Client Registration
                 .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt);
 
         return http.build();
@@ -69,11 +72,9 @@ public class AuthorizationServerConfig {
     public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http)
             throws Exception {
         http
-                .authorizeHttpRequests((authorize) -> authorize
+                .authorizeHttpRequests(authorize -> authorize
                         .anyRequest().authenticated()
                 )
-                // Form login handles the redirect to the login page from the
-                // authorization server filter chain
                 .formLogin(Customizer.withDefaults());
 
         return http.build();
@@ -93,7 +94,6 @@ public class AuthorizationServerConfig {
                 .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
                 .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
                 .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
-                .authorizationGrantType(AuthorizationGrantType.PASSWORD)
                 .redirectUri(securityProperties.getRedirectLoginUri())
                 .redirectUri(securityProperties.getRedirectSuccessLoginUri())
                 .scope(OidcScopes.OPENID)
@@ -147,5 +147,18 @@ public class AuthorizationServerConfig {
                 .refreshTokenTimeToLive(Duration.ofMinutes(securityProperties.getRefreshTokenLifetimeInMinutes()))
                 .idTokenSignatureAlgorithm(SignatureAlgorithm.RS256)
                 .build();
+    }
+
+    @SuppressWarnings("unchecked")
+    @Bean
+    public OAuth2TokenCustomizer<JwtEncodingContext> tokenCustomizer() {
+        return context -> {
+            Authentication principal = context.getPrincipal();
+            if (Objects.equals(context.getTokenType().getValue(), "access_token")
+                    && principal instanceof UsernamePasswordAuthenticationToken) {
+                Map<String, String> details = (Map<String, String>) principal.getDetails();
+                context.getClaims().claim("user-id", details.get("user-id"));
+            }
+        };
     }
 }

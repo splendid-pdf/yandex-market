@@ -3,12 +3,9 @@ package com.yandex.market.userinfoservice.mapper;
 import com.yandex.market.mapper.Mapper;
 import com.yandex.market.userinfoservice.model.Sex;
 import com.yandex.market.userinfoservice.model.User;
-import io.micrometer.common.util.StringUtils;
-import io.netty.util.internal.ObjectUtil;
 import lombok.RequiredArgsConstructor;
 import org.openapitools.api.model.UserResponseDto;
 import org.springframework.stereotype.Component;
-import org.springframework.util.ObjectUtils;
 
 import java.util.Collection;
 import java.util.stream.Stream;
