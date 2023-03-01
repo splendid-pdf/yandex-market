@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-import static com.yandex.market.productservice.utils.ExceptionMessagesConstants.USER_NOT_FOUND_ERROR_MESSAGE;
+import static com.yandex.market.productservice.utils.ExceptionMessagesConstants.PRODUCT_NOT_FOUND_ERROR_MESSAGE;
 
 @Service
 @RequiredArgsConstructor
@@ -32,24 +32,26 @@ public class ProductService {
 
     @Transactional(readOnly = true)
     public ProductResponseDto getProductByExternalId(UUID externalId) {
-        Product product = productRepository.findByExternalId(externalId)
-                .orElseThrow(() -> new EntityNotFoundException(USER_NOT_FOUND_ERROR_MESSAGE + externalId));
+        Product product = productRepository
+                .findByExternalId(externalId)
+                .orElseThrow(() -> new EntityNotFoundException(PRODUCT_NOT_FOUND_ERROR_MESSAGE + externalId));
         return productMapper.toResponseDto(product);
+    }
+
+    @Transactional(readOnly = true)
+    public ProductResponseDto getProductNoLimitsByExternalId(UUID externalId) {
+        return productMapper.toResponseDto(productRepository
+                .findNoLimitsByExternalId(externalId)
+                .orElseThrow(() -> new EntityNotFoundException(PRODUCT_NOT_FOUND_ERROR_MESSAGE + externalId)));
     }
 
     @Transactional
     public ProductResponseDto updateProductByExternalId(UUID externalId, ProductRequestDto productRequestDto) {
-        Product storedProduct = productRepository.findByExternalId(externalId)
-                .orElseThrow(() -> new EntityNotFoundException(USER_NOT_FOUND_ERROR_MESSAGE + externalId));
+        Product storedProduct = productRepository
+                .findByExternalId(externalId)
+                .orElseThrow(() -> new EntityNotFoundException(PRODUCT_NOT_FOUND_ERROR_MESSAGE + externalId));
         storedProduct = productMapper.toProduct(productRequestDto, storedProduct);
         return productMapper.toResponseDto(productRepository.save(storedProduct));
-    }
-
-    @Transactional
-    public void deleteProductByExternalId(UUID externalId) {
-        Product product = productRepository.findByExternalId(externalId)
-                .orElseThrow(() -> new EntityNotFoundException(USER_NOT_FOUND_ERROR_MESSAGE + externalId));
-        product.setIsDeleted(true);
     }
 
     @Transactional(readOnly = true)

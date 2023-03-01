@@ -22,7 +22,7 @@ spring:
     database: POSTGRESQL
     show-sql: true
     hibernate:
-      ddl-auto: create # далее validate
+      ddl-auto: update # далее validate
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
@@ -34,4 +34,4 @@ spring:
           enabled: false
       host: 51.250.102.12
       port: 6379
-      database: 0sssssssssssssssssssssssssssssssssssssssssssssssss
+      database: 0
