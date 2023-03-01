@@ -1,22 +1,30 @@
 package com.yandex.market.sellerinfoservice.model;
 
-import jakarta.persistence.Embedded;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import lombok.*;
 
 import java.util.UUID;
 
 @Entity
+@Getter
+@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Table(name = "sellers")
+@EqualsAndHashCode(of = "id")
 public class Seller {
 
     @Id
+    @SequenceGenerator(name = "sellers_sequence", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sellers_sequence")
     private Long id;
 
     private UUID externalId;
 
-    private String name;
+    private String firstName;
 
-    private String surName;
+    private String lastName;
 
     private String legalAddress;
 
@@ -24,13 +32,16 @@ public class Seller {
 
     private String imageUrl;
 
-    @Embedded
+    @Enumerated(value = EnumType.STRING)
     private BusinessModel businessModel;
 
-    private String individualTaxpayerNumber;
+    //ITN - Идентификационный номер налогоплательщика
+    private String ITN;
 
-    private String primaryStateRegistrationNumber;
+    //PSRN - Основной государственный регистрационный номер
+    private String PSRN;
 
+    // BIC - Банковский идентификационный код
     private String BIC;
 
     private String paymentAccount;

@@ -1,11 +1,7 @@
 package com.yandex.market.sellerinfoservice.model;
 
-import jakarta.persistence.Embeddable;
+public enum BusinessModel {
 
-@Embeddable
-public class BusinessModel {
-
-    private String IP;
-
-    private String OOO;
+    IP,
+    OOO
 }
