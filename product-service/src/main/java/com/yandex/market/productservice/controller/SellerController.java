@@ -52,26 +52,8 @@ public class SellerController {
                                                  @RequestBody List<UUID> productIds,
                                                  @RequestParam VisibleMethod method,
                                                  @RequestParam boolean methodAction) {
-        String methodName = "";
-        if (method == VisibleMethod.VISIBLE) {
-            if (methodAction) {
-                methodName = "withdraw goods from sale";
-                sellerService.displayProductListForSeller(productIds, sellerId);
-            } else {
-                methodName = "return goods for sale";
-                log.info("The method of RETURNING the list of products from the archive is executed");
-                sellerService.hideProductListForSeller(productIds, sellerId);
-            }
-        } else if (method == VisibleMethod.DELETE) {
-            if (methodAction) {
-                methodName = "add products to the archive";
-                sellerService.addListOfGoodsToArchiveForSeller(productIds, sellerId);
-            } else {
-                methodName = "return goods from the archive";
-                sellerService.returnListOfGoodsFromArchiveToSeller(productIds, sellerId);
-            }
-        }
-        log.info("A request was received to {} for a specific seller with sellerId: {}"
-                 + " and a list of goods in the number of {} entries.", methodName, sellerId, productIds.size());
+        log.info("A request was received  to change visibility (remove/visibility) for a specific seller with sellerId: {}"
+                 + " and a list of goods in the number of {} entries.", sellerId, productIds.size());
+        sellerService.changeVisibilityForSellerId(sellerId, productIds, method, methodAction);
     }
 }

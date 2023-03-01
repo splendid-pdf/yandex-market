@@ -1,6 +1,7 @@
 package com.yandex.market.productservice.service;
 
 import com.yandex.market.productservice.dto.response.ProductResponseDto;
+import com.yandex.market.productservice.model.VisibleMethod;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -10,11 +11,5 @@ import java.util.UUID;
 public interface SellerService {
     Page<ProductResponseDto> getPageOfProductsBySellerId(UUID sellerId, Pageable pageable);
 
-    void hideProductListForSeller(List<UUID> productIds, UUID sellerId);
-
-    void displayProductListForSeller(List<UUID> productIds, UUID sellerId);
-
-    void addListOfGoodsToArchiveForSeller(List<UUID> productIds, UUID sellerId);
-
-    void returnListOfGoodsFromArchiveToSeller(List<UUID> productIds, UUID sellerId);
+    void changeVisibilityForSellerId(UUID sellerId, List<UUID> productIds, VisibleMethod method, boolean methodAction);
 }
