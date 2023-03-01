@@ -36,6 +36,8 @@ public class FavoritesController {
 
     private final FavoritesService favoritesService;
 
+    private static final String USER_ID = "userId";
+
     @PostMapping("/{userId}/favorites")
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(operationId = "createFavorites", summary = "Add product in favorites for user")
@@ -45,8 +47,8 @@ public class FavoritesController {
     private UUID createFavorites(
             @Parameter(name = "favoritesRequestDto", description = "Representation of a created favorites")
             @RequestBody @Valid FavoritesRequestDto favoritesRequestDto,
-            @Parameter(name = "userId", description = "User's identifier")
-            @PathVariable("userId") UUID userId) {
+            @Parameter(name = USER_ID, description = "User's identifier")
+            @PathVariable(USER_ID) UUID userId) {
         log.info("Received a request to added product \"%s\" in favorites for user \"%s\""
                 .formatted(favoritesRequestDto.productId(), userId));
         return favoritesService.createFavorites(favoritesRequestDto, userId);
@@ -59,8 +61,8 @@ public class FavoritesController {
             content = @Content(mediaType = "application/json",
                     array = @ArraySchema(schema = @Schema(implementation = FavoritesResponseDto.class))))
     private Page<FavoritesResponseDto> getFavorites(
-            @Parameter(name = "userId", description = "User's identifier")
-            @PathVariable("userId") UUID userId,
+            @Parameter(name = USER_ID, description = "User's identifier")
+            @PathVariable(USER_ID) UUID userId,
             @PageableDefault(sort = "additionTimestamp", direction = Sort.Direction.DESC) Pageable page) {
         log.info("Received a request to get favorites products of user: \"%s\"".formatted(userId));
         return favoritesService.getFavoritesByUserId(userId, page);
@@ -71,8 +73,8 @@ public class FavoritesController {
     @Operation(operationId = "deleteFavorites", summary = "Delete favorites product of user")
     @ApiResponse(responseCode = "204", description = "NO_CONTENT")
     private void deleteFavorites(
-            @Parameter(name = "userId", description = "User's identifier")
-            @PathVariable("userId") UUID userId,
+            @Parameter(name = USER_ID, description = "User's identifier")
+            @PathVariable(USER_ID) UUID userId,
             @Parameter(name = "productId", description = "Product's identifier")
             @PathVariable("productId") UUID productId) {
         log.info("Received a request to delete favorites product \"%s\" of user: \"%s\""

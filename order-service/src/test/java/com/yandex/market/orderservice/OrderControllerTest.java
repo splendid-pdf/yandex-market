@@ -28,6 +28,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.transaction.annotation.Transactional;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
+import java.io.Serial;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -42,6 +43,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 @ActiveProfiles("testcontainers")
+@SuppressWarnings("PMD.AvoidDuplicateLiterals")
 public class OrderControllerTest {
 
     private final MockMvc mockMvc;
@@ -195,7 +197,7 @@ public class OrderControllerTest {
     @Sql("/db/insertTestOrderCompleted.sql")
     public void updateOrderNegativeStatusCompleted() throws Exception {
         UUID orderExternalId = UUID.fromString("37678201-f3c8-4d5c-a628-2344eef50c54");
-        MvcResult mvcResult = mockMvc.perform(put("/public/api/v1/orders/{externalId}", orderExternalId)
+        mockMvc.perform(put("/public/api/v1/orders/{externalId}", orderExternalId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(Files.readString(Path.of("src/test/resources/CreateOrderRequestDto.json"))))
                 .andExpect(status().isBadRequest())
@@ -203,6 +205,9 @@ public class OrderControllerTest {
     }
 
     static class RestPageImpl<T> extends PageImpl<T> {
+
+        @Serial
+        private static final long serialVersionUID = 867755909294344407L;
 
         @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
         public RestPageImpl(@JsonProperty("content") List<T> content,
