@@ -41,17 +41,21 @@ import static com.yandex.market.util.HttpUtils.PUBLIC_API_V1;
                 content = @Content(mediaType = "application/json"))})
 public class OrderController {
 
+    public static final String EXTERNAL_ID = "externalId";
+    public static final String USER_ID = "userId";
+    public static final String SUCCESSFUL_OPERATION = "Successful operation";
+    public static final String APPLICATION_JSON = "application/json";
     private final OrderService orderService;
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/users/{userId}/orders")
     @Operation(operationId = "createOrder", summary = "Create new order for the user")
-    @ApiResponse(responseCode = "201", description = "Successful operation",
-            content = @Content(mediaType = "application/json", schema = @Schema(implementation = UUID.class)))
+    @ApiResponse(responseCode = "201", description = SUCCESSFUL_OPERATION,
+            content = @Content(mediaType = APPLICATION_JSON, schema = @Schema(implementation = UUID.class)))
     public UUID createOrder(@Parameter(name = "orderRequestDto", description = "Representation of a created order")
                             @RequestBody @Valid OrderRequestDto orderRequestDto,
                             @Parameter(name = "userId", description = "User's identifier")
-                            @PathVariable("userId") UUID userId) {
+                            @PathVariable(USER_ID) UUID userId) {
         log.info("Received a request to create new order {} for user: {}}", orderRequestDto, userId);
         return orderService.create(orderRequestDto, userId);
     }
@@ -59,11 +63,11 @@ public class OrderController {
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/orders/{externalId}")
     @Operation(operationId = "getByExternalId", summary = "Get order information by it is external id")
-    @ApiResponse(responseCode = "200", description = "Successful operation", content =
-    @Content(mediaType = "application/json", schema = @Schema(implementation = OrderResponseDto.class)))
+    @ApiResponse(responseCode = "200", description = SUCCESSFUL_OPERATION, content =
+    @Content(mediaType = APPLICATION_JSON, schema = @Schema(implementation = OrderResponseDto.class)))
     public OrderResponseDto getByExternalId(
-            @Parameter(name = "externalId", description = "Order's identifier")
-            @PathVariable("externalId") UUID externalId) {
+            @Parameter(name = EXTERNAL_ID, description = "Order's identifier")
+            @PathVariable(EXTERNAL_ID) UUID externalId) {
         log.info("Received a request to get orders by order identifier: {}",externalId);
         return orderService.getOrderResponseDtoByExternalId(externalId);
     }
@@ -71,12 +75,12 @@ public class OrderController {
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/users/{userId}/orders")
     @Operation(operationId = "getOrderByUserId", summary = "Get user orders by user identifier")
-    @ApiResponse(responseCode = "200", description = "Successful operation",
-            content = @Content(mediaType = "application/json",
+    @ApiResponse(responseCode = "200", description = SUCCESSFUL_OPERATION,
+            content = @Content(mediaType = APPLICATION_JSON,
                     array = @ArraySchema(schema = @Schema(implementation = OrderResponseDto.class))))
     public Page<OrderPreviewDto> getOrderByUserId(
-            @Parameter(name = "userId", description = "User's identifier")
-            @PathVariable("userId") UUID userId,
+            @Parameter(name = USER_ID, description = "User's identifier")
+            @PathVariable(USER_ID) UUID userId,
             @PageableDefault(sort = "creationTimestamp", direction = Sort.Direction.DESC) Pageable pageable) {
         log.info("Received a request to get orders by user identifier: {}", userId);
         return orderService.getOrdersByUserId(userId, pageable);
@@ -85,9 +89,9 @@ public class OrderController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PutMapping("/orders/{externalId}/cancellation")
     @Operation(operationId = "cancelOrder", summary = "Cancel order by it's external id")
-    @ApiResponse(responseCode = "204", description = "Successful operation")
-    public void cancelOrder(@Parameter(name = "externalId", description = "Order's identifier")
-                            @PathVariable("externalId") UUID externalId) {
+    @ApiResponse(responseCode = "204", description = SUCCESSFUL_OPERATION)
+    public void cancelOrder(@Parameter(name = EXTERNAL_ID, description = "Order's identifier")
+                            @PathVariable(EXTERNAL_ID) UUID externalId) {
         log.info("Received a request to cancel an order: {}", externalId);
         orderService.cancelOrder(externalId);
     }
@@ -95,19 +99,19 @@ public class OrderController {
     @ResponseStatus(HttpStatus.OK)
     @PutMapping("/orders/{externalId}")
     @Operation(operationId = "updateOrder", summary = "Update order by it's external id")
-    @ApiResponse(responseCode = "200", description = "Successful operation")
+    @ApiResponse(responseCode = "200", description = SUCCESSFUL_OPERATION)
     public OrderResponseDto updateOrder(
             @Parameter(name = "orderRequestDto", description = "Representation of a updated order")
             @RequestBody @Valid OrderRequestDto orderRequestDto,
-            @Parameter(name = "externalId", description = "Order's identifier")
-            @PathVariable("externalId") UUID externalId) {
+            @Parameter(name = EXTERNAL_ID, description = "Order's identifier")
+            @PathVariable(EXTERNAL_ID) UUID externalId) {
         log.info("Received a request to update an order: {}",externalId);
         return orderService.update(orderRequestDto, externalId);
     }
 
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/orders/{externalId}/check")
-    public ResponseEntity<InputStreamResource> receiveOrderCheck(@PathVariable("externalId") UUID externalID) {
+    public ResponseEntity<InputStreamResource> receiveOrderCheck(@PathVariable(EXTERNAL_ID) UUID externalID) {
         ByteArrayInputStream byteArrayInputStream = orderService.createCheck(externalID);
         log.info("Received a request to generate of check of order: {}", externalID);
 
