@@ -78,7 +78,7 @@ bootBuildImage {
     imageName = "${account}/${project.name}:${project.version}"
     publish = true
     environment = [
-            "BP_JVM_VERSION" : "${compileJava.sourceCompatibility}"
+            "BP_JVM_VERSION": "${compileJava.sourceCompatibility}"
     ]
     docker {
         publishRegistry {
@@ -91,4 +91,5 @@ bootBuildImage {
 tasks.named('test') {
     useJUnitPlatform()
 }
-tasks.register("prepareKotlinBuildScriptModel"){}
+
+tasks.register("prepareKotlinBuildScriptModel") {}
