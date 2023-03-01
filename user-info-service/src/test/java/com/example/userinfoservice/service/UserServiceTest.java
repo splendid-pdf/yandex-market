@@ -111,48 +111,6 @@ class UserServiceTest {
     }
 
     @Test
-    void create() throws Exception {
-        File jsonFileRequest = new ClassPathResource(CREATE_USER).getFile();
-        User user = new User();
-        user.setLocation(createLocation());
-        user.setPhone(EXISTING_PHONE);
-        user.setExternalId(uuid);
-        UserRequestDto userRequestDto = MAPPER.readValue(Files.readString(jsonFileRequest.toPath()), UserRequestDto.class);
-        Mockito.doNothing()
-                .when(userValidator)
-                .validate(userRequestDto);
-        Mockito.doReturn(user)
-                .when(userRepository)
-                .save(user);
-        Mockito.doReturn(false)
-                .when(userRepository)
-                .existsByEmail(null);
-        Mockito.doReturn(false)
-                .when(userRepository)
-                .existsByPhone(EXISTING_PHONE);
-        Mockito.doReturn(user)
-                .when(userRequestMapper)
-                .map(userRequestDto);
-        Mockito.doReturn(Optional.empty())
-                .when(client)
-                .findCoordinatesByLocation(user.getLocation());
-        UUID actual = userService.create(userRequestDto);
-        assertThat(actual).isEqualTo(uuid);
-    }
-
-    @Test
-    void createIllegalArgument() throws Exception {
-        UserRequestDto userRequestDto = new UserRequestDto();
-        Mockito.doNothing()
-                .when(userValidator)
-                .validate(userRequestDto);
-        Mockito.doReturn(true)
-                .when(userRepository)
-                .existsByEmail(null);
-        assertThrows(IllegalArgumentException.class, () -> userService.create(userRequestDto));
-    }
-
-    @Test
     void deleteUserByExternalId() throws Exception {
         User user = new User();
         user.setExternalId(uuid);
@@ -169,52 +127,6 @@ class UserServiceTest {
                 .when(userRepository)
                 .findByExternalId(uuid);
         assertThrows(EntityNotFoundException.class, () -> userService.deleteUserByExternalId(uuid));
-    }
-
-    @Test
-    void getUserDtoByEmail() throws Exception {
-        Optional<User> optionalUser = Optional.of(new User());
-        File jsonFile = new ClassPathResource(GET_EXPECTED_RESPONSE).getFile();
-        UserResponseDto userResponseDtoExpected = MAPPER.readValue(Files.readString(jsonFile.toPath()), UserResponseDto.class);
-        Mockito.doReturn(optionalUser)
-                .when(userRepository)
-                .findUserByEmail(EXISTING_EMAIL);
-        Mockito.doReturn(userResponseDtoExpected)
-                .when(userResponseMapper)
-                .map(optionalUser.get());
-        UserResponseDto userResponseDtoActual = userService.getUserDtoByEmailOrPhone(EXISTING_EMAIL);
-        assertThat(userResponseDtoActual).isEqualTo(userResponseDtoExpected);
-    }
-
-    @Test
-    void getUserDtoByEmailNotFound() throws Exception {
-        Mockito.doReturn(Optional.empty())
-                .when(userRepository)
-                .findUserByEmail(EXISTING_EMAIL);
-        assertThrows(EntityNotFoundException.class, () -> userService.getUserDtoByEmailOrPhone(EXISTING_EMAIL));
-    }
-
-    @Test
-    void getUserDtoByPhone() throws Exception {
-        Optional<User> optionalUser = Optional.of(new User());
-        File jsonFile = new ClassPathResource(GET_EXPECTED_RESPONSE).getFile();
-        UserResponseDto userResponseDtoExpected = MAPPER.readValue(Files.readString(jsonFile.toPath()), UserResponseDto.class);
-        Mockito.doReturn(optionalUser)
-                .when(userRepository)
-                .findUserByPhone(EXISTING_PHONE);
-        Mockito.doReturn(userResponseDtoExpected)
-                .when(userResponseMapper)
-                .map(optionalUser.get());
-        UserResponseDto userResponseDtoActual = userService.getUserDtoByEmailOrPhone(EXISTING_PHONE);
-        assertThat(userResponseDtoActual).isEqualTo(userResponseDtoExpected);
-    }
-
-    @Test
-    void getUserDtoByPhoneNotFound() throws Exception {
-        Mockito.doReturn(Optional.empty())
-                .when(userRepository)
-                .findUserByEmail(EXISTING_PHONE);
-        assertThrows(EntityNotFoundException.class, () -> userService.getUserDtoByEmailOrPhone(EXISTING_PHONE));
     }
 
     @Test

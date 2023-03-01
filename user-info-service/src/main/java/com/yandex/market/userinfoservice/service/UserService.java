@@ -1,11 +1,14 @@
 package com.yandex.market.userinfoservice.service;
 
+import com.yandex.market.userinfoservice.dto.UserRegistrationDto;
 import com.yandex.market.userinfoservice.gateway.TwoGisClient;
 import com.yandex.market.userinfoservice.mapper.UserRequestMapper;
 import com.yandex.market.userinfoservice.mapper.UserResponseMapper;
 import com.yandex.market.userinfoservice.model.Location;
+import com.yandex.market.userinfoservice.model.Role;
 import com.yandex.market.userinfoservice.model.User;
 import com.yandex.market.userinfoservice.repository.UserRepository;
+import com.yandex.market.userinfoservice.validator.UserRegistrationValidator;
 import com.yandex.market.userinfoservice.validator.UserValidator;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -13,12 +16,12 @@ import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.validator.routines.EmailValidator;
 import org.openapitools.api.model.UserRequestDto;
 import org.openapitools.api.model.UserResponseDto;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,7 +31,7 @@ import java.util.regex.Matcher;
 import java.util.stream.Stream;
 
 import static com.yandex.market.userinfoservice.utils.ExceptionMessagesConstants.*;
-import static com.yandex.market.userinfoservice.utils.PatternConstants.*;
+import static com.yandex.market.userinfoservice.utils.PatternConstants.GROUPED_PHONE_NUMBERS_PATTERN;
 
 @Slf4j
 @Service
@@ -37,26 +40,25 @@ public class UserService {
     private final TwoGisClient client;
     private final UserValidator userValidator;
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
     private final UserRequestMapper userRequestMapper;
     private final UserResponseMapper userResponseMapper;
+    private final UserRegistrationValidator userRegistrationValidator;
+
 
     @Transactional
-    public UUID create(UserRequestDto userRequestDto) {
-        userValidator.validate(userRequestDto);
+    public void signUp(UserRegistrationDto userDto) {
+        userRegistrationValidator.validate(userDto);
 
-        checkEmailForUniqueness(userRequestDto.getEmail());
+        checkEmailForUniqueness(userDto.email());
 
-        val formattedPhone = formatPhone(userRequestDto.getPhone());
-        checkPhoneForUniqueness(formattedPhone);
+        val user = new User();
+        user.setExternalId(UUID.randomUUID());
+        user.setRole(Role.USER);
+        user.setEmail(userDto.email());
+        user.setPassword(userDto.password());
 
-        val user = userRequestMapper.map(userRequestDto);
-        user.setPhone(formattedPhone);
-
-        val location = user.getLocation();
-        client.findCoordinatesByLocation(location)
-                .ifPresent(point -> setLocationCoordinates(location, point));
-
-        return userRepository.save(user).getExternalId();
+        userRepository.save(user);
     }
 
     @Cacheable(value = "users", key = "#externalId")
@@ -68,7 +70,7 @@ public class UserService {
 
     @Transactional
     @CacheEvict(value = "users", key = "#externalId")
-    public void deleteUserByExternalId(UUID externalId){
+    public void deleteUserByExternalId(UUID externalId) {
         val user = userRepository.findByExternalId(externalId)
                 .orElseThrow(() -> new EntityNotFoundException(USER_NOT_FOUND_ERROR_MESSAGE + externalId));
         user.setDeleted(true);
@@ -90,20 +92,6 @@ public class UserService {
         updateUser(storedUser, updatedUser);
 
         return userResponseMapper.map(storedUser);
-    }
-
-    @Cacheable(value = "users", key = "#emailOrPhone")
-    public UserResponseDto getUserDtoByEmailOrPhone(String emailOrPhone) {
-        val trimmedEmailOrPhone = emailOrPhone.trim();
-        if (PHONE_PATTERN.matcher(trimmedEmailOrPhone).matches()) {
-            val phone = formatPhone(trimmedEmailOrPhone);
-            return userResponseMapper.map(getUserByPhone(phone));
-        } else if (EmailValidator.getInstance().isValid(trimmedEmailOrPhone)) {
-            return userResponseMapper.map(getUserByEmail(trimmedEmailOrPhone));
-        }
-
-        log.error("Given email or phone is not valid: emailOrPhone - " + trimmedEmailOrPhone);
-        throw new IllegalArgumentException("Invalid input data - " + trimmedEmailOrPhone);
     }
 
     private void checkEmailForUniqueness(String email) {
@@ -170,15 +158,5 @@ public class UserService {
             checkPhoneForUniqueness(formattedPhone);
             storedUser.setPhone(formattedPhone);
         }
-    }
-
-    private User getUserByPhone(String emailOrPhone) {
-        return userRepository.findUserByPhone(emailOrPhone)
-                .orElseThrow(() -> new EntityNotFoundException(USER_NOT_FOUND_BY_PHONE_ERROR_MESSAGE + emailOrPhone));
-    }
-
-    private User getUserByEmail(String emailOrPhone) {
-        return userRepository.findUserByEmail(emailOrPhone)
-                .orElseThrow(() -> new EntityNotFoundException(USER_NOT_FOUND_BY_EMAIL_ERROR_MESSAGE + emailOrPhone));
     }
 }

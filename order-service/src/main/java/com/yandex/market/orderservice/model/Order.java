@@ -2,6 +2,7 @@ package com.yandex.market.orderservice.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -46,6 +47,7 @@ public class Order {
 
     private LocalDateTime paymentDateTime;
 
+    @CreationTimestamp
     private LocalDateTime creationTimestamp;
 
     @Override
