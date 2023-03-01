@@ -2,6 +2,7 @@ package com.yandex.market.productservice.controller;
 
 import com.yandex.market.productservice.dto.response.ProductResponseDto;
 import com.yandex.market.productservice.model.DisplayProductMethod;
+import com.yandex.market.productservice.model.VisibleMethod;
 import com.yandex.market.productservice.service.SellerService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -47,6 +48,25 @@ public class SellerController {
 
         log.info("Received a request to get Page list or Archive list for products by sellerId = {}", sellerId);
         return sellerService.getPageListOrArchiveBySellerId(sellerId, method, pageable);
+    }
+
+    @PatchMapping("{sellerId}/products")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(operationId = "deleteOrVisibleProductList",
+            summary = "Change product visibility for sellerId",
+            description = "Remove or remove / return from sale a list of goods by sellers")
+    @ApiResponse(responseCode = "200",
+            description = "OK",
+            content = @Content(mediaType = "application/json",
+                    array = @ArraySchema(schema = @Schema(implementation = ProductResponseDto.class))))
+    public void changeProductVisibilityForSeller(@PathVariable(value = "sellerId") UUID sellerId,
+                                                 @RequestBody List<UUID> productIds,
+                                                 @RequestParam VisibleMethod method,
+                                                 @RequestParam boolean methodAction) {
+        log.info("A request was received  to change visibility (remove/visibility) for a specific seller with sellerId: {}"
+                 + " and a list of goods in the number of {} entries.", sellerId, productIds.size());
+        sellerService.changeVisibilityForSellerId(sellerId, productIds, method, methodAction);
+
     }
 
     @DeleteMapping("{sellerId}/products")

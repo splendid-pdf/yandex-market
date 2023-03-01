@@ -27,6 +27,38 @@ public interface SellerRepository extends JpaRepository<Product, Long> {
 
     @Modifying
     @Query(value = """
+                UPDATE Product p
+                SET p.isVisible=false
+                WHERE p.sellerExternalId=:sellerId AND p.externalId IN :productIds
+            """)
+    void hideProductListForSeller(List<UUID> productIds, UUID sellerId);
+
+    @Modifying
+    @Query(value = """
+                UPDATE Product p
+                SET p.isVisible=true
+                WHERE p.sellerExternalId=:sellerId AND p.externalId IN :productIds
+            """)
+    void displayProductListForSeller(List<UUID> productIds, UUID sellerId);
+
+    @Modifying
+    @Query(value = """
+                UPDATE Product p
+                SET p.isVisible=false, p.isDeleted = true
+                WHERE p.sellerExternalId=:sellerId AND p.externalId IN :productIds
+            """)
+    void addListOfGoodsToArchiveForSeller(List<UUID> productIds, UUID sellerId);
+
+    @Modifying
+    @Query(value = """
+                UPDATE Product p
+                SET p.isDeleted=false
+                WHERE p.sellerExternalId=:sellerId AND p.externalId IN :productIds
+            """)
+    void returnListOfGoodsFromArchiveToSeller(List<UUID> productIds, UUID sellerId);
+
+    @Modifying
+    @Query(value = """
                 DELETE FROM Product p
                 WHERE p.sellerExternalId=:sellerId AND
                  p.isDeleted=true AND

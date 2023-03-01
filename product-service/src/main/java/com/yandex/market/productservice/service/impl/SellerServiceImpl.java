@@ -4,6 +4,7 @@ import com.yandex.market.productservice.dto.response.ProductResponseDto;
 import com.yandex.market.productservice.mapper.ProductMapper;
 import com.yandex.market.productservice.model.DisplayProductMethod;
 import com.yandex.market.productservice.model.Product;
+import com.yandex.market.productservice.model.VisibleMethod;
 import com.yandex.market.productservice.repository.SellerRepository;
 import com.yandex.market.productservice.service.SellerService;
 import lombok.RequiredArgsConstructor;
@@ -37,6 +38,21 @@ public class SellerServiceImpl implements SellerService {
                         .map(productMapper::toResponseDto)
                         .toList()
         );
+    }
+
+    @Override
+    @Transactional
+    public void changeVisibilityForSellerId(UUID sellerId, List<UUID> productIds, VisibleMethod method, boolean methodAction) {
+        switch (method) {
+            case VISIBLE -> {
+                if (methodAction) repository.displayProductListForSeller(productIds, sellerId);
+                else repository.hideProductListForSeller(productIds, sellerId);
+            }
+            case DELETE -> {
+                if (methodAction) repository.addListOfGoodsToArchiveForSeller(productIds, sellerId);
+                else repository.returnListOfGoodsFromArchiveToSeller(productIds, sellerId);
+            }
+        }
     }
 
     @Override
