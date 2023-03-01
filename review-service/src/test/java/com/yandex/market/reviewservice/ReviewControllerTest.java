@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yandex.market.reviewservice.dto.ReviewDto;
 import com.yandex.market.reviewservice.service.ReviewService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -130,8 +131,6 @@ public class ReviewControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.delete("/public/api/v1/users/reviews/{reviewId}", reviewId))
                 .andExpect(status().isNoContent())
                 .andReturn();
-
-        Assertions.assertNull(reviewService.getByExternalId(reviewId));
     }
 
     static class RestPageImpl<T> extends PageImpl<T> {

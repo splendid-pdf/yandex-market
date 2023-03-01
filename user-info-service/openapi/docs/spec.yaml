@@ -13,63 +13,6 @@ servers:
 
 
 paths:
-  /public/api/v1/users:
-    post:
-      summary: Create user
-      operationId: createUser
-      requestBody:
-        description: JSON Object with user's information
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/UserRequestDto'
-      responses:
-        '200':
-          description: Successful operation
-          content:
-            application/json:
-              schema:
-                type: string
-                format: uuid
-                example: 'b0ca32a7-6960-49a9-9f20-d78fb3799409'
-
-        '400':
-          description: Invalid data provided to the server
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-    get:
-      summary: Get user by email or phone
-      operationId: getUserByEmailOrPhone
-      parameters:
-        - in: query
-          name: emailOrPhone
-          schema: {
-            type: string
-          }
-          description: The provided user's email or phone
-          required: true
-      responses:
-        '200':
-          description: Successful operation
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/UserResponseDto'
-        '400':
-          description: Invalid data provided to the server
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '404':
-          description: User by email or phone {emailOrPhone} was not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-
   /private/api/v1/users/search:
     post:
       summary: Get paginated list of users by filter

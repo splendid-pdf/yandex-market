@@ -11,8 +11,8 @@ import java.util.UUID;
 @Getter
 @Setter
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "types")
 @EqualsAndHashCode(of = "id")
 public class Type {
@@ -45,27 +45,21 @@ public class Type {
         products.add(product);
     }
 
-    public void removeProduct(Product product) {
-        products.remove(product);
-    }
-
-    public void addTypeCharacteristic(TypeCharacteristic typeCharacteristic) {
+    public void addCharacteristic(TypeCharacteristic typeCharacteristic) {
         typeCharacteristic.setType(this);
         typeCharacteristics.add(typeCharacteristic);
+    }
+
+    public void removeProduct(Product product) {
+        products.remove(product);
     }
 
     public void removeTypeCharacteristic(TypeCharacteristic typeCharacteristic) {
         typeCharacteristics.remove(typeCharacteristic);
     }
 
-    public void addRoom(Room room) {
-        room.getTypes().add(this);
-        rooms.add(room);
-    }
-
     public void removeRoom(Room room) {
         room.getTypes().remove(this);
         rooms.remove(room);
     }
-
 }

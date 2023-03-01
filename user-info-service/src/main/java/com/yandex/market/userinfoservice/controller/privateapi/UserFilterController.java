@@ -1,4 +1,4 @@
-package com.yandex.market.userinfoservice.controller;
+package com.yandex.market.userinfoservice.controller.privateapi;
 
 import com.yandex.market.userinfoservice.service.UserSearchService;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +14,7 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-public class PrivateUserController implements PrivateApi {
+public class UserFilterController implements PrivateApi {
 
     private final UserSearchService userSearchService;
 

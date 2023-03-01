@@ -10,25 +10,48 @@ spring:
     gateway:
       routes:
         - id: order-service-route
-          uri: http://localhost:8081
+          uri: http://127.0.0.1:8081
           predicates:
             - Path=/*/*/*/orders, /*/*/*/orders/**
         - id: user-info-service-route
-          uri: http://localhost:8080
+          uri: http://127.0.0.1:8080
           predicates:
-            - Path=/*/*/*/users, /*/*/*/users/{externalId}, /*/*/*/users/search
+            - Path=/*/*/*/users, /*/*/*/users/{externalId}, /*/*/*/users/search, /*/*/*/users/signup
         - id: product-service-route
-          uri: http://localhost:9090
+          uri: http://127.0.0.1:9090
           predicates:
             - Path=/*/*/*/products, /*/*/*/products/{externalId}, /*/*/*/products/search, /*/*/*/*/*/products, /*/*/*/*/*/products/categories, /*/*/*/*/*/products/categories/**, /*/*/*/*/*/products/search/by-name
         - id: favorite-service-route
-          uri: http://localhost:8082
+          uri: http://127.0.0.1:8082
           predicates:
             - Path=/*/*/*/*/*/favorites, /*/*/*/*/*/favorites/{externalId}
         - id: upload-service-route
-          uri: http://localhost:9001
+          uri: http://127.0.0.1:9001
           predicates:
             - Path=/*/*/*/upload, /*/*/*/download, /*/*/*/url, /*/*/*/delete, /*/*/*/urls
+      default-filters:
+        - TokenRelay
+
+  security:
+    oauth2:
+      client:
+        registration:
+          custom-oidc:
+            provider: custom-oidc
+            scope: openid
+            client-id: client
+            client-secret: secret
+            authorization-grant-type: authorization_code
+            client-authentication-method: client_secret_basic
+            redirect-uri: "http://127.0.0.1:7777/login/oauth2/code/custom-oidc"
+        provider:
+          custom-oidc:
+            issuer-uri: "http://127.0.0.1:9000"
+            token-uri: "http://127.0.0.1:9000/oauth2/token"
+            authorization-uri: "http://127.0.0.1:9000/oauth2/authorize"
+            jwk-set-uri: "http://127.0.0.1:9000/oauth2/jwks"
+            user-info-uri: "http://127.0.0.1:9000/userinfo"
+
 management:
   endpoint:
     gateway:

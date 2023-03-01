@@ -3,6 +3,12 @@ package com.yandex.market.productservice.controller;
 import com.yandex.market.productservice.dto.ProductRequestDto;
 import com.yandex.market.productservice.dto.response.ProductResponseDto;
 import com.yandex.market.productservice.service.ProductService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -21,20 +27,29 @@ import java.util.UUID;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("${spring.app.product.url}")
+
 @Tag(name = "API for working with the Product entity")
+@ApiResponses({
+        @ApiResponse(responseCode = "400", description = "Invalid data provided to the server",
+                content = @Content(mediaType = "application/json"))})
 public class ProductController {
     private final ProductService productService;
 
-    @PostMapping()
+    @PostMapping("/{sellerExternalId}/products")
     @ResponseStatus(HttpStatus.CREATED)
-    public UUID createProduct(@RequestBody @Valid ProductRequestDto productRequestDto) {
-        log.info("Received request to create a product by given value: {}", productRequestDto);
-        return productService.createProduct(productRequestDto);
+    @Operation(operationId = "createProduct", summary = "Create new product for the seller")
+    @ApiResponse(responseCode = "201", description = "Successful operation",
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = UUID.class)))
+    public UUID createProduct(@Parameter(name = "productRequestDto", description = "Representation of a created product")
+                              @RequestBody @Valid ProductRequestDto productRequestDto,
+                              @Parameter(name = "sellerExternalId", description = "Seller's identifier")
+                              @PathVariable("sellerExternalId") UUID sellerExternalId) {
+        return productService.createProduct(productRequestDto, sellerExternalId);
     }
 
     @GetMapping("{externalId}")
     @ResponseStatus(HttpStatus.OK)
-    public ProductResponseDto getProductByExternalId(@PathVariable UUID externalId) {
+    public ProductResponseDto getProductByExternalId(@PathVariable("externalId") UUID externalId) {
         log.info("Received request to get a product by given value: {}", externalId);
         return productService.getProductByExternalId(externalId);
     }

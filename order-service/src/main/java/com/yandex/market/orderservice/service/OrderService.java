@@ -41,6 +41,7 @@ public class OrderService {
         return order.getExternalId();
     }
 
+    @Transactional(readOnly = true)
     public OrderResponseDto getOrderResponseDtoByExternalId(UUID externalId) {
         return orderMapper.toOrderResponseDto(getOrderByExternalId(externalId));
     }
