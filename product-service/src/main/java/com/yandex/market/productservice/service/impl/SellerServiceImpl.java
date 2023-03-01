@@ -2,6 +2,7 @@ package com.yandex.market.productservice.service.impl;
 
 import com.yandex.market.productservice.dto.response.ProductResponseDto;
 import com.yandex.market.productservice.mapper.ProductMapper;
+import com.yandex.market.productservice.model.DisplayProductMethod;
 import com.yandex.market.productservice.model.Product;
 import com.yandex.market.productservice.repository.SellerRepository;
 import com.yandex.market.productservice.service.SellerService;
@@ -12,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -23,8 +25,11 @@ public class SellerServiceImpl implements SellerService {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<ProductResponseDto> getPageOfProductsBySellerId(UUID sellerId, Pageable pageable) {
-        Page<Product> productsBySellerId = repository.getPageOfProductsBySellerId(sellerId, pageable);
+    public Page<ProductResponseDto> getPageListOrArchiveBySellerId(UUID sellerId, DisplayProductMethod method, Pageable pageable) {
+        Page<Product> productsBySellerId = switch (method) {
+            case PRODUCT_LIST -> repository.getPageOfProductsBySellerId(sellerId, pageable);
+            case ARCHIVE -> repository.getArchivePageOfProductsBySellerId(sellerId, pageable);
+        };
 
         return new PageImpl<>(
                 productsBySellerId
@@ -35,14 +40,8 @@ public class SellerServiceImpl implements SellerService {
     }
 
     @Override
-    public Page<ProductResponseDto> getArchivePageOfProductsBySellerId(UUID sellerId, Pageable pageable) {
-        Page<Product> productsBySellerId = repository.getArchivePageOfProductsBySellerId(sellerId, pageable);
-
-        return new PageImpl<>(
-                productsBySellerId
-                        .stream()
-                        .map(productMapper::toResponseDto)
-                        .toList()
-        );
+    @Transactional
+    public void deleteFromArchiveListProductBySellerId(List<UUID> productIds, UUID sellerId) {
+        repository.deleteProductsBySellerId(productIds, sellerId);
     }
 }

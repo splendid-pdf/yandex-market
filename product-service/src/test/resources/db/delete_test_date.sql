@@ -1,3 +1,3 @@
-delete
-from products
-WHERE id between 1000001 and 1000010;
+DELETE
+FROM products
+WHERE id BETWEEN 1000000 AND 1000100;

@@ -15,6 +15,7 @@ public record ProductResponseDto(
          Long count,
          String articleFromSeller,
          Boolean isVisible,
+         Boolean isDeleted,
          LocalDate creationDate,
          TaxType taxType,
          Type type,

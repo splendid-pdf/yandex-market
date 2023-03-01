@@ -2,6 +2,7 @@ package com.yandex.market.productservice;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -28,14 +29,15 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serial;
+import java.io.UnsupportedEncodingException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -69,14 +71,12 @@ class ProductServiceApplicationTests {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        Page<ProductResponseDto> productsBySellerId = objectMapper.readValue(
-                mvcResult.getResponse().getContentAsString(), new TypeReference<RestPageImpl<ProductResponseDto>>() {
-                });
+        Page<ProductResponseDto> productsBySellerId = getPageOfProductFromMvcResult(mvcResult);
 
-        long expectedTotalElements = 2;
+        long expectedTotalElements = 3;
 
         Assertions.assertNotNull(productsBySellerId);
-        Assertions.assertEquals(expectedTotalElements, productsBySellerId.getTotalElements());
+        assertEquals(expectedTotalElements, productsBySellerId.getTotalElements());
     }
 
     @Test
@@ -101,21 +101,75 @@ class ProductServiceApplicationTests {
 
         MvcResult mvcResult = mockMvc.perform(get(
                         PATH_TO_SELLER + "{shopId}/products", sellerId, PageRequest.of(0, 20))
-                        .param("method", "DELETED")
+                        .param("method", "ARCHIVE")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();
 
-        Page<ProductResponseDto> productsBySellerId = objectMapper.readValue(
-                mvcResult.getResponse().getContentAsString(), new TypeReference<RestPageImpl<ProductResponseDto>>() {
-                });
+        Page<ProductResponseDto> productsBySellerId = getPageOfProductFromMvcResult(mvcResult);
 
         long expectedTotalElements = 1;
 
         Assertions.assertNotNull(productsBySellerId);
-        Assertions.assertEquals(expectedTotalElements, productsBySellerId.getTotalElements());
+        assertEquals(expectedTotalElements, productsBySellerId.getTotalElements());
     }
-  
+
+    @Test
+    void deleteListProductBySellerId_successDeleted() throws Exception {
+        UUID sellerId = UUID.fromString("301c5370-be41-421e-9b15-f1e80a7071d1");
+
+        List<UUID> productIds = new ArrayList<>(List.of(
+                UUID.fromString("301c5370-be41-421e-9b15-f1e80a7074d1"),
+                UUID.fromString("301c5370-be41-421e-9b15-f1e80a7074d2"),
+                UUID.fromString("301c5370-be41-421e-9b15-f1e80a7074d3")));
+
+        executeDelete(sellerId, productIds);
+
+        long expectedBeforeDelete = 5 - productIds.size(),
+                actualCountAfterDelete = getActualCountAfterDelete(sellerId);
+
+        assertEquals(expectedBeforeDelete, actualCountAfterDelete);
+    }
+
+    @Test
+    void deleteListProductBySellerId_notAllProductsFound() throws Exception {
+        UUID sellerId = UUID.fromString("301c5370-be41-421e-9b15-f1e80a7071d1");
+
+        List<UUID> productIds = new ArrayList<>(List.of(
+                UUID.fromString("301c5370-be41-421e-9b15-f1e80a7074d4"),   // существует
+                UUID.fromString("301c5370-be41-421e-9b15-f1e80a7074c5"),   // не существует
+                UUID.fromString("301c5370-be41-421e-9b15-f1e80a7074c6"))); // не существует
+
+        executeDelete(sellerId, productIds);
+
+        int countNotFound = 2;
+        long expectedBeforeDelete = 5 - (productIds.size() - countNotFound),
+                actualCountAfterDelete = getActualCountAfterDelete(sellerId);
+
+        assertEquals(expectedBeforeDelete, actualCountAfterDelete);
+    }
+
+    @Test
+    void deleteListProductBySellerId_notAllProductsCanBeDeleted() throws Exception {
+        UUID sellerId = UUID.fromString("301c5370-be41-421e-9b15-f1e80a7071d1");
+
+        List<UUID> productIds = new ArrayList<>(List.of(
+                UUID.fromString("301c5370-be41-421e-9b15-f1e80a7074d5"),   // isDeleted = false
+                UUID.fromString("301c5370-be41-421e-9b15-f1e80a7074d6"),   // isDeleted = false
+                UUID.fromString("301c5370-be41-421e-9b15-f1e80a7074d7"),   // isDeleted = true
+                UUID.fromString("301c5370-be41-421e-9b15-f1e80a7074d8"))); // isDeleted = false
+
+
+        executeDelete(sellerId, productIds);
+
+        int countNotFound = 3;
+        // ожидаемо 5 - (4 - 3 (isDeleted = false))
+        long expectedBeforeDelete = 5 - (productIds.size() - countNotFound),
+                actualCountAfterDelete = getActualCountAfterDelete(sellerId);
+
+        assertEquals(expectedBeforeDelete, actualCountAfterDelete);
+    }
+
     @Test
     @Transactional
     public void create() throws Exception {
@@ -142,7 +196,31 @@ class ProductServiceApplicationTests {
                 .andReturn();
     }
 
-    static class RestPageImpl<T> extends PageImpl<T> {
+    private Page<ProductResponseDto> getPageOfProductFromMvcResult(MvcResult mvcResult) throws JsonProcessingException, UnsupportedEncodingException {
+        return objectMapper.readValue(
+                mvcResult.getResponse().getContentAsString(), new TypeReference<RestPageImpl<ProductResponseDto>>() {
+                });
+    }
+
+    private void executeDelete(UUID sellerId, List<UUID> productIds) throws Exception {
+        mockMvc.perform(delete(
+                        PATH_TO_SELLER + "{sellerId}/products", sellerId)
+                        .content(objectMapper.writeValueAsString(productIds))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
+    private long getActualCountAfterDelete(UUID sellerId) throws Exception {
+        return objectMapper.readValue(mockMvc.perform(get(
+                        PATH_TO_SELLER + "{shopId}/products", sellerId, PageRequest.of(0, 20))
+                        .param("method", "ARCHIVE")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString(), new TypeReference<RestPageImpl<ProductResponseDto>>() {
+        }).getTotalElements();
+    }
+
+    public static class RestPageImpl<T> extends PageImpl<T> {
 
         @Serial
         private static final long serialVersionUID = 867755909294344407L;
