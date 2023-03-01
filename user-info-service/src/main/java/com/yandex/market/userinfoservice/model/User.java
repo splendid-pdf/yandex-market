@@ -42,6 +42,9 @@ public class User {
 
     private String password;
 
+    @Enumerated(value = EnumType.STRING)
+    private Role role;
+
     private LocalDate birthday;
 
     @Enumerated(value = EnumType.STRING)

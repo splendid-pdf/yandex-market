@@ -20,11 +20,11 @@ public class ProductSpecialPrice {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "product_special_prices_sequence")
     private Long id;
 
-    private Long discountedPrice;
-
     private LocalDateTime specialPriceFromDate;
 
     private LocalDateTime specialPriceToDate;
+
+    private Long specialPrice;
 
     @ManyToOne(fetch = FetchType.LAZY)
     Product product;

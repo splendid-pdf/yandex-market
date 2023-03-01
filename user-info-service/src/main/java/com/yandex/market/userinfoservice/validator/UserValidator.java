@@ -48,23 +48,19 @@ public class UserValidator {
         val lastName = userRequestDto.getLastName();
         val middleName = userRequestDto.getMiddleName();
 
-        if (StringUtils.isBlank(firstName)) {
-            exceptionMessages.add(properties.getMessageByErrorCode(BLANK_FIRST_NAME_VALIDATION_ERROR_CODE));
-        } else if (!NAME_PATTERN.matcher(firstName).matches()) {
+        if (StringUtils.isNotBlank(firstName) && !NAME_PATTERN.matcher(firstName).matches()) {
             exceptionMessages
                     .add(properties.getMessageByErrorCode(INCORRECT_FIRST_NAME_VALIDATION_ERROR_CODE)
                             .formatted(firstName));
         }
 
-        if (StringUtils.isNotEmpty(middleName) && !NAME_PATTERN.matcher(middleName).matches()) {
+        if (StringUtils.isNotBlank(middleName) && !NAME_PATTERN.matcher(middleName).matches()) {
             exceptionMessages
                     .add(properties.getMessageByErrorCode(INCORRECT_MIDDLE_NAME_VALIDATION_ERROR_CODE)
                             .formatted(middleName));
         }
 
-        if (StringUtils.isBlank(lastName)) {
-            exceptionMessages.add(properties.getMessageByErrorCode(BLANK_LAST_NAME_VALIDATION_ERROR_CODE));
-        } else if (!NAME_PATTERN.matcher(lastName).matches()) {
+        if (StringUtils.isNotBlank(lastName) && !NAME_PATTERN.matcher(lastName).matches()) {
             exceptionMessages
                     .add(properties.getMessageByErrorCode(INCORRECT_LAST_NAME_VALIDATION_ERROR_CODE)
                             .formatted(lastName));
@@ -99,9 +95,7 @@ public class UserValidator {
     public void validatePhone(@NotNull UserRequestDto userRequestDto, @NotNull List<String> exceptionMessages) {
         val phone = userRequestDto.getPhone();
 
-        if (StringUtils.isBlank(phone)) {
-            exceptionMessages.add(properties.getMessageByErrorCode(BLANK_PHONE_VALIDATION_ERROR_CODE));
-        } else if (!PHONE_PATTERN.matcher(phone).matches()) {
+        if (StringUtils.isNotBlank(phone) && !PHONE_PATTERN.matcher(phone).matches()) {
             exceptionMessages.add(properties.getMessageByErrorCode(INCORRECT_PHONE_VALIDATION_ERROR_CODE)
                     .formatted(phone));
         }
@@ -109,7 +103,7 @@ public class UserValidator {
 
     public void validateSex(@NotNull UserRequestDto userRequestDto, @NotNull List<String> exceptionMessages) {
         val sex = userRequestDto.getSex();
-        if (StringUtils.isNotEmpty(sex) && !EnumUtils.isValidEnumIgnoreCase(Sex.class, sex)) {
+        if (StringUtils.isNotBlank(sex) && !EnumUtils.isValidEnumIgnoreCase(Sex.class, sex)) {
             exceptionMessages.add(properties.getMessageByErrorCode(INCORRECT_SEX_TYPE_ERROR_CODE)
                     .formatted(sex));
         }

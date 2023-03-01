@@ -2,6 +2,8 @@ server:
   port: 9090
 
 spring:
+  application:
+    name: product-service
   flyway:
     enabled: false
   app:
@@ -20,7 +22,7 @@ spring:
     database: POSTGRESQL
     show-sql: true
     hibernate:
-      ddl-auto: update # далее validate
+      ddl-auto: create # далее validate
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect

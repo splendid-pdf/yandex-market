@@ -26,5 +26,4 @@ public class AppConfig {
                 .setConnectTimeout(Duration.ofMillis(properties.getConnectionTimeoutInMs()))
                 .build();
     }
-
 }
