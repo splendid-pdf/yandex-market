@@ -27,7 +27,7 @@ import java.util.UUID;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("${spring.app.product.url}")
-@Tag(name = "products")
+@Tag(name = "API for working with the Product entity")
 @ApiResponses({
         @ApiResponse(responseCode = "400", description = "Invalid data provided to the server",
                 content = @Content(mediaType = "application/json"))})
@@ -59,13 +59,6 @@ public class ProductController {
                                                         @RequestBody @Valid ProductRequestDto productRequestDto) {
         log.info("Received request to update a product:{} by given value: {}", externalId, productRequestDto);
         return productService.updateProductByExternalId(externalId, productRequestDto);
-    }
-
-    @DeleteMapping("{externalId}")
-    @ResponseStatus(HttpStatus.OK)
-    public void deleteProductByExternalId(@PathVariable UUID externalId) {
-        log.info("Received request to get a product by given value: {}", externalId);
-        productService.deleteProductByExternalId(externalId);
     }
 
     @GetMapping()
