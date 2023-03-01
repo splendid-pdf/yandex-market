@@ -12,7 +12,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "sellers")
-@EqualsAndHashCode(of = "id")
+@EqualsAndHashCode(of = "email")
 public class Seller {
 
     @Id
@@ -25,6 +25,8 @@ public class Seller {
     private String firstName;
 
     private String lastName;
+
+    private String email;
 
     private String legalAddress;
 
