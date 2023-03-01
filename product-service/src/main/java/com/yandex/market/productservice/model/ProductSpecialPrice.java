@@ -1,5 +1,6 @@
 package com.yandex.market.productservice.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -27,5 +28,6 @@ public class ProductSpecialPrice {
     private Long specialPrice;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
     Product product;
 }
