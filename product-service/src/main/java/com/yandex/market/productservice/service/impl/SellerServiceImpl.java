@@ -2,9 +2,10 @@ package com.yandex.market.productservice.service.impl;
 
 import com.yandex.market.productservice.dto.response.ProductResponseDto;
 import com.yandex.market.productservice.mapper.ProductMapper;
+import com.yandex.market.productservice.model.DisplayProductMethod;
 import com.yandex.market.productservice.model.Product;
 import com.yandex.market.productservice.model.VisibleMethod;
-import com.yandex.market.productservice.repository.ProductRepository;
+import com.yandex.market.productservice.repository.SellerRepository;
 import com.yandex.market.productservice.service.SellerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -19,13 +20,17 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class SellerServiceImpl implements SellerService {
+
+    private final SellerRepository repository;
     private final ProductMapper productMapper;
-    private final ProductRepository productRepository;
 
     @Override
     @Transactional(readOnly = true)
-    public Page<ProductResponseDto> getPageOfProductsBySellerId(UUID sellerId, Pageable pageable) {
-        Page<Product> productsBySellerId = productRepository.getPageOfProductsBySellerId(sellerId, pageable);
+    public Page<ProductResponseDto> getPageListOrArchiveBySellerId(UUID sellerId, DisplayProductMethod method, Pageable pageable) {
+        Page<Product> productsBySellerId = switch (method) {
+            case PRODUCT_LIST -> repository.getPageOfProductsBySellerId(sellerId, pageable);
+            case ARCHIVE -> repository.getArchivePageOfProductsBySellerId(sellerId, pageable);
+        };
 
         return new PageImpl<>(
                 productsBySellerId
@@ -40,14 +45,19 @@ public class SellerServiceImpl implements SellerService {
     public void changeVisibilityForSellerId(UUID sellerId, List<UUID> productIds, VisibleMethod method, boolean methodAction) {
         switch (method) {
             case VISIBLE -> {
-                if (methodAction) productRepository.displayProductListForSeller(productIds, sellerId);
-                else productRepository.hideProductListForSeller(productIds, sellerId);
+                if (methodAction) repository.displayProductListForSeller(productIds, sellerId);
+                else repository.hideProductListForSeller(productIds, sellerId);
             }
             case DELETE -> {
-                if (methodAction) productRepository.addListOfGoodsToArchiveForSeller(productIds, sellerId);
-                else productRepository.returnListOfGoodsFromArchiveToSeller(productIds, sellerId);
+                if (methodAction) repository.addListOfGoodsToArchiveForSeller(productIds, sellerId);
+                else repository.returnListOfGoodsFromArchiveToSeller(productIds, sellerId);
             }
-            default -> throw new IllegalArgumentException("Invalid method value: " + method);
         }
+    }
+
+    @Override
+    @Transactional
+    public void deleteFromArchiveListProductBySellerId(List<UUID> productIds, UUID sellerId) {
+        repository.deleteProductsBySellerId(productIds, sellerId);
     }
 }

@@ -1,6 +1,12 @@
 server:
   port: 9000
 
+spring:
+  application:
+    name: authorization-server
+  config:
+    import: "optional:configserver:"
+
 app:
   security:
     client-settings:

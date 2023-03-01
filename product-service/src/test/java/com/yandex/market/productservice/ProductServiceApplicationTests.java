@@ -2,6 +2,7 @@ package com.yandex.market.productservice;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -28,22 +29,16 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serial;
+import java.io.UnsupportedEncodingException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -70,19 +65,18 @@ class ProductServiceApplicationTests {
         UUID sellerId = UUID.fromString("301c5370-be41-421e-9b15-f1e80a7074f2");
 
         MvcResult mvcResult = mockMvc.perform(get(
-                        PATH_TO_SELLER + "{sellerId}/products", sellerId, PageRequest.of(0, 20))
+                        PATH_TO_SELLER + "{shopId}/products", sellerId, PageRequest.of(0, 20))
+                        .param("method", "PRODUCT_LIST")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();
 
-        Page<ProductResponseDto> productsBySellerId = objectMapper.readValue(
-                mvcResult.getResponse().getContentAsString(), new TypeReference<RestPageImpl<ProductResponseDto>>() {
-                });
+        Page<ProductResponseDto> productsBySellerId = getPageOfProductFromMvcResult(mvcResult);
 
         long expectedTotalElements = 3;
 
         Assertions.assertNotNull(productsBySellerId);
-        Assertions.assertEquals(expectedTotalElements, productsBySellerId.getTotalElements());
+        assertEquals(expectedTotalElements, productsBySellerId.getTotalElements());
     }
 
     @Test
@@ -90,144 +84,90 @@ class ProductServiceApplicationTests {
         UUID sellerId = UUID.fromString("301c5370-be41-421e-9b15-f1e80a7074f9");
 
         MvcResult mvcResult = mockMvc.perform(get(
-                        PATH_TO_SELLER + "{sellerId}/products", sellerId, PageRequest.of(0, 20))
+                        PATH_TO_SELLER + "{shopId}/products", sellerId, PageRequest.of(0, 20))
+                        .param("method", "PRODUCT_LIST")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();
 
         boolean isEmpty = mvcResult.getResponse().getContentAsString().contains("\"empty\":true");
 
-        assertTrue(isEmpty);
+        Assertions.assertTrue(isEmpty);
     }
 
     @Test
-    void hideProductListForSeller_SuccessUpdateVisibility() throws Exception {
-        UUID sellerId = UUID.fromString("301c5370-be41-421e-9b15-f1e80a7074a1");
+    void findArchivePageOfProductsBySellerId_successfulSearch() throws Exception {
+        UUID sellerId = UUID.fromString("301c5370-be41-421e-9b15-f1e80a7074f2");
 
-        List<UUID> productIds = new ArrayList<>(List.of(
-                UUID.fromString("301c5370-be41-421e-9b15-f1e80a7074b2"),
-                UUID.fromString("301c5370-be41-421e-9b15-f1e80a7074b4")));
-
-        ProductResponseDto product = productService.getProductNoLimitsByExternalId(productIds.get(0)),
-                product2 = productService.getProductNoLimitsByExternalId(productIds.get(1));
-
-        assertNotNull(product);
-        assertNotNull(product2);
-
-        assertTrue(product.isVisible());
-        assertTrue(product2.isVisible());
-
-        mockMvc.perform(patch(
-                        PATH_TO_SELLER + "{sellerId}/products", sellerId)
-                        .param("method", "VISIBLE")
-                        .param("methodAction", "false")
-                        .content(objectMapper.writeValueAsString(productIds))
+        MvcResult mvcResult = mockMvc.perform(get(
+                        PATH_TO_SELLER + "{shopId}/products", sellerId, PageRequest.of(0, 20))
+                        .param("method", "ARCHIVE")
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andReturn();
 
-        product = productService.getProductNoLimitsByExternalId(productIds.get(0));
-        product2 = productService.getProductNoLimitsByExternalId(productIds.get(1));
+        Page<ProductResponseDto> productsBySellerId = getPageOfProductFromMvcResult(mvcResult);
 
-        assertFalse(product.isVisible());
-        assertFalse(product2.isVisible());
+        long expectedTotalElements = 1;
+
+        Assertions.assertNotNull(productsBySellerId);
+        assertEquals(expectedTotalElements, productsBySellerId.getTotalElements());
     }
 
     @Test
-    void displayProductListForSeller_SuccessUpdateVisibility() throws Exception {
-        UUID sellerId = UUID.fromString("301c5370-be41-421e-9b15-f1e80a7074a1");
+    void deleteListProductBySellerId_successDeleted() throws Exception {
+        UUID sellerId = UUID.fromString("301c5370-be41-421e-9b15-f1e80a7071d1");
 
         List<UUID> productIds = new ArrayList<>(List.of(
-                UUID.fromString("301c5370-be41-421e-9b15-f1e80a7074b1"),
-                UUID.fromString("301c5370-be41-421e-9b15-f1e80a7074b3")));
+                UUID.fromString("301c5370-be41-421e-9b15-f1e80a7074d1"),
+                UUID.fromString("301c5370-be41-421e-9b15-f1e80a7074d2"),
+                UUID.fromString("301c5370-be41-421e-9b15-f1e80a7074d3")));
 
-        ProductResponseDto product = productService.getProductNoLimitsByExternalId(productIds.get(0)),
-                product2 = productService.getProductNoLimitsByExternalId(productIds.get(1));
+        executeDelete(sellerId, productIds);
 
-        Assertions.assertNotNull(product);
-        Assertions.assertNotNull(product2);
+        long expectedBeforeDelete = 5 - productIds.size(),
+                actualCountAfterDelete = getActualCountAfterDelete(sellerId);
 
-        assertFalse(product.isVisible());
-        assertFalse(product2.isVisible());
-
-        mockMvc.perform(patch(
-                        PATH_TO_SELLER + "{sellerId}/products", sellerId)
-                        .param("method", "VISIBLE")
-                        .param("methodAction", "true")
-                        .content(objectMapper.writeValueAsString(productIds))
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
-
-        product = productService.getProductNoLimitsByExternalId(productIds.get(0));
-        product2 = productService.getProductNoLimitsByExternalId(productIds.get(1));
-
-        assertTrue(product.isVisible());
-        assertTrue(product2.isVisible());
+        assertEquals(expectedBeforeDelete, actualCountAfterDelete);
     }
 
     @Test
-    void addListOfGoodsToArchiveForSeller_SuccessAddList() throws Exception {
-        UUID sellerId = UUID.fromString("301c5370-be41-421e-9b15-f1e80a7074a1");
+    void deleteListProductBySellerId_notAllProductsFound() throws Exception {
+        UUID sellerId = UUID.fromString("301c5370-be41-421e-9b15-f1e80a7071d1");
 
         List<UUID> productIds = new ArrayList<>(List.of(
-                UUID.fromString("301c5370-be41-421e-9b15-f1e80a7074b2"),
-                UUID.fromString("301c5370-be41-421e-9b15-f1e80a7074b4")));
+                UUID.fromString("301c5370-be41-421e-9b15-f1e80a7074d4"),   // существует
+                UUID.fromString("301c5370-be41-421e-9b15-f1e80a7074c5"),   // не существует
+                UUID.fromString("301c5370-be41-421e-9b15-f1e80a7074c6"))); // не существует
 
-        ProductResponseDto product = productService.getProductNoLimitsByExternalId(productIds.get(0)),
-                product2 = productService.getProductNoLimitsByExternalId(productIds.get(1));
+        executeDelete(sellerId, productIds);
 
-        assertNotNull(product);
-        assertNotNull(product2);
+        int countNotFound = 2;
+        long expectedBeforeDelete = 5 - (productIds.size() - countNotFound),
+                actualCountAfterDelete = getActualCountAfterDelete(sellerId);
 
-        assertFalse(product.isDeleted());
-        assertFalse(product2.isDeleted());
-
-        mockMvc.perform(patch(
-                        PATH_TO_SELLER + "{sellerId}/products", sellerId)
-                        .param("method", "DELETE")
-                        .param("methodAction", "true")
-                        .content(objectMapper.writeValueAsString(productIds))
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
-
-        product = productService.getProductNoLimitsByExternalId(productIds.get(0));
-        product2 = productService.getProductNoLimitsByExternalId(productIds.get(1));
-
-        assertTrue(product.isDeleted());
-        assertTrue(product2.isDeleted());
-        assertFalse(product.isVisible());
-        assertFalse(product2.isVisible());
+        assertEquals(expectedBeforeDelete, actualCountAfterDelete);
     }
 
     @Test
-    void returnListOfGoodsFromArchiveToSeller_SuccessReturn() throws Exception {
-        UUID sellerId = UUID.fromString("301c5370-be41-421e-9b15-f1e80a7074a1");
+    void deleteListProductBySellerId_notAllProductsCanBeDeleted() throws Exception {
+        UUID sellerId = UUID.fromString("301c5370-be41-421e-9b15-f1e80a7071d1");
 
         List<UUID> productIds = new ArrayList<>(List.of(
-                UUID.fromString("301c5370-be41-421e-9b15-f1e80a7074b1"),
-                UUID.fromString("301c5370-be41-421e-9b15-f1e80a7074b3")));
+                UUID.fromString("301c5370-be41-421e-9b15-f1e80a7074d5"),   // isDeleted = false
+                UUID.fromString("301c5370-be41-421e-9b15-f1e80a7074d6"),   // isDeleted = false
+                UUID.fromString("301c5370-be41-421e-9b15-f1e80a7074d7"),   // isDeleted = true
+                UUID.fromString("301c5370-be41-421e-9b15-f1e80a7074d8"))); // isDeleted = false
 
-        ProductResponseDto product = productService.getProductNoLimitsByExternalId(productIds.get(0)),
-                product2 = productService.getProductNoLimitsByExternalId(productIds.get(1));
 
-        Assertions.assertNotNull(product);
-        Assertions.assertNotNull(product2);
+        executeDelete(sellerId, productIds);
 
-        assertFalse(product.isVisible());
-        assertFalse(product2.isVisible());
+        int countNotFound = 3;
+        // ожидаемо 5 - (4 - 3 (isDeleted = false))
+        long expectedBeforeDelete = 5 - (productIds.size() - countNotFound),
+                actualCountAfterDelete = getActualCountAfterDelete(sellerId);
 
-        mockMvc.perform(patch(
-                        PATH_TO_SELLER + "{sellerId}/products", sellerId)
-                        .param("method", "DELETE")
-                        .param("methodAction", "false")
-                        .content(objectMapper.writeValueAsString(productIds))
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
-
-        product = productService.getProductNoLimitsByExternalId(productIds.get(0));
-        product2 = productService.getProductNoLimitsByExternalId(productIds.get(1));
-
-        assertFalse(product.isDeleted());
-        assertFalse(product2.isDeleted());
+        assertEquals(expectedBeforeDelete, actualCountAfterDelete);
     }
 
     @Test
@@ -256,7 +196,31 @@ class ProductServiceApplicationTests {
                 .andReturn();
     }
 
-    static class RestPageImpl<T> extends PageImpl<T> {
+    private Page<ProductResponseDto> getPageOfProductFromMvcResult(MvcResult mvcResult) throws JsonProcessingException, UnsupportedEncodingException {
+        return objectMapper.readValue(
+                mvcResult.getResponse().getContentAsString(), new TypeReference<RestPageImpl<ProductResponseDto>>() {
+                });
+    }
+
+    private void executeDelete(UUID sellerId, List<UUID> productIds) throws Exception {
+        mockMvc.perform(delete(
+                        PATH_TO_SELLER + "{sellerId}/products", sellerId)
+                        .content(objectMapper.writeValueAsString(productIds))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
+    private long getActualCountAfterDelete(UUID sellerId) throws Exception {
+        return objectMapper.readValue(mockMvc.perform(get(
+                        PATH_TO_SELLER + "{shopId}/products", sellerId, PageRequest.of(0, 20))
+                        .param("method", "ARCHIVE")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString(), new TypeReference<RestPageImpl<ProductResponseDto>>() {
+        }).getTotalElements();
+    }
+
+    public static class RestPageImpl<T> extends PageImpl<T> {
 
         @Serial
         private static final long serialVersionUID = 867755909294344407L;
