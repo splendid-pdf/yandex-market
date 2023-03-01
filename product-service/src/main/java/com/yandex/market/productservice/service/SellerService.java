@@ -10,10 +10,9 @@ import java.util.List;
 import java.util.UUID;
 
 public interface SellerService {
-
     Page<ProductResponseDto> getPageListOrArchiveBySellerId(UUID sellerId, DisplayProductMethod method, Pageable pageable);
 
     void changeVisibilityForSellerId(UUID sellerId, List<UUID> productIds, VisibleMethod method, boolean methodAction);
-
+  
     void deleteFromArchiveListProductBySellerId(List<UUID> productIds, UUID sellerId);
 }
