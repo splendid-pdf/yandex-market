@@ -27,7 +27,7 @@ import java.util.UUID;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("${spring.app.product.url}")
-@Tag(name = "products")
+@Tag(name = "API for working with the Product entity")
 @ApiResponses({
         @ApiResponse(responseCode = "400", description = "Invalid data provided to the server",
                 content = @Content(mediaType = "application/json"))})

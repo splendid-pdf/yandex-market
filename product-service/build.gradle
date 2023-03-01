@@ -13,6 +13,7 @@ ext {
     set('apacheCommonsLangVersion', '3.12.0')
     set('jetbrainsAnnotationsVersion', '23.1.0')
     set('openapitoolsJacksonDatabindVersion', '0.2.4')
+    set('openapiUiVersion', '2.0.2')
     set('apacheCommonsValidator', '1.7')
     set("springCloudConfigVersion", "2022.0.1")
     set("mapstructVersion", "1.5.3.Final")
@@ -31,6 +32,8 @@ dependencies {
     implementation 'org.springframework:spring-jdbc'
     implementation 'org.springframework.boot:spring-boot-starter-web'
 
+    // open api
+    implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:${openapiUiVersion}"
 
     // db
     implementation "org.flywaydb:flyway-core:${flywayCoreVersion}"
@@ -75,7 +78,7 @@ bootBuildImage {
     imageName = "${account}/${project.name}:${project.version}"
     publish = true
     environment = [
-            "BP_JVM_VERSION" : "${compileJava.sourceCompatibility}"
+            "BP_JVM_VERSION": "${compileJava.sourceCompatibility}"
     ]
     docker {
         publishRegistry {
@@ -88,4 +91,5 @@ bootBuildImage {
 tasks.named('test') {
     useJUnitPlatform()
 }
-tasks.register("prepareKotlinBuildScriptModel"){}
+
+tasks.register("prepareKotlinBuildScriptModel") {}

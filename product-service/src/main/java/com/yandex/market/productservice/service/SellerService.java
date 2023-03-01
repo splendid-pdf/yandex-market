@@ -8,4 +8,6 @@ import java.util.UUID;
 
 public interface SellerService {
     Page<ProductResponseDto> getPageOfProductsBySellerId (UUID sellerId, Pageable pageable);
+
+    Page<ProductResponseDto> getArchivePageOfProductsBySellerId(UUID sellerId, Pageable pageable);
 }
