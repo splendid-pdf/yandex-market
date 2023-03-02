@@ -32,6 +32,7 @@ public class Room {
             joinColumns = {@JoinColumn(name = "room_id")},
             inverseJoinColumns = {@JoinColumn(name = "type_id")}
     )
+    @Builder.Default
     private Set<Type> types = new HashSet<>();
 
     public void addType(Type type) {

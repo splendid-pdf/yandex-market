@@ -29,9 +29,11 @@ public class Type {
 
     @OneToMany(mappedBy = "type", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     @JsonIgnore
+    @Builder.Default
     private Set<Product> products = new HashSet<>();
 
     @OneToMany(mappedBy = "type", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
     private Set<TypeCharacteristic> typeCharacteristics = new HashSet<>();
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
@@ -40,6 +42,7 @@ public class Type {
             joinColumns = {@JoinColumn(name = "type_id")},
             inverseJoinColumns = {@JoinColumn(name = "room_id")}
     )
+    @Builder.Default
     private Set<Room> rooms = new HashSet<>();
 
     public void addProduct(Product product) {
