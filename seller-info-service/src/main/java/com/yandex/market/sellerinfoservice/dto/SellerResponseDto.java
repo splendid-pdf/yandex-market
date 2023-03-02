@@ -21,7 +21,7 @@ public record SellerResponseDto(
         String lastName,
         @Schema(description = "Электронная почта продавца")
         String email,
-        @Schema(description = "Адресс продавца")
+        @Schema(description = "Адрес продавца")
         String legalAddress,
         @Schema(description = "Имя фирмы продавца")
         String companyName,
