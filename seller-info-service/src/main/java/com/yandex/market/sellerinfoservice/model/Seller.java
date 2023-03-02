@@ -30,29 +30,22 @@ public class Seller {
 
     private String email;
 
-    @Schema(description = "Адрес продавца")
     private String legalAddress;
 
     private String companyName;
 
     private String imageUrl;
 
-    @Schema(description = "Форма регистрации фирмы продавца")
     @Enumerated(value = EnumType.STRING)
     private BusinessModel businessModel;
 
-    @Schema(description = "Идентификационный номер налогоплательщика продавца")
     private String ITN;
 
-    @Schema(description = "Основной государственный регистрационный номер продавца")
     private String PSRN;
 
-    @Schema(description = "Банковский идентификационный код продавца")
     private String BIC;
 
-    @Schema(description = "Банковский расчетный счет продавца")
     private String paymentAccount;
 
-    @Schema(description = "Банковский корпаративный счет продавца")
     private String corporateAccount;
 }
