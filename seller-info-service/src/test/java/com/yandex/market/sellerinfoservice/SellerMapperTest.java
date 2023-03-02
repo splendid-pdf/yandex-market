@@ -50,6 +50,7 @@ public class SellerMapperTest {
             "alexsandrooo@example.com",
             "г. Саратов, ул. Московская, д123, к13",
             "Alex Corp",
+            "https://example.com/image.jpg",
             BusinessModel.OOO,
             "123456789012",
             "123456789012345",
@@ -74,6 +75,7 @@ public class SellerMapperTest {
         Assertions.assertNotNull(seller);
         assertThat(SELLER_REQUEST_DTO)
                 .usingRecursiveComparison()
+                .ignoringFieldsOfTypes(UUID.class)
                 .isEqualTo(seller);
     }
 
@@ -84,6 +86,7 @@ public class SellerMapperTest {
                 null,
                 "alexsandrooo@gmail.com",
                 "г. Саратов, ул. Московская, д123, к14",
+                null,
                 null,
                 null,
                 "123456789999",

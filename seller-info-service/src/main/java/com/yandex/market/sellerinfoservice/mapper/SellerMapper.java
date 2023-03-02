@@ -15,12 +15,10 @@ public interface SellerMapper {
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "externalId", expression = "java(UUID.randomUUID())")
-    @Mapping(target = "imageUrl", ignore = true)
     Seller toSellerModel(SellerRequestDto sellerRequestDTO);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "externalId", ignore = true)
-    @Mapping(target = "imageUrl", ignore = true)
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     Seller updateSellerModel(SellerRequestDto sellerRequestDTO, @MappingTarget Seller seller);
 }
