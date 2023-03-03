@@ -3,7 +3,7 @@ package com.yandex.market.userinfoservice.validator;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yandex.market.userinfoservice.config.properties.ErrorInfoProperties;
-import com.yandex.market.userinfoservice.dto.UserRegistrationDto;
+import com.yandex.market.userinfoservice.dto.request.UserRegistrationDto;
 import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;

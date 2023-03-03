@@ -2,6 +2,7 @@ package com.yandex.market.userinfoservice.validator;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yandex.market.userinfoservice.config.properties.ErrorInfoProperties;
+import com.yandex.market.userinfoservice.dto.request.UserRequestDto;
 import com.yandex.market.userinfoservice.model.Sex;
 import com.yandex.market.userinfoservice.model.SocialNetwork;
 import com.yandex.market.userinfoservice.validator.enums.UserFieldValidation;
@@ -12,7 +13,6 @@ import lombok.val;
 import org.apache.commons.lang3.EnumUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
-import org.openapitools.api.model.UserRequestDto;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
@@ -44,9 +44,9 @@ public class UserValidator {
     }
 
     public void validateName(@NotNull UserRequestDto userRequestDto, @NotNull List<String> exceptionMessages) {
-        val firstName = userRequestDto.getFirstName();
-        val lastName = userRequestDto.getLastName();
-        val middleName = userRequestDto.getMiddleName();
+        val firstName = userRequestDto.firstName();
+        val lastName = userRequestDto.lastName();
+        val middleName = userRequestDto.middleName();
 
         if (StringUtils.isNotBlank(firstName) && !NAME_PATTERN.matcher(firstName).matches()) {
             exceptionMessages
@@ -68,7 +68,7 @@ public class UserValidator {
     }
 
     public void validateEmail(@NotNull UserRequestDto userRequestDto, @NotNull List<String> exceptionMessages) {
-        val email = userRequestDto.getEmail();
+        val email = userRequestDto.email();
 
 //        if (userRepository.existsByEmail(email)) {
 //            throw new IllegalArgumentException(USER_WITH_THE_SAME_EMAIL_IS_EXISTS_MESSAGE.formatted(email));
@@ -82,7 +82,7 @@ public class UserValidator {
     }
 
     public void validatePassword(@NotNull UserRequestDto userRequestDto, @NotNull List<String> exceptionMessages) {
-        val password = userRequestDto.getPassword();
+        val password = userRequestDto.password();
 
         if (StringUtils.isBlank(password)) {
             exceptionMessages.add(properties.getMessageByErrorCode(BLANK_PASSWORD_VALIDATION_ERROR_CODE));
@@ -93,7 +93,7 @@ public class UserValidator {
     }
 
     public void validatePhone(@NotNull UserRequestDto userRequestDto, @NotNull List<String> exceptionMessages) {
-        val phone = userRequestDto.getPhone();
+        val phone = userRequestDto.phone();
 
         if (StringUtils.isNotBlank(phone) && !PHONE_PATTERN.matcher(phone).matches()) {
             exceptionMessages.add(properties.getMessageByErrorCode(INCORRECT_PHONE_VALIDATION_ERROR_CODE)
@@ -102,7 +102,7 @@ public class UserValidator {
     }
 
     public void validateSex(@NotNull UserRequestDto userRequestDto, @NotNull List<String> exceptionMessages) {
-        val sex = userRequestDto.getSex();
+        val sex = userRequestDto.sex();
         if (StringUtils.isNotBlank(sex) && !EnumUtils.isValidEnumIgnoreCase(Sex.class, sex)) {
             exceptionMessages.add(properties.getMessageByErrorCode(INCORRECT_SEX_TYPE_ERROR_CODE)
                     .formatted(sex));
@@ -110,10 +110,10 @@ public class UserValidator {
     }
 
     public void validateContact(@NotNull UserRequestDto userRequestDto, @NotNull List<String> exceptionMessages) {
-        if (!CollectionUtils.isEmpty(userRequestDto.getContacts())) {
-            userRequestDto.getContacts().forEach(contactDto -> {
-                val networkValue = contactDto.getValue();
-                val socialNetwork = contactDto.getType();
+        if (!CollectionUtils.isEmpty(userRequestDto.contacts())) {
+            userRequestDto.contacts().forEach(contactDto -> {
+                val networkValue = contactDto.value();
+                val socialNetwork = contactDto.type();
 
                 if (!EnumUtils.isValidEnumIgnoreCase(SocialNetwork.class, socialNetwork) && socialNetwork != null) {
                     exceptionMessages.add(properties.getMessageByErrorCode(INCORRECT_SOCIAL_NETWORK_ERROR_CODE)

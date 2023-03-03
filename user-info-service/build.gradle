@@ -1,9 +1,6 @@
-import org.openapitools.generator.gradle.plugin.tasks.GenerateTask
-
 plugins {
     id 'pmd'
     id 'java'
-    id 'org.openapi.generator' version '6.2.1'
     id 'org.springframework.boot' version '3.0.2'
     id 'io.spring.dependency-management' version '1.1.0'
 }
@@ -14,7 +11,6 @@ ext {
     set('mockitoInlineVersion', '4.10.0')
     set('apacheCommonsLangVersion', '3.12.0')
     set('jetbrainsAnnotationsVersion', '23.1.0')
-    set('openapitoolsJacksonDatabindVersion', '0.2.4')
     set('apacheCommonsValidator', '1.7')
     set('springCloudVersion', "2022.0.1")
 
@@ -34,6 +30,9 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
 
+    // open api
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
+
     //spring cloud
     implementation 'org.springframework.cloud:spring-cloud-config-client'
 
@@ -49,10 +48,6 @@ dependencies {
     implementation "org.apache.commons:commons-lang3:${apacheCommonsLangVersion}"
     implementation "commons-validator:commons-validator:${apacheCommonsValidator}"
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
-
-    // open api
-    implementation "org.openapitools:jackson-databind-nullable:${openapitoolsJacksonDatabindVersion}"
-    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
 
     // lombok
     compileOnly 'org.projectlombok:lombok'
@@ -91,34 +86,6 @@ bootBuildImage {
 
 tasks.named('test') {
     useJUnitPlatform()
-}
-
-def generatedDir = "${buildDir}/generated"
-
-tasks.register('generateOpenApi', GenerateTask) {
-    generatorName = 'spring'
-    inputSpec = "$projectDir/openapi/docs/spec.yaml"
-    outputDir = generatedDir
-    configOptions = [
-            interfaceOnly       : 'true',
-            artifactDescription : 'User Info service',
-            artifactId          : project.name,
-            artifactVersion     : project.version.toString(),
-            artifactUrl         : 'https://github.com/splendid-pdf/yandex-market/tree/master/user-info-service',
-            serializationLibrary: 'jackson',
-            apiPackage          : 'org.openapitools.api.controller',
-            modelPackage        : 'org.openapitools.api.model',
-            sourceFolder        : 'src/main/java',
-            useSpringBoot3      : 'true'
-    ]
-}
-
-compileJava.dependsOn tasks.generateOpenApi
-
-sourceSets {
-    main {
-        java.srcDirs += generatedDir + '/src/main/java'
-    }
 }
 
 pmd {

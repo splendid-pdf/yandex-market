@@ -1,6 +1,9 @@
 package com.yandex.market.userinfoservice.service;
 
-import com.yandex.market.userinfoservice.dto.UserRegistrationDto;
+import com.yandex.market.userinfoservice.dto.request.UserAuthenticationDto;
+import com.yandex.market.userinfoservice.dto.request.UserRegistrationDto;
+import com.yandex.market.userinfoservice.dto.request.UserRequestDto;
+import com.yandex.market.userinfoservice.dto.response.UserResponseDto;
 import com.yandex.market.userinfoservice.gateway.TwoGisClient;
 import com.yandex.market.userinfoservice.mapper.UserRequestMapper;
 import com.yandex.market.userinfoservice.mapper.UserResponseMapper;
@@ -16,8 +19,6 @@ import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.openapitools.api.model.UserRequestDto;
-import org.openapitools.api.model.UserResponseDto;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
@@ -92,6 +93,18 @@ public class UserService {
         updateUser(storedUser, updatedUser);
 
         return userResponseMapper.map(storedUser);
+    }
+
+    public UserAuthenticationDto authenticate(String email) {
+        User user = userRepository.findUserByEmail(email)
+                .orElseThrow(() -> new EntityNotFoundException(USER_NOT_FOUND_BY_EMAIL_ERROR_MESSAGE + email));
+
+        return new UserAuthenticationDto(
+                user.getExternalId(),
+                user.getEmail(),
+                user.getPassword(),
+                user.getRole().name()
+        );
     }
 
     private void checkEmailForUniqueness(String email) {

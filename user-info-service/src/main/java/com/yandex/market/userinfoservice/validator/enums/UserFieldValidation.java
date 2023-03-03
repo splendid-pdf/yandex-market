@@ -1,8 +1,8 @@
 package com.yandex.market.userinfoservice.validator.enums;
 
+import com.yandex.market.userinfoservice.dto.request.UserRequestDto;
 import com.yandex.market.userinfoservice.validator.UserValidator;
 import org.apache.logging.log4j.util.TriConsumer;
-import org.openapitools.api.model.UserRequestDto;
 
 import java.util.List;
 

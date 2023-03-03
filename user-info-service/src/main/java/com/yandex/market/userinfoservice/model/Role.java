@@ -10,6 +10,10 @@ public enum Role {
         this.key = key;
     }
 
+    public String getKey() {
+        return key;
+    }
+
     public static Role findRoleByKey(String key) {
         for (Role role : values()) {
             if (role.key.equals(key)) {

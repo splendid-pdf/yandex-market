@@ -1,7 +1,7 @@
 package com.yandex.market.userinfoservice.controller.privateapi;
 
-import com.yandex.market.userinfoservice.dto.UserAuthenticationDto;
-import com.yandex.market.userinfoservice.service.UserSearchService;
+import com.yandex.market.userinfoservice.dto.request.UserAuthenticationDto;
+import com.yandex.market.userinfoservice.service.UserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,10 +15,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/private/api/v1/users/auth-details")
 public class AuthUserController {
 
-    private final UserSearchService userSearchService;
+    private final UserService userService;
 
     @GetMapping("/{email}")
     public UserAuthenticationDto authenticate(@PathVariable("email") String email) {
-        return userSearchService.authenticate(email);
+        return userService.authenticate(email);
     }
 }

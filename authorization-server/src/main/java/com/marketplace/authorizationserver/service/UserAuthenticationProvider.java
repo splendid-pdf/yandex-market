@@ -34,6 +34,7 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
         if (password.equals(userDetails.getPassword())) {
             UsernamePasswordAuthenticationToken token =
                     new UsernamePasswordAuthenticationToken(email, password, userDetails.getAuthorities());
+            
             token.setDetails(Map.of("user-id", userDetails.getExternalId()));
             return token;
         }

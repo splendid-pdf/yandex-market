@@ -1,10 +1,10 @@
 package com.yandex.market.userinfoservice.mapper;
 
 import com.yandex.market.mapper.Mapper;
-import com.yandex.market.userinfoservice.model.Sex;
+import com.yandex.market.userinfoservice.dto.response.UserResponseDto;
 import com.yandex.market.userinfoservice.model.User;
 import lombok.RequiredArgsConstructor;
-import org.openapitools.api.model.UserResponseDto;
+import lombok.val;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
@@ -21,36 +21,32 @@ public class UserResponseMapper implements Mapper<User, UserResponseDto> {
 
     @Override
     public UserResponseDto map(User user) {
-        UserResponseDto userResponseDto = new UserResponseDto();
-        userResponseDto.setExternalId(user.getExternalId());
-        userResponseDto.setEmail(user.getEmail());
-        userResponseDto.setFirstName(user.getFirstName());
-        userResponseDto.setMiddleName(user.getMiddleName());
-        userResponseDto.setLastName(user.getLastName());
-        userResponseDto.setPhone(user.getPhone());
-        userResponseDto.setPhotoId(user.getPhotoId());
+        val sex = user.getSex() != null ? user.getSex().name() : null;
 
-        if (user.getSex() == null) {
-            userResponseDto.setSex(Sex.NONE.name());
-        } else {
-            userResponseDto.setSex(user.getSex().name());
-        }
-
-        userResponseDto.setBirthday(user.getBirthday());
-        userResponseDto.setContacts(Stream.ofNullable(user.getContacts())
+        val contactDtoList = Stream.ofNullable(user.getContacts())
                 .flatMap(Collection::stream)
                 .map(contactMapper::mapToDto)
-                .toList());
+                .toList();
 
-        if (user.getLocation() != null) {
-            userResponseDto.setLocation(locationMapper.mapToDto(user.getLocation()));
-        }
+        val locationDto = user.getLocation() != null ? locationMapper.mapToDto(user.getLocation()) : null;
 
-        if (user.getNotificationSettings() != null) {
-            userResponseDto.setNotificationSettings(notificationSettingsMapper
-                    .notificationSettingsToDto(user.getNotificationSettings()));
-        }
+        val notificationSettingsDto = user.getNotificationSettings() != null
+                ? notificationSettingsMapper.notificationSettingsToDto(user.getNotificationSettings())
+                : null;
 
-        return userResponseDto;
+        return new UserResponseDto(
+                user.getExternalId(),
+                user.getFirstName(),
+                user.getMiddleName(),
+                user.getLastName(),
+                user.getPhone(),
+                user.getEmail(),
+                user.getBirthday(),
+                sex,
+                locationDto,
+                contactDtoList,
+                notificationSettingsDto,
+                user.getPhotoId()
+        );
     }
 }

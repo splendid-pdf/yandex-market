@@ -20,7 +20,6 @@ public class TwoGisClient {
     private final RestTemplate restTemplate;
     private final RestProperties properties;
 
-
     public Optional<Point> findCoordinatesByLocation(Location location) {
         if (StringUtils.isNoneBlank(location.getCity(), location.getStreet(), location.getHouseNumber())) {
             String addressQuery = QUERY_TEMPLATE.formatted(

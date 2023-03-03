@@ -1,4 +1,4 @@
-package com.yandex.market.userinfoservice.dto;
+package com.yandex.market.userinfoservice.dto.request;
 
 import java.util.UUID;
 
