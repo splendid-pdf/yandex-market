@@ -1,6 +1,6 @@
 package com.yandex.market.userinfoservice.controller.publicapi;
 
-import com.yandex.market.userinfoservice.dto.UserRegistrationDto;
+import com.yandex.market.userinfoservice.dto.request.UserRegistrationDto;
 import com.yandex.market.userinfoservice.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -12,9 +12,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import static com.yandex.market.util.HttpUtils.PUBLIC_API_V1;
+
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/public/api/v1/users")
+@RequestMapping(PUBLIC_API_V1)
 @Tag(name = "public")
 @ApiResponses({
         @ApiResponse(responseCode = "400", description = "Invalid data provided to the server",
@@ -26,7 +28,7 @@ public class SignUpUserController {
     @ResponseStatus(HttpStatus.OK)
     @Operation(operationId = "signUp", summary = "Registration user in application")
     @ApiResponse(responseCode = "200", description = "Successful")
-    @PostMapping("/signup")
+    @PostMapping("/users/signup")
     public void signUp(@Parameter(name = "userRegistrationDto", description = "User registration")
             @RequestBody UserRegistrationDto userRegistrationDto) {
         userService.signUp(userRegistrationDto);
