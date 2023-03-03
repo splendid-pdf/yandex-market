@@ -13,7 +13,6 @@ import org.mapstruct.*;
 public interface SellerMapper {
     SellerResponseDto toSellerResponseDto(Seller seller);
 
-    @Mapping(target = "id", ignore = true)
     @Mapping(target = "externalId", expression = "java(UUID.randomUUID())")
     Seller toSellerModel(SellerRequestDto sellerRequestDTO);
 
