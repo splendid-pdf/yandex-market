@@ -53,12 +53,15 @@ public class Product {
     private LocalDate creationDate;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
     private Set<ProductCharacteristic> productCharacteristics = new HashSet<>();
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
     private Set<ProductImage> productImages = new HashSet<>();
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
     private Set<ProductSpecialPrice> productSpecialPrices = new HashSet<>();
 
     public void addProductCharacteristic(ProductCharacteristic characteristic) {

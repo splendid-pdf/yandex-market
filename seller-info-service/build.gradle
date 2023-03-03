@@ -1,0 +1,61 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.0.3'
+    id 'io.spring.dependency-management' version '1.1.0'
+}
+
+group = 'com.yandex.market'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '17'
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+ext {
+    set("mapstructVersion", "1.5.3.Final")
+    set('openapiUiVersion', '2.0.2')
+    set('lombokVersion', '1.18.24')
+    set('mockitoInlineVersion', '4.10.0')
+}
+
+dependencies {
+    // spring
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+
+    // mapper
+    implementation "org.mapstruct:mapstruct:${mapstructVersion}"
+
+    // db
+    runtimeOnly 'org.postgresql:postgresql'
+
+    // open api
+    implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:${openapiUiVersion}"
+
+    // lombok
+    compileOnly "org.projectlombok:lombok:${lombokVersion}"
+    testCompileOnly "org.projectlombok:lombok:${lombokVersion}"
+    testAnnotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+
+    // annotation processor
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+    annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+    annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
+
+    // tests
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation "org.mockito:mockito-inline:${mockitoInlineVersion}"
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
