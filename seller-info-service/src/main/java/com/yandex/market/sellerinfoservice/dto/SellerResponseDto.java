@@ -11,7 +11,7 @@ import java.util.UUID;
  * @param BIC  BIC - Банковский идентификационный код
  */
 
-@Schema(description = "Seller Response Dto")
+@Schema(description = "Модель для отображения модели \"Seller\"")
 public record SellerResponseDto(
         @Schema(description = "внешний id для продавца")
         UUID externalId,
@@ -39,5 +39,4 @@ public record SellerResponseDto(
         String paymentAccount,
         @Schema(description = "Банковский корпаративный счет продавца")
         String corporateAccount) {
-
 }

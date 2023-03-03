@@ -1,5 +1,6 @@
 package com.yandex.market.sellerinfoservice.model;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -12,7 +13,8 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "sellers")
-@EqualsAndHashCode(of = "email")
+@EqualsAndHashCode(of = "id")
+@Schema(description = "Модель для \"Продавца\"")
 public class Seller {
 
     @Id
@@ -37,13 +39,10 @@ public class Seller {
     @Enumerated(value = EnumType.STRING)
     private BusinessModel businessModel;
 
-    //ITN - Идентификационный номер налогоплательщика
     private String ITN;
 
-    //PSRN - Основной государственный регистрационный номер
     private String PSRN;
 
-    // BIC - Банковский идентификационный код
     private String BIC;
 
     private String paymentAccount;

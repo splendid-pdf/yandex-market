@@ -9,7 +9,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
  * @param BIC  BIC - Банковский идентификационный код
  */
 
-@Schema(description = "Seller Request Dto")
+@Schema(description = "Модель для сохранения \"Продавца\"")
 public record SellerRequestDto(
         @Schema(description = "Имя продавца")
         String firstName,
@@ -35,5 +35,4 @@ public record SellerRequestDto(
         String paymentAccount,
         @Schema(description = "Банковский корпаративный счет продавца")
         String corporateAccount) {
-
 }
