@@ -1,7 +1,7 @@
 package com.example.userinfoservice.repository;
 
-import com.yandex.market.userinfoservice.UserInfoServiceApplication;
-import com.yandex.market.userinfoservice.repository.UserRepository;
+import com.yandex.market.userservice.UserInfoServiceApplication;
+import com.yandex.market.userservice.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
