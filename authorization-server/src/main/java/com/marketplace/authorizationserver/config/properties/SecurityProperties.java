@@ -18,7 +18,6 @@ public class SecurityProperties {
         private String clientSecret;
         private String redirectLoginUri;
         private String redirectSuccessLoginUri;
-        private String scope;
     }
 
     @Setter
@@ -45,10 +44,6 @@ public class SecurityProperties {
 
     public String getRedirectSuccessLoginUri() {
         return clientSettings.redirectSuccessLoginUri;
-    }
-
-    public String getScope() {
-        return clientSettings.scope;
     }
 
     public Integer getAccessTokenLifetimeInMinutes() {

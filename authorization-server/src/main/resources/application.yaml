@@ -14,7 +14,6 @@ app:
       client-secret: "{noop}secret"
       redirect-login-uri: "http://127.0.0.1:7777/login/oauth2/code/custom-oidc"
       redirect-success-login-uri: "http://127.0.0.1:7777/authorized"
-      scope: read
     token-settings:
       access-token-life-time-in-minutes: 30
       refresh-token-lifetime-in-minutes: 60
