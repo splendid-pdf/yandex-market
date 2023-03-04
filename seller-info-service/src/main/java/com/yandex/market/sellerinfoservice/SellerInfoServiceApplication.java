@@ -9,5 +9,4 @@ public class SellerInfoServiceApplication {
     public static void main(String[] args) {
         SpringApplication.run(SellerInfoServiceApplication.class, args);
     }
-
 }
