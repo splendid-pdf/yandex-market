@@ -22,7 +22,7 @@ public class SellerService {
     @Transactional
     public UUID createSeller(SellerRequestDto sellerRequestDto) {
         if (sellerRepository.existsSellerByEmail(sellerRequestDto.email())) {
-            throw new EntityExistsException(sellerRequestDto.email());
+            throw new EntityExistsException("Seller with email " + sellerRequestDto.email() + " already exist");
         }
         Seller seller = sellerMapper.toSellerModel(sellerRequestDto);
         return sellerRepository.save(seller).getExternalId();

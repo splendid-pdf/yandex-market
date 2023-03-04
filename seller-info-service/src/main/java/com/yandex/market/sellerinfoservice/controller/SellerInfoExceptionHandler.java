@@ -17,7 +17,7 @@ public class SellerInfoExceptionHandler {
     public ErrorResponse entityExistExceptionHandler(EntityExistsException ex) {
         return ErrorResponse.builder()
                 .statusCode(HttpStatus.CONFLICT.name())
-                .message("User with email " + ex.getMessage() + " already exist")
+                .message(ex.getMessage())
                 .timestamp(LocalDateTime.now())
                 .build();
     }
