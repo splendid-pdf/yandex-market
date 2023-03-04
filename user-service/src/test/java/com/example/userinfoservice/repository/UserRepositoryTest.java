@@ -1,6 +1,6 @@
 package com.example.userinfoservice.repository;
 
-import com.yandex.market.userservice.UserInfoServiceApplication;
+import com.yandex.market.userservice.UserServiceApplication;
 import com.yandex.market.userservice.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +20,7 @@ import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.AFTER_TES
 import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.BEFORE_TEST_METHOD;
 
 
-@SpringBootTest(classes = UserInfoServiceApplication.class,
+@SpringBootTest(classes = UserServiceApplication.class,
         webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
 @TestPropertySource(locations = "classpath:application-test.yaml")
