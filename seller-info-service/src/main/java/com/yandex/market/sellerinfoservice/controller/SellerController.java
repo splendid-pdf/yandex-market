@@ -3,16 +3,20 @@ package com.yandex.market.sellerinfoservice.controller;
 import com.yandex.market.sellerinfoservice.dto.SellerRequestDto;
 import com.yandex.market.sellerinfoservice.service.SellerService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
+@Slf4j
 @RestController
 @RequestMapping("${spring.application.url}")
 @RequiredArgsConstructor
@@ -31,5 +35,20 @@ public class SellerController {
     })
     public UUID createSeller(@RequestBody SellerRequestDto sellerRequestDto) {
         return sellerService.createSeller(sellerRequestDto);
+    }
+
+    @PutMapping("{sellerId}")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "OK",
+                    content = @Content(mediaType = "application/json",
+                            array = @ArraySchema(schema = @Schema(implementation = SellerRequestDto.class))))
+    })
+    @Operation(operationId = "updateSeller",
+            summary = "Search by sellerId and update with Dto",
+            description = "Updating seller based on incoming object DTO and seller UUID")
+    @ResponseStatus(HttpStatus.OK)
+    public void updateSeller(@PathVariable UUID sellerId, @RequestBody SellerRequestDto sellerRequestDto) {
+        log.info("Request received to update seller found by sellerId = {} based on dto = {}", sellerId, sellerRequestDto);
+        sellerService.updateSellerWithDto(sellerId, sellerRequestDto);
     }
 }

@@ -8,15 +8,10 @@ spring:
   flyway:
     enabled: false
 
-#  datasource:
-#    url: jdbc:postgresql://51.250.102.12:5432/${DB_NAME}
-#    username: ${POSTGRES_USER}
-#    password: ${POSTGRES_PASSWORD}
-#    driver-class-name: org.postgresql.Driver
   datasource:
-    url: ${POSTGRES_URL:jdbc:postgresql://localhost:5432/postgres}
-    username: ${POSTGRES_USER:postgres}
-    password: ${POSTGRES_PASSWORD:navvrks9}
+    url: jdbc:postgresql://${DB_URL}:5432/${DB_NAME}
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
     driver-class-name: org.postgresql.Driver
 
   jpa:
