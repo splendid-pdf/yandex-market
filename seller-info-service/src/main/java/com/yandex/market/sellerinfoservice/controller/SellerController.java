@@ -20,7 +20,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("${spring.application.url}")
 @RequiredArgsConstructor
-@Tag(name = "sellers")
+@Tag(name = "Методы seller-service для работы с сущьностью \"Продавец\"")
 public class SellerController {
 
     private final SellerService sellerService;
@@ -43,12 +43,11 @@ public class SellerController {
                     content = @Content(mediaType = "application/json",
                             array = @ArraySchema(schema = @Schema(implementation = SellerRequestDto.class))))
     })
-    @Operation(operationId = "updateSeller",
-            summary = "Search by sellerId and update with Dto",
-            description = "Updating seller based on incoming object DTO and seller UUID")
+    @Operation(operationId = "обновлениеПродавца",
+            summary = "Поиск по продавца Id и обновление с помощью Dto",
+            description = "Обновление продавца на основе входящего объекта DTO и продавца UUID")
     @ResponseStatus(HttpStatus.OK)
     public void updateSeller(@PathVariable UUID sellerId, @RequestBody SellerRequestDto sellerRequestDto) {
-        log.info("Request received to update seller found by sellerId = {} based on dto = {}", sellerId, sellerRequestDto);
         sellerService.updateSellerWithDto(sellerId, sellerRequestDto);
     }
 }
