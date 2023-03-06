@@ -33,7 +33,6 @@ public class SellerServiceImpl implements SellerService {
         return sellerRepository.save(seller).getExternalId();
     }
 
-    //На данный момент метод сделан чисто для теста, поэтому не Optional
     public Seller getSellerByExternalId(UUID sellerExternalId) {
         return sellerRepository
                 .findByExternalId(sellerExternalId)
@@ -46,5 +45,12 @@ public class SellerServiceImpl implements SellerService {
         Seller seller = getSellerByExternalId(sellerId);
         sellerMapper.updateSellerModel(sellerRequestDto, seller);
         return sellerMapper.toSellerResponseDto(seller);
+    }
+
+    @Override
+    @Transactional
+    public void deleteSeller(UUID sellerExternalId) {
+        Seller seller = getSellerByExternalId(sellerExternalId);
+        sellerRepository.deleteById(seller.getId());
     }
 }

@@ -9,8 +9,10 @@ import java.util.UUID;
 public interface SellerService {
 
     UUID createSeller(SellerRequestDto sellerRequestDto);
-    
+
     Seller getSellerByExternalId(UUID sellerExternalId);
 
     SellerResponseDto updateSellerWithDto(UUID sellerId, SellerRequestDto sellerRequestDto);
+
+    void deleteSeller(UUID sellerExternalId);
 }

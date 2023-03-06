@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.yandex.market.sellerinfoservice.dto.SellerRequestDto;
 import com.yandex.market.sellerinfoservice.service.SellerService;
 import jakarta.persistence.EntityExistsException;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -24,6 +25,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.UUID;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -35,17 +37,19 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class SellerInfoServiceApplicationTests {
 
     private final MockMvc mockMvc;
-
     private final ObjectMapper objectMapper;
-
     private final SellerService sellerService;
+    public static final String CREATE_SELLER_REQUEST_DTO_NEGATIVE_JSON = "src/test/resources/json/create/CreateSellerRequestDtoNegative.json";
+    public static final String CREATE_SELLER_REQUEST_DTO_JSON = "src/test/resources/json/create/CreateSellerRequestDto.json";
+    private final UUID SELLER_EXTERNAL_ID = UUID.fromString("37678201-f3c8-4d5c-a628-2344eef50c54");
+    private final UUID SELLER_EXTERNAL_ID_NEGATIVE = UUID.fromString("37678201-f3c8-4d5c-a628-2344eef50c55");
 
     @Test
     @Transactional
     public void createSellerController() throws Exception {
         MvcResult mvcResult = mockMvc.perform(post("/public/api/v1/sellers")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(Files.readString(Path.of("src/test/resources/CreateSellerRequestDto.json"))))
+                        .content(Files.readString(Path.of(CREATE_SELLER_REQUEST_DTO_JSON))))
                 .andExpect(status().isCreated())
                 .andReturn();
 
@@ -62,7 +66,7 @@ class SellerInfoServiceApplicationTests {
     public void createSellerNegativeController() throws Exception {
         mockMvc.perform(post("/public/api/v1/sellers")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(Files.readString(Path.of("src/test/resources/CreateSellerRequestDtoNegative.json"))))
+                        .content(Files.readString(Path.of(CREATE_SELLER_REQUEST_DTO_NEGATIVE_JSON))))
                 .andExpect(status().isBadRequest());
     }
 
@@ -72,18 +76,18 @@ class SellerInfoServiceApplicationTests {
     public void createSellerNegativeControllerExistException() throws Exception {
         mockMvc.perform(post("/public/api/v1/sellers")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(Files.readString(Path.of("src/test/resources/CreateSellerRequestDto.json"))))
+                        .content(Files.readString(Path.of(CREATE_SELLER_REQUEST_DTO_JSON))))
                 .andExpect(status().isConflict());
 
         Assertions.assertThrows(EntityExistsException.class, () -> sellerService
-                .createSeller(objectMapper.readValue(Files.readString(Path.of("src/test/resources/CreateSellerRequestDto.json")), SellerRequestDto.class)));
+                .createSeller(objectMapper.readValue(Files.readString(Path.of(CREATE_SELLER_REQUEST_DTO_JSON)), SellerRequestDto.class)));
     }
 
     @Test
     @Transactional
     public void createSellerService() throws IOException {
         UUID actualSellerExternalId = sellerService
-                .createSeller(objectMapper.readValue(Files.readString(Path.of("src/test/resources/CreateSellerRequestDto.json")), SellerRequestDto.class));
+                .createSeller(objectMapper.readValue(Files.readString(Path.of(CREATE_SELLER_REQUEST_DTO_JSON)), SellerRequestDto.class));
         Assertions.assertNotNull(sellerService.getSellerByExternalId(actualSellerExternalId));
     }
 
@@ -91,7 +95,7 @@ class SellerInfoServiceApplicationTests {
     @Transactional
     public void createSellerServiceNegative() {
         Assertions.assertThrows(InvalidFormatException.class, () -> sellerService
-                .createSeller(objectMapper.readValue(Files.readString(Path.of("src/test/resources/CreateSellerRequestDtoNegative.json")), SellerRequestDto.class)));
+                .createSeller(objectMapper.readValue(Files.readString(Path.of(CREATE_SELLER_REQUEST_DTO_NEGATIVE_JSON)), SellerRequestDto.class)));
     }
 
     @Test
@@ -99,6 +103,42 @@ class SellerInfoServiceApplicationTests {
     @Sql("/db/insertTestSeller.sql")
     public void createSellerServiceNegativeServiceExistException() {
         Assertions.assertThrows(EntityExistsException.class, () -> sellerService
-                .createSeller(objectMapper.readValue(Files.readString(Path.of("src/test/resources/CreateSellerRequestDto.json")), SellerRequestDto.class)));
+                .createSeller(objectMapper.readValue(Files.readString(Path.of(CREATE_SELLER_REQUEST_DTO_JSON)), SellerRequestDto.class)));
+    }
+
+    @Test
+    @Transactional
+    @Sql("/db/insertTestSeller.sql")
+    public void deleteSellerController() throws Exception {
+        mockMvc.perform(delete("/public/api/v1/sellers/" + SELLER_EXTERNAL_ID))
+                .andExpect(status().isOk());
+
+        Assertions.assertThrows(EntityNotFoundException.class, () -> sellerService
+                .getSellerByExternalId(SELLER_EXTERNAL_ID));
+    }
+
+    @Test
+    @Transactional
+    @Sql("/db/insertTestSeller.sql")
+    public void deleteSellerControllerNegative() throws Exception {
+        mockMvc.perform(delete("/public/api/v1/sellers/" + SELLER_EXTERNAL_ID_NEGATIVE))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @Transactional
+    @Sql("/db/insertTestSeller.sql")
+    public void deleteSellerService() {
+        sellerService.deleteSeller(SELLER_EXTERNAL_ID);
+
+        Assertions.assertThrows(EntityNotFoundException.class, () -> sellerService
+                .getSellerByExternalId(SELLER_EXTERNAL_ID));
+    }
+
+    @Test
+    @Transactional
+    public void deleteSellerServiceNegative() {
+        Assertions.assertThrows(EntityNotFoundException.class, () -> sellerService
+                .deleteSeller(SELLER_EXTERNAL_ID));
     }
 }
