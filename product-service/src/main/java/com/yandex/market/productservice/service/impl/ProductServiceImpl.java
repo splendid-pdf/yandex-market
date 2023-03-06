@@ -36,21 +36,22 @@ public class ProductServiceImpl implements ProductService {
         return repository.save(product).getExternalId();
     }
 
+    private Product findProductByExternalId(UUID externalId) {
+        return repository
+                .findByExternalId(externalId)
+                .orElseThrow(() -> new EntityNotFoundException(PRODUCT_NOT_FOUND_ERROR_MESSAGE + externalId));
+    }
+
     @Override
     @Transactional(readOnly = true)
     public ProductResponseDto getProductByExternalId(UUID externalId) {
-        Product product = repository
-                .findByExternalId(externalId)
-                .orElseThrow(() -> new EntityNotFoundException(PRODUCT_NOT_FOUND_ERROR_MESSAGE + externalId));
-        return productMapper.toResponseDto(product);
+        return productMapper.toResponseDto(findProductByExternalId(externalId));
     }
 
     @Override
     @Transactional
     public ProductResponseDto updateProductByExternalId(UUID externalId, ProductRequestDto productRequestDto) {
-        Product storedProduct = repository
-                .findByExternalId(externalId)
-                .orElseThrow(() -> new EntityNotFoundException(PRODUCT_NOT_FOUND_ERROR_MESSAGE + externalId));
+        Product storedProduct = findProductByExternalId(externalId);
         storedProduct = productMapper.toProduct(productRequestDto, storedProduct);
         return productMapper.toResponseDto(repository.save(storedProduct));
     }
@@ -68,8 +69,8 @@ public class ProductServiceImpl implements ProductService {
     @Transactional(readOnly = true)
     public Page<ProductResponseDto> getPageListOrArchiveBySellerId(UUID sellerId, DisplayProductMethod method, Pageable pageable) {
         Page<Product> productsBySellerId = switch (method) {
-            case PRODUCT_LIST -> repository.getPageOfProductsBySellerId(sellerId, pageable);
-            case ARCHIVE -> repository.getArchivePageOfProductsBySellerId(sellerId, pageable);
+            case PRODUCT_LIST -> repository.findProductsPageBySellerId(sellerId, pageable);
+            case ARCHIVE -> repository.findArchivedProductsPageBySellerId(sellerId, pageable);
         };
 
         return new PageImpl<>(
@@ -85,12 +86,12 @@ public class ProductServiceImpl implements ProductService {
     public void changeVisibilityForSellerId(UUID sellerId, List<UUID> productIds, VisibleMethod method, boolean methodAction) {
         switch (method) {
             case VISIBLE -> {
-                if (methodAction) repository.displayProductListForSeller(productIds, sellerId);
-                else repository.hideProductListForSeller(productIds, sellerId);
+                if (methodAction) repository.displayProductsBySellerId(productIds, sellerId);
+                else repository.hideProductsBySellerId(productIds, sellerId);
             }
             case DELETE -> {
-                if (methodAction) repository.addListOfGoodsToArchiveForSeller(productIds, sellerId);
-                else repository.returnListOfGoodsFromArchiveToSeller(productIds, sellerId);
+                if (methodAction) repository.addProductsToArchiveBySellerId(productIds, sellerId);
+                else repository.returnProductsFromArchiveBySellerId(productIds, sellerId);
             }
         }
     }

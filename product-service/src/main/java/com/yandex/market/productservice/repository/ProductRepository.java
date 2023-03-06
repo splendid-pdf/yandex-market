@@ -26,13 +26,13 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             FROM Product p
             WHERE p.sellerExternalId = :sellerId AND p.isDeleted = false
             """)
-    Page<Product> getPageOfProductsBySellerId(@io.lettuce.core.dynamic.annotation.Param("sellerId") UUID sellerId, Pageable pageable);
+    Page<Product> findProductsPageBySellerId(@Param("sellerId") UUID sellerId, Pageable pageable);
 
     @Query(value = """
             FROM Product p
             WHERE p.sellerExternalId = :sellerId AND p.isDeleted = true
             """)
-    Page<Product> getArchivePageOfProductsBySellerId(@io.lettuce.core.dynamic.annotation.Param("sellerId") UUID sellerId, Pageable pageable);
+    Page<Product> findArchivedProductsPageBySellerId(@Param("sellerId") UUID sellerId, Pageable pageable);
 
     @Modifying
     @Query(value = """
@@ -40,7 +40,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
                 SET p.isVisible=false
                 WHERE p.sellerExternalId=:sellerId AND p.externalId IN :productIds
             """)
-    void hideProductListForSeller(List<UUID> productIds, UUID sellerId);
+    void hideProductsBySellerId(List<UUID> productIds, UUID sellerId);
 
     @Modifying
     @Query(value = """
@@ -48,7 +48,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
                 SET p.isVisible=true
                 WHERE p.sellerExternalId=:sellerId AND p.externalId IN :productIds
             """)
-    void displayProductListForSeller(List<UUID> productIds, UUID sellerId);
+    void displayProductsBySellerId(List<UUID> productIds, UUID sellerId);
 
     @Modifying
     @Query(value = """
@@ -56,7 +56,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
                 SET p.isVisible=false, p.isDeleted = true
                 WHERE p.sellerExternalId=:sellerId AND p.externalId IN :productIds
             """)
-    void addListOfGoodsToArchiveForSeller(List<UUID> productIds, UUID sellerId);
+    void addProductsToArchiveBySellerId(List<UUID> productIds, UUID sellerId);
 
     @Modifying
     @Query(value = """
@@ -64,7 +64,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
                 SET p.isDeleted=false
                 WHERE p.sellerExternalId=:sellerId AND p.externalId IN :productIds
             """)
-    void returnListOfGoodsFromArchiveToSeller(List<UUID> productIds, UUID sellerId);
+    void returnProductsFromArchiveBySellerId(List<UUID> productIds, UUID sellerId);
 
     @Modifying
     @Query(value = """

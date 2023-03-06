@@ -3,7 +3,7 @@ package com.yandex.market.productservice.controller;
 import com.yandex.market.productservice.controller.response.ErrorResponse;
 import com.yandex.market.productservice.dto.ProductRequestDto;
 import com.yandex.market.productservice.dto.response.ProductResponseDto;
-import com.yandex.market.productservice.service.impl.ProductServiceImpl;
+import com.yandex.market.productservice.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -37,24 +37,26 @@ import java.util.UUID;
                 content = @Content(mediaType = "application/json",
                         schema = @Schema(implementation = ErrorResponse.class)))})
 public class ProductController {
-    private final ProductServiceImpl productService;
+    private final ProductService productService;
 
     @PostMapping("/{sellerExternalId}/products")
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(operationId = "createProduct", summary = "Создание нового продукта")
-    @ApiResponse(responseCode = "201", description = "Successful operation",
+    @ApiResponse(responseCode = "201", description = "Created",
             content = @Content(mediaType = "application/json", schema = @Schema(implementation = UUID.class)))
     public UUID createProduct(@Parameter(name = "productRequestDto", description = "Представление созданного продукта")
                               @RequestBody @Valid ProductRequestDto productRequestDto,
                               @Parameter(name = "sellerExternalId", description = "Идентификатор продавца")
                               @PathVariable("sellerExternalId") UUID sellerExternalId) {
+        log.info("Received a request to create a product with DTO = {} from a seller with externalId: {}",
+                productRequestDto, sellerExternalId);
         return productService.createProduct(productRequestDto, sellerExternalId);
     }
 
     @GetMapping("{externalId}")
     @ResponseStatus(HttpStatus.OK)
     @Operation(operationId = "getProductByExternalId", summary = "Получение товара по externalId")
-    @ApiResponse(responseCode = "200", description = "Successful operation",
+    @ApiResponse(responseCode = "200", description = "OK",
             content = @Content(mediaType = "application/json", schema = @Schema(implementation = UUID.class)))
     public ProductResponseDto getProductByExternalId(@PathVariable("externalId") UUID externalId) {
         log.info("Received request to get a product by given value: {}", externalId);

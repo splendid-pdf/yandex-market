@@ -38,11 +38,11 @@ import java.util.UUID;
                         schema = @Schema(implementation = ErrorResponse.class)))})
 public class SellerController {
 
-    private final ProductService sellerService;
+    private final ProductService productService;
 
     @GetMapping("{sellerId}/products")
     @ResponseStatus(HttpStatus.OK)
-    @Operation(operationId = "getProductPage", summary = "Получить список продуктов в виде пагинации по ID продавца")
+    @Operation(operationId = "getProductPage", summary = "Метод возращает пагинированный список продуктов продавца")
     @ApiResponse(responseCode = "200", description = "OK",
             content = @Content(mediaType = "application/json",
                     array = @ArraySchema(schema = @Schema(implementation = ProductResponseDto.class))))
@@ -51,7 +51,7 @@ public class SellerController {
             @RequestParam DisplayProductMethod method,
             @PageableDefault(size = 20, sort = "creationDate", direction = Sort.Direction.DESC) Pageable pageable) {
         log.info("Received a request to get Page list or Archive list for products by sellerId = {}", sellerId);
-        return sellerService.getPageListOrArchiveBySellerId(sellerId, method, pageable);
+        return productService.getPageListOrArchiveBySellerId(sellerId, method, pageable);
     }
 
     @PatchMapping("{sellerId}/products")
@@ -66,7 +66,7 @@ public class SellerController {
                                                  @RequestParam boolean methodAction) {
         log.info("A request was received  to change visibility (remove/visibility) for a specific seller with sellerId: {}"
                 + " and a list of goods in the number of {} entries.", sellerId, productIds.size());
-        sellerService.changeVisibilityForSellerId(sellerId, productIds, method, methodAction);
+        productService.changeVisibilityForSellerId(sellerId, productIds, method, methodAction);
 
     }
 
@@ -80,6 +80,6 @@ public class SellerController {
                                             @RequestBody List<UUID> productIds) {
         log.info("Request for the complete removal of the product(s) in the amount of {} pieces " +
                 "for the seller with externalId = {}", productIds.size(), sellerId);
-        sellerService.deleteFromArchiveListProductBySellerId(productIds, sellerId);
+        productService.deleteFromArchiveListProductBySellerId(productIds, sellerId);
     }
 }
