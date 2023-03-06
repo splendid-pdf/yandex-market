@@ -1,5 +1,6 @@
 package com.yandex.market.productservice.controller;
 
+import com.yandex.market.productservice.controller.response.ErrorResponse;
 import com.yandex.market.productservice.dto.response.ProductResponseDto;
 import com.yandex.market.productservice.model.DisplayProductMethod;
 import com.yandex.market.productservice.model.VisibleMethod;
@@ -9,6 +10,7 @@ import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +29,13 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @RequestMapping("${spring.app.seller.url}")
 @Tag(name = "API для работы с сущностью Product для Seller")
+@ApiResponses({
+        @ApiResponse(responseCode = "400", description = "На сервер переданы неверные данные",
+                content = @Content(mediaType = "application/json",
+                        schema = @Schema(implementation = ErrorResponse.class))),
+        @ApiResponse(responseCode = "404", description = "Продукт не найден",
+                content = @Content(mediaType = "application/json",
+                        schema = @Schema(implementation = ErrorResponse.class)))})
 public class SellerController {
 
     private final ProductService sellerService;
