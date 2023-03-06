@@ -1,6 +1,7 @@
 package com.yandex.market.sellerinfoservice.controller;
 
 import com.yandex.market.sellerinfoservice.dto.SellerRequestDto;
+import com.yandex.market.sellerinfoservice.dto.SellerResponseDto;
 import com.yandex.market.sellerinfoservice.service.SellerService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -47,7 +48,7 @@ public class SellerController {
             summary = "Поиск по продавца Id и обновление с помощью Dto",
             description = "Обновление продавца на основе входящего объекта DTO и продавца UUID")
     @ResponseStatus(HttpStatus.OK)
-    public void updateSeller(@PathVariable UUID sellerId, @RequestBody SellerRequestDto sellerRequestDto) {
-        sellerService.updateSellerWithDto(sellerId, sellerRequestDto);
+    public SellerResponseDto updateSeller(@PathVariable UUID sellerId, @RequestBody SellerRequestDto sellerRequestDto) {
+        return sellerService.updateSellerWithDto(sellerId, sellerRequestDto);
     }
 }

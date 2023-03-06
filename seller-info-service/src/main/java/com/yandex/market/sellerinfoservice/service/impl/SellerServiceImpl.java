@@ -1,6 +1,7 @@
 package com.yandex.market.sellerinfoservice.service.impl;
 
 import com.yandex.market.sellerinfoservice.dto.SellerRequestDto;
+import com.yandex.market.sellerinfoservice.dto.SellerResponseDto;
 import com.yandex.market.sellerinfoservice.mapper.SellerMapper;
 import com.yandex.market.sellerinfoservice.model.Seller;
 import com.yandex.market.sellerinfoservice.repository.SellerRepository;
@@ -35,16 +36,15 @@ public class SellerServiceImpl implements SellerService {
     //На данный момент метод сделан чисто для теста, поэтому не Optional
     public Seller getSellerByExternalId(UUID sellerExternalId) {
         return sellerRepository
-                .getSellerByExternalId(sellerExternalId)
+                .findByExternalId(sellerExternalId)
                 .orElseThrow(() -> new EntityNotFoundException(SELLER_NOT_FOUND_EXCEPTION + sellerExternalId));
     }
 
     @Override
     @Transactional
-    public void updateSellerWithDto(UUID sellerId, SellerRequestDto sellerRequestDto) {
-        Seller seller = sellerRepository
-                .getSellerByExternalId(sellerId)
-                .orElseThrow(() -> new EntityNotFoundException(""));
+    public SellerResponseDto updateSellerWithDto(UUID sellerId, SellerRequestDto sellerRequestDto) {
+        Seller seller = getSellerByExternalId(sellerId);
         sellerMapper.updateSellerModel(sellerRequestDto, seller);
+        return sellerMapper.toSellerResponseDto(seller);
     }
 }

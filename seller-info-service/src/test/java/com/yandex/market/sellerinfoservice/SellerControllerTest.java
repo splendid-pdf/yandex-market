@@ -73,6 +73,7 @@ public class SellerControllerTest {
                 .andReturn();
 
         Seller seller = sellerService.getSellerByExternalId(sellerId);
+
         assertNotNull(seller);
 
         AssertionsForClassTypes.assertThat(expectedSeller)

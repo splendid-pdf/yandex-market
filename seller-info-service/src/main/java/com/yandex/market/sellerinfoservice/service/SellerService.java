@@ -1,6 +1,7 @@
 package com.yandex.market.sellerinfoservice.service;
 
 import com.yandex.market.sellerinfoservice.dto.SellerRequestDto;
+import com.yandex.market.sellerinfoservice.dto.SellerResponseDto;
 import com.yandex.market.sellerinfoservice.model.Seller;
 
 import java.util.UUID;
@@ -11,5 +12,5 @@ public interface SellerService {
     
     Seller getSellerByExternalId(UUID sellerExternalId);
 
-    void updateSellerWithDto(UUID sellerId, SellerRequestDto sellerRequestDto);
+    SellerResponseDto updateSellerWithDto(UUID sellerId, SellerRequestDto sellerRequestDto);
 }
