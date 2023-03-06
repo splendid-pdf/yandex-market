@@ -23,6 +23,7 @@ ext {
     set('openapiUiVersion', '2.0.2')
     set('lombokVersion', '1.18.24')
     set('mockitoInlineVersion', '4.10.0')
+    set("h2databaseVersion", "2.1.214")
 }
 
 dependencies {
@@ -56,6 +57,7 @@ dependencies {
     testImplementation "org.mockito:mockito-inline:${mockitoInlineVersion}"
     testImplementation 'org.testcontainers:junit-jupiter:1.17.6'
     testImplementation 'org.testcontainers:postgresql:1.17.6'
+    testImplementation "com.h2database:h2:${h2databaseVersion}"
 }
 
 tasks.named('test') {
