@@ -7,7 +7,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yandex.market.productservice.dto.response.ProductResponseDto;
-import com.yandex.market.productservice.service.ProductService;
+import com.yandex.market.productservice.service.impl.ProductServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -55,7 +55,7 @@ class ProductServiceApplicationTests {
 
     private final ObjectMapper objectMapper;
 
-    private final ProductService productService;
+    private final ProductServiceImpl productService;
 
     @Value("${spring.app.seller.url}")
     private String PATH_TO_SELLER;

@@ -18,8 +18,8 @@ public class SpringdocConfig {
 
     private static Info apiInfo() {
         return new Info()
-                .title("Spring Doc Open Api Product-service")
-                .version("1.0.0");
+                .title("Spring Doc OpenApi для Product-service")
+                .version("1.0.1");
     }
 
     @Bean
