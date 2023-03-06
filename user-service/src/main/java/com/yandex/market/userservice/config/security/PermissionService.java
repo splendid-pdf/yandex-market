@@ -2,6 +2,7 @@ package com.yandex.market.userservice.config.security;
 
 import com.yandex.market.userservice.model.Role;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Component;
@@ -10,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class PermissionService {
@@ -19,7 +21,6 @@ public class PermissionService {
         Map<String, Object> tokenAttributes = getTokenAttributes();
         String authUserExternalId = (String) tokenAttributes.get("user-id");
         List<String> authorities = (List<String>) tokenAttributes.get("authorities");
-
         if (authorities.contains(Role.ADMIN.getKey())){
             return true;
         }
@@ -32,6 +33,7 @@ public class PermissionService {
                 SecurityContextHolder
                         .getContext()
                         .getAuthentication();
+        log.info("Access token: " + authenticationToken.getToken().getTokenValue());
         return authenticationToken.getTokenAttributes();
     }
 }
