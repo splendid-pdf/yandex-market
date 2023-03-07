@@ -13,25 +13,30 @@ spring:
       url: /public/api/v1/sellers/
 
   datasource:
-    url: jdbc:postgresql://51.250.102.12:5432/${DB_NAME}
-    username: ${POSTGRES_USER}
-    password: ${POSTGRES_PASSWORD}
+    url: jdbc:postgresql://localhost:5432/test
+    username: postgres
+    password: admin
     driver-class-name: org.postgresql.Driver
 
   jpa:
     database: POSTGRESQL
     show-sql: true
     hibernate:
-      ddl-auto: update # далее validate
+      ddl-auto: create-drop # далее validate
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
-  data:
-    redis:
-      jedis:
-        pool:
-          enabled: false
-      host: 51.250.102.12
-      port: 6379
-      database: 0
+#  data:
+#    redis:
+#      jedis:
+#        pool:
+#          enabled: false
+#      host: 51.250.102.12
+#      port: 6379
+#      database: 0
+
+  kafka:
+    bootstrap-servers: localhost:9092
+
+

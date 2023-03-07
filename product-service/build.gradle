@@ -38,7 +38,6 @@ dependencies {
     // db
     implementation "org.flywaydb:flyway-core:${flywayCoreVersion}"
     runtimeOnly 'org.postgresql:postgresql'
-    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
     // utils
     compileOnly "org.jetbrains:annotations:${jetbrainsAnnotationsVersion}"
@@ -57,6 +56,12 @@ dependencies {
 
     // monitoring
     runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
+
+    //kafka
+    implementation 'org.springframework.kafka:spring-kafka:3.0.2'
+
+
+
 
     // tests
     testImplementation 'org.springframework.boot:spring-boot-starter-test'

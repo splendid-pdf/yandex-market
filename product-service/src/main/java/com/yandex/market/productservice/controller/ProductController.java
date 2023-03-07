@@ -61,6 +61,7 @@ public class ProductController {
         return productService.updateProductByExternalId(externalId, productRequestDto);
     }
 
+
     @GetMapping()
     @ResponseStatus(HttpStatus.OK)
     public List<ProductResponseDto> getProductsBySetExternalId(@RequestParam(name = "extId") Set<UUID> externalIdSet,
