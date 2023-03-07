@@ -50,7 +50,6 @@ public class SellerController {
             @PathVariable UUID sellerId,
             @RequestParam DisplayProductMethod method,
             @PageableDefault(size = 20, sort = "creationDate", direction = Sort.Direction.DESC) Pageable pageable) {
-        log.info("Received a request to get Page list or Archive list for products by sellerId = {}", sellerId);
         return productService.getPageListOrArchiveBySellerId(sellerId, method, pageable);
     }
 
@@ -64,8 +63,6 @@ public class SellerController {
                                                  @RequestBody List<UUID> productIds,
                                                  @RequestParam VisibleMethod method,
                                                  @RequestParam boolean methodAction) {
-        log.info("A request was received  to change visibility (remove/visibility) for a specific seller with sellerId: {}"
-                + " and a list of goods in the number of {} entries.", sellerId, productIds.size());
         productService.changeVisibilityForSellerId(sellerId, productIds, method, methodAction);
 
     }
@@ -78,8 +75,6 @@ public class SellerController {
                     array = @ArraySchema(schema = @Schema(implementation = ProductResponseDto.class))))
     public void deleteListProductBySellerId(@PathVariable(value = "sellerId") UUID sellerId,
                                             @RequestBody List<UUID> productIds) {
-        log.info("Request for the complete removal of the product(s) in the amount of {} pieces " +
-                "for the seller with externalId = {}", productIds.size(), sellerId);
         productService.deleteFromArchiveListProductBySellerId(productIds, sellerId);
     }
 }

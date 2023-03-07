@@ -59,7 +59,6 @@ public class ProductController {
     @ApiResponse(responseCode = "200", description = "OK",
             content = @Content(mediaType = "application/json", schema = @Schema(implementation = UUID.class)))
     public ProductResponseDto getProductByExternalId(@PathVariable("externalId") UUID externalId) {
-        log.info("Received request to get a product by given value: {}", externalId);
         return productService.getProductByExternalId(externalId);
     }
 
@@ -70,7 +69,6 @@ public class ProductController {
             content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProductResponseDto.class)))
     public ProductResponseDto updateProductByExternalId(@PathVariable UUID externalId,
                                                         @RequestBody @Valid ProductRequestDto productRequestDto) {
-        log.info("Received request to update a product:{} by given value: {}", externalId, productRequestDto);
         return productService.updateProductByExternalId(externalId, productRequestDto);
     }
 
@@ -82,7 +80,6 @@ public class ProductController {
     public List<ProductResponseDto> getProductsBySetExternalId(
             @RequestParam(name = "extId") Set<UUID> externalIdSet,
             @PageableDefault(sort = {"name"}, direction = Sort.Direction.ASC) Pageable pageable) {
-        log.info("Received request to get a products list by given values: {}", externalIdSet);
         return productService.getProductsBySetExternalId(externalIdSet, pageable);
     }
 }
