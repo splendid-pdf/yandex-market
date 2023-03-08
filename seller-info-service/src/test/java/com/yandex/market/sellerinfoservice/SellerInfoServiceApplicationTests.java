@@ -10,10 +10,12 @@ import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -34,20 +36,23 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 @ActiveProfiles("testcontainers")
+@TestPropertySource(locations = "classpath:application-testcontainers.yml")
 class SellerInfoServiceApplicationTests {
 
     private final MockMvc mockMvc;
     private final ObjectMapper objectMapper;
     private final SellerService sellerService;
-    public static final String CREATE_SELLER_REQUEST_DTO_NEGATIVE_JSON = "src/test/resources/json/create/CreateSellerRequestDtoNegative.json";
-    public static final String CREATE_SELLER_REQUEST_DTO_JSON = "src/test/resources/json/create/CreateSellerRequestDto.json";
-    private final UUID SELLER_EXTERNAL_ID = UUID.fromString("37678201-f3c8-4d5c-a628-2344eef50c54");
-    private final UUID SELLER_EXTERNAL_ID_NEGATIVE = UUID.fromString("37678201-f3c8-4d5c-a628-2344eef50c55");
+    public static final String CREATE_SELLER_REQUEST_DTO_NEGATIVE_JSON = "src/test/resources/json/create/create_seller_request_dto_negative.json";
+    public static final String CREATE_SELLER_REQUEST_DTO_JSON = "src/test/resources/json/create/create_seller_request_dto.json";
+    private final UUID SELLER_EXTERNAL_ID = UUID.fromString("47678201-f3c8-4d5c-a628-2344eef50c54");
+    private final UUID SELLER_EXTERNAL_ID_NEGATIVE = UUID.fromString("77678201-f3c8-4d5c-a628-2344eef50c55");
+    @Value("${spring.app.seller.url}")
+    private String SELLERS_URL;
 
     @Test
     @Transactional
     public void createSellerController() throws Exception {
-        MvcResult mvcResult = mockMvc.perform(post("/public/api/v1/sellers")
+        MvcResult mvcResult = mockMvc.perform(post(SELLERS_URL)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(Files.readString(Path.of(CREATE_SELLER_REQUEST_DTO_JSON))))
                 .andExpect(status().isCreated())
@@ -64,7 +69,7 @@ class SellerInfoServiceApplicationTests {
     @Test
     @Transactional
     public void createSellerNegativeController() throws Exception {
-        mockMvc.perform(post("/public/api/v1/sellers")
+        mockMvc.perform(post(SELLERS_URL)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(Files.readString(Path.of(CREATE_SELLER_REQUEST_DTO_NEGATIVE_JSON))))
                 .andExpect(status().isBadRequest());
@@ -72,9 +77,9 @@ class SellerInfoServiceApplicationTests {
 
     @Test
     @Transactional
-    @Sql("/db/insertTestSeller.sql")
+    @Sql("/db/insert_test_seller.sql")
     public void createSellerNegativeControllerExistException() throws Exception {
-        mockMvc.perform(post("/public/api/v1/sellers")
+        mockMvc.perform(post(SELLERS_URL)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(Files.readString(Path.of(CREATE_SELLER_REQUEST_DTO_JSON))))
                 .andExpect(status().isConflict());
@@ -100,7 +105,7 @@ class SellerInfoServiceApplicationTests {
 
     @Test
     @Transactional
-    @Sql("/db/insertTestSeller.sql")
+    @Sql("/db/insert_test_seller.sql")
     public void createSellerServiceNegativeServiceExistException() {
         Assertions.assertThrows(EntityExistsException.class, () -> sellerService
                 .createSeller(objectMapper.readValue(Files.readString(Path.of(CREATE_SELLER_REQUEST_DTO_JSON)), SellerRequestDto.class)));
@@ -108,9 +113,9 @@ class SellerInfoServiceApplicationTests {
 
     @Test
     @Transactional
-    @Sql("/db/insertTestSeller.sql")
+    @Sql("/db/insert_test_seller.sql")
     public void deleteSellerController() throws Exception {
-        mockMvc.perform(delete("/public/api/v1/sellers/" + SELLER_EXTERNAL_ID))
+        mockMvc.perform(delete(SELLERS_URL + "/" + SELLER_EXTERNAL_ID))
                 .andExpect(status().isOk());
 
         Assertions.assertThrows(EntityNotFoundException.class, () -> sellerService
@@ -119,15 +124,14 @@ class SellerInfoServiceApplicationTests {
 
     @Test
     @Transactional
-    @Sql("/db/insertTestSeller.sql")
     public void deleteSellerControllerNegative() throws Exception {
-        mockMvc.perform(delete("/public/api/v1/sellers/" + SELLER_EXTERNAL_ID_NEGATIVE))
+        mockMvc.perform(delete(SELLERS_URL + SELLER_EXTERNAL_ID_NEGATIVE))
                 .andExpect(status().isNotFound());
     }
 
     @Test
     @Transactional
-    @Sql("/db/insertTestSeller.sql")
+    @Sql("/db/insert_test_seller.sql")
     public void deleteSellerService() {
         sellerService.deleteSeller(SELLER_EXTERNAL_ID);
 

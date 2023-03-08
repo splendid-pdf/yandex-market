@@ -57,7 +57,7 @@ public class SellerController {
     @DeleteMapping("/{externalId}")
     @Operation(summary = "Удаление продавца", responses = {
             @ApiResponse(description = "Продавец успешно удален", responseCode = "200"),
-            @ApiResponse(description = "Такого продавца не существует", responseCode = "404 ")
+            @ApiResponse(description = "Такого продавца не существует", responseCode = "404")
     })
     public void deleteSeller(@Parameter(name = "externalId", description = "Индентификатор продавца")
                              @PathVariable UUID externalId) {
