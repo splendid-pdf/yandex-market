@@ -5,7 +5,7 @@ import com.yandex.market.productservice.dto.response.ProductResponseDto;
 import com.yandex.market.productservice.mapper.ProductMapper;
 import com.yandex.market.productservice.model.DisplayProductMethod;
 import com.yandex.market.productservice.model.Product;
-import com.yandex.market.productservice.model.VisibleMethod;
+import com.yandex.market.productservice.model.VisibilityMethod;
 import com.yandex.market.productservice.repository.ProductRepository;
 import com.yandex.market.productservice.service.ProductService;
 import jakarta.persistence.EntityNotFoundException;
@@ -83,16 +83,17 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional
-    public void changeVisibilityForSellerId(UUID sellerId, List<UUID> productIds, VisibleMethod method, boolean methodAction) {
+    public void changeVisibilityForSellerId(UUID sellerId, List<UUID> productIds, VisibilityMethod method, boolean methodAction) {
         switch (method) {
             case VISIBLE -> {
                 if (methodAction) repository.displayProductsBySellerId(productIds, sellerId);
                 else repository.hideProductsBySellerId(productIds, sellerId);
             }
-            case DELETE -> {
+            case DELETED -> {
                 if (methodAction) repository.addProductsToArchiveBySellerId(productIds, sellerId);
                 else repository.returnProductsFromArchiveBySellerId(productIds, sellerId);
             }
+            default -> throw  new IllegalArgumentException("Некорректный метод = " + method);
         }
     }
 

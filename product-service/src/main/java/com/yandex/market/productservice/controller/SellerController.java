@@ -3,7 +3,7 @@ package com.yandex.market.productservice.controller;
 import com.yandex.market.productservice.controller.response.ErrorResponse;
 import com.yandex.market.productservice.dto.response.ProductResponseDto;
 import com.yandex.market.productservice.model.DisplayProductMethod;
-import com.yandex.market.productservice.model.VisibleMethod;
+import com.yandex.market.productservice.model.VisibilityMethod;
 import com.yandex.market.productservice.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -61,7 +61,7 @@ public class SellerController {
                     array = @ArraySchema(schema = @Schema(implementation = ProductResponseDto.class))))
     public void changeProductVisibilityForSeller(@PathVariable(value = "sellerId") UUID sellerId,
                                                  @RequestBody List<UUID> productIds,
-                                                 @RequestParam VisibleMethod method,
+                                                 @RequestParam VisibilityMethod method,
                                                  @RequestParam boolean methodAction) {
         productService.changeVisibilityForSellerId(sellerId, productIds, method, methodAction);
 
