@@ -1,4 +1,7 @@
 spring:
+  app:
+    seller:
+      url: /public/api/v1/sellers
   jpa:
     properties:
       hibernate:

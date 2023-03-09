@@ -4,6 +4,7 @@ import com.yandex.market.sellerinfoservice.dto.SellerRequestDto;
 import com.yandex.market.sellerinfoservice.dto.SellerResponseDto;
 import com.yandex.market.sellerinfoservice.service.SellerService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -17,17 +18,19 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
+import static com.yandex.market.util.HttpUtils.PUBLIC_API_V1;
+
 @Slf4j
 @RestController
-@RequestMapping("${spring.application.url}")
+@RequestMapping(PUBLIC_API_V1)
 @RequiredArgsConstructor
-@Tag(name = "Методы seller-service для работы с сущьностью \"Продавец\"")
+@Tag(name = "Методы seller-service для работы с сущностью \"Продавец\"")
 public class SellerController {
 
     private final SellerService sellerService;
 
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping
+    @PostMapping("/sellers")
     @Operation(summary = "Создание нового продавца", responses = {
             @ApiResponse(description = "Новый продавец создан", responseCode = "201",
                     content = @Content(mediaType = "application/json",
@@ -38,7 +41,7 @@ public class SellerController {
         return sellerService.createSeller(sellerRequestDto);
     }
 
-    @PutMapping("{sellerId}")
+    @PutMapping("/sellers/{sellerId}")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "OK",
                     content = @Content(mediaType = "application/json",
@@ -50,5 +53,16 @@ public class SellerController {
     @ResponseStatus(HttpStatus.OK)
     public SellerResponseDto updateSeller(@PathVariable UUID sellerId, @RequestBody SellerRequestDto sellerRequestDto) {
         return sellerService.updateSellerWithDto(sellerId, sellerRequestDto);
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @DeleteMapping("sellers/{externalId}")
+    @Operation(summary = "Удаление продавца", responses = {
+            @ApiResponse(description = "Продавец успешно удален", responseCode = "200"),
+            @ApiResponse(description = "Такого продавца не существует", responseCode = "404")
+    })
+    public void deleteSeller(@Parameter(name = "externalId", description = "Индентификатор продавца")
+                             @PathVariable UUID externalId) {
+        sellerService.deleteSellerByExternalId(externalId);
     }
 }
