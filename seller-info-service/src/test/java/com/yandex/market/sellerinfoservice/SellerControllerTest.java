@@ -1,6 +1,7 @@
 package com.yandex.market.sellerinfoservice;
 
 
+import com.yandex.market.sellerinfoservice.dto.SellerResponseDto;
 import com.yandex.market.sellerinfoservice.model.BusinessModel;
 import com.yandex.market.sellerinfoservice.model.Seller;
 import com.yandex.market.sellerinfoservice.service.SellerService;
@@ -72,7 +73,7 @@ public class SellerControllerTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        Seller seller = sellerService.getSellerByExternalId(sellerId);
+        SellerResponseDto seller = sellerService.getSellerByExternalId(sellerId);
 
         assertNotNull(seller);
 
@@ -96,18 +97,18 @@ public class SellerControllerTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        Seller seller = sellerService.getSellerByExternalId(sellerId);
+        SellerResponseDto seller = sellerService.getSellerByExternalId(sellerId);
         assertNotNull(seller);
 
-        assertEquals(firstName, seller.getFirstName());
-        assertEquals(lastName, seller.getLastName());
+        assertEquals(firstName, seller.firstName());
+        assertEquals(lastName, seller.lastName());
     }
 
     @Test
     void updateSeller_emptyDto() throws Exception {
         UUID sellerId = UUID.fromString("37678201-f3c8-4d5c-a628-2344eef50c53");
 
-        Seller sellerBefore = sellerService.getSellerByExternalId(sellerId);
+        SellerResponseDto sellerBefore = sellerService.getSellerByExternalId(sellerId);
 
         mockMvc.perform(put(
                         PATH_TO_SELLER + "{shopId}", sellerId)
@@ -116,7 +117,7 @@ public class SellerControllerTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        Seller sellerAfter = sellerService.getSellerByExternalId(sellerId);
+        SellerResponseDto sellerAfter = sellerService.getSellerByExternalId(sellerId);
         assertNotNull(sellerAfter);
 
         AssertionsForClassTypes.assertThat(sellerBefore)

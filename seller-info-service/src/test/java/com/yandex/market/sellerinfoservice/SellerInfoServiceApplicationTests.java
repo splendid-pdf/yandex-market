@@ -60,7 +60,7 @@ class SellerInfoServiceApplicationTests {
 
         String expectedFirstName = "Alex";
         UUID actualSellerExternalId = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), UUID.class);
-        String actualFirstName = sellerService.getSellerByExternalId(actualSellerExternalId).getFirstName();
+        String actualFirstName = sellerService.getSellerByExternalId(actualSellerExternalId).firstName();
 
         Assertions.assertNotNull(sellerService.getSellerByExternalId(actualSellerExternalId));
         Assertions.assertEquals(expectedFirstName, actualFirstName);
@@ -119,7 +119,7 @@ class SellerInfoServiceApplicationTests {
                 .andExpect(status().isOk());
 
         Assertions.assertThrows(EntityNotFoundException.class, () -> sellerService
-                .getSellerByExternalId(SELLER_EXTERNAL_ID));
+                .deleteSeller(SELLER_EXTERNAL_ID));
     }
 
     @Test

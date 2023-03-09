@@ -21,7 +21,7 @@ public class SellerServiceImpl implements SellerService {
 
     private final SellerMapper sellerMapper;
 
-    private final String SELLER_NOT_FOUND_EXCEPTION = "Seller not found with seller id = {}";
+    private final String SELLER_NOT_FOUND_EXCEPTION = "Seller not found with seller id = ";
 
     @Override
     @Transactional
@@ -33,16 +33,18 @@ public class SellerServiceImpl implements SellerService {
         return sellerRepository.save(seller).getExternalId();
     }
 
-    public Seller getSellerByExternalId(UUID sellerExternalId) {
-        return sellerRepository
-                .findByExternalId(sellerExternalId)
-                .orElseThrow(() -> new EntityNotFoundException(SELLER_NOT_FOUND_EXCEPTION + sellerExternalId));
+    @Override
+    public SellerResponseDto getSellerByExternalId(UUID sellerExternalId) {
+        return sellerMapper.toSellerResponseDto(sellerRepository.getByExternalId(sellerExternalId)
+                .orElseThrow(() -> new EntityNotFoundException(SELLER_NOT_FOUND_EXCEPTION + sellerExternalId)));
     }
 
     @Override
     @Transactional
     public SellerResponseDto updateSellerWithDto(UUID sellerId, SellerRequestDto sellerRequestDto) {
-        Seller seller = getSellerByExternalId(sellerId);
+        Seller seller = sellerRepository
+                .getByExternalId(sellerId)
+                .orElseThrow(() -> new EntityNotFoundException(SELLER_NOT_FOUND_EXCEPTION + sellerId));
         sellerMapper.updateSellerModel(sellerRequestDto, seller);
         return sellerMapper.toSellerResponseDto(seller);
     }
@@ -50,7 +52,10 @@ public class SellerServiceImpl implements SellerService {
     @Override
     @Transactional
     public void deleteSeller(UUID sellerExternalId) {
-        Seller seller = getSellerByExternalId(sellerExternalId);
+        Seller seller = sellerRepository
+                .getByExternalId(sellerExternalId)
+                .orElseThrow(() -> new EntityNotFoundException(SELLER_NOT_FOUND_EXCEPTION + sellerExternalId));
+        ;
         sellerRepository.deleteById(seller.getId());
     }
 }
