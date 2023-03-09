@@ -119,7 +119,7 @@ class SellerInfoServiceApplicationTests {
                 .andExpect(status().isOk());
 
         Assertions.assertThrows(EntityNotFoundException.class, () -> sellerService
-                .deleteSeller(SELLER_EXTERNAL_ID));
+                .deleteSellerByExternalId(SELLER_EXTERNAL_ID));
     }
 
     @Test
@@ -133,7 +133,7 @@ class SellerInfoServiceApplicationTests {
     @Transactional
     @Sql("/db/insert_test_seller.sql")
     public void deleteSellerService() {
-        sellerService.deleteSeller(SELLER_EXTERNAL_ID);
+        sellerService.deleteSellerByExternalId(SELLER_EXTERNAL_ID);
 
         Assertions.assertThrows(EntityNotFoundException.class, () -> sellerService
                 .getSellerByExternalId(SELLER_EXTERNAL_ID));
@@ -143,6 +143,6 @@ class SellerInfoServiceApplicationTests {
     @Transactional
     public void deleteSellerServiceNegative() {
         Assertions.assertThrows(EntityNotFoundException.class, () -> sellerService
-                .deleteSeller(SELLER_EXTERNAL_ID));
+                .deleteSellerByExternalId(SELLER_EXTERNAL_ID));
     }
 }

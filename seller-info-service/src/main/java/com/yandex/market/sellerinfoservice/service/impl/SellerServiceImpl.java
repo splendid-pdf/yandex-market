@@ -51,11 +51,10 @@ public class SellerServiceImpl implements SellerService {
 
     @Override
     @Transactional
-    public void deleteSeller(UUID sellerExternalId) {
+    public void deleteSellerByExternalId(UUID sellerExternalId) {
         Seller seller = sellerRepository
                 .getByExternalId(sellerExternalId)
                 .orElseThrow(() -> new EntityNotFoundException(SELLER_NOT_FOUND_EXCEPTION + sellerExternalId));
-        ;
         sellerRepository.deleteById(seller.getId());
     }
 }

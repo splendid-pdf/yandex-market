@@ -13,5 +13,5 @@ public interface SellerService {
 
     SellerResponseDto updateSellerWithDto(UUID sellerId, SellerRequestDto sellerRequestDto);
 
-    void deleteSeller(UUID sellerExternalId);
+    void deleteSellerByExternalId(UUID sellerExternalId);
 }

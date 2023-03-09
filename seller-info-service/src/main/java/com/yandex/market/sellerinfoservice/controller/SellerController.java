@@ -63,6 +63,6 @@ public class SellerController {
     })
     public void deleteSeller(@Parameter(name = "externalId", description = "Индентификатор продавца")
                              @PathVariable UUID externalId) {
-        sellerService.deleteSeller(externalId);
+        sellerService.deleteSellerByExternalId(externalId);
     }
 }
