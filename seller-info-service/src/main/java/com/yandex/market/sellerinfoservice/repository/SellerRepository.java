@@ -10,5 +10,5 @@ public interface SellerRepository extends JpaRepository<Seller, Long> {
 
     boolean existsSellerByEmail(String email);
 
-    Optional<Seller> getByExternalId(UUID sellerExternalId);
+    Optional<Seller> findByExternalId(UUID externalId);
 }

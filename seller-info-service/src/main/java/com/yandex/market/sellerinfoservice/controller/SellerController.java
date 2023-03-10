@@ -1,5 +1,6 @@
 package com.yandex.market.sellerinfoservice.controller;
 
+import com.yandex.market.sellerinfoservice.controller.response.ErrorResponse;
 import com.yandex.market.sellerinfoservice.dto.SellerRequestDto;
 import com.yandex.market.sellerinfoservice.dto.SellerResponseDto;
 import com.yandex.market.sellerinfoservice.service.SellerService;
@@ -25,12 +26,19 @@ import static com.yandex.market.util.HttpUtils.PUBLIC_API_V1;
 @RequestMapping(PUBLIC_API_V1)
 @RequiredArgsConstructor
 @Tag(name = "Методы seller-service для работы с сущностью \"Продавец\"")
+@ApiResponses({
+        @ApiResponse(responseCode = "400", description = "На сервер переданы неверные данные",
+                content = @Content(mediaType = "application/json",
+                        schema = @Schema(implementation = ErrorResponse.class))),
+        @ApiResponse(responseCode = "404", description = "Продавец не найден",
+                content = @Content(mediaType = "application/json",
+                        schema = @Schema(implementation = ErrorResponse.class)))})
 public class SellerController {
 
     private final SellerService sellerService;
 
+    @PostMapping("sellers")
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/sellers")
     @Operation(summary = "Создание нового продавца", responses = {
             @ApiResponse(description = "Новый продавец создан", responseCode = "201",
                     content = @Content(mediaType = "application/json",
@@ -41,7 +49,16 @@ public class SellerController {
         return sellerService.createSeller(sellerRequestDto);
     }
 
-    @PutMapping("/sellers/{sellerId}")
+    @GetMapping("sellers/{sellerId}")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(operationId = "getProductByExternalId", summary = "Получение товара по externalId")
+    @ApiResponse(responseCode = "200", description = "OK",
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = UUID.class)))
+    public SellerResponseDto getSellerByExternalId(@PathVariable("sellerId") UUID sellerId) {
+        return sellerService.getSellerByExternalId(sellerId);
+    }
+
+    @PutMapping("sellers/{sellerId}")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "OK",
                     content = @Content(mediaType = "application/json",
@@ -55,8 +72,8 @@ public class SellerController {
         return sellerService.updateSellerWithDto(sellerId, sellerRequestDto);
     }
 
-    @ResponseStatus(HttpStatus.OK)
     @DeleteMapping("sellers/{externalId}")
+    @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Удаление продавца", responses = {
             @ApiResponse(description = "Продавец успешно удален", responseCode = "200"),
             @ApiResponse(description = "Такого продавца не существует", responseCode = "404")
