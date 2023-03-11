@@ -15,7 +15,7 @@ import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
-public class AuthService implements UserDetailsService {
+public class CustomUserDetailsService implements UserDetailsService {
 
     private static final String ROLE_PREFIX = "ROLE_";
 

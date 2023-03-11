@@ -4,10 +4,8 @@ import com.yandex.market.userservice.dto.request.UserAuthenticationDto;
 import com.yandex.market.userservice.dto.request.UserRegistrationDto;
 import com.yandex.market.userservice.dto.request.UserRequestDto;
 import com.yandex.market.userservice.dto.response.UserResponseDto;
-import com.yandex.market.userservice.gateway.TwoGisClient;
 import com.yandex.market.userservice.mapper.UserRequestMapper;
 import com.yandex.market.userservice.mapper.UserResponseMapper;
-import com.yandex.market.userservice.model.Location;
 import com.yandex.market.userservice.model.Role;
 import com.yandex.market.userservice.model.User;
 import com.yandex.market.userservice.repository.UserRepository;
@@ -22,7 +20,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,17 +35,14 @@ import static com.yandex.market.userservice.utils.PatternConstants.GROUPED_PHONE
 @Service
 @RequiredArgsConstructor
 public class UserService {
-    private final TwoGisClient client;
     private final UserValidator userValidator;
     private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
     private final UserRequestMapper userRequestMapper;
     private final UserResponseMapper userResponseMapper;
     private final UserRegistrationValidator userRegistrationValidator;
 
 
-    @Transactional
-    public void signUp(UserRegistrationDto userDto) {
+    public UUID signUp(UserRegistrationDto userDto) {
         userRegistrationValidator.validate(userDto);
 
         checkEmailForUniqueness(userDto.email());
@@ -59,7 +53,7 @@ public class UserService {
         user.setEmail(userDto.email());
         user.setPassword(userDto.password());
 
-        userRepository.save(user);
+        return userRepository.save(user).getExternalId();
     }
 
     @Cacheable(value = "users", key = "#externalId")
@@ -135,11 +129,6 @@ public class UserService {
         if (userRepository.existsByPhone(formattedPhone)) {
             throw new IllegalArgumentException(USER_WITH_THE_SAME_PHONE_IS_EXISTS_MESSAGE.formatted(formattedPhone));
         }
-    }
-
-    private static void setLocationCoordinates(Location location, TwoGisClient.Point point) {
-        location.setLatitude(point.lat());
-        location.setLongitude(point.lon());
     }
 
     private void updateUser(User storedUser, User updatedUser) {
