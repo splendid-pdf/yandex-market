@@ -23,9 +23,12 @@ public class PermissionService {
         List<String> authorities = (List<String>) tokenAttributes.get("authorities");
         if (authorities.contains(Role.ADMIN.getKey())){
             return true;
+        } else if (authUserExternalId.equals(externalId.toString()) && authorities.contains(Role.USER.getKey())) {
+            return true;
         }
 
-        return authUserExternalId.equals(externalId.toString()) && authorities.contains(Role.USER.getKey());
+        log.info("User with id {} has no permission for resource", externalId);
+        return false;
     }
 
     private Map<String, Object> getTokenAttributes() {
