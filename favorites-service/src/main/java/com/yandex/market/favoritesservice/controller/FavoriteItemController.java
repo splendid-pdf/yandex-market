@@ -56,7 +56,7 @@ public class FavoriteItemController {
     private Page<FavoriteItemResponseDto> getFavorites(
             @Parameter(name = "userId", description = "User's identifier")
             @PathVariable("userId") UUID userId,
-            @PageableDefault(sort = "additionTimestamp", direction = Sort.Direction.DESC) Pageable page) {
+            @PageableDefault(sort = "addedAt", direction = Sort.Direction.DESC) Pageable page) {
         log.info("Received a request to get favorites products of user: \"%s\"".formatted(userId));
         return favoriteItemService.getFavoritesByUserId(userId, page);
     }

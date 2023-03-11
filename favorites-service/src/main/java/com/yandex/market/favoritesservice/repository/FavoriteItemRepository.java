@@ -5,11 +5,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.Optional;
 import java.util.UUID;
 
 public interface FavoriteItemRepository extends JpaRepository<FavoriteItem, Long> {
 
     Page<FavoriteItem> getFavoritesByUserId(UUID userId, Pageable pageable);
 
-    void deleteByUserIdAndProductId(UUID userId, UUID productId);
+    Optional<FavoriteItem> getFavoriteItemByUserIdAndProductId(UUID userId, UUID productId);
 }

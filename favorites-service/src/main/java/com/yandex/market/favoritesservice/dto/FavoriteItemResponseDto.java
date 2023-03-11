@@ -8,9 +8,11 @@ import java.util.UUID;
 @Schema
 public record FavoriteItemResponseDto(
 
+        UUID externalId,
+
         UUID productId,
 
         UUID userId,
 
-        LocalDateTime additionTimestamp) {
+        LocalDateTime addedAt) {
 }

@@ -4,6 +4,7 @@ import com.yandex.market.favoritesservice.dto.FavoriteItemResponseDto;
 import com.yandex.market.favoritesservice.mapper.FavoriteItemMapper;
 import com.yandex.market.favoritesservice.model.FavoriteItem;
 import com.yandex.market.favoritesservice.repository.FavoriteItemRepository;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +47,10 @@ public class FavoriteItemServiceImpl implements FavoriteItemService {
     @Override
     @Transactional
     public void deleteFavoritesByUserId(UUID userId, UUID productId) {
-        repository.deleteByUserIdAndProductId(userId, productId);
+        FavoriteItem favoriteItem = repository.getFavoriteItemByUserIdAndProductId(userId, productId).orElseThrow(
+                () -> new EntityNotFoundException("FavoriteItem was not found by given userId = %s and productId = %s"
+                        .formatted(userId, productId))
+        );
+        repository.deleteById(favoriteItem.getId());
     }
 }
