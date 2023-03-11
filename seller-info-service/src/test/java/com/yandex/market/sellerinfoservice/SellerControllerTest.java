@@ -56,9 +56,8 @@ public class SellerControllerTest {
     @Value("${spring.app.seller.json-path}" + "update/")
     private String RESOURCES_PATH_UPDATE;
 
-    // Тесты на получение продавца
     @Test
-    void getSellerByExternalId_successfulSearch() throws Exception {
+    void getSellerByExternalId_sellerFoundWithoutProblem() throws Exception {
         UUID sellerId = UUID.fromString("37678201-f3c8-4d5c-a628-2344eef50c55");
 
         MvcResult mvcResult = mockMvc.perform(get(PATH_TO_SELLER + "{sellerId}", sellerId)
@@ -79,9 +78,8 @@ public class SellerControllerTest {
                 .andExpect(status().isNotFound());
     }
 
-    // Тесты на обновление продавца
     @Test
-    void updateSeller_successfulUpdate() throws Exception {
+    void updateSeller_sellerFoundAndFullyUpdated() throws Exception {
         UUID sellerId = UUID.fromString("37678201-f3c8-4d5c-a628-2344eef50c51");
 
         Seller expectedSeller = Seller.builder()
@@ -127,7 +125,7 @@ public class SellerControllerTest {
     }
 
     @Test
-    void updateSeller_OnlySellerName() throws Exception {
+    void updateSeller_sellerFoundAndUpdatedOnlySellerName() throws Exception {
         UUID sellerId = UUID.fromString("37678201-f3c8-4d5c-a628-2344eef50c52");
 
         String firstName = "Новое имя",
@@ -148,7 +146,7 @@ public class SellerControllerTest {
     }
 
     @Test
-    void updateSeller_emptyDto() throws Exception {
+    void updateSeller_sellerFoundButWasTransferEmptyDto() throws Exception {
         UUID sellerId = UUID.fromString("37678201-f3c8-4d5c-a628-2344eef50c53");
 
         SellerResponseDto sellerBefore = sellerService.getSellerByExternalId(sellerId);

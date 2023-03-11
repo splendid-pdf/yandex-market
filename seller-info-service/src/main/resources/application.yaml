@@ -4,7 +4,6 @@ server:
 spring:
   application:
     name: seller-info-service
-    url: /public/api/v1/sellers
   flyway:
     enabled: false
 

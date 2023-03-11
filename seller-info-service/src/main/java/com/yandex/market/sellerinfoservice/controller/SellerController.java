@@ -49,16 +49,18 @@ public class SellerController {
         return sellerService.createSeller(sellerRequestDto);
     }
 
-    @GetMapping("sellers/{sellerId}")
+    @GetMapping("sellers/{externalId}")
     @ResponseStatus(HttpStatus.OK)
-    @Operation(operationId = "getProductByExternalId", summary = "Получение товара по externalId")
+    @Operation(operationId = "getSellerByExternalId", summary = "Получение продавца по externalId")
     @ApiResponse(responseCode = "200", description = "OK",
             content = @Content(mediaType = "application/json", schema = @Schema(implementation = UUID.class)))
-    public SellerResponseDto getSellerByExternalId(@PathVariable("sellerId") UUID sellerId) {
-        return sellerService.getSellerByExternalId(sellerId);
+    public SellerResponseDto getSellerByExternalId(
+            @Parameter(name = "externalId", description = "Индификатор продавца")
+            @PathVariable("externalId") UUID externalId) {
+        return sellerService.getSellerByExternalId(externalId);
     }
 
-    @PutMapping("sellers/{sellerId}")
+    @PutMapping("sellers/{externalId}")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "OK",
                     content = @Content(mediaType = "application/json",
@@ -68,8 +70,11 @@ public class SellerController {
             summary = "Поиск по продавца Id и обновление с помощью Dto",
             description = "Обновление продавца на основе входящего объекта DTO и продавца UUID")
     @ResponseStatus(HttpStatus.OK)
-    public SellerResponseDto updateSeller(@PathVariable UUID sellerId, @RequestBody SellerRequestDto sellerRequestDto) {
-        return sellerService.updateSellerWithDto(sellerId, sellerRequestDto);
+    public SellerResponseDto updateSeller(
+            @Parameter(name = "externalId", description = "Индификатор продавца")
+            @PathVariable UUID externalId,
+            @RequestBody SellerRequestDto sellerRequestDto) {
+        return sellerService.updateSellerWithDto(externalId, sellerRequestDto);
     }
 
     @DeleteMapping("sellers/{externalId}")
