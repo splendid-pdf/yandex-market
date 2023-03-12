@@ -22,7 +22,6 @@ import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Set;
-import java.util.UUID;
 
 import static org.springframework.security.oauth2.core.OAuth2AccessToken.TokenType.BEARER;
 
@@ -39,7 +38,7 @@ public class AuthenticationService {
         Authentication authentication = provider.authenticate(
                 new UsernamePasswordAuthenticationToken(request.email(), request.password()));
         String email = authentication.getPrincipal().toString();
-        String id = ((Map<String, String>) authentication.getDetails()).get("user-id");
+        String userId = ((Map<String, String>) authentication.getDetails()).get("user-id");
 
         if (authentication.isAuthenticated()) {
             OAuth2AccessToken accessToken =
@@ -47,14 +46,20 @@ public class AuthenticationService {
             OAuth2RefreshToken refreshToken =
                     tokenService.createRefreshToken(authentication, securityProperties.getRefreshTokenLifetimeInMinutes());
 
-            OAuth2Authorization authorizationObject = getoAuth2Authorization(email, accessToken, refreshToken);
+            OAuth2Authorization authorizationObject = getoAuth2Authorization(email, userId, accessToken, refreshToken);
 
             authorizationService.save(authorizationObject);
 
-            return new OAuthUserData(id, email, accessToken.getTokenValue(), refreshToken.getTokenValue());
+            return new OAuthUserData(
+                    userId,
+                    email,
+                    accessToken.getTokenValue(),
+                    refreshToken.getTokenValue(),
+                    accessToken.getExpiresAt()
+            );
         }
 
-        throw new AuthorizationServiceException("User with id '%s' wasn't authenticated".formatted(id));
+        throw new AuthorizationServiceException("User with id '%s' wasn't authenticated".formatted(userId));
     }
 
     public void revokeAuthentication(String token, OAuth2TokenType tokenType) {
@@ -78,6 +83,7 @@ public class AuthenticationService {
     @SneakyThrows
     private OAuth2Authorization getoAuth2Authorization(
             String email,
+            String userId,
             OAuth2AccessToken accessToken,
             OAuth2RefreshToken refreshToken
     ) {
@@ -96,7 +102,7 @@ public class AuthenticationService {
 
         Arrays.stream(authorizationClass.getDeclaredFields()).forEach(field -> field.setAccessible(true));
 
-        fieldId.set(authorizationObject, UUID.randomUUID().toString());
+        fieldId.set(authorizationObject, userId);
         fieldClientId.set(authorizationObject, securityProperties.getClientId());
         fieldPrincipalName.set(authorizationObject, email);
         fieldGrantType.set(authorizationObject, AuthorizationGrantType.PASSWORD);
