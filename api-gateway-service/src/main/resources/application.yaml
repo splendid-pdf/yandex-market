@@ -29,8 +29,8 @@ spring:
           uri: http://127.0.0.1:9001
           predicates:
             - Path=/*/*/*/upload, /*/*/*/download, /*/*/*/url, /*/*/*/delete, /*/*/*/urls
-          filters:
-            - AuthFilter
+      default-filters:
+        - name: AuthFilter
 
   security:
     oauth2:
@@ -64,8 +64,8 @@ management:
 application:
   security:
     white-list:
-      - http://localhost:8080/public/api/v1/
+      - /public/api/v1/users/signup
 
 logging:
   level:
-    web: DEBUG
+    org: INFO

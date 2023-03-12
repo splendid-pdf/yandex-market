@@ -19,7 +19,6 @@ import org.springframework.util.StringUtils;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
-import java.util.Arrays;
 import java.util.Map;
 import java.util.Set;
 
@@ -100,7 +99,13 @@ public class AuthenticationService {
         Field fieldTokens = authorizationClass.getDeclaredField("tokens");
         Field fieldAttributes = authorizationClass.getDeclaredField("attributes");
 
-        Arrays.stream(authorizationClass.getDeclaredFields()).forEach(field -> field.setAccessible(true));
+        fieldId.setAccessible(true);
+        fieldClientId.setAccessible(true);
+        fieldPrincipalName.setAccessible(true);
+        fieldGrantType.setAccessible(true);
+        fieldScopes.setAccessible(true);
+        fieldTokens.setAccessible(true);
+        fieldAttributes.setAccessible(true);
 
         fieldId.set(authorizationObject, userId);
         fieldClientId.set(authorizationObject, securityProperties.getClientId());

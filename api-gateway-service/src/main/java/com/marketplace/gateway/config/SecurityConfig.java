@@ -21,6 +21,6 @@ public class SecurityConfig {
                 .anyExchange()
                 .permitAll();
 
-        return http.build();
+        return http.formLogin().disable().httpBasic().disable().build();
     }
 }

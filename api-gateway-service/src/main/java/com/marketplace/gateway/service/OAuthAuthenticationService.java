@@ -4,6 +4,7 @@ import com.marketplace.gateway.dto.OAuthUserResponse;
 import com.marketplace.gateway.dto.OAuthUser;
 import com.marketplace.gateway.dto.UserLoginRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +26,7 @@ import static com.marketplace.gateway.util.AuthConstants.X_USER_ID_HEADER;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.security.oauth2.core.OAuth2AccessToken.TokenType.BEARER;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class OAuthAuthenticationService {
@@ -42,6 +44,7 @@ public class OAuthAuthenticationService {
                 .exchangeToMono(this::getAuthenticatedUserData)
                 .doOnNext(oAuthUser -> addAuthDataToResponseHeaders(oAuthUser, exchange))
                 .doOnNext(data -> AUTHORIZED_CLIENTS_DATA.put(data.id(), data))
+                .doOnNext(data -> log.info(AUTHORIZED_CLIENTS_DATA.toString()))
                 .map(data -> new OAuthUserResponse(data.id(), data.email()));
     }
 
@@ -51,18 +54,15 @@ public class OAuthAuthenticationService {
                             .flatMap(Function.identity())
                             .doOnNext(responseEntity ->
                                 AUTHORIZED_CLIENTS_DATA.remove(request.getHeaders().getFirst(X_USER_ID_HEADER)))
+                            .doOnNext(data -> log.info(AUTHORIZED_CLIENTS_DATA.toString()))
                         : Mono.error(() -> new AuthorizationServiceException("User is not authenticated")));
     }
 
     public boolean isAuthenticated(String userId, String token) {
-        if (StringUtils.hasText(token) && StringUtils.hasText(userId)) {
-            OAuthUser authenticatedUser = AUTHORIZED_CLIENTS_DATA.get(userId);
-            return authenticatedUser != null
-                    && !authenticatedUser.accessTokenExpiredAt().isBefore(Instant.now())
-                    && token.equals(authenticatedUser.accessToken());
-        }
-
-        return false;
+        OAuthUser authenticatedUser = AUTHORIZED_CLIENTS_DATA.get(userId);
+        return authenticatedUser != null
+                && authenticatedUser.accessTokenExpiredAt().isAfter(Instant.now())
+                && token.equals(authenticatedUser.accessToken());
     }
 
     private Mono<OAuthUser> getAuthenticatedUserData(ClientResponse clientResponse) {
