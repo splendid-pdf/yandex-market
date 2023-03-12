@@ -30,9 +30,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional
-    public UUID createProduct(ProductRequestDto productRequestDto, UUID sellerExternalId) {
+    public UUID createProduct(ProductRequestDto productRequestDto, UUID sellerId) {
         Product product = productMapper.toProduct1(productRequestDto);
-        product.setSellerExternalId(sellerExternalId);
+        product.setSellerExternalId(sellerId);
         return repository.save(product).getExternalId();
     }
 
@@ -67,7 +67,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<ProductResponseDto> getPageListOrArchiveBySellerId(UUID sellerId, DisplayProductMethod method, Pageable pageable) {
+    public Page<ProductResponseDto> getPageListOrArchiveBySellerId(UUID sellerId,
+                                                                   DisplayProductMethod method,
+                                                                   Pageable pageable) {
         Page<Product> productsBySellerId = switch (method) {
             case PRODUCT_LIST -> repository.findProductsPageBySellerId(sellerId, pageable);
             case ARCHIVE -> repository.findArchivedProductsPageBySellerId(sellerId, pageable);
@@ -83,7 +85,8 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional
-    public void changeVisibilityForSellerId(UUID sellerId, List<UUID> productIds, VisibilityMethod method, boolean methodAction) {
+    public void changeVisibilityForSellerId(UUID sellerId, List<UUID> productIds,
+                                            VisibilityMethod method, boolean methodAction) {
         switch (method) {
             case VISIBLE -> {
                 if (methodAction) repository.displayProductsBySellerId(productIds, sellerId);

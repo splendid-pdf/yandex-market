@@ -68,7 +68,8 @@ class ProductServiceApplicationTests {
     @Test
     void findPageProductsBySellerId_successfulSearch() throws Exception {
         MvcResult mvcResult = mockMvc.perform(get(
-                        PATH_TO_SELLER + "{shopId}/products", FIND_SELLER_ID, PageRequest.of(0, 20))
+                        PATH_TO_SELLER + "{sellerId}/products",
+                        FIND_SELLER_ID, PageRequest.of(0, 20))
                         .param("method", "PRODUCT_LIST")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -87,7 +88,7 @@ class ProductServiceApplicationTests {
         UUID sellerId = UUID.fromString("301c5370-be41-421e-9b15-f1e80a7074f9");
 
         MvcResult mvcResult = mockMvc.perform(get(
-                        PATH_TO_SELLER + "{shopId}/products", sellerId, PageRequest.of(0, 20))
+                        PATH_TO_SELLER + "{sellerId}/products", sellerId, PageRequest.of(0, 20))
                         .param("method", "PRODUCT_LIST")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -101,7 +102,7 @@ class ProductServiceApplicationTests {
     @Test
     void findArchivePageOfProductsBySellerId_successfulSearch() throws Exception {
         MvcResult mvcResult = mockMvc.perform(get(
-                        PATH_TO_SELLER + "{shopId}/products", FIND_SELLER_ID, PageRequest.of(0, 20))
+                        PATH_TO_SELLER + "{sellerId}/products", FIND_SELLER_ID, PageRequest.of(0, 20))
                         .param("method", "ARCHIVE")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -187,7 +188,7 @@ class ProductServiceApplicationTests {
     public void createProduct_returnExternalIdAndStatus201Created() throws Exception {
         UUID sellerExternalId = UUID.fromString("cd8ae5aa-ebea-4922-b3c2-8ba8a296ef04");
         MvcResult mvcResult = mockMvc.perform(
-                        post(PATH_TO_PRODUCT + "{sellerExternalId}/products", sellerExternalId)
+                        post(PATH_TO_PRODUCT + "{sellerId}/products", sellerExternalId)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(Files.readString(Path.of("src/test/resources/CreateProductRequestDto.json"))))
                 .andExpect(status().isCreated())
@@ -202,7 +203,7 @@ class ProductServiceApplicationTests {
     @Transactional
     public void createNegative() throws Exception {
         UUID sellerExternalId = UUID.fromString("cd8ae5aa-ebea-4922-b3c2-8ba8a296ef04");
-        mockMvc.perform(post(PATH_TO_PRODUCT + "{sellerExternalId}/products", sellerExternalId)
+        mockMvc.perform(post(PATH_TO_PRODUCT + "{sellerId}/products", sellerExternalId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(Files.readString(Path.of("src/test/resources/CreateProductRequestDtoNegative.json"))))
                 .andExpect(status().isBadRequest())
@@ -258,7 +259,7 @@ class ProductServiceApplicationTests {
 
     private long getActualCountAfterDelete(UUID sellerId) throws Exception {
         return objectMapper.readValue(mockMvc.perform(get(
-                        PATH_TO_SELLER + "{shopId}/products", sellerId, PageRequest.of(0, 20))
+                        PATH_TO_SELLER + "{sellerId}/products", sellerId, PageRequest.of(0, 20))
                         .param("method", "ARCHIVE")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
