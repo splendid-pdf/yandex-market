@@ -1,16 +1,22 @@
 spring:
-  kafka:
-    bootstrap-servers: localhost:9092
-
-  cloud:
-    config:
-      enabled: false
+  application:
+    name: metrics-service
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/test
-    username: postgres
-    password: admin
+    url: jdbc:postgresql://localhost:5432/${DB_NAME}
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
     driver-class-name: org.postgresql.Driver
 
   flyway:
     enabled: false
+
+  config:
+    import: "optional:configserver:"
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+
+  kafka:
+    bootstrap-servers: localhost:9092

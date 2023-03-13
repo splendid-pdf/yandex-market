@@ -13,16 +13,16 @@ spring:
       url: /public/api/v1/sellers/
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/test
-    username: postgres
-    password: admin
+    url: jdbc:postgresql://localhost:5432/${DB_NAME}
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
     driver-class-name: org.postgresql.Driver
 
   jpa:
     database: POSTGRESQL
     show-sql: true
     hibernate:
-      ddl-auto: create-drop # далее validate
+      ddl-auto: update # далее validate
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
@@ -38,5 +38,3 @@ spring:
 
   kafka:
     bootstrap-servers: localhost:9092
-
-

@@ -34,7 +34,7 @@ dependencies {
     runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
 
     //kafka
-    implementation 'org.springframework.kafka:spring-kafka:3.0.2'
+    implementation 'org.springframework.kafka:spring-kafka'
 
     // tests
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
