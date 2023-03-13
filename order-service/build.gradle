@@ -8,7 +8,7 @@ plugins {
 
 ext {
 	set('flywayCoreVersion', '9.14.1')
-	set("springCloudConfigVersion", "2022.0.1");
+	set("springCloudConfigVersion", "2022.0.1")
 }
 
 dependencies {
