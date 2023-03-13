@@ -31,7 +31,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @Transactional
     public UUID createProduct(ProductRequestDto productRequestDto, UUID sellerId) {
-        Product product = productMapper.toProduct1(productRequestDto);
+        Product product = productMapper.toProduct(productRequestDto);
         product.setSellerExternalId(sellerId);
         return repository.save(product).getExternalId();
     }
