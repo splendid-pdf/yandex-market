@@ -1,6 +1,6 @@
 package com.yandex.market.favoritesservice.controller;
 
-import com.yandex.market.favoritesservice.service.ExceptionResponse;
+import com.yandex.market.favoritesservice.dto.ExceptionResponse;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -19,7 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestControllerAdvice
-public class FavoritesControllerAdvice extends ResponseEntityExceptionHandler {
+public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(EntityNotFoundException.class)
