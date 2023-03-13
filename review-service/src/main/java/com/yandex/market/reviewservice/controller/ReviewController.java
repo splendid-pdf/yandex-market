@@ -48,7 +48,7 @@ public class ReviewController {
     @ApiResponse(responseCode = "200", description = "OK",
             content = @Content(mediaType = "application/json", schema = @Schema(implementation = UUID.class)))
     public Page<ReviewDto> getReviewsByUserId(
-            @Parameter(name = "userId", description = "Индентификатор продавца")
+            @Parameter(name = "userId", description = "Индентификатор пользователя")
             @PathVariable("userId") UUID userId,
             @PageableDefault(sort = "creationTimestamp", direction = Sort.Direction.DESC) Pageable pageable) {
         log.info("Received a request to get reviews by user identifier: {}", userId);
