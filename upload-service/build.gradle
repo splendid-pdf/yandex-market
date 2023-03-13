@@ -6,7 +6,7 @@ plugins {
 }
 
 ext {
-	set("springCloudVersion", "2022.0.1");
+	set("springCloudVersion", "2022.0.1")
 }
 
 
@@ -68,4 +68,12 @@ bootBuildImage {
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+pmd {
+	toolVersion = '6.53.0'
+	consoleOutput = true
+	ignoreFailures = true
+	ruleSetFiles = files("${rootDir}/ruleset.xml")
+	ruleSets = []
 }
