@@ -23,7 +23,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 @SpringBootTest(classes = SellerMapperImpl.class)
 @ContextConfiguration(classes = SellerMapperImpl.class)
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
-public class SellerMapperTest {
+class SellerMapperTest {
 
     private final SellerMapper mapper;
 

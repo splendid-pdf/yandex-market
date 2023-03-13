@@ -1,6 +1,5 @@
 package com.yandex.market.sellerinfoservice;
 
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yandex.market.sellerinfoservice.dto.SellerResponseDto;
 import com.yandex.market.sellerinfoservice.model.BusinessModel;
@@ -8,7 +7,6 @@ import com.yandex.market.sellerinfoservice.model.Seller;
 import com.yandex.market.sellerinfoservice.service.SellerService;
 import lombok.RequiredArgsConstructor;
 import org.assertj.core.api.AssertionsForClassTypes;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,12 +24,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.UUID;
 
-import static org.hamcrest.Matchers.containsString;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -43,7 +38,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         @Sql(value = "classpath:db/insert_tests_fields.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD),
         @Sql(value = "classpath:db/truncate.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 })
-public class SellerControllerTest {
+class SellerControllerTest {
     private final MockMvc mockMvc;
 
     private final ObjectMapper objectMapper;
@@ -57,29 +52,36 @@ public class SellerControllerTest {
     private String RESOURCES_PATH_UPDATE;
 
     @Test
-    void getSellerByExternalId_sellerFoundWithoutProblem() throws Exception {
+    void getSellerByExternalIdSellerFoundWithoutProblem() throws Exception {
         UUID sellerId = UUID.fromString("37678201-f3c8-4d5c-a628-2344eef50c55");
 
         MvcResult mvcResult = mockMvc.perform(get(PATH_TO_SELLER + "{sellerId}", sellerId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString(sellerId.toString())))
                 .andReturn();
 
-        Assertions.assertNotNull(objectMapper.readValue(mvcResult.getResponse().getContentAsString(), Seller.class));
+        SellerResponseDto seller = objectMapper.readValue(mvcResult.getResponse().getContentAsString(),
+                SellerResponseDto.class);
+
+        assertEquals(seller.externalId(), sellerId, "External IDs don't match");
     }
 
     @Test
-    void getSellerByExternalId_sellerNotFound() throws Exception {
+    void getSellerByExternalIdSellerNotFound() throws Exception {
         UUID sellerId = UUID.fromString("37678201-f3c8-4d5c-a628-2344eef50c99");
 
-        mockMvc.perform(get(PATH_TO_SELLER + "{sellerId}", sellerId)
+        MvcResult mvcResult = mockMvc.perform(get(PATH_TO_SELLER + "{sellerId}", sellerId)
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNotFound());
+                .andExpect(status().isNotFound())
+                .andReturn();
+
+        String responseBody = mvcResult.getResponse().getContentAsString();
+        assertTrue(responseBody.contains("\"statusCode\":\"NOT_FOUND\""),
+                "The received status does not match the expected");
     }
 
     @Test
-    void updateSeller_sellerFoundAndFullyUpdated() throws Exception {
+    void updateSellerSellerFoundAndFullyUpdated() throws Exception {
         UUID sellerId = UUID.fromString("37678201-f3c8-4d5c-a628-2344eef50c51");
 
         Seller expectedSeller = Seller.builder()
@@ -105,7 +107,7 @@ public class SellerControllerTest {
 
         SellerResponseDto seller = sellerService.getSellerByExternalId(sellerId);
 
-        assertNotNull(seller);
+        assertNotNull(seller, "The returned object is empty");
 
         AssertionsForClassTypes.assertThat(expectedSeller)
                 .usingRecursiveComparison()
@@ -114,18 +116,23 @@ public class SellerControllerTest {
     }
 
     @Test
-    void updateSeller_sellerNotFound() throws Exception {
+    void updateSellerSellerNotFound() throws Exception {
         UUID sellerId = UUID.fromString("37678201-f3c8-4d5c-a628-2344eef50c98");
 
-        mockMvc.perform(put(
+        MvcResult mvcResult = mockMvc.perform(put(
                         PATH_TO_SELLER + "{sellerId}", sellerId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(Files.readString(Path.of(RESOURCES_PATH_UPDATE + "update_full.json"))))
-                .andExpect(status().isNotFound());
+                .andExpect(status().isNotFound())
+                .andReturn();
+
+        String responseBody = mvcResult.getResponse().getContentAsString();
+        assertTrue(responseBody.contains("\"statusCode\":\"NOT_FOUND\""),
+                "The received status does not match the expected");
     }
 
     @Test
-    void updateSeller_sellerFoundAndUpdatedOnlySellerName() throws Exception {
+    void updateSellerSellerFoundAndUpdatedOnlySellerName() throws Exception {
         UUID sellerId = UUID.fromString("37678201-f3c8-4d5c-a628-2344eef50c52");
 
         String firstName = "Новое имя",
@@ -139,14 +146,15 @@ public class SellerControllerTest {
                 .andReturn();
 
         SellerResponseDto seller = sellerService.getSellerByExternalId(sellerId);
-        assertNotNull(seller);
 
-        assertEquals(firstName, seller.firstName());
-        assertEquals(lastName, seller.lastName());
+        assertAll("Values firstName and lastName are not as expected",
+                () -> assertEquals(firstName, seller.firstName(), "FirstName values are not equal"),
+                () -> assertEquals(lastName, seller.lastName(), "LastName values are not equal")
+        );
     }
 
     @Test
-    void updateSeller_sellerFoundButWasTransferEmptyDto() throws Exception {
+    void updateSellerSellerFoundButWasTransferEmptyDto() throws Exception {
         UUID sellerId = UUID.fromString("37678201-f3c8-4d5c-a628-2344eef50c53");
 
         SellerResponseDto sellerBefore = sellerService.getSellerByExternalId(sellerId);
@@ -159,7 +167,7 @@ public class SellerControllerTest {
                 .andReturn();
 
         SellerResponseDto sellerAfter = sellerService.getSellerByExternalId(sellerId);
-        assertNotNull(sellerAfter);
+        assertNotNull(sellerAfter, "The returned object is empty");
 
         AssertionsForClassTypes.assertThat(sellerBefore)
                 .usingRecursiveComparison()
