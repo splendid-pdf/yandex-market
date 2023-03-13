@@ -31,7 +31,7 @@ public class ReviewService {
 
     @Transactional
     public ReviewDto update(ReviewDto reviewDto, UUID reviewExternalId) {
-        Review storedReview = reviewRepository.getReviewsByExternalId(reviewExternalId)
+        Review storedReview = reviewRepository.getReviewByExternalId(reviewExternalId)
                 .orElseThrow(() -> new EntityNotFoundException("Review not found by external id = '%s'"
                         .formatted(reviewExternalId)));
         Review review = reviewMapper.toReview(reviewDto);
@@ -65,7 +65,7 @@ public class ReviewService {
 
     @Transactional
     public void delete(UUID reviewExternalId) {
-        Review review = reviewRepository.getReviewsByExternalId(reviewExternalId)
+        Review review = reviewRepository.getReviewByExternalId(reviewExternalId)
                 .orElseThrow(() -> new EntityNotFoundException("Review not found by external id = '%s'"
                         .formatted(reviewExternalId)));
         reviewRepository.deleteById(review.getId());
