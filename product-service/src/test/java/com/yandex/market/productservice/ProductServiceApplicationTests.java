@@ -66,7 +66,7 @@ class ProductServiceApplicationTests {
     private String PATH_TO_PRODUCT;
 
     @Test
-    void findPageProductsBySellerId_successfulSearch() throws Exception {
+    void shouldFindPageProductsBySellerIdSuccessfulSearch() throws Exception {
         MvcResult mvcResult = mockMvc.perform(get(
                         PATH_TO_SELLER + "{sellerId}/products",
                         FIND_SELLER_ID, PageRequest.of(0, 20))
@@ -84,7 +84,7 @@ class ProductServiceApplicationTests {
     }
 
     @Test
-    void findPageProductsBySellerId_noSellerFoundForCurrentId() throws Exception {
+    void shouldFindPageProductsBySellerIdNoSellerFoundForCurrentId() throws Exception {
         UUID sellerId = UUID.fromString("301c5370-be41-421e-9b15-f1e80a7074f9");
 
         MvcResult mvcResult = mockMvc.perform(get(
@@ -100,7 +100,7 @@ class ProductServiceApplicationTests {
     }
 
     @Test
-    void findArchivePageOfProductsBySellerId_successfulSearch() throws Exception {
+    void shouldFindArchivePageOfProductsBySellerIdSuccessfulSearch() throws Exception {
         MvcResult mvcResult = mockMvc.perform(get(
                         PATH_TO_SELLER + "{sellerId}/products", FIND_SELLER_ID, PageRequest.of(0, 20))
                         .param("method", "ARCHIVE")
@@ -117,7 +117,7 @@ class ProductServiceApplicationTests {
     }
 
     @Test
-    void deleteListProductBySellerId_successDeleted() throws Exception {
+    void shouldDeleteListProductBySellerIdSuccessDeleted() throws Exception {
         List<UUID> productIds = new ArrayList<>(List.of(
                 UUID.fromString("301c5370-be41-421e-9b15-f1e80a7074d1"),
                 UUID.fromString("301c5370-be41-421e-9b15-f1e80a7074d2"),
@@ -132,7 +132,7 @@ class ProductServiceApplicationTests {
     }
 
     /**
-     * Method: deleteListProductBySellerId_notAllProductsFound()
+     * Method: shouldDeleteListProductBySellerIdNotAllProductsFound()
      *
      * @throws Exception throws out methods {@link ProductServiceApplicationTests#executeDelete(UUID, List)},
      *                   {@link ProductServiceApplicationTests#getActualCountAfterDelete(UUID)}
@@ -140,7 +140,7 @@ class ProductServiceApplicationTests {
      * @value <b>productIds</b> list elements (0 - exists, 1 - not exists, 2 - not exists)
      */
     @Test
-    void deleteListProductBySellerId_notAllProductsFound() throws Exception {
+    void shouldDeleteListProductBySellerIdNotAllProductsFound() throws Exception {
         List<UUID> productIds = new ArrayList<>(List.of(
                 UUID.fromString("301c5370-be41-421e-9b15-f1e80a7074d4"),
                 UUID.fromString("301c5370-be41-421e-9b15-f1e80a7074c5"),
@@ -156,7 +156,7 @@ class ProductServiceApplicationTests {
     }
 
     /**
-     * Method: deleteListProductBySellerId_notAllProductsCanBeDeleted()
+     * Method: shouldDeleteListProductBySellerIdNotAllProductsCanBeDeleted()
      *
      * @throws Exception throws out methods {@link ProductServiceApplicationTests#executeDelete(UUID, List)},
      *                   {@link ProductServiceApplicationTests#getActualCountAfterDelete(UUID)}
@@ -166,7 +166,7 @@ class ProductServiceApplicationTests {
      * @value <b>expectedBeforeDelete</b> expected 5 - (4 - 3 (isDeleted = false))
      */
     @Test
-    void deleteListProductBySellerId_notAllProductsCanBeDeleted() throws Exception {
+    void shouldDeleteListProductBySellerIdNotAllProductsCanBeDeleted() throws Exception {
         List<UUID> productIds = new ArrayList<>(List.of(
                 UUID.fromString("301c5370-be41-421e-9b15-f1e80a7074d5"),
                 UUID.fromString("301c5370-be41-421e-9b15-f1e80a7074d6"),
@@ -185,7 +185,7 @@ class ProductServiceApplicationTests {
 
     @Test
     @Transactional
-    public void createProduct_returnExternalIdAndStatus201Created() throws Exception {
+    public void shouldCreateProductReturnExternalIdAndStatus201Created() throws Exception {
         UUID sellerExternalId = UUID.fromString("cd8ae5aa-ebea-4922-b3c2-8ba8a296ef04");
         MvcResult mvcResult = mockMvc.perform(
                         post(PATH_TO_PRODUCT + "{sellerId}/products", sellerExternalId)
@@ -201,7 +201,7 @@ class ProductServiceApplicationTests {
 
     @Test
     @Transactional
-    public void createNegative() throws Exception {
+    public void shouldCreateNegative() throws Exception {
         UUID sellerExternalId = UUID.fromString("cd8ae5aa-ebea-4922-b3c2-8ba8a296ef04");
         mockMvc.perform(post(PATH_TO_PRODUCT + "{sellerId}/products", sellerExternalId)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -212,7 +212,7 @@ class ProductServiceApplicationTests {
 
     @Test
     @Transactional
-    public void getProductByExternalId_returnProductResponseDtoAndStatus200Ok() throws Exception {
+    public void shouldGetProductByExternalIdReturnProductResponseDtoAndStatus200Ok() throws Exception {
         UUID productExternalId = UUID.fromString("301c5370-be41-421e-9b15-f1e80a7074f5");
 
         MvcResult mvcResult = mockMvc.perform(get(PATH_TO_PRODUCT + "{externalId}", productExternalId)
@@ -230,7 +230,7 @@ class ProductServiceApplicationTests {
 
     @Test
     @Transactional
-    public void getProductByExternalIdNegative_returnProductResponseDtoAndStatus200Ok() throws Exception {
+    public void shouldGetProductByExternalIdNegativeReturnProductResponseDtoAndStatus200Ok() throws Exception {
         UUID productExternalId = UUID.fromString("301c5370-be41-421e-9b15-f1e80a7124f5");
 
         MvcResult mvcResult = mockMvc.perform(get(PATH_TO_PRODUCT + "{externalId}", productExternalId)
