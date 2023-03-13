@@ -14,7 +14,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Table(name = "favorites")
 @EqualsAndHashCode(of = "id")
-public class Favorites {
+public class FavoriteItem {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "favorites_sequence")
@@ -24,9 +24,9 @@ public class Favorites {
     @Column(unique = true)
     private UUID externalId;
 
-    private UUID productId;
-
     private UUID userId;
 
-    private LocalDateTime additionTimestamp;
+    private UUID productId;
+
+    private LocalDateTime addedAt;
 }

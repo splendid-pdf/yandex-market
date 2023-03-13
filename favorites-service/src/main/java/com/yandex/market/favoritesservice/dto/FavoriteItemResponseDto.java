@@ -6,11 +6,13 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Schema
-public record FavoritesResponseDto(
+public record FavoriteItemResponseDto(
+
+        UUID externalId,
 
         UUID productId,
 
         UUID userId,
 
-        LocalDateTime additionTimestamp) {
+        LocalDateTime addedAt) {
 }
