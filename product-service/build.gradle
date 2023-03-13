@@ -18,6 +18,7 @@ ext {
     set("springCloudConfigVersion", "2022.0.1")
     set("mapstructVersion", "1.5.3.Final")
     set("h2databaseVersion", "2.1.214")
+    set('projectlombok', '1.18.24')
 }
 
 repositories {
@@ -67,15 +68,14 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation "org.mockito:mockito-inline:${mockitoInlineVersion}"
     testImplementation "com.h2database:h2:${h2databaseVersion}"
-    testCompileOnly "org.projectlombok:lombok"
-    testAnnotationProcessor "org.projectlombok:lombok"
+    testCompileOnly "org.projectlombok:lombok:${projectlombok}"
+    testAnnotationProcessor "org.projectlombok:lombok:${projectlombok}"
     testImplementation 'org.testcontainers:postgresql:1.17.6'
 
     // annotation processor
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
     annotationProcessor 'org.projectlombok:lombok'
     annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
-
 }
 
 dependencyManagement {
@@ -104,3 +104,11 @@ tasks.named('test') {
 }
 
 tasks.register("prepareKotlinBuildScriptModel") {}
+
+pmd {
+    toolVersion = '6.53.0'
+    consoleOutput = true
+    ignoreFailures = true
+    ruleSetFiles = files("${rootDir}/ruleset.xml")
+    ruleSets = []
+}
