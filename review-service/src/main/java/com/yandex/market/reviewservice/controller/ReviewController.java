@@ -36,8 +36,9 @@ public class ReviewController {
                             schema = @Schema(implementation = ReviewDto.class))),
             @ApiResponse(description = "Ошибка при создании нового отзыва", responseCode = "400")
     })
-    public UUID createOrder(@RequestBody @Valid ReviewDto reviewDto,
-                            @PathVariable("userId") UUID userId) {
+    public UUID createReview(@RequestBody @Valid ReviewDto reviewDto,
+                             @Parameter(name = "userId", description = "Индентификатор пользователя")
+                             @PathVariable("userId") UUID userId) {
         log.info("Received a request to create new review {} for user: {}}", reviewDto, userId);
         return reviewService.create(reviewDto, userId);
     }
@@ -76,7 +77,7 @@ public class ReviewController {
                             schema = @Schema(implementation = ReviewDto.class))),
             @ApiResponse(description = "Такого отзыва не существует", responseCode = "404")
     })
-    public ReviewDto update(
+    public ReviewDto updateReview(
             @Parameter(name = "reviewId", description = "Индентификатор отзыва")
             @PathVariable("reviewId") UUID reviewExternalId,
             @RequestBody @Valid ReviewDto reviewDto) {
@@ -90,7 +91,7 @@ public class ReviewController {
             @ApiResponse(description = "Отзыв успешно удален", responseCode = "204"),
             @ApiResponse(description = "Такого отзыва не существует", responseCode = "404")
     })
-    public void delete(
+    public void deleteReview(
             @Parameter(name = "reviewId", description = "Индентификатор отзыва")
             @PathVariable("reviewId") UUID reviewExternalId) {
         log.info("Received a request to delete an review: {}", reviewExternalId);

@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
 public class ReviewService {
     private final ReviewRepository reviewRepository;
     private final ReviewMapper reviewMapper;
+    public static final String REVIEW_NOT_FOUND_MESSAGE = "Review not found by external id = '%s'";
 
     @Transactional
     public UUID create(ReviewDto reviewDto, UUID userId) {
@@ -31,9 +32,7 @@ public class ReviewService {
 
     @Transactional
     public ReviewDto update(ReviewDto reviewDto, UUID reviewExternalId) {
-        Review storedReview = reviewRepository.getReviewByExternalId(reviewExternalId)
-                .orElseThrow(() -> new EntityNotFoundException("Review not found by external id = '%s'"
-                        .formatted(reviewExternalId)));
+        Review storedReview = getReview(reviewExternalId);
         Review review = reviewMapper.toReview(reviewDto);
         review.setId(storedReview.getId());
         review.setUserId(storedReview.getUserId());
@@ -65,15 +64,17 @@ public class ReviewService {
 
     @Transactional
     public void delete(UUID reviewExternalId) {
-        Review review = reviewRepository.getReviewByExternalId(reviewExternalId)
-                .orElseThrow(() -> new EntityNotFoundException("Review not found by external id = '%s'"
-                        .formatted(reviewExternalId)));
+        Review review = getReview(reviewExternalId);
         reviewRepository.deleteById(review.getId());
     }
 
     public ReviewDto getByExternalId(UUID reviewExternalId) {
-        return reviewMapper.toReviewDto(reviewRepository.getReviewByExternalId(reviewExternalId)
-                .orElseThrow(() -> new EntityNotFoundException("Review not found by external id = '%s'"
-                        .formatted(reviewExternalId))));
+        return reviewMapper.toReviewDto(getReview(reviewExternalId));
+    }
+
+    private Review getReview(UUID reviewExternalId) {
+        return reviewRepository.getReviewByExternalId(reviewExternalId)
+                .orElseThrow(() -> new EntityNotFoundException(REVIEW_NOT_FOUND_MESSAGE
+                        .formatted(reviewExternalId)));
     }
 }
