@@ -1,9 +1,9 @@
 server:
-  port: 8082
+  port: 8083
 
 spring:
   application:
-    name: order-service
+    name: review-service
     url: /public/api/v1
   jackson:
     serialization:

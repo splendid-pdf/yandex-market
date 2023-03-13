@@ -38,6 +38,9 @@ dependencies {
     // mapper
     implementation "org.mapstruct:mapstruct:${mapstructVersion}"
 
+    //spring cloud
+    implementation 'org.springframework.cloud:spring-cloud-config-client'
+
     // db
     runtimeOnly 'org.postgresql:postgresql'
 
@@ -60,6 +63,21 @@ dependencies {
     testImplementation 'org.testcontainers:junit-jupiter:1.17.6'
     testImplementation 'org.testcontainers:postgresql:1.17.6'
     testImplementation "com.h2database:h2:${h2databaseVersion}"
+}
+
+bootBuildImage {
+    def account = rootProject.property('dockerHubUsername')
+    imageName = "${account}/${project.name}:${project.version}"
+    publish = true
+    environment = [
+            "BP_JVM_VERSION" : "${compileJava.sourceCompatibility}"
+    ]
+    docker {
+        publishRegistry {
+            username = account
+            password = rootProject.property('dockerHubPassword')
+        }
+    }
 }
 
 tasks.named('test') {

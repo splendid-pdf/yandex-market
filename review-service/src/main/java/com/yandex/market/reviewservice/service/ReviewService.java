@@ -43,6 +43,7 @@ public class ReviewService {
         return reviewMapper.toReviewDto(reviewRepository.save(review));
     }
 
+    @Transactional(readOnly = true)
     public Page<ReviewDto> getReviewsByUserId(UUID userId, Pageable pageable) {
         Page<Review> pagedResult = reviewRepository.getReviewsByUserId(userId, pageable);
 
@@ -52,6 +53,7 @@ public class ReviewService {
                 .collect(Collectors.toList()));
     }
 
+    @Transactional(readOnly = true)
     public Page<ReviewDto> getReviewsByProductExternalId(UUID productId, Pageable pageable) {
         Page<Review> pagedResult = reviewRepository.getReviewsByProductId(productId, pageable);
 
