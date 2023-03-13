@@ -4,9 +4,10 @@ server:
 spring:
   application:
     name: seller-info-service
-    url: /public/api/v1/sellers
   flyway:
     enabled: false
+  config:
+    import: "optional:configserver:"
 
   datasource:
     url: jdbc:postgresql://${DB_URL}:5432/${DB_NAME}
