@@ -1,19 +1,15 @@
 package com.yandex.market.productservice.mapper;
 
-import com.yandex.market.productservice.dto.CharacteristicDto;
-import com.yandex.market.productservice.model.Characteristic;
+import com.yandex.market.productservice.dto.TypeCharacteristicDto;
+import com.yandex.market.productservice.model.TypeCharacteristic;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
+import org.mapstruct.ReportingPolicy;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring",
+        unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface CharacteristicMapper {
 
+    TypeCharacteristic toCharacteristic(TypeCharacteristicDto typeCharacteristicDto);
 
-    CharacteristicDto toDto(Characteristic charachteristic);
-
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "product", ignore = true)
-    Characteristic toCharachteristic(CharacteristicDto characteristicDto);
-
-
+    TypeCharacteristicDto toCharacteristicDto(TypeCharacteristic typeCharacteristic);
 }

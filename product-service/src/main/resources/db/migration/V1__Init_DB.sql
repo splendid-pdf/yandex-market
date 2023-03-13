@@ -1,5 +1,5 @@
 create sequence "category-generator" start with 1 increment by 1;
-create sequence "characteristic-generator" start with 1 increment by 1;
+create sequence "typeCharacteristic-generator" start with 1 increment by 1;
 create sequence "product_price-generator" start with 1 increment by 1;
 create sequence "products-generator" start with 1 increment by 1;
 

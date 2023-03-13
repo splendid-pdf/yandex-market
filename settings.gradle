@@ -1,7 +1,15 @@
 rootProject.name = 'yandex-market'
 
-include 'user-info-service'
 include 'commons'
+include 'user-service'
 include 'order-service'
 include 'product-service'
 include 'favorites-service'
+include 'review-service'
+include 'config-server'
+include 'upload-service'
+include 'metrics-service'
+include 'api-gateway-service'
+include 'authorization-server'
+include 'seller-info-service'
+

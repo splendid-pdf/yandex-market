@@ -1,0 +1,14 @@
+{
+  "firstName": "Новое имя",
+  "lastName": "Новая фамилия",
+  "email": "newemail@mail.ru",
+  "legalAddress": "Ул Новая, 1",
+  "companyName": "Новая компания",
+  "imageUrl": "new.png",
+  "businessModel": "IP",
+  "ITN": "123456789",
+  "PSRN": "123456",
+  "BIC": "1234",
+  "paymentAccount": "ACCOUNT123456",
+  "corporateAccount": "SACCOUNT123"
+}

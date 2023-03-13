@@ -1,0 +1,64 @@
+spring:
+  application:
+    name: user-service
+  config:
+    import: "optional:configserver:"
+  jpa:
+    show-sql: true
+    hibernate:
+      dialect: org.hibernate.dialect.PostgreSQLDialect
+      ddl-auto: validate
+    properties:
+      hibernate:
+        generate_statistics: false
+        format_sql: true
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://127.0.0.1:9000/oauth2/jwks
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      password: password
+
+  cache:
+    type: redis
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/user_info_db
+    username: postgres
+    password: 123
+    driver-class-name: org.postgresql.Driver
+
+app:
+  api:
+    rest:
+      connection-timeout-in-ms: 1000
+      read-connection-timeout-in-ms: 1000
+      geocoder:
+        url: https://catalog.api.2gis.com/3.0/items/geocode?q=%s&fields=items.point&key=%s
+        api-key: ${api-key:ruogpy7686}
+  validation:
+    error-info:
+      BLANK_FIRST_NAME_VALIDATION_ERROR_CODE: 'Firstname can not be blank'
+      BLANK_LAST_NAME_VALIDATION_ERROR_CODE: 'Lastname can not be blank'
+      BLANK_EMAIL_VALIDATION_ERROR_CODE: 'Email can not be blank'
+      BLANK_PASSWORD_VALIDATION_ERROR_CODE: 'Password can not be blank'
+      BLANK_PHONE_VALIDATION_ERROR_CODE: 'Phone can not be blank'
+      BLANK_SOCIAL_NETWORK_VALUE_ERROR_CODE: 'The value with the specified social network cannot be blank'
+      BLANK_SOCIAL_NETWORK_ERROR_CODE: 'A social network with a specified value cannot be blank'
+      INCORRECT_FIRST_NAME_VALIDATION_ERROR_CODE: 'Incorrect firstname format: %s'
+      INCORRECT_LAST_NAME_VALIDATION_ERROR_CODE: 'Incorrect lastname format: %s'
+      INCORRECT_MIDDLE_NAME_VALIDATION_ERROR_CODE: 'Incorrect middle name format: %s'
+      INCORRECT_PHONE_VALIDATION_ERROR_CODE: 'Incorrect format for phone number: %s'
+      INCORRECT_EMAIL_VALIDATION_ERROR_CODE: 'Incorrect email format: %s'
+      INCORRECT_PASSWORD_VALIDATION_ERROR_CODE: 'Incorrect password format: %s. The correct password should contain:[at least 1 uppercase letter, at least 1 lowercase letter, at least 1 number, at least 1 special character]. Minimum 8 characters and maximum 30 characters.'
+      INCORRECT_SEX_TYPE_ERROR_CODE: 'Incorrect enum format: %s. Expected[MALE, FEMALE]'
+      INCORRECT_SOCIAL_NETWORK_VALUE_ERROR_CODE: 'Incorrect social network value: %s'
+      INCORRECT_SOCIAL_NETWORK_ERROR_CODE: 'Incorrect social network: %s'
+
+logging:
+  level:
+    web: DEBUG

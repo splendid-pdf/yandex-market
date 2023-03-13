@@ -1,0 +1,24 @@
+server:
+  port: 9000
+
+spring:
+  application:
+    name: authorization-server
+  config:
+    import: "optional:configserver:"
+
+app:
+  security:
+    client-settings:
+      client-id: client
+      client-secret: "{noop}secret"
+      redirect-login-uri: "http://127.0.0.1:7777/login/oauth2/code/custom-oidc"
+      redirect-success-login-uri: "http://127.0.0.1:7777/authorized"
+    token-settings:
+      access-token-life-time-in-minutes: 3600
+      refresh-token-lifetime-in-minutes: 7200
+    data-provider-uri: "http://127.0.0.1:8080/private/api/v1/users/auth-details/"
+
+logging:
+  level:
+    org: INFO

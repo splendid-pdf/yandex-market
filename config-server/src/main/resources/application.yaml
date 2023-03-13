@@ -1,0 +1,19 @@
+server:
+  port: 8888
+
+spring:
+  application:
+    name: marketplace-config-server
+  cloud:
+    config:
+      fail-fast: true
+      server:
+        git:
+          force-pull: true
+          clone-on-start: true
+          default-label: master
+          uri: https://github.com/splendid-pdf/marketplace-settings
+logging:
+  level:
+    org:
+      INFO
