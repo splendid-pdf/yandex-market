@@ -84,3 +84,11 @@ bootBuildImage {
 tasks.named('test') {
 	useJUnitPlatform()
 }
+
+pmd {
+	toolVersion = '6.53.0'
+	consoleOutput = true
+	ignoreFailures = true
+	ruleSetFiles = files("${rootDir}/ruleset.xml")
+	ruleSets = []
+}
