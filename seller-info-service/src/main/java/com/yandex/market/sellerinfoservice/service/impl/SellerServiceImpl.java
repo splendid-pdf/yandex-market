@@ -35,7 +35,8 @@ public class SellerServiceImpl implements SellerService {
 
     @Override
     public SellerResponseDto getSellerByExternalId(UUID sellerExternalId) {
-        return sellerMapper.toSellerResponseDto(sellerRepository.getByExternalId(sellerExternalId)
+        return sellerMapper.toSellerResponseDto(sellerRepository
+                .findByExternalId(sellerExternalId)
                 .orElseThrow(() -> new EntityNotFoundException(SELLER_NOT_FOUND_EXCEPTION + sellerExternalId)));
     }
 
@@ -43,7 +44,7 @@ public class SellerServiceImpl implements SellerService {
     @Transactional
     public SellerResponseDto updateSellerWithDto(UUID sellerId, SellerRequestDto sellerRequestDto) {
         Seller seller = sellerRepository
-                .getByExternalId(sellerId)
+                .findByExternalId(sellerId)
                 .orElseThrow(() -> new EntityNotFoundException(SELLER_NOT_FOUND_EXCEPTION + sellerId));
         sellerMapper.updateSellerModel(sellerRequestDto, seller);
         return sellerMapper.toSellerResponseDto(seller);
@@ -53,7 +54,7 @@ public class SellerServiceImpl implements SellerService {
     @Transactional
     public void deleteSellerByExternalId(UUID sellerExternalId) {
         Seller seller = sellerRepository
-                .getByExternalId(sellerExternalId)
+                .findByExternalId(sellerExternalId)
                 .orElseThrow(() -> new EntityNotFoundException(SELLER_NOT_FOUND_EXCEPTION + sellerExternalId));
         sellerRepository.deleteById(seller.getId());
     }

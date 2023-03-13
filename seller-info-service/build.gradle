@@ -1,4 +1,5 @@
 plugins {
+    id 'pmd'
     id 'java'
     id 'org.springframework.boot' version '3.0.3'
     id 'io.spring.dependency-management' version '1.1.0'
@@ -24,6 +25,7 @@ ext {
     set('lombokVersion', '1.18.24')
     set('mockitoInlineVersion', '4.10.0')
     set("h2databaseVersion", "2.1.214")
+    set("springCloudConfigVersion", "2022.0.1")
 }
 
 dependencies {
@@ -34,6 +36,9 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-web'
+
+    //spring cloud
+    implementation 'org.springframework.cloud:spring-cloud-config-client'
 
     // mapper
     implementation "org.mapstruct:mapstruct:${mapstructVersion}"
@@ -62,6 +67,35 @@ dependencies {
     testImplementation "com.h2database:h2:${h2databaseVersion}"
 }
 
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudConfigVersion}"
+    }
+}
+
+bootBuildImage {
+    def account = rootProject.property('dockerHubUsername')
+    imageName = "${account}/${project.name}:${project.version}"
+    publish = true
+    environment = [
+            "BP_JVM_VERSION": "${compileJava.sourceCompatibility}"
+    ]
+    docker {
+        publishRegistry {
+            username = account
+            password = rootProject.property('dockerHubPassword')
+        }
+    }
+}
+
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+pmd {
+    toolVersion = '6.53.0'
+    consoleOutput = true
+    ignoreFailures = true
+    ruleSetFiles = files("${rootDir}/ruleset.xml")
+    ruleSets = []
 }
