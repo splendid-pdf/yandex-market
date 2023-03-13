@@ -7,10 +7,15 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
+import java.io.Serial;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class RestPageImpl<T> extends PageImpl<T> {
+
+    @Serial
+    private static final long serialVersionUID = 867755909294344407L;
 
     @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
     public RestPageImpl(@JsonProperty("content") List<T> content,

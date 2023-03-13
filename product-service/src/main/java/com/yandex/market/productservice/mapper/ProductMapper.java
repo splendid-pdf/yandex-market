@@ -31,5 +31,5 @@ public interface ProductMapper {
     @Mapping(source = "productRequestDto.productImageDto", target = "productImages")
     @Mapping(source = "productRequestDto.productSpecialPriceDto", target = "productSpecialPrices")
     @Mapping(source = "productRequestDto.typeDto", target = "type")
-    Product toProduct1(ProductRequestDto productRequestDto);
+    Product toProduct(ProductRequestDto productRequestDto);
 }

@@ -39,18 +39,18 @@ import java.util.UUID;
 public class ProductController {
     private final ProductService productService;
 
-    @PostMapping("/{sellerExternalId}/products")
+    @PostMapping("/{sellerId}/products")
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(operationId = "createProduct", summary = "Создание нового продукта")
     @ApiResponse(responseCode = "201", description = "Created",
             content = @Content(mediaType = "application/json", schema = @Schema(implementation = UUID.class)))
     public UUID createProduct(@Parameter(name = "productRequestDto", description = "Представление созданного продукта")
                               @RequestBody @Valid ProductRequestDto productRequestDto,
-                              @Parameter(name = "sellerExternalId", description = "Идентификатор продавца")
-                              @PathVariable("sellerExternalId") UUID sellerExternalId) {
+                              @Parameter(name = "sellerId", description = "Идентификатор продавца")
+                              @PathVariable("sellerId") UUID sellerId) {
         log.info("Received a request to create a product with DTO = {} from a seller with externalId: {}",
-                productRequestDto, sellerExternalId);
-        return productService.createProduct(productRequestDto, sellerExternalId);
+                productRequestDto, sellerId);
+        return productService.createProduct(productRequestDto, sellerId);
     }
 
     @GetMapping("{externalId}")
