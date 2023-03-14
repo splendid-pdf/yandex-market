@@ -68,7 +68,14 @@ management:
 application:
   security:
     white-list:
-      - /public/api/v1/users/signup
+      # users-api
+      - url: /*/*/*/users/signup
+        methods:
+          - POST
+      # products-api
+      - url: /*/*/*/products/{externalId}
+        methods:
+          - GET
 
 logging:
   level:
