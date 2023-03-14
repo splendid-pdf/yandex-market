@@ -25,7 +25,7 @@ ext {
     set('lombokVersion', '1.18.24')
     set('mockitoInlineVersion', '4.10.0')
     set("h2databaseVersion", "2.1.214")
-    set("springCloudConfigVersion", "2022.0.1")
+    set("springCloudConfigVersion", "2022.0.1");
 }
 
 dependencies {
@@ -42,6 +42,9 @@ dependencies {
 
     // mapper
     implementation "org.mapstruct:mapstruct:${mapstructVersion}"
+
+    //spring cloud
+    implementation 'org.springframework.cloud:spring-cloud-config-client'
 
     // db
     runtimeOnly 'org.postgresql:postgresql'

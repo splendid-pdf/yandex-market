@@ -1,6 +1,7 @@
 package com.yandex.market.reviewservice.dto;
 
 import com.yandex.market.reviewservice.model.ReviewType;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 
@@ -8,6 +9,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
+@Schema(description = "Модель для сохранения \"Отзыва\"")
 public record ReviewDto(
         UUID userId,
         UUID productId,
