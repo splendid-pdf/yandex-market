@@ -1,4 +1,4 @@
-package com.yandex.market.favoritesservice.service;
+package com.yandex.market.favoritesservice.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;

@@ -14,7 +14,7 @@ spring:
           predicates:
             - Path=/*/*/*/orders, /*/*/*/orders/**
         - id: user-info-service-route
-          uri: ${app.urls.users}
+          uri: http://127.0.0.1:8080
           predicates:
             - Path=/*/*/*/users, /*/*/*/users/{externalId}, /*/*/*/users/signup
         - id: product-service-route
@@ -34,7 +34,7 @@ spring:
           predicates:
             - Path=/*/*/*/users/{userId}/reviews, /*/*/*/products/{productId}/reviews, /*/*/*/users/reviews/{reviewId}
       default-filters:
-        - TokenRelay
+        - name: AuthFilter
 
   security:
     oauth2:
@@ -56,10 +56,6 @@ spring:
             jwk-set-uri: "http://127.0.0.1:9000/oauth2/jwks"
             user-info-uri: "http://127.0.0.1:9000/userinfo"
 
-app:
-  urls:
-    users: http://localhost:8080
-
 management:
   endpoint:
     gateway:
@@ -69,6 +65,11 @@ management:
       exposure:
         include: gateway
 
+application:
+  security:
+    white-list:
+      - /public/api/v1/users/signup
+
 logging:
   level:
-    web: DEBUG
+    org: INFO
