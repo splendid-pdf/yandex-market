@@ -13,7 +13,7 @@ import java.util.UUID;
 
 @Schema(description = "Модель для отображения модели \"Seller\"")
 public record SellerResponseDto(
-        @Schema(description = "внешний id для продавца")
+        @Schema(description = "Внешний id для продавца")
         UUID externalId,
         @Schema(description = "Имя продавца")
         String firstName,

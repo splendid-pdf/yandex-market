@@ -8,7 +8,7 @@ plugins {
 
 ext {
 	set('flywayCoreVersion', '9.14.1')
-	set("springCloudConfigVersion", "2022.0.1");
+	set("springCloudConfigVersion", "2022.0.1")
 }
 
 dependencies {
@@ -83,4 +83,12 @@ bootBuildImage {
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+pmd {
+	toolVersion = '6.53.0'
+	consoleOutput = true
+	ignoreFailures = true
+	ruleSetFiles = files("${rootDir}/ruleset.xml")
+	ruleSets = []
 }
