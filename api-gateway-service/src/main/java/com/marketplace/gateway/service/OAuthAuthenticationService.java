@@ -24,7 +24,6 @@ import java.util.function.Function;
 
 import static com.marketplace.gateway.util.AuthConstants.X_USER_ID_HEADER;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
-import static org.springframework.security.oauth2.core.OAuth2AccessToken.TokenType.BEARER;
 
 @Slf4j
 @Service
@@ -45,7 +44,7 @@ public class OAuthAuthenticationService {
                 .doOnNext(oAuthUser -> addAuthDataToResponseHeaders(oAuthUser, exchange))
                 .doOnNext(data -> AUTHORIZED_CLIENTS_DATA.put(data.id(), data))
                 .doOnNext(data -> log.info(AUTHORIZED_CLIENTS_DATA.toString()))
-                .map(data -> new OAuthUserResponse(data.id(), data.email()));
+                .map(data -> new OAuthUserResponse(data.id(), data.email(), data.accessToken()));
     }
 
     public Mono<ResponseEntity<Void>> deauthenticate(ServerHttpRequest request) {
@@ -74,7 +73,6 @@ public class OAuthAuthenticationService {
 
     private void addAuthDataToResponseHeaders(OAuthUser data, ServerWebExchange exchange) {
         HttpHeaders headers = exchange.getResponse().getHeaders();
-        headers.add(AUTHORIZATION, "%s %s".formatted(BEARER.getValue(), data.accessToken()));
         headers.add(X_USER_ID_HEADER, data.id());
     }
 
