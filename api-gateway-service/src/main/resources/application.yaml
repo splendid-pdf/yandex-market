@@ -29,6 +29,10 @@ spring:
           uri: http://127.0.0.1:9001
           predicates:
             - Path=/*/*/*/upload, /*/*/*/download, /*/*/*/url, /*/*/*/delete, /*/*/*/urls
+        - id: review-service
+          uri: http://127.0.0.1:8083
+          predicates:
+            - Path=/*/*/*/users/{userId}/reviews, /*/*/*/products/{productId}/reviews, /*/*/*/users/reviews/{reviewId}
       default-filters:
         - name: AuthFilter
 
