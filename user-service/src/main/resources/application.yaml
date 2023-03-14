@@ -1,6 +1,6 @@
 spring:
   application:
-    name: user-info-service
+    name: user-service
   config:
     import: "optional:configserver:"
   jpa:

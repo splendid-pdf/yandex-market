@@ -12,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
+
 import static com.yandex.market.util.HttpUtils.PUBLIC_API_V1;
 
 @RestController
@@ -29,8 +31,8 @@ public class SignUpUserController {
     @Operation(operationId = "signUp", summary = "Registration user in application")
     @ApiResponse(responseCode = "200", description = "Successful")
     @PostMapping("/users/signup")
-    public void signUp(@Parameter(name = "userRegistrationDto", description = "User registration")
+    public UUID signUp(@Parameter(name = "userRegistrationDto", description = "User registration")
             @RequestBody UserRegistrationDto userRegistrationDto) {
-        userService.signUp(userRegistrationDto);
+        return userService.signUp(userRegistrationDto);
     }
 }

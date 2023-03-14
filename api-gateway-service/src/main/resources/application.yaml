@@ -16,7 +16,7 @@ spring:
         - id: user-info-service-route
           uri: http://127.0.0.1:8080
           predicates:
-            - Path=/*/*/*/users, /*/*/*/users/{externalId}, /*/*/*/users/search, /*/*/*/users/signup
+            - Path=/*/*/*/users, /*/*/*/users/{externalId}, /*/*/*/users/signup
         - id: product-service-route
           uri: http://127.0.0.1:9090
           predicates:
@@ -30,7 +30,7 @@ spring:
           predicates:
             - Path=/*/*/*/upload, /*/*/*/download, /*/*/*/url, /*/*/*/delete, /*/*/*/urls
       default-filters:
-        - TokenRelay
+        - name: AuthFilter
 
   security:
     oauth2:
@@ -61,6 +61,11 @@ management:
       exposure:
         include: gateway
 
+application:
+  security:
+    white-list:
+      - /public/api/v1/users/signup
+
 logging:
   level:
-    web: DEBUG
+    org: INFO

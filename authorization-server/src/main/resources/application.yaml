@@ -21,4 +21,4 @@ app:
 
 logging:
   level:
-    org: debug
+    org: INFO
