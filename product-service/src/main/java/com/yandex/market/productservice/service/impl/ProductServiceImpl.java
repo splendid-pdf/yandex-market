@@ -14,6 +14,7 @@ import com.yandex.market.productservice.service.ProductService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -33,26 +34,23 @@ import static com.yandex.market.productservice.utils.ExceptionMessagesConstants.
 public class ProductServiceImpl implements ProductService {
     private final ProductRepository repository;
     private final ProductMapper productMapper;
-    private ObjectMapper objectMapper;
-    private KafkaTemplate<String, String> kafkaTemplate;
+    private final ObjectMapper objectMapper;
+    private final KafkaTemplate<String, String> kafkaTemplate;
 
     @Override
     @Transactional
     public UUID createProduct(ProductRequestDto productRequestDto, UUID sellerId) {
         Product product = productMapper.toProduct(productRequestDto);
         product.setSellerExternalId(sellerId);
-
-        sendMetricsToKafka(UserAction.CREATE_PRODUCT, product);
-
         return repository.save(product).getExternalId();
     }
 
     @Override
     @Transactional(readOnly = true)
-    public ProductResponseDto getProductByExternalId(UUID externalId) {
+    public ProductResponseDto getProductByExternalId(UUID externalId, @Nullable String userId) {
         Product product = findProductByExternalId(externalId);
 
-        sendMetricsToKafka(UserAction.VIEW_PRODUCT, product);
+        sendMetricsToKafka(UserAction.VIEW_PRODUCT, product, userId);
 
         return productMapper.toResponseDto(product);
     }
@@ -62,9 +60,6 @@ public class ProductServiceImpl implements ProductService {
     public ProductResponseDto updateProductByExternalId(UUID externalId, ProductRequestDto productRequestDto) {
         Product storedProduct = findProductByExternalId(externalId);
         storedProduct = productMapper.toProduct(productRequestDto, storedProduct);
-
-        sendMetricsToKafka(UserAction.UPDATE_PRODUCT, storedProduct);
-
         return productMapper.toResponseDto(repository.save(storedProduct));
     }
 
@@ -120,7 +115,7 @@ public class ProductServiceImpl implements ProductService {
 
 
     @SneakyThrows
-    private void sendMetricsToKafka(UserAction userAction, Product product) {
+    private void sendMetricsToKafka(UserAction userAction, Product product, String userId) {
         kafkaTemplate.send(
                 "METRICS",
                 "product",
@@ -128,10 +123,12 @@ public class ProductServiceImpl implements ProductService {
                         ProductMetricsDto.builder()
                                 .productExternalId(product.getExternalId())
                                 .userAction(userAction)
+                                .userId(userId)
                                 .productName(product.getName())
                                 .timestamp(LocalDateTime.now())
                                 .build()));
     }
+
 
     private Product findProductByExternalId(UUID externalId) {
         return repository

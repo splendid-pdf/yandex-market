@@ -13,6 +13,7 @@ import java.util.UUID;
 @NoArgsConstructor
 public class ProductMetricsDto {
     private UserAction userAction;
+    private String userId;
     private UUID productExternalId;
     private String productName;
     private LocalDateTime timestamp;

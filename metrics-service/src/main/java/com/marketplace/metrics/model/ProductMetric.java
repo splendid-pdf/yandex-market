@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "metrics")
 @EqualsAndHashCode(of = "id")
-public class Metric {
+public class ProductMetric {
 
     @Id
     @SequenceGenerator(name = "metrics_generator", allocationSize = 10)
@@ -21,6 +21,8 @@ public class Metric {
     private Long id;
 
     private String userAction;
+
+    private String userId;
 
     private String productExternalId;
 

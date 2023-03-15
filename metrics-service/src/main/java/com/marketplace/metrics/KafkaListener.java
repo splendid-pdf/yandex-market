@@ -1,7 +1,7 @@
 package com.marketplace.metrics;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.marketplace.metrics.model.Metric;
+import com.marketplace.metrics.model.ProductMetric;
 import com.marketplace.metrics.repo.MetricsRepo;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -22,7 +22,7 @@ public class KafkaListener {
             groupId = "product"
     )
     void listener(String data){
-        var metric = objectMapper.readValue(data, Metric.class);
+        var metric = objectMapper.readValue(data, ProductMetric.class);
         log.info("Saving metric into database, {}", metric);
         metricsRepo.save(metric);
     }

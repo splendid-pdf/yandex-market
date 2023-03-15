@@ -1,3 +1,4 @@
+version: "3.9"
 services:
   zookeeper:
     image: zookeeper:3.7.0
@@ -17,6 +18,8 @@ services:
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:PLAINTEXT,OUTSIDE:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: INSIDE
       KAFKA_LISTENERS: INSIDE://0.0.0.0:9093,OUTSIDE://0.0.0.0:9092
+      KAFKA_BROKER_ID: 1
+      KAFKA_LOG_DIRS: /var/lib/kafka/data
     depends_on:
       - zookeeper
 
