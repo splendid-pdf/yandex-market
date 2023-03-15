@@ -35,7 +35,17 @@ public class AuthFilter extends AbstractGatewayFilterFactory<AuthFilter.Config> 
     public GatewayFilter apply(Config config) {
         return (exchange, chain) -> {
             PathContainer requestedPath = exchange.getRequest().getPath().pathWithinApplication();
-            log.info(requestedPath.value());
+            log.info("""
+                            Http request is passing auth filter:
+                            Path - '{}'.
+                            Method - '{}'.
+                            Headers - '{}'.
+                            Cookies - '{}'.
+                     """,
+                    requestedPath.value(),
+                    exchange.getRequest().getMethod(),
+                    exchange.getRequest().getHeaders(),
+                    exchange.getRequest().getCookies());
 
             if (openedRoutes.entrySet().stream().noneMatch(route -> isOpenedRoute(requestedPath, exchange, route))) {
                 String userId = exchange.getRequest().getHeaders().getFirst(X_USER_ID_HEADER);
@@ -59,7 +69,6 @@ public class AuthFilter extends AbstractGatewayFilterFactory<AuthFilter.Config> 
     private boolean isOpenedRoute(PathContainer requestedPath,
                                   ServerWebExchange exchange,
                                   Map.Entry<PathPattern, List<String>> route) {
-
         return route.getKey().matches(requestedPath)
                 && route.getValue().contains(exchange.getRequest().getMethod().name());
     }
