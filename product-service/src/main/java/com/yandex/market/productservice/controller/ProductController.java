@@ -42,22 +42,20 @@ public class ProductController {
     @PostMapping("/{sellerId}/products")
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(operationId = "createProduct", summary = "Создание нового продукта")
-    @ApiResponse(responseCode = "201", description = "Created",
+    @ApiResponse(responseCode = "201", description = "Продукт успешно создан",
             content = @Content(mediaType = "application/json", schema = @Schema(implementation = UUID.class)))
     public UUID createProduct(@Parameter(name = "productRequestDto", description = "Представление созданного продукта")
                               @RequestBody @Valid ProductRequestDto productRequestDto,
                               @Parameter(name = "sellerId", description = "Идентификатор продавца")
                               @PathVariable("sellerId") UUID sellerId) {
-        log.info("Received a request to create a product with DTO = {} from a seller with externalId: {}",
-                productRequestDto, sellerId);
         return productService.createProduct(productRequestDto, sellerId);
     }
 
     @GetMapping("{externalId}")
     @ResponseStatus(HttpStatus.OK)
     @Operation(operationId = "getProductByExternalId", summary = "Получение товара по externalId")
-    @ApiResponse(responseCode = "200", description = "OK",
-            content = @Content(mediaType = "application/json", schema = @Schema(implementation = UUID.class)))
+    @ApiResponse(responseCode = "200", description = "Продукт успешно получен",
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProductResponseDto.class)))
     public ProductResponseDto getProductByExternalId(@PathVariable("externalId") UUID externalId) {
         return productService.getProductByExternalId(externalId);
     }
