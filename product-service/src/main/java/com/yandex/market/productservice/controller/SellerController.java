@@ -56,23 +56,18 @@ public class SellerController {
     @PatchMapping("{sellerId}/products")
     @ResponseStatus(HttpStatus.OK)
     @Operation(operationId = "deleteOrVisibleProductList", summary = "Изменить видимость продукта по ID продавца")
-    @ApiResponse(responseCode = "204", description = "No Content",
-            content = @Content(mediaType = "application/json",
-                    array = @ArraySchema(schema = @Schema(implementation = ProductResponseDto.class))))
+    @ApiResponse(responseCode = "204", description = "No Content")
     public void changeProductVisibilityForSeller(@PathVariable(value = "sellerId") UUID sellerId,
                                                  @RequestBody List<UUID> productIds,
                                                  @RequestParam VisibilityMethod method,
                                                  @RequestParam boolean methodAction) {
         productService.changeVisibilityForSellerId(sellerId, productIds, method, methodAction);
-
     }
 
     @DeleteMapping("{sellerId}/products")
     @ResponseStatus(HttpStatus.OK)
     @Operation(operationId = "removeProductsFromArchive", summary = "Удаление списка товаров из базы данных")
-    @ApiResponse(responseCode = "204", description = "No Content",
-            content = @Content(mediaType = "application/json",
-                    array = @ArraySchema(schema = @Schema(implementation = ProductResponseDto.class))))
+    @ApiResponse(responseCode = "204", description = "No Content")
     public void deleteListProductBySellerId(@PathVariable(value = "sellerId") UUID sellerId,
                                             @RequestBody List<UUID> productIds) {
         productService.deleteFromArchiveListProductBySellerId(productIds, sellerId);

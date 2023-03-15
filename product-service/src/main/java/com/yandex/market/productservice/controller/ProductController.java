@@ -57,7 +57,7 @@ public class ProductController {
     @ResponseStatus(HttpStatus.OK)
     @Operation(operationId = "getProductByExternalId", summary = "Получение товара по externalId")
     @ApiResponse(responseCode = "200", description = "OK",
-            content = @Content(mediaType = "application/json", schema = @Schema(implementation = UUID.class)))
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProductResponseDto.class)))
     public ProductResponseDto getProductByExternalId(@PathVariable("externalId") UUID externalId) {
         return productService.getProductByExternalId(externalId);
     }
