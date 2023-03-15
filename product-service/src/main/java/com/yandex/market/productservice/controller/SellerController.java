@@ -43,7 +43,7 @@ public class SellerController {
     @GetMapping("{sellerId}/products")
     @ResponseStatus(HttpStatus.OK)
     @Operation(operationId = "getProductPage", summary = "Метод возращает пагинированный список продуктов продавца")
-    @ApiResponse(responseCode = "200", description = "OK",
+    @ApiResponse(responseCode = "200", description = "Список продуктов успешно получен",
             content = @Content(mediaType = "application/json",
                     array = @ArraySchema(schema = @Schema(implementation = ProductResponseDto.class))))
     public Page<ProductResponseDto> findPageProductsBySellerId(
@@ -54,9 +54,9 @@ public class SellerController {
     }
 
     @PatchMapping("{sellerId}/products")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(operationId = "deleteOrVisibleProductList", summary = "Изменить видимость продукта по ID продавца")
-    @ApiResponse(responseCode = "204", description = "No Content")
+    @ApiResponse(responseCode = "204", description = "Продукт успешно скрыт / добавлен в архив")
     public void changeProductVisibilityForSeller(@PathVariable(value = "sellerId") UUID sellerId,
                                                  @RequestBody List<UUID> productIds,
                                                  @RequestParam VisibilityMethod method,
@@ -65,9 +65,9 @@ public class SellerController {
     }
 
     @DeleteMapping("{sellerId}/products")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(operationId = "removeProductsFromArchive", summary = "Удаление списка товаров из базы данных")
-    @ApiResponse(responseCode = "204", description = "No Content")
+    @ApiResponse(responseCode = "204", description = "Продукт успешно удалён")
     public void deleteListProductBySellerId(@PathVariable(value = "sellerId") UUID sellerId,
                                             @RequestBody List<UUID> productIds) {
         productService.deleteFromArchiveListProductBySellerId(productIds, sellerId);
