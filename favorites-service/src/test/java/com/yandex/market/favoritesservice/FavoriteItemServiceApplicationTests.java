@@ -9,7 +9,6 @@ import com.yandex.market.favoritesservice.repository.FavoriteItemRepository;
 import com.yandex.market.util.RestPageImpl;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
@@ -37,7 +36,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@Slf4j
 @SpringBootTest
 @Testcontainers
 @AutoConfigureMockMvc
@@ -64,7 +62,7 @@ public class FavoriteItemServiceApplicationTests {
     @Test
     @Transactional
     @SuppressWarnings("ResultOfMethodCallIgnored")
-    public void createFavorites_returnFavoritesExternalIdAnd201Created() throws Exception {
+    public void shouldCreateFavoritesReturnFavoritesExternalIdAndStatusCreated() throws Exception {
         try (MockedStatic<UUID> mockedStatic = Mockito.mockStatic(UUID.class)) {
             mockedStatic.when(UUID::randomUUID).thenReturn(FAVORITE_ID_UUID);
             mockedStatic.when(() -> UUID.fromString(PRODUCT_ID)).thenReturn(PRODUCT_ID_UUID);
@@ -93,7 +91,7 @@ public class FavoriteItemServiceApplicationTests {
     @Test
     @Transactional
     @Sql("/db/insert-favorites-query.sql")
-    public void getFavoritesByUserId_returnPageFavoritesAnd200_Ok() throws Exception {
+    public void shouldGetFavoritesByUserIdReturnPageFavoritesAndStatusOk() throws Exception {
         MvcResult mvcResult = mockMvc.perform(
                         get(PUBLIC_API + "/{userId}/favorites", USER_ID).contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
@@ -119,7 +117,7 @@ public class FavoriteItemServiceApplicationTests {
     @Test
     @Transactional
     @Sql("/db/insert-favorites-query.sql")
-    public void deleteFavorites_return204NoContent() throws Exception {
+    public void shouldDeleteFavoritesReturnStatusNoContent() throws Exception {
         mockMvc.perform(
                         delete(PUBLIC_API + "/{userId}/favorites/{productId}", USER_ID, PRODUCT_ID)
                                 .contentType(MediaType.APPLICATION_JSON))
@@ -132,7 +130,7 @@ public class FavoriteItemServiceApplicationTests {
 
     @Test
     @Transactional
-    public void deleteFavoritesNegative_return404NotFound() throws Exception {
+    public void shouldDeleteFavoritesNegativeReturnStatusNotFound() throws Exception {
         MvcResult mvcResult = mockMvc.perform(
                         delete(PUBLIC_API + "/{userId}/favorites/{productId}", USER_ID, PRODUCT_ID)
                                 .contentType(MediaType.APPLICATION_JSON))
@@ -147,7 +145,7 @@ public class FavoriteItemServiceApplicationTests {
 
     @Test
     @Transactional
-    public void getFavoritesByUserIdNegative_returnPageFavoritesAnd200_Ok() throws Exception {
+    public void shouldGetFavoritesByUserIdNegativeReturnPageFavoritesAndStatusOk() throws Exception {
         MvcResult mvcResult = mockMvc.perform(
                         get(PUBLIC_API + "/{userId}/favorites", USER_ID).contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())

@@ -40,7 +40,7 @@ public class FavoriteItemController {
     @ApiResponse(responseCode = "201", description = "CREATED",
             content = @Content(mediaType = "application/json",
                     schema = @Schema(implementation = UUID.class)))
-    private UUID createFavorites(
+    public UUID createFavorites(
             @Parameter(name = "userId", description = "User's identifier") @PathVariable UUID userId,
             @Parameter(name = "productId", description = "Product's identifier") @PathVariable UUID productId) {
         log.info("Received a request to added product '%s' in favorites for user '%s'".formatted(productId, userId));
@@ -53,7 +53,7 @@ public class FavoriteItemController {
     @ApiResponse(responseCode = "200", description = "OK",
             content = @Content(mediaType = "application/json",
                     array = @ArraySchema(schema = @Schema(implementation = FavoriteItemResponseDto.class))))
-    private Page<FavoriteItemResponseDto> getFavorites(
+    public Page<FavoriteItemResponseDto> getFavorites(
             @Parameter(name = "userId", description = "User's identifier")
             @PathVariable("userId") UUID userId,
             @PageableDefault(sort = "addedAt", direction = Sort.Direction.DESC) Pageable page) {
@@ -65,7 +65,7 @@ public class FavoriteItemController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(operationId = "deleteFavorites", summary = "Delete favorites product of user")
     @ApiResponse(responseCode = "204", description = "NO_CONTENT")
-    private void deleteFavorites(
+    public void deleteFavorites(
             @Parameter(name = "userId", description = "User's identifier")
             @PathVariable("userId") UUID userId,
             @Parameter(name = "productId", description = "Product's identifier")
