@@ -9,7 +9,6 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface ReviewRepository extends JpaRepository<Review, Long> {
-    Optional<Review> getReviewsByExternalId(UUID reviewExternalId);
 
     Page<Review> getReviewsByUserId(UUID userId, Pageable pageable);
 

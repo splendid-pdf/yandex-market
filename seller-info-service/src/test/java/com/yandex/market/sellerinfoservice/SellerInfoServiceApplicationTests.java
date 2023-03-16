@@ -42,8 +42,8 @@ class SellerInfoServiceApplicationTests {
     private final MockMvc mockMvc;
     private final ObjectMapper objectMapper;
     private final SellerService sellerService;
-    public static final String CREATE_SELLER_REQUEST_DTO_NEGATIVE_JSON = "src/test/resources/json/create/create_seller_request_dto_negative.json";
-    public static final String CREATE_SELLER_REQUEST_DTO_JSON = "src/test/resources/json/create/create_seller_request_dto.json";
+    private static final String CREATE_SELLER_REQUEST_DTO_NEGATIVE_JSON = "src/test/resources/json/create/create_seller_request_dto_negative.json";
+    private static final String CREATE_SELLER_REQUEST_DTO_JSON = "src/test/resources/json/create/create_seller_request_dto.json";
     private final UUID SELLER_EXTERNAL_ID = UUID.fromString("47678201-f3c8-4d5c-a628-2344eef50c54");
     private final UUID SELLER_EXTERNAL_ID_NEGATIVE = UUID.fromString("77678201-f3c8-4d5c-a628-2344eef50c55");
     @Value("${spring.app.seller.url}")
@@ -51,7 +51,7 @@ class SellerInfoServiceApplicationTests {
 
     @Test
     @Transactional
-    public void createSellerController() throws Exception {
+    void createSellerController() throws Exception {
         MvcResult mvcResult = mockMvc.perform(post(SELLERS_URL)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(Files.readString(Path.of(CREATE_SELLER_REQUEST_DTO_JSON))))
@@ -68,7 +68,7 @@ class SellerInfoServiceApplicationTests {
 
     @Test
     @Transactional
-    public void createSellerNegativeController() throws Exception {
+    void createSellerNegativeController() throws Exception {
         mockMvc.perform(post(SELLERS_URL)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(Files.readString(Path.of(CREATE_SELLER_REQUEST_DTO_NEGATIVE_JSON))))
@@ -78,7 +78,7 @@ class SellerInfoServiceApplicationTests {
     @Test
     @Transactional
     @Sql("/db/insert_test_seller.sql")
-    public void createSellerNegativeControllerExistException() throws Exception {
+    void createSellerNegativeControllerExistException() throws Exception {
         mockMvc.perform(post(SELLERS_URL)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(Files.readString(Path.of(CREATE_SELLER_REQUEST_DTO_JSON))))
@@ -90,7 +90,7 @@ class SellerInfoServiceApplicationTests {
 
     @Test
     @Transactional
-    public void createSellerService() throws IOException {
+    void createSellerService() throws IOException {
         UUID actualSellerExternalId = sellerService
                 .createSeller(objectMapper.readValue(Files.readString(Path.of(CREATE_SELLER_REQUEST_DTO_JSON)), SellerRequestDto.class));
         Assertions.assertNotNull(sellerService.getSellerByExternalId(actualSellerExternalId));
@@ -98,7 +98,7 @@ class SellerInfoServiceApplicationTests {
 
     @Test
     @Transactional
-    public void createSellerServiceNegative() {
+    void createSellerServiceNegative() {
         Assertions.assertThrows(InvalidFormatException.class, () -> sellerService
                 .createSeller(objectMapper.readValue(Files.readString(Path.of(CREATE_SELLER_REQUEST_DTO_NEGATIVE_JSON)), SellerRequestDto.class)));
     }
@@ -106,7 +106,7 @@ class SellerInfoServiceApplicationTests {
     @Test
     @Transactional
     @Sql("/db/insert_test_seller.sql")
-    public void createSellerServiceNegativeServiceExistException() {
+    void createSellerServiceNegativeServiceExistException() {
         Assertions.assertThrows(EntityExistsException.class, () -> sellerService
                 .createSeller(objectMapper.readValue(Files.readString(Path.of(CREATE_SELLER_REQUEST_DTO_JSON)), SellerRequestDto.class)));
     }
@@ -114,7 +114,7 @@ class SellerInfoServiceApplicationTests {
     @Test
     @Transactional
     @Sql("/db/insert_test_seller.sql")
-    public void deleteSellerController() throws Exception {
+    void deleteSellerController() throws Exception {
         mockMvc.perform(delete(SELLERS_URL + "/" + SELLER_EXTERNAL_ID))
                 .andExpect(status().isOk());
 
@@ -124,7 +124,7 @@ class SellerInfoServiceApplicationTests {
 
     @Test
     @Transactional
-    public void deleteSellerControllerNegative() throws Exception {
+    void deleteSellerControllerNegative() throws Exception {
         mockMvc.perform(delete(SELLERS_URL + SELLER_EXTERNAL_ID_NEGATIVE))
                 .andExpect(status().isNotFound());
     }
@@ -132,7 +132,7 @@ class SellerInfoServiceApplicationTests {
     @Test
     @Transactional
     @Sql("/db/insert_test_seller.sql")
-    public void deleteSellerService() {
+    void deleteSellerService() {
         sellerService.deleteSellerByExternalId(SELLER_EXTERNAL_ID);
 
         Assertions.assertThrows(EntityNotFoundException.class, () -> sellerService
@@ -141,7 +141,7 @@ class SellerInfoServiceApplicationTests {
 
     @Test
     @Transactional
-    public void deleteSellerServiceNegative() {
+    void deleteSellerServiceNegative() {
         Assertions.assertThrows(EntityNotFoundException.class, () -> sellerService
                 .deleteSellerByExternalId(SELLER_EXTERNAL_ID));
     }

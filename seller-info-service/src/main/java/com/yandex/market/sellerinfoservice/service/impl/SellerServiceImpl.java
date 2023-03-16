@@ -21,7 +21,7 @@ public class SellerServiceImpl implements SellerService {
 
     private final SellerMapper sellerMapper;
 
-    private final String SELLER_NOT_FOUND_EXCEPTION = "Seller not found with seller id = ";
+    private final static String SELLER_NOT_FOUND_EXCEPTION = "Seller not found with seller id = ";
 
     @Override
     @Transactional

@@ -15,6 +15,7 @@ ext {
     set('testcontainerspostgresql', '1.17.6')
     set('H2', '2.1.214')
     set('assertJVersion', '3.24.2')
+    set("springCloudConfigVersion", "2022.0.1")
 }
 
 dependencies {
@@ -26,6 +27,9 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
+    //spring cloud
+    implementation 'org.springframework.cloud:spring-cloud-config-client'
 
     // mapper
     implementation "org.mapstruct:mapstruct:${mapstruct}"
@@ -62,6 +66,35 @@ dependencies {
     testImplementation "com.h2database:h2:${H2}"
 }
 
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudConfigVersion}"
+    }
+}
+
+bootBuildImage {
+    def account = rootProject.property('dockerHubUsername')
+    imageName = "${account}/${project.name}:${project.version}"
+    publish = true
+    environment = [
+            "BP_JVM_VERSION" : "${compileJava.sourceCompatibility}"
+    ]
+    docker {
+        publishRegistry {
+            username = account
+            password = rootProject.property('dockerHubPassword')
+        }
+    }
+}
+
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+pmd {
+    toolVersion = '6.53.0'
+    consoleOutput = true
+    ignoreFailures = true
+    ruleSetFiles = files("${rootDir}/ruleset.xml")
+    ruleSets = []
 }
