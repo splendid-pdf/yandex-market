@@ -56,8 +56,9 @@ public class ProductController {
     @Operation(operationId = "getProductByExternalId", summary = "Получение товара по externalId")
     @ApiResponse(responseCode = "200", description = "Продукт успешно получен",
             content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProductResponseDto.class)))
-    public ProductResponseDto getProductByExternalId(@PathVariable("externalId") UUID externalId) {
-        return productService.getProductByExternalId(externalId);
+    public ProductResponseDto getProductByExternalId(@PathVariable("externalId") UUID externalId,
+                                                     @RequestHeader(value = "X-User-Id", required = false) String userId) {
+        return productService.getProductByExternalId(externalId, userId);
     }
 
     @PutMapping("{externalId}")

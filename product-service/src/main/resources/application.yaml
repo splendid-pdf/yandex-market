@@ -11,6 +11,7 @@ spring:
       url: /public/api/v1/products/
     seller:
       url: /public/api/v1/sellers/
+
   config:
     import: "optional:configserver:"
 
@@ -37,3 +38,6 @@ spring:
       host: 51.250.102.12
       port: 6379
       database: 0
+
+  kafka:
+    bootstrap-servers: localhost:9092
