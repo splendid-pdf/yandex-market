@@ -132,6 +132,8 @@ public class UserService {
     }
 
     private void updateUser(User storedUser, User updatedUser) {
+        storedUser.removeAllContacts();
+
         storedUser.setFirstName(updatedUser.getFirstName());
         storedUser.setMiddleName(updatedUser.getMiddleName());
         storedUser.setLastName(updatedUser.getLastName());

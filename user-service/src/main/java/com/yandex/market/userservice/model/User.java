@@ -78,4 +78,8 @@ public class User {
     public void removeContact(Contact contact) {
         contacts.remove(contact);
     }
+
+    public void removeAllContacts() {
+        contacts.clear();
+    }
 }
