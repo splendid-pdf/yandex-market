@@ -3,13 +3,13 @@ package com.marketplace.gateway.service;
 import com.marketplace.gateway.dto.OAuthUserResponse;
 import com.marketplace.gateway.dto.OAuthUser;
 import com.marketplace.gateway.dto.UserLoginRequest;
+import com.marketplace.gateway.exception.AuthenticationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.server.reactive.ServerHttpRequest;
-import org.springframework.security.access.AuthorizationServiceException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.reactive.function.client.ClientResponse;
@@ -54,7 +54,7 @@ public class OAuthAuthenticationService {
                             .doOnNext(responseEntity ->
                                 AUTHORIZED_CLIENTS_DATA.remove(request.getHeaders().getFirst(X_USER_ID_HEADER)))
                             .doOnNext(data -> log.info(AUTHORIZED_CLIENTS_DATA.toString()))
-                        : Mono.error(() -> new AuthorizationServiceException("User is not authenticated")));
+                        : Mono.error(() -> new AuthenticationException("User is not authenticated")));
     }
 
     public boolean isAuthenticated(String userId, String token) {
@@ -68,7 +68,7 @@ public class OAuthAuthenticationService {
         if (clientResponse.statusCode().is2xxSuccessful()) {
             return clientResponse.bodyToMono(OAuthUser.class);
         }
-        return Mono.error(() -> new AuthorizationServiceException("User was not authenticated"));
+        return Mono.error(() -> new AuthenticationException("User was not authenticated"));
     }
 
     private void addAuthDataToResponseHeaders(OAuthUser data, ServerWebExchange exchange) {
@@ -90,7 +90,7 @@ public class OAuthAuthenticationService {
 
     private Mono<ResponseEntity<Void>> handleRevocationResponse(ClientResponse clientResponse) {
         if (!clientResponse.statusCode().is2xxSuccessful()) {
-            return Mono.error(() -> new AuthorizationServiceException("User is not authenticated"));
+            return Mono.error(() -> new AuthenticationException("User is not authenticated"));
         }
 
         return clientResponse.toBodilessEntity();
