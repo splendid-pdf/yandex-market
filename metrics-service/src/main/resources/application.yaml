@@ -1,0 +1,22 @@
+spring:
+  application:
+    name: metrics-service
+
+  datasource:
+    url: jdbc:postgresql://${DB_URL}:5432/${DB_NAME}
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+
+  flyway:
+    enabled: false
+
+  config:
+    import: "optional:configserver:"
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+
+  kafka:
+    bootstrap-servers: localhost:9092
