@@ -22,9 +22,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
+import static com.yandex.market.util.HttpUtils.PUBLIC_API_V1;
+
 @Slf4j
 @RestController
-@RequestMapping("${spring.application.url}")
+@RequestMapping(PUBLIC_API_V1)
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 @Tag(name = "favorite items")
 @ApiResponses({
@@ -34,7 +36,7 @@ public class FavoriteItemController {
 
     private final FavoriteItemService favoriteItemService;
 
-    @PostMapping("/{userId}/favorites/{productId}")
+    @PostMapping("/users/{userId}/favorites/{productId}")
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(operationId = "createFavorites", summary = "Добавление продукта во вкладку избранное клиента")
     @ApiResponse(responseCode = "201", description = "CREATED",
@@ -47,7 +49,7 @@ public class FavoriteItemController {
         return favoriteItemService.addItemInFavorites(productId, userId);
     }
 
-    @GetMapping("/{userId}/favorites")
+    @GetMapping("/users/{userId}/favorites")
     @ResponseStatus(HttpStatus.OK)
     @Operation(operationId = "getFavorites", summary = "Получение избранных продуктов клиента")
     @ApiResponse(responseCode = "200", description = "OK",
@@ -61,7 +63,7 @@ public class FavoriteItemController {
         return favoriteItemService.getFavoritesByUserId(userId, page);
     }
 
-    @DeleteMapping("/{userId}/favorites/{productId}")
+    @DeleteMapping("/users/{userId}/favorites/{productId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(operationId = "deleteFavorites", summary = "Удаление продукта с избранных клиента")
     @ApiResponse(responseCode = "204", description = "NO_CONTENT")
