@@ -42,7 +42,7 @@ public class SellerController {
     @Operation(summary = "Создание нового продавца", responses = {
             @ApiResponse(description = "Новый продавец создан", responseCode = "201",
                     content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = SellerRequestDto.class))),
+                            schema = @Schema(implementation = UUID.class))),
             @ApiResponse(description = "Ошибка при создании нового продавца", responseCode = "409")
     })
     public UUID createSeller(@RequestBody SellerRequestDto sellerRequestDto) {
@@ -53,7 +53,7 @@ public class SellerController {
     @ResponseStatus(HttpStatus.OK)
     @Operation(operationId = "getSellerByExternalId", summary = "Получение продавца по externalId")
     @ApiResponse(responseCode = "200", description = "OK",
-            content = @Content(mediaType = "application/json", schema = @Schema(implementation = UUID.class)))
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = SellerResponseDto.class)))
     public SellerResponseDto getSellerByExternalId(
             @Parameter(name = "externalId", description = "Индификатор продавца")
             @PathVariable("externalId") UUID externalId) {
@@ -64,7 +64,7 @@ public class SellerController {
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "OK",
                     content = @Content(mediaType = "application/json",
-                            array = @ArraySchema(schema = @Schema(implementation = SellerRequestDto.class))))
+                            array = @ArraySchema(schema = @Schema(implementation = SellerResponseDto.class))))
     })
     @Operation(operationId = "обновлениеПродавца",
             summary = "Поиск по продавца Id и обновление с помощью Dto",
