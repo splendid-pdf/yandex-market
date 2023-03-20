@@ -37,12 +37,6 @@ public class ProductServiceImpl implements ProductService {
         return repository.save(product).getExternalId();
     }
 
-    private Product findProductByExternalId(UUID externalId) {
-        return repository
-                .findByExternalId(externalId)
-                .orElseThrow(() -> new EntityNotFoundException(PRODUCT_NOT_FOUND_ERROR_MESSAGE + externalId));
-    }
-
     @Override
     @Transactional(readOnly = true)
     public ProductResponseDto getProductByExternalId(UUID externalId) {
@@ -115,5 +109,27 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<ProductPreview> getProductPreviewsByIdentifiers(Set<UUID> productIdentifiers) {
         return repository.getProductPreviewsByIdentifiers(productIdentifiers);
+    }
+
+    @SneakyThrows
+    private void sendMetricsToKafka(UserAction userAction, Product product, String userId) {
+        kafkaTemplate.send(
+                "METRICS",
+                "product",
+                objectMapper.writeValueAsString(
+                        ProductMetricsDto.builder()
+                                .productExternalId(product.getExternalId())
+                                .userAction(userAction)
+                                .userId(userId)
+                                .productName(product.getName())
+                                .timestamp(LocalDateTime.now())
+                                .build()));
+    }
+
+
+    private Product findProductByExternalId(UUID externalId) {
+        return repository
+                .findByExternalId(externalId)
+                .orElseThrow(() -> new EntityNotFoundException(PRODUCT_NOT_FOUND_ERROR_MESSAGE + externalId));
     }
 }
