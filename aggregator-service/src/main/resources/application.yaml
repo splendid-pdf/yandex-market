@@ -1,0 +1,11 @@
+server:
+  port: 8181
+
+spring:
+  application:
+    name: aggregator-service
+
+app:
+  rest:
+    connect-timeout: 1
+    read-timeout: 3

@@ -1,5 +1,6 @@
 package com.yandex.market.productservice.repository;
 
+import com.yandex.market.productservice.dto.response.ProductPreview;
 import com.yandex.market.productservice.model.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -74,4 +75,34 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
                  p.externalId IN :productIds
             """)
     void deleteProductsBySellerId(List<UUID> productIds, UUID sellerId);
+
+    @Query(value = """
+            SELECT
+               p.external_id AS externalId,
+               p.seller_external_id AS sellerExternalId,
+               p.name,
+               p.price,
+               product_image.url AS imageUrl
+             FROM products p
+             LEFT JOIN product_images product_image ON p.id = product_image.product_id
+             WHERE product_image.is_main = true
+             ORDER BY p.creation_date DESC
+             """,
+            nativeQuery = true)
+    Page<ProductPreview> getProductsPreview(Pageable pageable);
+
+    @Query(value = """
+            SELECT
+               p.external_id AS externalId,
+               p.seller_external_id AS sellerExternalId,
+               p.name,
+               p.price,
+               product_image.url AS imageUrl
+             FROM products p
+             LEFT JOIN product_images product_image ON p.id = product_image.product_id
+             WHERE p.external_id IN ?1 AND product_image.is_main = true
+             ORDER BY p.creation_date DESC
+             """,
+            nativeQuery = true)
+    List<ProductPreview> getProductPreviewsByIdentifiers(Set<UUID> productIdentifiers);
 }
