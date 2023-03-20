@@ -1,6 +1,7 @@
 package com.yandex.market.productservice.service.impl;
 
 import com.yandex.market.productservice.dto.ProductRequestDto;
+import com.yandex.market.productservice.dto.response.ProductPreview;
 import com.yandex.market.productservice.dto.response.ProductResponseDto;
 import com.yandex.market.productservice.mapper.ProductMapper;
 import com.yandex.market.productservice.model.DisplayProductMethod;
@@ -96,7 +97,7 @@ public class ProductServiceImpl implements ProductService {
                 if (methodAction) repository.addProductsToArchiveBySellerId(productIds, sellerId);
                 else repository.returnProductsFromArchiveBySellerId(productIds, sellerId);
             }
-            default -> throw  new IllegalArgumentException("Некорректный метод = " + method);
+            default -> throw new IllegalArgumentException("Некорректный метод = " + method);
         }
     }
 
@@ -104,5 +105,15 @@ public class ProductServiceImpl implements ProductService {
     @Transactional
     public void deleteFromArchiveListProductBySellerId(List<UUID> productIds, UUID sellerId) {
         repository.deleteProductsBySellerId(productIds, sellerId);
+    }
+
+    @Override
+    public Page<ProductPreview> getProductPreviews(Pageable pageable) {
+        return repository.getProductsPreview(pageable);
+    }
+
+    @Override
+    public List<ProductPreview> getProductPreviewsByIdentifiers(Set<UUID> productIdentifiers) {
+        return repository.getProductPreviewsByIdentifiers(productIdentifiers);
     }
 }

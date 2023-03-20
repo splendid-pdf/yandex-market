@@ -70,7 +70,7 @@ public class ProductController {
         return productService.updateProductByExternalId(externalId, productRequestDto);
     }
 
-    @GetMapping()
+/*    @GetMapping()
     @ResponseStatus(HttpStatus.OK)
     @Operation(operationId = "getProductsBySetExternalId", summary = "Получения списка товаров по externalId каждого товара")
     @ApiResponse(responseCode = "200", description = "Продукт успешно обновлен",
@@ -79,5 +79,5 @@ public class ProductController {
             @RequestParam(name = "extId") Set<UUID> externalIdSet,
             @PageableDefault(sort = {"name"}, direction = Sort.Direction.ASC) Pageable pageable) {
         return productService.getProductsBySetExternalId(externalIdSet, pageable);
-    }
+    }*/
 }
