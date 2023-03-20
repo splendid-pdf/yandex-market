@@ -3,7 +3,7 @@ package com.yandex.market.productservice.dto.projections;
 import java.time.LocalDate;
 import java.util.UUID;
 
-public interface ProductSellerPreview {
+public interface SellerProductsPreview {
     UUID getExternalId();
 
     UUID getSellerExternalId();
@@ -13,6 +13,7 @@ public interface ProductSellerPreview {
     String getName();
 
     Long getPrice();
+    Long getCount();
 
     String getType();
 

@@ -2,7 +2,7 @@ package com.yandex.market.productservice.service.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yandex.market.productservice.dto.ProductRequestDto;
-import com.yandex.market.productservice.dto.projections.ProductSellerPreview;
+import com.yandex.market.productservice.dto.projections.SellerProductsPreview;
 import com.yandex.market.productservice.dto.response.ProductResponseDto;
 import com.yandex.market.productservice.mapper.ProductMapper;
 import com.yandex.market.productservice.metric.dto.ProductMetricsDto;
@@ -74,10 +74,13 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<ProductSellerPreview> getPageListOrArchiveBySellerId(UUID sellerId,
-                                                                     DisplayProductMethod method,
-                                                                     Pageable pageable) {
-        return repository.findProductsPreviewPageBySellerId(sellerId, String.valueOf(method), pageable);
+    public Page<SellerProductsPreview> getPageListOrArchiveBySellerId(UUID sellerId,
+                                                                      DisplayProductMethod method,
+                                                                      Pageable pageable) {
+        return switch (method) {
+            case PRODUCT_LIST -> repository.findProductsPreviewPageBySellerId(sellerId, pageable);
+            case ARCHIVE -> repository.findArchivePreviewPageBySellerId(sellerId, pageable);
+        };
     }
 
     @Override

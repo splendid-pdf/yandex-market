@@ -1,6 +1,6 @@
 package com.yandex.market.productservice.repository;
 
-import com.yandex.market.productservice.dto.projections.ProductSellerPreview;
+import com.yandex.market.productservice.dto.projections.SellerProductsPreview;
 import com.yandex.market.productservice.model.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -44,16 +44,36 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
                     ON p.type.id=t.id
             WHERE
                 p.sellerExternalId=:sellerId AND
-                    p.isDeleted =
-                    CASE
-                        WHEN :method='PRODUCT_LIST' THEN true
-                        WHEN :method='ARCHIVE' THEN false
-                        ELSE false
-                    END
+                    p.isDeleted=false
             """)
-    Page<ProductSellerPreview> findProductsPreviewPageBySellerId(@Param("sellerId") UUID sellerId,
-                                                                 String method,
-                                                                 Pageable pageable);
+    Page<SellerProductsPreview> findProductsPreviewPageBySellerId(@Param("sellerId") UUID sellerId,
+                                                                  Pageable pageable);
+
+    @Query(value = """
+            SELECT
+                pi.url as imageUrl,
+                p.externalId as externalId,
+                p.sellerExternalId as sellerExternalId,
+                p.name as name,
+                p.articleNumber as articleNumber,
+                p.price as price,
+                p.count as count,
+                p.isVisible as isVisible,
+                t.name as type,
+                p.creationDate as creationDate,
+                p.isDeleted as isDeleted
+            FROM
+                Product p
+                JOIN ProductImage pi
+                    ON pi.product=p AND pi.isMain=true
+                JOIN Type t
+                    ON p.type.id=t.id
+            WHERE
+                p.sellerExternalId=:sellerId AND
+                    p.isDeleted=false
+            """)
+    Page<SellerProductsPreview> findArchivePreviewPageBySellerId(@Param("sellerId") UUID sellerId,
+                                                                  Pageable pageable);
 
     @Modifying
     @Query(value = """
