@@ -33,4 +33,3 @@ target
 build
 .openapi-generator
 /product-service/src/main/resources/application.properties
-/seller-info-service/src/main/resources/application.properties

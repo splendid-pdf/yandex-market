@@ -1,9 +1,12 @@
 package com.yandex.market.productservice.service.impl;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yandex.market.productservice.dto.ProductRequestDto;
 import com.yandex.market.productservice.dto.response.ProductPreview;
 import com.yandex.market.productservice.dto.response.ProductResponseDto;
 import com.yandex.market.productservice.mapper.ProductMapper;
+import com.yandex.market.productservice.metric.dto.ProductMetricsDto;
+import com.yandex.market.productservice.metric.enums.UserAction;
 import com.yandex.market.productservice.model.DisplayProductMethod;
 import com.yandex.market.productservice.model.Product;
 import com.yandex.market.productservice.model.VisibilityMethod;
@@ -11,12 +14,16 @@ import com.yandex.market.productservice.repository.ProductRepository;
 import com.yandex.market.productservice.service.ProductService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -28,6 +35,8 @@ import static com.yandex.market.productservice.utils.ExceptionMessagesConstants.
 public class ProductServiceImpl implements ProductService {
     private final ProductRepository repository;
     private final ProductMapper productMapper;
+    private final ObjectMapper objectMapper;
+    private final KafkaTemplate<String, String> kafkaTemplate;
 
     @Override
     @Transactional
@@ -39,8 +48,12 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional(readOnly = true)
-    public ProductResponseDto getProductByExternalId(UUID externalId) {
-        return productMapper.toResponseDto(findProductByExternalId(externalId));
+    public ProductResponseDto getProductByExternalId(UUID externalId, @Nullable String userId) {
+        Product product = findProductByExternalId(externalId);
+
+        sendMetricsToKafka(UserAction.VIEW_PRODUCT, product, userId);
+
+        return productMapper.toResponseDto(product);
     }
 
     @Override
@@ -132,4 +145,3 @@ public class ProductServiceImpl implements ProductService {
                 .findByExternalId(externalId)
                 .orElseThrow(() -> new EntityNotFoundException(PRODUCT_NOT_FOUND_ERROR_MESSAGE + externalId));
     }
-}
