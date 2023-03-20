@@ -2,6 +2,7 @@ package com.yandex.market.productservice.service.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yandex.market.productservice.dto.ProductRequestDto;
+import com.yandex.market.productservice.dto.projections.ProductSellerPreview;
 import com.yandex.market.productservice.dto.response.ProductResponseDto;
 import com.yandex.market.productservice.mapper.ProductMapper;
 import com.yandex.market.productservice.metric.dto.ProductMetricsDto;
@@ -16,7 +17,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
@@ -74,20 +74,10 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<ProductResponseDto> getPageListOrArchiveBySellerId(UUID sellerId,
-                                                                   DisplayProductMethod method,
-                                                                   Pageable pageable) {
-        Page<Product> productsBySellerId = switch (method) {
-            case PRODUCT_LIST -> repository.findProductsPageBySellerId(sellerId, pageable);
-            case ARCHIVE -> repository.findArchivedProductsPageBySellerId(sellerId, pageable);
-        };
-
-        return new PageImpl<>(
-                productsBySellerId
-                        .stream()
-                        .map(productMapper::toResponseDto)
-                        .toList()
-        );
+    public Page<ProductSellerPreview> getPageListOrArchiveBySellerId(UUID sellerId,
+                                                                     DisplayProductMethod method,
+                                                                     Pageable pageable) {
+        return repository.findProductsPreviewPageBySellerId(sellerId, String.valueOf(method), pageable);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.yandex.market.productservice.repository;
 
+import com.yandex.market.productservice.dto.projections.ProductSellerPreview;
 import com.yandex.market.productservice.model.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,16 +24,36 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     Stream<Product> findByExternalId(@Param("externals") Set<UUID> uuidSet, Pageable pageable);
 
     @Query(value = """
-            FROM Product p
-            WHERE p.sellerExternalId = :sellerId AND p.isDeleted = false
+            SELECT
+                pi.url as imageUrl,
+                p.externalId as externalId,
+                p.sellerExternalId as sellerExternalId,
+                p.name as name,
+                p.articleNumber as articleNumber,
+                p.price as price,
+                p.count as count,
+                p.isVisible as isVisible,
+                t.name as type,
+                p.creationDate as creationDate,
+                p.isDeleted as isDeleted
+            FROM
+                Product p
+                JOIN ProductImage pi
+                    ON pi.product=p AND pi.isMain=true
+                JOIN Type t
+                    ON p.type.id=t.id
+            WHERE
+                p.sellerExternalId=:sellerId AND
+                    p.isDeleted =
+                    CASE
+                        WHEN :method='PRODUCT_LIST' THEN true
+                        WHEN :method='ARCHIVE' THEN false
+                        ELSE false
+                    END
             """)
-    Page<Product> findProductsPageBySellerId(@Param("sellerId") UUID sellerId, Pageable pageable);
-
-    @Query(value = """
-            FROM Product p
-            WHERE p.sellerExternalId = :sellerId AND p.isDeleted = true
-            """)
-    Page<Product> findArchivedProductsPageBySellerId(@Param("sellerId") UUID sellerId, Pageable pageable);
+    Page<ProductSellerPreview> findProductsPreviewPageBySellerId(@Param("sellerId") UUID sellerId,
+                                                                 String method,
+                                                                 Pageable pageable);
 
     @Modifying
     @Query(value = """

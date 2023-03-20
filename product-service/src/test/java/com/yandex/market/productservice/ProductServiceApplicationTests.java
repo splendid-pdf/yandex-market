@@ -9,6 +9,7 @@ import com.yandex.market.productservice.service.ProductService;
 import com.yandex.market.util.RestPageImpl;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

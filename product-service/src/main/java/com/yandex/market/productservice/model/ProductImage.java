@@ -20,6 +20,7 @@ public class ProductImage {
     private Long id;
 
     private String url;
+    private Boolean isMain;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore
