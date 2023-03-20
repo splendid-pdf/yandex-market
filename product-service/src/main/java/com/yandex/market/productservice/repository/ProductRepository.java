@@ -100,7 +100,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
                product_image.url AS imageUrl
              FROM products p
              LEFT JOIN product_images product_image ON p.id = product_image.product_id
-             WHERE product_image.is_main = true AND p.external_id IN ?1
+             WHERE p.external_id IN ?1 AND product_image.is_main = true
              ORDER BY p.creation_date DESC
              """,
             nativeQuery = true)

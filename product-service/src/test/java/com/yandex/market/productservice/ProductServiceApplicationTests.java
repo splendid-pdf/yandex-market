@@ -254,7 +254,7 @@ class ProductServiceApplicationTests {
                         PATH_TO_SELLER + "{sellerId}/products", sellerId)
                         .content(objectMapper.writeValueAsString(productIds))
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .andExpect(status().isNoContent());
     }
 
     private long getActualCountAfterDelete(UUID sellerId) throws Exception {
