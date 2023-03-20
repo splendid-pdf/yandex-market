@@ -182,7 +182,7 @@ class ProductServiceApplicationTests {
     @Test
     @Disabled
     @Transactional
-    public void shouldCreateProductReturnExternalIdAndStatus201Created() throws Exception {
+    void shouldCreateProductReturnExternalIdAndStatus201Created() throws Exception {
         UUID sellerExternalId = UUID.fromString("cd8ae5aa-ebea-4922-b3c2-8ba8a296ef04");
 
         MvcResult mvcResult = mockMvc.perform(
@@ -199,7 +199,7 @@ class ProductServiceApplicationTests {
 
     @Test
     @Transactional
-    public void shouldCreateNegative() throws Exception {
+    void shouldCreateNegative() throws Exception {
         UUID sellerExternalId = UUID.fromString("cd8ae5aa-ebea-4922-b3c2-8ba8a296ef04");
         mockMvc.perform(post(PATH_TO_PRODUCT + "{sellerId}/products", sellerExternalId)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -210,7 +210,7 @@ class ProductServiceApplicationTests {
 
     @Test
     @Transactional
-    public void shouldGetProductByExternalIdReturnProductResponseDtoAndStatus200Ok() throws Exception {
+    void shouldGetProductByExternalIdReturnProductResponseDtoAndStatus200Ok() throws Exception {
         UUID productExternalId = UUID.fromString("301c5370-be41-421e-9b15-f1e80a7074f5");
 
         MvcResult mvcResult = mockMvc.perform(get(PATH_TO_PRODUCT + "{externalId}", productExternalId)
@@ -228,7 +228,7 @@ class ProductServiceApplicationTests {
 
     @Test
     @Transactional
-    public void shouldGetProductByExternalIdNegativeReturnProductResponseDtoAndStatus200Ok() throws Exception {
+    void shouldGetProductByExternalIdNegativeReturnProductResponseDtoAndStatus200Ok() throws Exception {
         UUID productExternalId = UUID.fromString("301c5370-be41-421e-9b15-f1e80a7124f5");
 
         MvcResult mvcResult = mockMvc.perform(get(PATH_TO_PRODUCT + "{externalId}", productExternalId)

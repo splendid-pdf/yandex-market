@@ -86,12 +86,18 @@ public class ProductServiceImpl implements ProductService {
                                             VisibilityMethod method, boolean methodAction) {
         switch (method) {
             case VISIBLE -> {
-                if (methodAction) repository.displayProductsBySellerId(productIds, sellerId);
-                else repository.hideProductsBySellerId(productIds, sellerId);
+                if (methodAction) {
+                    repository.displayProductsBySellerId(productIds, sellerId);
+                } else {
+                    repository.hideProductsBySellerId(productIds, sellerId);
+                }
             }
             case DELETED -> {
-                if (methodAction) repository.addProductsToArchiveBySellerId(productIds, sellerId);
-                else repository.returnProductsFromArchiveBySellerId(productIds, sellerId);
+                if (methodAction) {
+                    repository.addProductsToArchiveBySellerId(productIds, sellerId);
+                } else {
+                    repository.returnProductsFromArchiveBySellerId(productIds, sellerId);
+                }
             }
             default -> throw new IllegalArgumentException("Некорректный метод = " + method);
         }
