@@ -36,7 +36,7 @@ public class ProductServiceImpl implements ProductService {
     private final ProductRepository repository;
     private final ProductMapper productMapper;
     private final ObjectMapper objectMapper;
-    private final KafkaTemplate<String, String> kafkaTemplate;
+    //private final KafkaTemplate<String, String> kafkaTemplate;
 
     @Override
     @Transactional
@@ -51,7 +51,7 @@ public class ProductServiceImpl implements ProductService {
     public ProductResponseDto getProductByExternalId(UUID externalId, @Nullable String userId) {
         Product product = findProductByExternalId(externalId);
 
-        sendMetricsToKafka(UserAction.VIEW_PRODUCT, product, userId);
+        //sendMetricsToKafka(UserAction.VIEW_PRODUCT, product, userId);
 
         return productMapper.toResponseDto(product);
     }
@@ -123,20 +123,20 @@ public class ProductServiceImpl implements ProductService {
         return repository.getProductPreviewsByIdentifiers(productIdentifiers);
     }
 
-    @SneakyThrows
-    private void sendMetricsToKafka(UserAction userAction, Product product, String userId) {
-        kafkaTemplate.send(
-                "METRICS",
-                "product",
-                objectMapper.writeValueAsString(
-                        ProductMetricsDto.builder()
-                                .productExternalId(product.getExternalId())
-                                .userAction(userAction)
-                                .userId(userId)
-                                .productName(product.getName())
-                                .timestamp(LocalDateTime.now())
-                                .build()));
-    }
+//    @SneakyThrows
+//    private void sendMetricsToKafka(UserAction userAction, Product product, String userId) {
+//        kafkaTemplate.send(
+//                "METRICS",
+//                "product",
+//                objectMapper.writeValueAsString(
+//                        ProductMetricsDto.builder()
+//                                .productExternalId(product.getExternalId())
+//                                .userAction(userAction)
+//                                .userId(userId)
+//                                .productName(product.getName())
+//                                .timestamp(LocalDateTime.now())
+//                                .build()));
+//    }
 
 
     private Product findProductByExternalId(UUID externalId) {
@@ -144,3 +144,4 @@ public class ProductServiceImpl implements ProductService {
                 .findByExternalId(externalId)
                 .orElseThrow(() -> new EntityNotFoundException(PRODUCT_NOT_FOUND_ERROR_MESSAGE + externalId));
     }
+}

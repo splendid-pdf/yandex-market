@@ -16,7 +16,6 @@ public interface ProductMapper {
     ProductResponseDto toResponseDto(Product product);
 
     @Mapping(target = "isDeleted", ignore = true)
-    @Mapping(target = "externalId", expression = "java(UUID.randomUUID())")
     @Mapping(target = "articleNumber", expression = "java(UUID.randomUUID())")
     @Mapping(source = "productRequestDto.productCharacteristicDto", target = "productCharacteristics")
     @Mapping(source = "productRequestDto.productImageDto", target = "productImages")
