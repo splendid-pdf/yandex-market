@@ -5,7 +5,8 @@ import jakarta.validation.constraints.NotBlank;
 
 @Schema
 public record ProductImageDto(
+
+        boolean isMain,
         @NotBlank
-        String url,
-        boolean isMain) {
+        String url) {
 }

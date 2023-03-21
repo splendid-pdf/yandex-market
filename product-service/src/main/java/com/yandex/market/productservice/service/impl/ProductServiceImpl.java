@@ -3,6 +3,7 @@ package com.yandex.market.productservice.service.impl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yandex.market.productservice.dto.ProductRequestDto;
 import com.yandex.market.productservice.dto.projections.SellerProductsPreview;
+import com.yandex.market.productservice.dto.response.ProductPreview;
 import com.yandex.market.productservice.dto.response.ProductResponseDto;
 import com.yandex.market.productservice.mapper.ProductMapper;
 import com.yandex.market.productservice.metric.dto.ProductMetricsDto;
@@ -112,6 +113,15 @@ public class ProductServiceImpl implements ProductService {
         repository.deleteProductsBySellerId(productIds, sellerId);
     }
 
+    @Override
+    public Page<ProductPreview> getProductPreviews(Pageable pageable) {
+        return repository.getProductsPreview(pageable);
+    }
+
+    @Override
+    public List<ProductPreview> getProductPreviewsByIdentifiers(Set<UUID> productIdentifiers) {
+        return repository.getProductPreviewsByIdentifiers(productIdentifiers);
+    }
 
     @SneakyThrows
     private void sendMetricsToKafka(UserAction userAction, Product product, String userId) {
@@ -134,4 +144,3 @@ public class ProductServiceImpl implements ProductService {
                 .findByExternalId(externalId)
                 .orElseThrow(() -> new EntityNotFoundException(PRODUCT_NOT_FOUND_ERROR_MESSAGE + externalId));
     }
-}
