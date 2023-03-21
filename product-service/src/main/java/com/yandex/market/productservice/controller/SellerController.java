@@ -7,6 +7,7 @@ import com.yandex.market.productservice.model.DisplayProductMethod;
 import com.yandex.market.productservice.model.VisibilityMethod;
 import com.yandex.market.productservice.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -69,9 +70,13 @@ public class SellerController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(operationId = "changeProductPrice", summary = "Изменить цену продукта")
     @ApiResponse(responseCode = "204", description = "Продукт успешно изменён в цене")
-    public void changeProductVisibilityForSeller(@PathVariable(value = "sellerId") UUID sellerId,
-                                                 @PathVariable(value = "productId") UUID productId,
-                                                 @RequestParam Long newPrice) {
+    public void changeProductVisibilityForSeller(
+            @Parameter(name = "sellerId", description = "Идентификатор продавца")
+            @PathVariable(value = "sellerId") UUID sellerId,
+            @Parameter(name = "productId", description = "Идентификатор продукта")
+            @PathVariable(value = "productId") UUID productId,
+            @Parameter(name = "newPrice", description = "Новая цена для продукта")
+            @RequestParam Long newPrice) {
         productService.changeProductPrice(sellerId, productId, newPrice);
     }
 
