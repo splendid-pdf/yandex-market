@@ -20,7 +20,15 @@ public class KafkaProducerConfig {
 
     public Map<String, Object> producerConfig() {
         Map<String, Object> properties = new HashMap<>();
-        properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
+        String jaasTemplate = "org.apache.kafka.common.security.scram.ScramLoginModule required username=\"%s\" password=\"%s\";";
+        String jaasCfg = String.format(jaasTemplate, "PRODUCT_SERVICE", "7d28fdf7a73b7c0bf133df0f2028879bf0acf4530bd1b528b81fc795a089abfa");
+        properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "rc1b-0iucrlge6nlombgi:9091");
+        properties.put(ProducerConfig.ACKS_CONFIG, "all");
+        properties.put("security.protocol", "SASL_SSL");
+        properties.put("sasl.mechanism", "SCRAM-SHA-512");
+        properties.put("sasl.jaas.config", jaasCfg);
+        properties.put("ssl.truststore.location", "/etc/security/ssl");
+        properties.put("ssl.truststore.password", "marketplace");
         properties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         properties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         return properties;

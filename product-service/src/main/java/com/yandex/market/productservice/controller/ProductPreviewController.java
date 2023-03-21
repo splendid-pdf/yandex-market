@@ -1,7 +1,7 @@
 package com.yandex.market.productservice.controller;
 
 import com.yandex.market.productservice.dto.ProductRepresentationSetDto;
-import com.yandex.market.productservice.dto.response.ProductPreview;
+import com.yandex.market.productservice.dto.projections.ProductPreview;
 import com.yandex.market.productservice.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -11,7 +11,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;

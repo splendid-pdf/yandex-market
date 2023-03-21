@@ -11,8 +11,6 @@ import org.mapstruct.*;
 public interface TypeMapper {
 
     @Mapping(target = "externalId", expression = "java(java.util.UUID.randomUUID())")
-    @Mapping(source = "typeDto.typeCharacteristicDto", target = "typeCharacteristics")
-    @Mapping(source = "typeDto.roomDto", target = "rooms")
     Type toType(TypeDto typeDto);
 
     TypeDto toTypeDto(Type type);

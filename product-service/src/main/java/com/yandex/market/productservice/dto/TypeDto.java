@@ -9,9 +9,6 @@ import java.util.Set;
 @Schema
 public record TypeDto(
         @NotBlank
-        String name,
-        @NotNull
-        Set<TypeCharacteristicDto> typeCharacteristicDto,
-        @NotNull
-        Set<RoomDto> roomDto) {
+        String name
+) {
 }

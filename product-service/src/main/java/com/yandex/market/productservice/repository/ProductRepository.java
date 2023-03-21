@@ -1,7 +1,7 @@
 package com.yandex.market.productservice.repository;
 
 import com.yandex.market.productservice.dto.projections.SellerProductsPreview;
-import com.yandex.market.productservice.dto.response.ProductPreview;
+import com.yandex.market.productservice.dto.projections.ProductPreview;
 import com.yandex.market.productservice.model.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,10 +18,10 @@ import java.util.stream.Stream;
 
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
-    @Query("FROM Product p WHERE p.externalId=:externalId AND p.isDeleted=false")
+    @Query("FROM Product p WHERE p.externalId=:externalId AND p.isArchived=false")
     Optional<Product> findByExternalId(@Param("externalId") UUID externalId);
 
-    @Query("FROM Product p WHERE p.externalId in :externals AND p.isDeleted=false")
+    @Query("FROM Product p WHERE p.externalId in :externals AND p.isArchived=false")
     Stream<Product> findByExternalId(@Param("externals") Set<UUID> uuidSet, Pageable pageable);
 
     @Query(value = """
@@ -36,7 +36,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
                 p.isVisible as isVisible,
                 t.name as type,
                 p.creationDate as creationDate,
-                p.isDeleted as isDeleted
+                p.isArchived as isArchived
             FROM
                 Product p
                 JOIN ProductImage pi
@@ -45,7 +45,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
                     ON p.type.id=t.id
             WHERE
                 p.sellerExternalId=:sellerId AND
-                    p.isDeleted=false
+                    p.isArchived=false
             """)
     Page<SellerProductsPreview> findProductsPreviewPageBySellerId(@Param("sellerId") UUID sellerId,
                                                                   Pageable pageable);
@@ -62,7 +62,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
                 p.isVisible as isVisible,
                 t.name as type,
                 p.creationDate as creationDate,
-                p.isDeleted as isDeleted
+                p.isArchived as isArchived
             FROM
                 Product p
                 JOIN ProductImage pi
@@ -71,7 +71,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
                     ON p.type.id=t.id
             WHERE
                 p.sellerExternalId=:sellerId AND
-                    p.isDeleted=false
+                    p.isArchived=false
             """)
     Page<SellerProductsPreview> findArchivePreviewPageBySellerId(@Param("sellerId") UUID sellerId,
                                                                   Pageable pageable);
@@ -95,7 +95,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Modifying
     @Query(value = """
                 UPDATE Product p
-                SET p.isVisible=false, p.isDeleted = true
+                SET p.isVisible=false, p.isArchived = true
                 WHERE p.sellerExternalId=:sellerId AND p.externalId IN :productIds
             """)
     void addProductsToArchiveBySellerId(List<UUID> productIds, UUID sellerId);
@@ -103,7 +103,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Modifying
     @Query(value = """
                 UPDATE Product p
-                SET p.isDeleted=false
+                SET p.isArchived=false
                 WHERE p.sellerExternalId=:sellerId AND p.externalId IN :productIds
             """)
     void returnProductsFromArchiveBySellerId(List<UUID> productIds, UUID sellerId);
@@ -112,7 +112,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Query(value = """
                 DELETE FROM Product p
                 WHERE p.sellerExternalId=:sellerId AND
-                 p.isDeleted=true AND
+                 p.isArchived=true AND
                  p.externalId IN :productIds
             """)
     void deleteProductsBySellerId(List<UUID> productIds, UUID sellerId);
