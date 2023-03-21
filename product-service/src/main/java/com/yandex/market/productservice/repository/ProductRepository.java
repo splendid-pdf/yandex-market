@@ -1,6 +1,6 @@
 package com.yandex.market.productservice.repository;
 
-import com.yandex.market.productservice.dto.projections.SellerProductsPreview;
+import com.yandex.market.productservice.dto.response.SellerProductsPreview;
 import com.yandex.market.productservice.dto.response.ProductPreview;
 import com.yandex.market.productservice.model.Product;
 import org.springframework.data.domain.Page;
@@ -74,7 +74,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
                     p.isDeleted=false
             """)
     Page<SellerProductsPreview> findArchivePreviewPageBySellerId(@Param("sellerId") UUID sellerId,
-                                                                  Pageable pageable);
+                                                                 Pageable pageable);
 
     @Modifying
     @Query(value = """
@@ -146,4 +146,14 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
              """,
             nativeQuery = true)
     List<ProductPreview> getProductPreviewsByIdentifiers(Set<UUID> productIdentifiers);
+
+    @Modifying
+    @Query("""
+            UPDATE Product p
+            SET p.price=:newPrice
+            WHERE p.sellerExternalId=:sellerId AND p.externalId=:productId
+            """)
+    void updateProductPrice(@Param("sellerId") UUID sellerId,
+                            @Param("productId") UUID productId,
+                            @Param("newPrice") Long newPrice);
 }

@@ -63,4 +63,8 @@ values (1000001, '000000001', '3e81e74e-db56-4a38-9564-0238b5225a81', 10, '2023-
 
        (1000063, '000000008', '3e81e74e-db56-4a38-9564-0238b5225a78', 18, '2023-02-16', 'new description: 08',
         '301c5370-be41-421e-9b15-f1e80a7074d8',
-        false, false, 'NAME PRODUCT DELETE 8', 14, '301c5370-be41-421e-9b15-f1e80a7071d1', 'MIN');
+        false, false, 'NAME PRODUCT DELETE 8', 14, '301c5370-be41-421e-9b15-f1e80a7071d1', 'MIN'),
+
+       (1000064, '000000008', '37678201-f3c8-4d5c-a628-2344eef50c62', 18, '2023-02-16', 'new description: 08',
+        '37678201-f3c8-4d5c-a628-2344eef50c61',
+        false, false, 'NAME PRODUCT', 14, '37678201-f3c8-4d5c-a628-2344eef50c60', 'MIN');;

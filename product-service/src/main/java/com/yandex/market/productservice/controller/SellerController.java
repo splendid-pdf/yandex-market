@@ -1,7 +1,7 @@
 package com.yandex.market.productservice.controller;
 
 import com.yandex.market.productservice.controller.response.ErrorResponse;
-import com.yandex.market.productservice.dto.projections.SellerProductsPreview;
+import com.yandex.market.productservice.dto.response.SellerProductsPreview;
 import com.yandex.market.productservice.dto.response.ProductResponseDto;
 import com.yandex.market.productservice.model.DisplayProductMethod;
 import com.yandex.market.productservice.model.VisibilityMethod;
@@ -63,6 +63,16 @@ public class SellerController {
                                                  @RequestParam VisibilityMethod method,
                                                  @RequestParam boolean methodAction) {
         productService.changeVisibilityForSellerId(sellerId, productIds, method, methodAction);
+    }
+
+    @PatchMapping("{sellerId}/products/{productId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Operation(operationId = "changeProductPrice", summary = "Изменить цену продукта")
+    @ApiResponse(responseCode = "204", description = "Продукт успешно изменён в цене")
+    public void changeProductVisibilityForSeller(@PathVariable(value = "sellerId") UUID sellerId,
+                                                 @PathVariable(value = "productId") UUID productId,
+                                                 @RequestParam Long newPrice) {
+        productService.changeProductPrice(sellerId, productId, newPrice);
     }
 
     @DeleteMapping("{sellerId}/products")

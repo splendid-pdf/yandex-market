@@ -2,7 +2,7 @@ package com.yandex.market.productservice.service.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yandex.market.productservice.dto.ProductRequestDto;
-import com.yandex.market.productservice.dto.projections.SellerProductsPreview;
+import com.yandex.market.productservice.dto.response.SellerProductsPreview;
 import com.yandex.market.productservice.dto.response.ProductPreview;
 import com.yandex.market.productservice.dto.response.ProductResponseDto;
 import com.yandex.market.productservice.mapper.ProductMapper;
@@ -123,6 +123,12 @@ public class ProductServiceImpl implements ProductService {
         return repository.getProductPreviewsByIdentifiers(productIdentifiers);
     }
 
+    @Override
+    @Transactional
+    public void changeProductPrice(UUID sellerId, UUID productId, Long newPrice) {
+        repository.updateProductPrice(sellerId, productId, newPrice);
+    }
+
     @SneakyThrows
     private void sendMetricsToKafka(UserAction userAction, Product product, String userId) {
         kafkaTemplate.send(
@@ -144,3 +150,4 @@ public class ProductServiceImpl implements ProductService {
                 .findByExternalId(externalId)
                 .orElseThrow(() -> new EntityNotFoundException(PRODUCT_NOT_FOUND_ERROR_MESSAGE + externalId));
     }
+}

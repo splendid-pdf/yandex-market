@@ -1,7 +1,7 @@
 package com.yandex.market.productservice.service;
 
 import com.yandex.market.productservice.dto.ProductRequestDto;
-import com.yandex.market.productservice.dto.projections.SellerProductsPreview;
+import com.yandex.market.productservice.dto.response.SellerProductsPreview;
 import com.yandex.market.productservice.dto.response.ProductPreview;
 import com.yandex.market.productservice.dto.response.ProductResponseDto;
 import com.yandex.market.productservice.model.DisplayProductMethod;
@@ -31,4 +31,6 @@ public interface ProductService {
     Page<ProductPreview> getProductPreviews(Pageable pageable);
 
     List<ProductPreview> getProductPreviewsByIdentifiers(Set<UUID> productIdentifiers);
+
+    void changeProductPrice(UUID sellerId, UUID productId, Long newPrice);
 }
