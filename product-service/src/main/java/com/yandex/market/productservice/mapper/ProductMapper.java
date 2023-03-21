@@ -18,18 +18,18 @@ public interface ProductMapper {
     @Mapping(target = "isDeleted", ignore = true)
     @Mapping(target = "externalId", expression = "java(UUID.randomUUID())")
     @Mapping(target = "articleNumber", expression = "java(UUID.randomUUID())")
-    @Mapping(source = "productRequestDto.productCharacteristicDto", target = "productCharacteristics")
-    @Mapping(source = "productRequestDto.productImageDto", target = "productImages")
-    @Mapping(source = "productRequestDto.productSpecialPriceDto", target = "productSpecialPrices")
-    @Mapping(source = "productRequestDto.typeDto", target = "type")
+    @Mapping(source = "productCharacteristicDto", target = "productCharacteristics")
+    @Mapping(source = "productImageDto", target = "productImages")
+    @Mapping(source = "productSpecialPriceDto", target = "productSpecialPrices")
+    @Mapping(source = "typeDto", target = "type")
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     Product toProduct(ProductRequestDto productRequestDto, @MappingTarget Product product);
 
     @Mapping(target = "externalId", expression = "java(java.util.UUID.randomUUID())")
     @Mapping(target = "articleNumber", expression = "java(java.util.UUID.randomUUID())")
-    @Mapping(source = "productRequestDto.productCharacteristicDto", target = "productCharacteristics")
-    @Mapping(source = "productRequestDto.productImageDto", target = "productImages")
-    @Mapping(source = "productRequestDto.productSpecialPriceDto", target = "productSpecialPrices")
-    @Mapping(source = "productRequestDto.typeDto", target = "type")
+    @Mapping(source = "productCharacteristicDto", target = "productCharacteristics")
+    @Mapping(source = "productImageDto", target = "productImages")
+    @Mapping(source = "productSpecialPriceDto", target = "productSpecialPrices")
+    @Mapping(source = "typeDto", target = "type")
     Product toProduct(ProductRequestDto productRequestDto);
 }
