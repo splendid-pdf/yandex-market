@@ -150,7 +150,7 @@ public class AggregatorService {
     public void getProductAndSellerDetails(String productId){
         ProductResponseDto productResponseDto = restTemplate.getForObject(URL_GET_PRODUCT, ProductResponseDto.class, productId);
         UUID sellerId = productResponseDto.
-        restTemplate.getForObject()
+        restTemplate.getForObject();
 
     }
 }
