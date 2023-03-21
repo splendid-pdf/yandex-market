@@ -1,6 +1,7 @@
 package com.yandex.market.productservice.service;
 
 import com.yandex.market.productservice.dto.ProductRequestDto;
+import com.yandex.market.productservice.dto.projections.SellerProductsPreview;
 import com.yandex.market.productservice.dto.response.ProductPreview;
 import com.yandex.market.productservice.dto.response.ProductResponseDto;
 import com.yandex.market.productservice.model.DisplayProductMethod;
@@ -21,7 +22,7 @@ public interface ProductService {
 
     List<ProductResponseDto> getProductsBySetExternalId(Set<UUID> externalIdSet, Pageable pageable);
 
-    Page<ProductResponseDto> getPageListOrArchiveBySellerId(UUID sellerId, DisplayProductMethod method, Pageable pageable);
+    Page<SellerProductsPreview> getPageListOrArchiveBySellerId(UUID sellerId, DisplayProductMethod method, Pageable pageable);
 
     void changeVisibilityForSellerId(UUID sellerId, List<UUID> productIds, VisibilityMethod method, boolean methodAction);
 

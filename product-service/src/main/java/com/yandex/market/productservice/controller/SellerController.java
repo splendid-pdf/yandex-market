@@ -1,6 +1,7 @@
 package com.yandex.market.productservice.controller;
 
 import com.yandex.market.productservice.controller.response.ErrorResponse;
+import com.yandex.market.productservice.dto.projections.SellerProductsPreview;
 import com.yandex.market.productservice.dto.response.ProductResponseDto;
 import com.yandex.market.productservice.model.DisplayProductMethod;
 import com.yandex.market.productservice.model.VisibilityMethod;
@@ -46,7 +47,7 @@ public class SellerController {
     @ApiResponse(responseCode = "200", description = "Список продуктов успешно получен",
             content = @Content(mediaType = "application/json",
                     array = @ArraySchema(schema = @Schema(implementation = ProductResponseDto.class))))
-    public Page<ProductResponseDto> findPageProductsBySellerId(
+    public Page<SellerProductsPreview> findPageProductsBySellerId(
             @PathVariable UUID sellerId,
             @RequestParam DisplayProductMethod method,
             @PageableDefault(size = 20, sort = "creationDate", direction = Sort.Direction.DESC) Pageable pageable) {

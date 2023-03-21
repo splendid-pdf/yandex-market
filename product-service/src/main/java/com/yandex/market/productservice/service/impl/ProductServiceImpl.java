@@ -2,6 +2,7 @@ package com.yandex.market.productservice.service.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yandex.market.productservice.dto.ProductRequestDto;
+import com.yandex.market.productservice.dto.projections.SellerProductsPreview;
 import com.yandex.market.productservice.dto.response.ProductPreview;
 import com.yandex.market.productservice.dto.response.ProductResponseDto;
 import com.yandex.market.productservice.mapper.ProductMapper;
@@ -17,7 +18,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
@@ -75,20 +75,13 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<ProductResponseDto> getPageListOrArchiveBySellerId(UUID sellerId,
-                                                                   DisplayProductMethod method,
-                                                                   Pageable pageable) {
-        Page<Product> productsBySellerId = switch (method) {
-            case PRODUCT_LIST -> repository.findProductsPageBySellerId(sellerId, pageable);
-            case ARCHIVE -> repository.findArchivedProductsPageBySellerId(sellerId, pageable);
+    public Page<SellerProductsPreview> getPageListOrArchiveBySellerId(UUID sellerId,
+                                                                      DisplayProductMethod method,
+                                                                      Pageable pageable) {
+        return switch (method) {
+            case PRODUCT_LIST -> repository.findProductsPreviewPageBySellerId(sellerId, pageable);
+            case ARCHIVE -> repository.findArchivePreviewPageBySellerId(sellerId, pageable);
         };
-
-        return new PageImpl<>(
-                productsBySellerId
-                        .stream()
-                        .map(productMapper::toResponseDto)
-                        .toList()
-        );
     }
 
     @Override
@@ -97,12 +90,18 @@ public class ProductServiceImpl implements ProductService {
                                             VisibilityMethod method, boolean methodAction) {
         switch (method) {
             case VISIBLE -> {
-                if (methodAction) repository.displayProductsBySellerId(productIds, sellerId);
-                else repository.hideProductsBySellerId(productIds, sellerId);
+                if (methodAction) {
+                    repository.displayProductsBySellerId(productIds, sellerId);
+                } else {
+                    repository.hideProductsBySellerId(productIds, sellerId);
+                }
             }
             case DELETED -> {
-                if (methodAction) repository.addProductsToArchiveBySellerId(productIds, sellerId);
-                else repository.returnProductsFromArchiveBySellerId(productIds, sellerId);
+                if (methodAction) {
+                    repository.addProductsToArchiveBySellerId(productIds, sellerId);
+                } else {
+                    repository.returnProductsFromArchiveBySellerId(productIds, sellerId);
+                }
             }
             default -> throw new IllegalArgumentException("Некорректный метод = " + method);
         }
