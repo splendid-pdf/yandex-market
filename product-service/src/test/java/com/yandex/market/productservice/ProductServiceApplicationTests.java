@@ -285,12 +285,10 @@ class ProductServiceApplicationTests {
         UUID productId = UUID.fromString("37678201-f3c8-4d5c-a628-2344eef50c69");
         long newPrice = 50L;
 
-        try {
-            changePrice(sellerId, productId, newPrice, status().isNoContent());
-            long actualPrice = findProductByExternalId(productId).price();
-        } catch (EntityNotFoundException e) {
-            assertEquals("Product was not found by given externalId = " + productId, e.getMessage());
-        }
+        changePrice(sellerId, productId, newPrice, status().isNoContent());
+
+        assertThrows(EntityNotFoundException.class, () -> findProductByExternalId(productId),
+                "Product was found by given externalId");
     }
 
     private void changePrice(UUID sellerId, UUID productId, long newPrice, ResultMatcher status) throws Exception {

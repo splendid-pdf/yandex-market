@@ -150,10 +150,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Modifying
     @Query("""
             UPDATE Product p
-            SET p.price=:newPrice
-            WHERE p.sellerExternalId=:sellerId AND p.externalId=:productId
+            SET p.price=:updatedPrice
+            WHERE p.externalId=:productId AND p.sellerExternalId=:sellerId
             """)
-    void updateProductPrice(@Param("sellerId") UUID sellerId,
-                            @Param("productId") UUID productId,
-                            @Param("newPrice") Long newPrice);
+    void updateProductPrice(UUID sellerId, UUID productId, Long updatedPrice);
 }

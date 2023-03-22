@@ -125,8 +125,8 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional
-    public void changeProductPrice(UUID sellerId, UUID productId, Long newPrice) {
-        repository.updateProductPrice(sellerId, productId, newPrice);
+    public void changeProductPrice(UUID sellerId, UUID productId, Long updatedPrice) {
+        repository.updateProductPrice(sellerId, productId, updatedPrice);
     }
 
     @SneakyThrows

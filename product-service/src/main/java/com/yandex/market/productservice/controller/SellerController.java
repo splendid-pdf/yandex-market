@@ -66,7 +66,7 @@ public class SellerController {
         productService.changeVisibilityForSellerId(sellerId, productIds, method, methodAction);
     }
 
-    @PatchMapping("{sellerId}/products/{productId}")
+    @PatchMapping("{sellerId}/products/price/{productId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(operationId = "changeProductPrice", summary = "Изменить цену продукта")
     @ApiResponse(responseCode = "204", description = "Продукт успешно изменён в цене")
@@ -76,8 +76,8 @@ public class SellerController {
             @Parameter(name = "productId", description = "Идентификатор продукта")
             @PathVariable(value = "productId") UUID productId,
             @Parameter(name = "newPrice", description = "Новая цена для продукта")
-            @RequestParam Long newPrice) {
-        productService.changeProductPrice(sellerId, productId, newPrice);
+            @RequestParam Long updatedPrice) {
+        productService.changeProductPrice(sellerId, productId, updatedPrice);
     }
 
     @DeleteMapping("{sellerId}/products")
