@@ -1,8 +1,12 @@
 package com.yandex.market.productservice.dto.response;
 
-import com.yandex.market.productservice.model.*;
+import com.yandex.market.productservice.dto.ProductCharacteristicDto;
+import com.yandex.market.productservice.dto.ProductImageDto;
+import com.yandex.market.productservice.dto.ProductSpecialPriceDto;
+import com.yandex.market.productservice.dto.TypeDto;
+import com.yandex.market.productservice.model.TaxType;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.UUID;
 
@@ -15,11 +19,11 @@ public record ProductResponseDto(
          Long count,
          String articleFromSeller,
          Boolean isVisible,
-         Boolean isDeleted,
-         LocalDate creationDate,
+         Boolean isArchived,
+         LocalDateTime creationDate,
          TaxType taxType,
-         Type type,
-         Set<ProductCharacteristic> productCharacteristics,
-         Set<ProductImage> productImages,
-         Set<ProductSpecialPrice> productSpecialPrices) {
+         TypeDto type,
+         Set<ProductCharacteristicDto> productCharacteristics,
+         Set<ProductImageDto> productImages,
+         Set<ProductSpecialPriceDto> productSpecialPrices) {
 }

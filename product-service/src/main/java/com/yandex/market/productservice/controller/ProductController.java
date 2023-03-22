@@ -1,7 +1,11 @@
 package com.yandex.market.productservice.controller;
 
 import com.yandex.market.productservice.controller.response.ErrorResponse;
-import com.yandex.market.productservice.dto.ProductRequestDto;
+import com.yandex.market.productservice.dto.ProductImageDto;
+import com.yandex.market.productservice.dto.ProductSpecialPriceDto;
+import com.yandex.market.productservice.dto.ProductUpdateRequestDto;
+import com.yandex.market.productservice.dto.request.CreateProductRequest;
+import com.yandex.market.productservice.dto.request.ProductCharacteristicUpdateDto;
 import com.yandex.market.productservice.dto.response.ProductResponseDto;
 import com.yandex.market.productservice.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -14,14 +18,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 @Slf4j
@@ -45,10 +44,10 @@ public class ProductController {
     @ApiResponse(responseCode = "201", description = "Продукт успешно создан",
             content = @Content(mediaType = "application/json", schema = @Schema(implementation = UUID.class)))
     public UUID createProduct(@Parameter(name = "productRequestDto", description = "Представление созданного продукта")
-                              @RequestBody @Valid ProductRequestDto productRequestDto,
+                              @RequestBody @Valid CreateProductRequest createProductRequest,
                               @Parameter(name = "sellerId", description = "Идентификатор продавца")
                               @PathVariable("sellerId") UUID sellerId) {
-        return productService.createProduct(productRequestDto, sellerId);
+        return productService.createProduct(createProductRequest, sellerId);
     }
 
     @GetMapping("{externalId}")
@@ -67,9 +66,68 @@ public class ProductController {
     @ApiResponse(responseCode = "200", description = "Продукт успешно обновлен",
             content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProductResponseDto.class)))
     public ProductResponseDto updateProductByExternalId(@PathVariable UUID externalId,
-                                                        @RequestBody @Valid ProductRequestDto productRequestDto) {
-        return productService.updateProductByExternalId(externalId, productRequestDto);
+                                                        @RequestBody @Valid ProductUpdateRequestDto productUpdateRequestDto) {
+        return productService.updateProductByExternalId(externalId, productUpdateRequestDto);
     }
+
+    @PostMapping("images/{productId}")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(operationId = "addImage", summary = "Добавить изображение продукту")
+    @ApiResponse(responseCode = "204", description = "Изображение продукта успешно добавлено",
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProductImageDto.class)))
+    public ProductImageDto addImage(
+                                                   @PathVariable UUID productId,
+                                                   @RequestBody ProductImageDto productImageDto
+    ) {
+        return productService.addProductImage(productId, productImageDto);
+    }
+
+    @DeleteMapping("images")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(operationId = "deleteImage", summary = "Удалить изображение продукта")
+    @ApiResponse(responseCode = "200", description = "Изображение успешно удалено")
+    public void deleteImageByUrl(@RequestParam String url) {
+         productService.deleteProductImage(url);
+    }
+
+    @DeleteMapping("special-prices/{specialPriceId}")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(operationId = "deleteSpecialPrice", summary = "Удалить акцию")
+    @ApiResponse(responseCode = "200", description = "Акция успешно удалена")
+    public void deleteSpecialPrice(@PathVariable UUID specialPriceId) {
+        productService.deleteProductSpecialPrice(specialPriceId);
+    }
+
+    @PostMapping("special-prices/{productExternalId}")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(operationId = "createSpecialPrice", summary = "Добавить акцию")
+    @ApiResponse(responseCode = "204", description = "Акция успешно добавлена")
+    public void createProductSpecialPrice(@RequestBody ProductSpecialPriceDto productSpecialPriceDto,
+                                          @PathVariable UUID productExternalId
+    ) {
+        productService.addProductSpecialPrice(productExternalId, productSpecialPriceDto);
+    }
+
+    @PutMapping("special-prices/{specialPriceExternalId}")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(operationId = "createSpecialPrice", summary = "Изменить акцию")
+    @ApiResponse(responseCode = "204", description = "Акция успешно изменена")
+    public ProductSpecialPriceDto updateProductSpecialPrice(@RequestBody ProductSpecialPriceDto productSpecialPriceDto,
+                                          @PathVariable UUID specialPriceExternalId
+    ) {
+        return productService.updateSpecialPrice(productSpecialPriceDto, specialPriceExternalId);
+    }
+
+    @PutMapping("characteristics/{characteristicExternalId}")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(operationId = "updateProductCharacteristic", summary = "Обновить характеристику продукта")
+    @ApiResponse(responseCode = "200", description = "Характеристика успешно обновлена")
+    public void updateProductSpecialPrice(@PathVariable UUID characteristicExternalId,
+                                          @RequestBody ProductCharacteristicUpdateDto productCharacteristicUpdateDto
+    ) {
+        productService.updateProductCharacteristic(characteristicExternalId, productCharacteristicUpdateDto);
+    }
+
 
 /*    @GetMapping()
     @ResponseStatus(HttpStatus.OK)

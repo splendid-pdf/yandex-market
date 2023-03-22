@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
 @Getter
@@ -20,6 +21,8 @@ public class ProductSpecialPrice {
     @SequenceGenerator(name = "product_special_prices_sequence", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "product_special_prices_sequence")
     private Long id;
+
+    private UUID externalId;
 
     private LocalDateTime specialPriceFromDate;
 

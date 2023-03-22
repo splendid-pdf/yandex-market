@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.UUID;
+
 @Entity
 @Getter
 @Setter
@@ -11,7 +13,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "product_characteristics")
-@EqualsAndHashCode(of = "id")
+@EqualsAndHashCode(of = "externalId")
 public class ProductCharacteristic {
 
     @Id
@@ -20,6 +22,8 @@ public class ProductCharacteristic {
     private Long id;
 
     private String name;
+
+    private UUID externalId;
 
     private String value;
 
