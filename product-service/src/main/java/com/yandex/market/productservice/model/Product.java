@@ -32,11 +32,11 @@ public class Product {
 
     private String description;
 
-    private Boolean isVisible;
+    private boolean isVisible;
 
-    private Boolean isDeleted;
+    private boolean isDeleted;
 
-    private Boolean isArchived;
+    private boolean isArchived;
 
     private double rating;
 
