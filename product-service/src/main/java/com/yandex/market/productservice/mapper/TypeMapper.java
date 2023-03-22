@@ -10,7 +10,6 @@ import org.mapstruct.*;
         unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface TypeMapper {
 
-    @Mapping(target = "externalId", expression = "java(java.util.UUID.randomUUID())")
     Type toType(TypeDto typeDto);
 
     TypeDto toTypeDto(Type type);

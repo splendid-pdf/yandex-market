@@ -50,7 +50,7 @@ public class Product {
     private String articleFromSeller;
 
     private Long count;
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Type type;
 
     @CreationTimestamp
