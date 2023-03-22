@@ -74,7 +74,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
                     p.isArchived=false
             """)
     Page<SellerProductsPreview> findArchivePreviewPageBySellerId(@Param("sellerId") UUID sellerId,
-                                                                  Pageable pageable);
+                                                                 Pageable pageable);
 
     @Modifying
     @Query(value = """

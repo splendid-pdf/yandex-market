@@ -4,16 +4,21 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yandex.market.productservice.dto.ProductImageDto;
 import com.yandex.market.productservice.dto.ProductSpecialPriceDto;
 import com.yandex.market.productservice.dto.ProductUpdateRequestDto;
+import com.yandex.market.productservice.dto.projections.ProductPreview;
+import com.yandex.market.productservice.dto.projections.SellerProductsPreview;
 import com.yandex.market.productservice.dto.request.ProductCharacteristicUpdateDto;
 import com.yandex.market.productservice.dto.request.ProductCreationRequestDto;
-import com.yandex.market.productservice.dto.projections.SellerProductsPreview;
-import com.yandex.market.productservice.dto.projections.ProductPreview;
 import com.yandex.market.productservice.dto.response.ProductResponseDto;
 import com.yandex.market.productservice.mapper.ProductCharacteristicMapper;
 import com.yandex.market.productservice.mapper.ProductImageMapper;
 import com.yandex.market.productservice.mapper.ProductMapper;
 import com.yandex.market.productservice.mapper.ProductSpecialPriceMapper;
-import com.yandex.market.productservice.model.*;
+import com.yandex.market.productservice.metric.dto.ProductMetricsDto;
+import com.yandex.market.productservice.metric.enums.UserAction;
+import com.yandex.market.productservice.model.DisplayProductMethod;
+import com.yandex.market.productservice.model.Product;
+import com.yandex.market.productservice.model.ProductImage;
+import com.yandex.market.productservice.model.VisibilityMethod;
 import com.yandex.market.productservice.repository.ProductCharacteristicRepository;
 import com.yandex.market.productservice.repository.ProductImageRepository;
 import com.yandex.market.productservice.repository.ProductRepository;
@@ -21,13 +26,15 @@ import com.yandex.market.productservice.repository.ProductSpecialPriceRepository
 import com.yandex.market.productservice.service.ProductService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.awt.*;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -46,7 +53,7 @@ public class ProductServiceImpl implements ProductService {
     private final ProductCharacteristicMapper productCharacteristicMapper;
     private final ProductCharacteristicRepository productCharacteristicRepository;
     private final ObjectMapper objectMapper;
-    //private final KafkaTemplate<String, String> kafkaTemplate;
+    private final KafkaTemplate<String, String> kafkaTemplate;
 
     @Override
     @Transactional
@@ -61,7 +68,7 @@ public class ProductServiceImpl implements ProductService {
     public ProductResponseDto getProductByExternalId(UUID externalId, @Nullable String userId) {
         Product product = findProductByExternalId(externalId);
 
-        //sendMetricsToKafka(UserAction.VIEW_PRODUCT, product, userId);
+        sendMetricsToKafka(UserAction.VIEW_PRODUCT, product, userId);
 
         return productMapper.toResponseDto(product);
     }
@@ -152,8 +159,8 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @Transactional
     public UUID addProductSpecialPrice(
-                                       UUID productExternalId,
-                                       ProductSpecialPriceDto productSpecialPriceDto
+            UUID productExternalId,
+            ProductSpecialPriceDto productSpecialPriceDto
     ) {
         Product product = findProductByExternalId(productExternalId);
         var productSpecialPrice = productSpecialPriceMapper.toProductSpecialPrice(productSpecialPriceDto);
@@ -167,8 +174,8 @@ public class ProductServiceImpl implements ProductService {
                                                      UUID specialPriceExternalId
     ) {
         var storedProductSpecialPrice = productSpecialPriceRepository.findByExternalId(specialPriceExternalId)
-                        .orElseThrow(() -> new EntityNotFoundException
-                                (PRODUCT_NOT_FOUND_ERROR_MESSAGE + specialPriceExternalId));
+                .orElseThrow(() -> new EntityNotFoundException
+                        (PRODUCT_NOT_FOUND_ERROR_MESSAGE + specialPriceExternalId));
         storedProductSpecialPrice =
                 productSpecialPriceMapper.toProductSpecialPrice(productSpecialPriceDto, storedProductSpecialPrice);
         productSpecialPriceRepository.save(storedProductSpecialPrice);
@@ -183,8 +190,8 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductCharacteristicUpdateDto updateProductCharacteristic(
-                                                           UUID productCharacteristicExternalId,
-                                                           ProductCharacteristicUpdateDto productCharacteristicUpdateDto
+            UUID productCharacteristicExternalId,
+            ProductCharacteristicUpdateDto productCharacteristicUpdateDto
     ) {
         var storedProductCharacteristic = productCharacteristicRepository
                 .findByExternalId(productCharacteristicExternalId)
@@ -197,20 +204,20 @@ public class ProductServiceImpl implements ProductService {
     }
 
 
-//    @SneakyThrows
-//    private void sendMetricsToKafka(UserAction userAction, Product product, String userId) {
-//        kafkaTemplate.send(
-//                "METRICS",
-//                "product",
-//                objectMapper.writeValueAsString(
-//                        ProductMetricsDto.builder()
-//                                .productExternalId(product.getExternalId())
-//                                .userAction(userAction)
-//                                .userId(userId)
-//                                .productName(product.getName())
-//                                .timestamp(LocalDateTime.now())
-//                                .build()));
-//    }
+    @SneakyThrows
+    private void sendMetricsToKafka(UserAction userAction, Product product, String userId) {
+        kafkaTemplate.send(
+                "METRICS",
+                "product",
+                objectMapper.writeValueAsString(
+                        ProductMetricsDto.builder()
+                                .productExternalId(product.getExternalId())
+                                .userAction(userAction)
+                                .userId(userId)
+                                .productName(product.getName())
+                                .timestamp(LocalDateTime.now())
+                                .build()));
+    }
 
 
     private Product findProductByExternalId(UUID externalId) {

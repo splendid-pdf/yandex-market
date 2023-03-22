@@ -22,7 +22,7 @@ create table products
     name                varchar(255),
     description         varchar(255),
     is_visible          boolean not null,
-    is_deleted          boolean not null,
+    is_archived         boolean not null,
     seller_external_id  uuid,
     tax_type            varchar(255),
     price               BIGINT,
@@ -35,17 +35,19 @@ create table products
 
 create table product_characteristics
 (
-    id         bigint not null,
-    name       varchar(255),
-    value      varchar(255),
-    product_id bigint REFERENCES products (id),
-    value_type varchar(255),
+    id          bigint not null,
+    external_id uuid,
+    name        varchar(255),
+    value       varchar(255),
+    product_id  bigint REFERENCES products (id),
+    value_type  varchar(255),
     primary key (id)
 );
 
 create table product_special_prices
 (
     id                      bigint not null,
+    external_id             uuid,
     special_price_from_date timestamp,
     special_price_to_date   timestamp,
     special_price           bigint,
