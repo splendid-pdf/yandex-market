@@ -293,7 +293,7 @@ class ProductServiceApplicationTests {
 
     private void changePrice(UUID sellerId, UUID productId, long newPrice, ResultMatcher status) throws Exception {
         mockMvc.perform(patch(
-                        PATH_TO_SELLER + "{sellerId}/products/{productId}", sellerId, productId)
+                        PATH_TO_SELLER + "{sellerId}/products/price/{productId}", sellerId, productId)
                         .param("newPrice", String.valueOf(newPrice))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status)
