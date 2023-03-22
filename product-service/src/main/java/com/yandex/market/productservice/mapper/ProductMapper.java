@@ -16,14 +16,12 @@ public interface ProductMapper {
 
     ProductResponseDto toResponseDto(Product product);
 
-    @Mapping(target = "isArchived", ignore = true)
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     Product toProduct(ProductUpdateRequestDto productUpdateRequestDto, @MappingTarget Product product);
 
     @Mapping(target = "externalId", expression = "java(java.util.UUID.randomUUID())")
     @Mapping(target = "articleNumber", expression = "java(java.util.UUID.randomUUID())")
-    @Mapping(target = "isArchived" , defaultValue = "false")
-    @Mapping(target = "isVisible", defaultValue = "true")
+    @Mapping(target = "visible", constant = "true")
     @Mapping(source = "productCharacteristicDto", target = "productCharacteristics")
     @Mapping(source = "productImageDto", target = "productImages")
     @Mapping(source = "productSpecialPriceDto", target = "productSpecialPrices")
