@@ -1,5 +1,6 @@
 package com.yandex.market.productservice.repository;
 
+import com.yandex.market.productservice.dto.projections.SellerArchivePreview;
 import com.yandex.market.productservice.dto.projections.SellerProductsPreview;
 import com.yandex.market.productservice.dto.projections.ProductPreview;
 import com.yandex.market.productservice.model.Product;
@@ -26,55 +27,47 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @Query(value = """
             SELECT
-                pi.url as imageUrl,
-                p.externalId as externalId,
-                p.sellerExternalId as sellerExternalId,
+                product_images.url as imageUrl,
+                p.external_id as externalId,
                 p.name as name,
-                p.articleNumber as articleNumber,
+                p.article_number as articleNumber,
                 p.price as price,
                 p.count as count,
-                p.isVisible as isVisible,
-                t.name as type,
-                p.creationDate as creationDate,
-                p.isArchived as isArchived
+                p.is_visible as isVisible,
+                types.name as type,
+                p.creation_date as creationDate
             FROM
-                Product p
-                JOIN ProductImage pi
-                    ON pi.product=p AND pi.isMain=true
-                JOIN Type t
-                    ON p.type.id=t.id
+                products AS p
+                LEFT JOIN product_images ON product_images.product_id=p.id
+                LEFT JOIN types ON types.id=p.type_id
             WHERE
-                p.sellerExternalId=:sellerId AND
-                    p.isArchived=false
-            """)
-    Page<SellerProductsPreview> findProductsPreviewPageBySellerId(@Param("sellerId") UUID sellerId,
-                                                                  Pageable pageable);
+                p.seller_external_id=:sellerId AND
+                p.is_archived=false AND product_images.is_main=true AND p.is_deleted=false
+            """, nativeQuery = true)
+    Page<SellerProductsPreview> findProductsPreviewBySellerId(@Param("sellerId") UUID sellerId,
+                                                              Pageable pageable);
 
     @Query(value = """
             SELECT
-                pi.url as imageUrl,
-                p.externalId as externalId,
-                p.sellerExternalId as sellerExternalId,
+                product_images.url as imageUrl,
+                p.external_id as externalId,
                 p.name as name,
-                p.articleNumber as articleNumber,
+                p.article_number as articleNumber,
                 p.price as price,
                 p.count as count,
-                p.isVisible as isVisible,
-                t.name as type,
-                p.creationDate as creationDate,
-                p.isArchived as isArchived
+                p.is_visible as isVisible,
+                types.name as type,
+                p.creation_date as creationDate
             FROM
-                Product p
-                JOIN ProductImage pi
-                    ON pi.product=p AND pi.isMain=true
-                JOIN Type t
-                    ON p.type.id=t.id
+                products AS p
+                LEFT JOIN product_images ON product_images.product_id=p.id
+                LEFT JOIN types ON types.id=p.type_id
             WHERE
-                p.sellerExternalId=:sellerId AND
-                    p.isArchived=false
-            """)
-    Page<SellerProductsPreview> findArchivePreviewPageBySellerId(@Param("sellerId") UUID sellerId,
-                                                                 Pageable pageable);
+                p.seller_external_id=:sellerId AND
+                p.is_archived=true AND product_images.is_main=true AND p.is_deleted=false
+            """, nativeQuery = true)
+    Page<SellerArchivePreview> findArchivedProductsPreviewBySellerId(@Param("sellerId") UUID sellerId,
+                                                                     Pageable pageable);
 
     @Modifying
     @Query(value = """

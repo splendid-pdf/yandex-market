@@ -1,9 +1,10 @@
 package com.yandex.market.productservice.dto.projections;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
-public interface SellerProductsPreview {
+public interface SellerArchivePreview {
+
     UUID getExternalId();
 
     String getArticleNumber();
@@ -16,9 +17,7 @@ public interface SellerProductsPreview {
 
     String getType();
 
-    LocalDate getCreationDate();
-
-    boolean getIsVisible();
+    LocalDateTime getCreationDate();
 
     String getImageUrl();
 }

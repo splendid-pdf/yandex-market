@@ -5,6 +5,7 @@ import com.yandex.market.productservice.dto.ProductImageDto;
 import com.yandex.market.productservice.dto.ProductSpecialPriceDto;
 import com.yandex.market.productservice.dto.ProductUpdateRequestDto;
 import com.yandex.market.productservice.dto.projections.ProductPreview;
+import com.yandex.market.productservice.dto.projections.SellerArchivePreview;
 import com.yandex.market.productservice.dto.projections.SellerProductsPreview;
 import com.yandex.market.productservice.dto.request.CreateProductRequest;
 import com.yandex.market.productservice.dto.request.ProductCharacteristicUpdateDto;
@@ -15,7 +16,6 @@ import com.yandex.market.productservice.mapper.ProductMapper;
 import com.yandex.market.productservice.mapper.ProductSpecialPriceMapper;
 import com.yandex.market.productservice.metric.dto.ProductMetricsDto;
 import com.yandex.market.productservice.metric.enums.UserAction;
-import com.yandex.market.productservice.model.DisplayProductMethod;
 import com.yandex.market.productservice.model.Product;
 import com.yandex.market.productservice.model.ProductImage;
 import com.yandex.market.productservice.model.VisibilityMethod;
@@ -92,13 +92,14 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<SellerProductsPreview> getPageListOrArchiveBySellerId(UUID sellerId,
-                                                                      DisplayProductMethod method,
-                                                                      Pageable pageable) {
-        return switch (method) {
-            case PRODUCT_LIST -> productRepository.findProductsPreviewPageBySellerId(sellerId, pageable);
-            case ARCHIVE -> productRepository.findArchivePreviewPageBySellerId(sellerId, pageable);
-        };
+    public Page<SellerProductsPreview> getProductsBySellerId(UUID sellerId,
+                                                             Pageable pageable) {
+        return productRepository.findProductsPreviewBySellerId(sellerId, pageable);
+    }
+
+    @Override
+    public Page<SellerArchivePreview> getArchivedProductsBySellerId(UUID sellerId, Pageable pageable) {
+        return productRepository.findArchivedProductsPreviewBySellerId(sellerId, pageable);
     }
 
     @Override
