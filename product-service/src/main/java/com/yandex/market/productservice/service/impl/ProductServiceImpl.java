@@ -6,7 +6,7 @@ import com.yandex.market.productservice.dto.ProductSpecialPriceDto;
 import com.yandex.market.productservice.dto.ProductUpdateRequestDto;
 import com.yandex.market.productservice.dto.projections.ProductPreview;
 import com.yandex.market.productservice.dto.projections.SellerArchivePreview;
-import com.yandex.market.productservice.dto.projections.SellerProductsPreview;
+import com.yandex.market.productservice.dto.projections.SellerProductPreview;
 import com.yandex.market.productservice.dto.request.CreateProductRequest;
 import com.yandex.market.productservice.dto.request.ProductCharacteristicUpdateDto;
 import com.yandex.market.productservice.dto.response.ProductResponseDto;
@@ -92,8 +92,8 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<SellerProductsPreview> getProductsBySellerId(UUID sellerId,
-                                                             Pageable pageable) {
+    public Page<SellerProductPreview> getProductsBySellerId(UUID sellerId,
+                                                            Pageable pageable) {
         return productRepository.findProductsPreviewBySellerId(sellerId, pageable);
     }
 

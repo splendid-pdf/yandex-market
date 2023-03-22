@@ -1,7 +1,7 @@
 package com.yandex.market.productservice.repository;
 
 import com.yandex.market.productservice.dto.projections.SellerArchivePreview;
-import com.yandex.market.productservice.dto.projections.SellerProductsPreview;
+import com.yandex.market.productservice.dto.projections.SellerProductPreview;
 import com.yandex.market.productservice.dto.projections.ProductPreview;
 import com.yandex.market.productservice.model.Product;
 import org.springframework.data.domain.Page;
@@ -44,8 +44,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
                 p.seller_external_id=:sellerId AND
                 p.is_archived=false AND product_images.is_main=true AND p.is_deleted=false
             """, nativeQuery = true)
-    Page<SellerProductsPreview> findProductsPreviewBySellerId(@Param("sellerId") UUID sellerId,
-                                                              Pageable pageable);
+    Page<SellerProductPreview> findProductsPreviewBySellerId(@Param("sellerId") UUID sellerId,
+                                                             Pageable pageable);
 
     @Query(value = """
             SELECT

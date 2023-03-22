@@ -6,7 +6,7 @@ import com.yandex.market.productservice.dto.ProductUpdateRequestDto;
 import com.yandex.market.productservice.dto.projections.SellerArchivePreview;
 import com.yandex.market.productservice.dto.request.ProductCharacteristicUpdateDto;
 import com.yandex.market.productservice.dto.request.CreateProductRequest;
-import com.yandex.market.productservice.dto.projections.SellerProductsPreview;
+import com.yandex.market.productservice.dto.projections.SellerProductPreview;
 import com.yandex.market.productservice.dto.projections.ProductPreview;
 import com.yandex.market.productservice.dto.response.ProductResponseDto;
 import com.yandex.market.productservice.model.VisibilityMethod;
@@ -26,7 +26,7 @@ public interface ProductService {
 
     List<ProductResponseDto> getProductsBySetExternalId(Set<UUID> externalIdSet, Pageable pageable);
 
-    Page<SellerProductsPreview> getProductsBySellerId(UUID sellerId, Pageable pageable);
+    Page<SellerProductPreview> getProductsBySellerId(UUID sellerId, Pageable pageable);
 
     Page<SellerArchivePreview> getArchivedProductsBySellerId(UUID sellerId, Pageable pageable);
 
