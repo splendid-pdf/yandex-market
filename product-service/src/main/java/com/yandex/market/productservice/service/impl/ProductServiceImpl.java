@@ -10,6 +10,7 @@ import com.yandex.market.productservice.dto.projections.SellerProductPreview;
 import com.yandex.market.productservice.dto.request.CreateProductRequest;
 import com.yandex.market.productservice.dto.request.ProductCharacteristicUpdateDto;
 import com.yandex.market.productservice.dto.response.ProductResponseDto;
+import com.yandex.market.productservice.dto.response.TypeResponse;
 import com.yandex.market.productservice.mapper.*;
 import com.yandex.market.productservice.metric.dto.ProductMetricsDto;
 import com.yandex.market.productservice.metric.enums.UserAction;
@@ -48,6 +49,7 @@ public class ProductServiceImpl implements ProductService {
     private final ProductCharacteristicMapper productCharacteristicMapper;
     private final ProductCharacteristicRepository productCharacteristicRepository;
     private final TypeRepository typeRepository;
+    private final TypeMapper typeMapper;
     private final ObjectMapper objectMapper;
     private final KafkaTemplate<String, String> kafkaTemplate;
 
@@ -69,7 +71,7 @@ public class ProductServiceImpl implements ProductService {
     public ProductResponseDto getProductByExternalId(UUID productId, @Nullable String userId) {
         Product product = findProductByExternalId(productId);
 
-        sendMetricsToKafka(UserAction.VIEW_PRODUCT, product, userId);
+//        sendMetricsToKafka(UserAction.VIEW_PRODUCT, product, userId);
 
         return productMapper.toResponseDto(product);
     }
@@ -205,21 +207,28 @@ public class ProductServiceImpl implements ProductService {
         return productCharacteristicUpdateDto;
     }
 
-
-    @SneakyThrows
-    private void sendMetricsToKafka(UserAction userAction, Product product, String userId) {
-        kafkaTemplate.send(
-                "METRICS",
-                "product",
-                objectMapper.writeValueAsString(
-                        ProductMetricsDto.builder()
-                                .productExternalId(product.getExternalId())
-                                .userAction(userAction)
-                                .userId(userId)
-                                .productName(product.getName())
-                                .timestamp(LocalDateTime.now())
-                                .build()));
+    @Override
+    public TypeResponse getTypeById(UUID typeId) {
+        Type type = typeRepository.findByExternalId(typeId)
+                .orElseThrow(()-> new EntityNotFoundException(String.format("Type was not found by external id = %s", typeId)));
+        return typeMapper.toTypeResponse(type);
     }
+
+
+//    @SneakyThrows
+//    private void sendMetricsToKafka(UserAction userAction, Product product, String userId) {
+//        kafkaTemplate.send(
+//                "METRICS",
+//                "product",
+//                objectMapper.writeValueAsString(
+//                        ProductMetricsDto.builder()
+//                                .productExternalId(product.getExternalId())
+//                                .userAction(userAction)
+//                                .userId(userId)
+//                                .productName(product.getName())
+//                                .timestamp(LocalDateTime.now())
+//                                .build()));
+//    }
 
 
     private Product findProductByExternalId(UUID productId) {
