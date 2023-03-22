@@ -157,9 +157,9 @@ class ProductServiceApplicationTests {
      * @throws Exception throws out methods {@link ProductServiceApplicationTests#executeDelete(UUID, List)},
      *                   {@link ProductServiceApplicationTests#getActualCountAfterDelete(UUID)}
      *                   <br>
-     * @value <b>productIds</b> list elements (isDeleted = false, isDeleted = false,
-     * 2 - isDeleted = true, 3 - isDeleted = false)
-     * @value <b>expectedBeforeDelete</b> expected 5 - (4 - 3 (isDeleted = false))
+     * @value <b>productIds</b> list elements (isArchived = false, isArchived = false,
+     * 2 - isArchived = true, 3 - isArchived = false)
+     * @value <b>expectedBeforeDelete</b> expected 5 - (4 - 3 (isArchived = false))
      */
     @Test
     void shouldDeleteListProductBySellerIdNotAllProductsCanBeDeleted() throws Exception {

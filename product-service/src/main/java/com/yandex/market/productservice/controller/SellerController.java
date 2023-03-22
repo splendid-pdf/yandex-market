@@ -1,9 +1,8 @@
 package com.yandex.market.productservice.controller;
 
 import com.yandex.market.productservice.controller.response.ErrorResponse;
-import com.yandex.market.productservice.dto.projections.SellerProductsPreview;
-import com.yandex.market.productservice.dto.response.ProductResponseDto;
-import com.yandex.market.productservice.model.DisplayProductMethod;
+import com.yandex.market.productservice.dto.projections.SellerArchivePreview;
+import com.yandex.market.productservice.dto.projections.SellerProductPreview;
 import com.yandex.market.productservice.model.VisibilityMethod;
 import com.yandex.market.productservice.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -46,13 +45,28 @@ public class SellerController {
     @Operation(operationId = "getProductPage", summary = "Метод возращает пагинированный список продуктов продавца")
     @ApiResponse(responseCode = "200", description = "Список продуктов успешно получен",
             content = @Content(mediaType = "application/json",
-                    array = @ArraySchema(schema = @Schema(implementation = ProductResponseDto.class))))
-    public Page<SellerProductsPreview> findPageProductsBySellerId(
+                    array = @ArraySchema(schema = @Schema(implementation = SellerProductPreview.class))))
+    public Page<SellerProductPreview> findProductsBySellerId(
             @PathVariable UUID sellerId,
-            @RequestParam DisplayProductMethod method,
             @PageableDefault(size = 20, sort = "creationDate", direction = Sort.Direction.DESC) Pageable pageable) {
-        return productService.getPageListOrArchiveBySellerId(sellerId, method, pageable);
+        return productService.getProductsBySellerId(sellerId, pageable);
     }
+
+    @GetMapping("{sellerId}/archived-products")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(operationId = "getArchivedProductPage",
+            summary = "Метод возращает пагинированный список продуктов из архива продавца")
+    @ApiResponse(responseCode = "200", description = "Архив продуктов успешно получен",
+            content = @Content(mediaType = "application/json",
+                    array = @ArraySchema(schema = @Schema(implementation = SellerProductPreview.class))))
+    public Page<SellerArchivePreview> findArchivedProductsBySellerId(
+            @PathVariable UUID sellerId,
+            @PageableDefault(size = 20, sort = "creationDate", direction = Sort.Direction.DESC) Pageable pageable) {
+        return productService.getArchivedProductsBySellerId(sellerId, pageable);
+    }
+
+
+
 
     @PatchMapping("{sellerId}/products")
     @ResponseStatus(HttpStatus.NO_CONTENT)

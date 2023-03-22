@@ -1,4 +1,4 @@
-package com.yandex.market.productservice.dto.response;
+package com.yandex.market.productservice.dto.projections;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 

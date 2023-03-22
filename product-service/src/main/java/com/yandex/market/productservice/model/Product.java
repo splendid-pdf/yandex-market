@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -32,9 +32,13 @@ public class Product {
 
     private String description;
 
-    private Boolean isVisible;
+    private boolean isVisible;
 
-    private Boolean isDeleted;
+    private boolean isDeleted;
+
+    private boolean isArchived;
+
+    private double rating;
 
     private UUID sellerExternalId;
 
@@ -50,7 +54,7 @@ public class Product {
     private Type type;
 
     @CreationTimestamp
-    private LocalDate creationDate;
+    private LocalDateTime creationDate;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default

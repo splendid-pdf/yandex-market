@@ -10,7 +10,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "product_images")
-@EqualsAndHashCode(of = "id")
+@EqualsAndHashCode(of = "url")
 public class ProductImage {
 
     @Id
