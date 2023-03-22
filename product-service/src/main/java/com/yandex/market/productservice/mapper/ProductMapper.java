@@ -1,7 +1,7 @@
 package com.yandex.market.productservice.mapper;
 
 import com.yandex.market.productservice.dto.ProductUpdateRequestDto;
-import com.yandex.market.productservice.dto.request.ProductCreationRequestDto;
+import com.yandex.market.productservice.dto.request.CreateProductRequest;
 import com.yandex.market.productservice.dto.response.ProductResponseDto;
 import com.yandex.market.productservice.model.Product;
 import org.mapstruct.*;
@@ -28,5 +28,5 @@ public interface ProductMapper {
     @Mapping(source = "productImageDto", target = "productImages")
     @Mapping(source = "productSpecialPriceDto", target = "productSpecialPrices")
     @Mapping(source = "typeDto", target = "type")
-    Product toProduct(ProductCreationRequestDto productCreationRequestDto);
+    Product toProduct(CreateProductRequest createProductRequest);
 }

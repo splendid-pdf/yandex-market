@@ -18,8 +18,8 @@ import java.util.stream.Stream;
 
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
-    @Query("FROM Product p WHERE p.externalId=:externalId AND p.isArchived=false")
-    Optional<Product> findByExternalId(@Param("externalId") UUID externalId);
+    @Query("FROM Product p WHERE p.externalId=:productId AND p.isArchived=false")
+    Optional<Product> findByExternalId(@Param("productId") UUID productId);
 
     @Query("FROM Product p WHERE p.externalId in :externals AND p.isArchived=false")
     Stream<Product> findByExternalId(@Param("externals") Set<UUID> uuidSet, Pageable pageable);

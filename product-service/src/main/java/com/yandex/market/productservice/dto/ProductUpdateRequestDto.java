@@ -4,7 +4,7 @@ import com.yandex.market.productservice.model.TaxType;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema
-public record ProductUpdateRequestDto (
+public record ProductUpdateRequestDto(
 
         String name,
 
@@ -20,7 +20,11 @@ public record ProductUpdateRequestDto (
 
         boolean isArchived,
 
-        boolean isDeleted
+        boolean isDeleted,
+
+        boolean isVisible,
+
+        double rating
 
 ) {
 }

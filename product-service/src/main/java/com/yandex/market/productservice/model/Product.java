@@ -34,7 +34,11 @@ public class Product {
 
     private Boolean isVisible;
 
+    private Boolean isDeleted;
+
     private Boolean isArchived;
+
+    private double rating;
 
     private UUID sellerExternalId;
 

@@ -23,6 +23,8 @@ create table products
     description         varchar(255),
     is_visible          boolean not null,
     is_archived         boolean not null,
+    is_deleted          boolean not null,
+    rating              float,
     seller_external_id  uuid,
     tax_type            varchar(255),
     price               BIGINT,

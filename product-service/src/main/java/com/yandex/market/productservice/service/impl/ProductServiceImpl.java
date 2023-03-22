@@ -6,8 +6,8 @@ import com.yandex.market.productservice.dto.ProductSpecialPriceDto;
 import com.yandex.market.productservice.dto.ProductUpdateRequestDto;
 import com.yandex.market.productservice.dto.projections.ProductPreview;
 import com.yandex.market.productservice.dto.projections.SellerProductsPreview;
+import com.yandex.market.productservice.dto.request.CreateProductRequest;
 import com.yandex.market.productservice.dto.request.ProductCharacteristicUpdateDto;
-import com.yandex.market.productservice.dto.request.ProductCreationRequestDto;
 import com.yandex.market.productservice.dto.response.ProductResponseDto;
 import com.yandex.market.productservice.mapper.ProductCharacteristicMapper;
 import com.yandex.market.productservice.mapper.ProductImageMapper;
@@ -57,16 +57,16 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional
-    public UUID createProduct(ProductCreationRequestDto productCreationRequestDto, UUID sellerId) {
-        Product product = productMapper.toProduct(productCreationRequestDto);
+    public UUID createProduct(CreateProductRequest createProductRequest, UUID sellerId) {
+        Product product = productMapper.toProduct(createProductRequest);
         product.setSellerExternalId(sellerId);
         return productRepository.save(product).getExternalId();
     }
 
     @Override
     @Transactional(readOnly = true)
-    public ProductResponseDto getProductByExternalId(UUID externalId, @Nullable String userId) {
-        Product product = findProductByExternalId(externalId);
+    public ProductResponseDto getProductByExternalId(UUID productId, @Nullable String userId) {
+        Product product = findProductByExternalId(productId);
 
         sendMetricsToKafka(UserAction.VIEW_PRODUCT, product, userId);
 
@@ -75,17 +75,17 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional
-    public ProductResponseDto updateProductByExternalId(UUID externalId, ProductUpdateRequestDto productUpdateRequestDto) {
-        Product storedProduct = findProductByExternalId(externalId);
+    public ProductResponseDto updateProductByExternalId(UUID productId, ProductUpdateRequestDto productUpdateRequestDto) {
+        Product storedProduct = findProductByExternalId(productId);
         storedProduct = productMapper.toProduct(productUpdateRequestDto, storedProduct);
         return productMapper.toResponseDto(productRepository.save(storedProduct));
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<ProductResponseDto> getProductsBySetExternalId(Set<UUID> externalIdSet, Pageable pageable) {
+    public List<ProductResponseDto> getProductsBySetExternalId(Set<UUID> productIdentifiers, Pageable pageable) {
         return productRepository
-                .findByExternalId(externalIdSet, pageable)
+                .findByExternalId(productIdentifiers, pageable)
                 .map(productMapper::toResponseDto)
                 .toList();
     }
@@ -126,8 +126,8 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional
-    public void deleteFromArchiveListProductBySellerId(List<UUID> productIds, UUID sellerId) {
-        productRepository.deleteProductsBySellerId(productIds, sellerId);
+    public void deleteFromArchiveListProductBySellerId(List<UUID> productIdentifiers, UUID sellerId) {
+        productRepository.deleteProductsBySellerId(productIdentifiers, sellerId);
     }
 
     @Override
@@ -142,8 +142,8 @@ public class ProductServiceImpl implements ProductService {
 
     @Transactional
     @Override
-    public ProductImageDto addProductImage(UUID productExternalId, ProductImageDto productImageDto) {
-        Product product = findProductByExternalId(productExternalId);
+    public ProductImageDto addProductImage(UUID productId, ProductImageDto productImageDto) {
+        Product product = findProductByExternalId(productId);
         ProductImage productImage = productImageMapper.toProductImage(productImageDto);
         productImageRepository.save(productImage);
         product.addProductImage(productImage);
@@ -159,10 +159,10 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @Transactional
     public UUID addProductSpecialPrice(
-            UUID productExternalId,
+            UUID productId,
             ProductSpecialPriceDto productSpecialPriceDto
     ) {
-        Product product = findProductByExternalId(productExternalId);
+        Product product = findProductByExternalId(productId);
         var productSpecialPrice = productSpecialPriceMapper.toProductSpecialPrice(productSpecialPriceDto);
         product.addProductSpecialPrice(productSpecialPrice);
         return productSpecialPriceRepository.save(productSpecialPrice).getExternalId();
@@ -171,11 +171,11 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @Transactional
     public ProductSpecialPriceDto updateSpecialPrice(ProductSpecialPriceDto productSpecialPriceDto,
-                                                     UUID specialPriceExternalId
+                                                     UUID specialPriceId
     ) {
-        var storedProductSpecialPrice = productSpecialPriceRepository.findByExternalId(specialPriceExternalId)
+        var storedProductSpecialPrice = productSpecialPriceRepository.findByExternalId(specialPriceId)
                 .orElseThrow(() -> new EntityNotFoundException
-                        (PRODUCT_NOT_FOUND_ERROR_MESSAGE + specialPriceExternalId));
+                        (PRODUCT_NOT_FOUND_ERROR_MESSAGE + specialPriceId));
         storedProductSpecialPrice =
                 productSpecialPriceMapper.toProductSpecialPrice(productSpecialPriceDto, storedProductSpecialPrice);
         productSpecialPriceRepository.save(storedProductSpecialPrice);
@@ -184,8 +184,8 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional
-    public void deleteProductSpecialPrice(UUID specialPriceExternalId) {
-        productSpecialPriceRepository.deleteByExternalId(specialPriceExternalId);
+    public void deleteProductSpecialPrice(UUID specialPriceId) {
+        productSpecialPriceRepository.deleteByExternalId(specialPriceId);
     }
 
     @Override
@@ -220,9 +220,9 @@ public class ProductServiceImpl implements ProductService {
     }
 
 
-    private Product findProductByExternalId(UUID externalId) {
+    private Product findProductByExternalId(UUID productId) {
         return productRepository
-                .findByExternalId(externalId)
-                .orElseThrow(() -> new EntityNotFoundException(PRODUCT_NOT_FOUND_ERROR_MESSAGE + externalId));
+                .findByExternalId(productId)
+                .orElseThrow(() -> new EntityNotFoundException(PRODUCT_NOT_FOUND_ERROR_MESSAGE + productId));
     }
 }

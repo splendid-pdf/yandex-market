@@ -4,8 +4,8 @@ import com.yandex.market.productservice.controller.response.ErrorResponse;
 import com.yandex.market.productservice.dto.ProductImageDto;
 import com.yandex.market.productservice.dto.ProductSpecialPriceDto;
 import com.yandex.market.productservice.dto.ProductUpdateRequestDto;
+import com.yandex.market.productservice.dto.request.CreateProductRequest;
 import com.yandex.market.productservice.dto.request.ProductCharacteristicUpdateDto;
-import com.yandex.market.productservice.dto.request.ProductCreationRequestDto;
 import com.yandex.market.productservice.dto.response.ProductResponseDto;
 import com.yandex.market.productservice.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -44,10 +44,10 @@ public class ProductController {
     @ApiResponse(responseCode = "201", description = "Продукт успешно создан",
             content = @Content(mediaType = "application/json", schema = @Schema(implementation = UUID.class)))
     public UUID createProduct(@Parameter(name = "productRequestDto", description = "Представление созданного продукта")
-                              @RequestBody @Valid ProductCreationRequestDto productCreationRequestDto,
+                              @RequestBody @Valid CreateProductRequest createProductRequest,
                               @Parameter(name = "sellerId", description = "Идентификатор продавца")
                               @PathVariable("sellerId") UUID sellerId) {
-        return productService.createProduct(productCreationRequestDto, sellerId);
+        return productService.createProduct(createProductRequest, sellerId);
     }
 
     @GetMapping("{externalId}")
@@ -70,16 +70,16 @@ public class ProductController {
         return productService.updateProductByExternalId(externalId, productUpdateRequestDto);
     }
 
-    @PostMapping("images/{productExternalId}")
+    @PostMapping("images/{productId}")
     @ResponseStatus(HttpStatus.OK)
     @Operation(operationId = "addImage", summary = "Добавить изображение продукту")
     @ApiResponse(responseCode = "204", description = "Изображение продукта успешно добавлено",
             content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProductImageDto.class)))
     public ProductImageDto addImage(
-                                                   @PathVariable UUID productExternalId,
+                                                   @PathVariable UUID productId,
                                                    @RequestBody ProductImageDto productImageDto
     ) {
-        return productService.addProductImage(productExternalId, productImageDto);
+        return productService.addProductImage(productId, productImageDto);
     }
 
     @DeleteMapping("images")
@@ -90,12 +90,12 @@ public class ProductController {
          productService.deleteProductImage(url);
     }
 
-    @DeleteMapping("special-prices/{specialPriceExternalId}")
+    @DeleteMapping("special-prices/{specialPriceId}")
     @ResponseStatus(HttpStatus.OK)
     @Operation(operationId = "deleteSpecialPrice", summary = "Удалить акцию")
     @ApiResponse(responseCode = "200", description = "Акция успешно удалена")
-    public void deleteSpecialPrice(@PathVariable UUID specialPriceExternalId) {
-        productService.deleteProductSpecialPrice(specialPriceExternalId);
+    public void deleteSpecialPrice(@PathVariable UUID specialPriceId) {
+        productService.deleteProductSpecialPrice(specialPriceId);
     }
 
     @PostMapping("special-prices/{productExternalId}")

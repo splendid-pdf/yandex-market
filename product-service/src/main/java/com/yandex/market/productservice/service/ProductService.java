@@ -1,16 +1,14 @@
 package com.yandex.market.productservice.service;
 
-import com.yandex.market.productservice.dto.ProductCharacteristicDto;
 import com.yandex.market.productservice.dto.ProductImageDto;
 import com.yandex.market.productservice.dto.ProductSpecialPriceDto;
 import com.yandex.market.productservice.dto.ProductUpdateRequestDto;
 import com.yandex.market.productservice.dto.request.ProductCharacteristicUpdateDto;
-import com.yandex.market.productservice.dto.request.ProductCreationRequestDto;
+import com.yandex.market.productservice.dto.request.CreateProductRequest;
 import com.yandex.market.productservice.dto.projections.SellerProductsPreview;
 import com.yandex.market.productservice.dto.projections.ProductPreview;
 import com.yandex.market.productservice.dto.response.ProductResponseDto;
 import com.yandex.market.productservice.model.DisplayProductMethod;
-import com.yandex.market.productservice.model.ProductSpecialPrice;
 import com.yandex.market.productservice.model.VisibilityMethod;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,7 +18,7 @@ import java.util.Set;
 import java.util.UUID;
 
 public interface ProductService {
-    UUID createProduct(ProductCreationRequestDto productCreationRequestDto, UUID sellerExternalId);
+    UUID createProduct(CreateProductRequest createProductRequest, UUID sellerExternalId);
 
     ProductResponseDto getProductByExternalId(UUID externalId, String userId);
 
@@ -38,16 +36,16 @@ public interface ProductService {
 
     List<ProductPreview> getProductPreviewsByIdentifiers(Set<UUID> productIdentifiers);
 
-    ProductImageDto addProductImage(UUID productExternalId, ProductImageDto productImageDto);
+    ProductImageDto addProductImage(UUID productId, ProductImageDto productImageDto);
 
     void deleteProductImage(String url);
 
-    UUID addProductSpecialPrice(UUID productExternalId, ProductSpecialPriceDto productSpecialPriceDto);
+    UUID addProductSpecialPrice(UUID productId, ProductSpecialPriceDto productSpecialPriceDto);
 
     ProductSpecialPriceDto updateSpecialPrice(ProductSpecialPriceDto productSpecialPriceDto,
-                                              UUID specialPriceExternalId);
+                                              UUID specialPriceId);
 
-    void deleteProductSpecialPrice(UUID specialPriceExternalId);
+    void deleteProductSpecialPrice(UUID specialPriceId);
 
     ProductCharacteristicUpdateDto updateProductCharacteristic(UUID productCharacteristicExternalId,
                                                                ProductCharacteristicUpdateDto productCharacteristicUpdateDto);
