@@ -17,8 +17,7 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
     @Query("SELECT CASE WHEN COUNT(u) = 1 THEN true ELSE false END FROM User u WHERE u.phone=:phone")
     boolean existsByPhone(String phone);
 
-    @Query("FROM User u LEFT JOIN FETCH u.contacts c" +
-            " WHERE u.externalId=:externalId AND u.isDeleted=false")
+    @Query("FROM User u WHERE u.externalId=:externalId AND u.isDeleted=false")
     Optional<User> findByExternalId(@Param("externalId") UUID externalId);
 
     @Query("FROM User u WHERE u.email=:email AND u.isDeleted=false")

@@ -1,6 +1,5 @@
 package com.yandex.market.userservice.controller.publicapi;
 
-import com.yandex.market.userservice.dto.request.UserAuthenticationDto;
 import com.yandex.market.userservice.dto.request.UserRequestDto;
 import com.yandex.market.userservice.dto.response.ErrorResponse;
 import com.yandex.market.userservice.dto.response.UserResponseDto;

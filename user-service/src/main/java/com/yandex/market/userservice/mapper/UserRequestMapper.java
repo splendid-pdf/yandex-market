@@ -5,25 +5,20 @@ import com.yandex.market.userservice.dto.request.UserRequestDto;
 import com.yandex.market.userservice.model.Sex;
 import com.yandex.market.userservice.model.User;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
-import java.util.Collection;
 import java.util.UUID;
-import java.util.stream.Stream;
 
 @Component
 @RequiredArgsConstructor
 public class UserRequestMapper implements Mapper<UserRequestDto, User> {
-
-    private final ContactMapper contactMapper;
     private final LocationMapper locationMapper;
     private final NotificationSettingsMapper notificationSettingsMapper;
 
     @Override
     public User map(UserRequestDto userRequestDto) {
-        User user = User.builder()
+        return User.builder()
                 .externalId(UUID.randomUUID())
                 .firstName(userRequestDto.firstName())
                 .middleName(userRequestDto.middleName())
@@ -37,15 +32,8 @@ public class UserRequestMapper implements Mapper<UserRequestDto, User> {
                 .location(locationMapper.map(userRequestDto.location()))
                 .notificationSettings(
                         notificationSettingsMapper.mapNotificationSettings(userRequestDto.notificationSettingsDto()))
-                .photoId(userRequestDto.photoId())
+                .photoUrl(userRequestDto.photoUrl())
                 .build();
-
-        Stream.ofNullable(userRequestDto.contacts())
-                .flatMap(Collection::stream)
-                .filter(contact -> ObjectUtils.allNotNull(contact.value(), contact.type()))
-                .map(contactMapper::map)
-                .forEach(user::addContact);
-        return user;
     }
 
     private String trimEmailForLogin(UserRequestDto userRequestDto) {

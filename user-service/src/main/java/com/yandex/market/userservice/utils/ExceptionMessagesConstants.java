@@ -11,5 +11,4 @@ public class ExceptionMessagesConstants {
 
     public static String USER_NOT_FOUND_ERROR_MESSAGE = "User was not found by given externalId = ";
     public static String USER_NOT_FOUND_BY_EMAIL_ERROR_MESSAGE = "User was not found by given email = ";
-    public static String USER_NOT_FOUND_BY_PHONE_ERROR_MESSAGE = "User was not found by given phone = ";
 }

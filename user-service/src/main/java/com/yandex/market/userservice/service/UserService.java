@@ -23,10 +23,8 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collection;
 import java.util.UUID;
 import java.util.regex.Matcher;
-import java.util.stream.Stream;
 
 import static com.yandex.market.userservice.utils.ExceptionMessagesConstants.*;
 import static com.yandex.market.userservice.utils.PatternConstants.GROUPED_PHONE_NUMBERS_PATTERN;
@@ -136,14 +134,11 @@ public class UserService {
         storedUser.setMiddleName(updatedUser.getMiddleName());
         storedUser.setLastName(updatedUser.getLastName());
         storedUser.setBirthday(updatedUser.getBirthday());
-        Stream.ofNullable(updatedUser.getContacts())
-                .flatMap(Collection::stream)
-                .forEach(storedUser::addContact);
         storedUser.setSex(updatedUser.getSex());
         storedUser.setLocation(updatedUser.getLocation());
         storedUser.setLogin(updatedUser.getLogin());
         storedUser.setNotificationSettings(updatedUser.getNotificationSettings());
-        storedUser.setPhotoId(updatedUser.getPhotoId());
+        storedUser.setPhotoUrl(updatedUser.getPhotoUrl());
     }
 
     private void setEmailIfChangedAndRemainedUnique(User storedUser, User updatedUser) {

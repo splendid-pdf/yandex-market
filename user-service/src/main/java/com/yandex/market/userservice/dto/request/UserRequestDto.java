@@ -1,12 +1,10 @@
 package com.yandex.market.userservice.dto.request;
 
-import com.yandex.market.userservice.dto.response.ContactDto;
 import com.yandex.market.userservice.dto.response.LocationDto;
 import com.yandex.market.userservice.dto.response.NotificationSettingsDto;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
-import java.util.List;
 
 public record UserRequestDto(
         String firstName,
@@ -19,8 +17,7 @@ public record UserRequestDto(
         LocalDate birthday,
         String sex,
         LocationDto location,
-        List<ContactDto> contacts,
         NotificationSettingsDto notificationSettingsDto,
-        String photoId
+        String photoUrl
 ) {
 }
