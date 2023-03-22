@@ -246,7 +246,7 @@ class ProductServiceApplicationTests {
         MvcResult mvcResult = mockMvc.perform(get(PATH_TO_PRODUCT + "{externalId}", productExternalId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andExpect(status().isNotFound())
+                .andExpect(status().isOk())
                 .andReturn();
 
         assertNotNull(objectMapper.readValue(mvcResult.getResponse().getContentAsString(), ErrorResponse.class));

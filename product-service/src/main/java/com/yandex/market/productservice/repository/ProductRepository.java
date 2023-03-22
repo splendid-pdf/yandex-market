@@ -67,49 +67,57 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
                 p.seller_external_id=:sellerId AND
                 p.is_archived=true AND product_images.is_main=true AND p.is_deleted=false
             """, nativeQuery = true)
-    Page<SellerArchivePreview> findArchivedProductsPreviewBySellerId(@Param("sellerId") UUID sellerId,
-                                                                     Pageable pageable)
+    Page<SellerArchivePreview> findArchivedProductsPreviewBySellerId(@Param("sellerId") UUID sellerId, Pageable pageable);
 
     @Modifying
     @Query(value = """
                 UPDATE Product p
-                SET p.isVisible=false
-                WHERE p.sellerExternalId=:sellerId AND p.externalId IN :productIds
+                SET p.isArchived=true,
+                    p.isVisible=false
+                WHERE p.sellerExternalId=:sellerId AND
+                      p.externalId IN :productIds
             """)
-    void hideProductsBySellerId(List<UUID> productIds, UUID sellerId);
-
-    @Modifying
-    @Query(value = """
-                UPDATE Product p
-                SET p.isVisible=true
-                WHERE p.sellerExternalId=:sellerId AND p.externalId IN :productIds
-            """)
-    void displayProductsBySellerId(List<UUID> productIds, UUID sellerId);
-
-    @Modifying
-    @Query(value = """
-                UPDATE Product p
-                SET p.isVisible=false, p.isArchived = true
-                WHERE p.sellerExternalId=:sellerId AND p.externalId IN :productIds
-            """)
-    void addProductsToArchiveBySellerId(List<UUID> productIds, UUID sellerId);
+    void addProductsToArchive(UUID sellerId, List<UUID> productIds);
 
     @Modifying
     @Query(value = """
                 UPDATE Product p
                 SET p.isArchived=false
-                WHERE p.sellerExternalId=:sellerId AND p.externalId IN :productIds
+                WHERE p.sellerExternalId=:sellerId AND
+                      p.externalId IN :productIds
             """)
-    void returnProductsFromArchiveBySellerId(List<UUID> productIds, UUID sellerId);
+    void returnProductsFromArchive(UUID sellerId, List<UUID> productIds);
 
     @Modifying
     @Query(value = """
-                DELETE FROM Product p
+                UPDATE Product p
+                SET p.isVisible=true
                 WHERE p.sellerExternalId=:sellerId AND
-                 p.isArchived=true AND
-                 p.externalId IN :productIds
+                      p.externalId IN :productIds AND
+                      p.isDeleted=false AND
+                      p.isArchived=false
             """)
-    void deleteProductsBySellerId(List<UUID> productIds, UUID sellerId);
+    void makeProductsVisible(UUID sellerId, List<UUID> productIds);
+
+    @Modifying
+    @Query(value = """
+                UPDATE Product p
+                SET p.isVisible=true
+                WHERE p.sellerExternalId=:sellerId AND
+                      p.externalId IN :productIds
+            """)
+    void makeProductsInvisible(UUID sellerId, List<UUID> productIds);
+
+    @Modifying
+    @Query(value = """
+                UPDATE Product p
+                SET p.isDeleted=true,
+                    p.isArchived=false,
+                    p.isVisible=false
+                WHERE p.sellerExternalId=:sellerId AND
+                      p.externalId IN :productIds
+            """)
+    void deleteProductsBySellerId(UUID sellerId, List<UUID> productIds);
 
     @Query(value = """
             SELECT

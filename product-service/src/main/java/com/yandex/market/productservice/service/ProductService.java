@@ -9,7 +9,6 @@ import com.yandex.market.productservice.dto.request.CreateProductRequest;
 import com.yandex.market.productservice.dto.projections.SellerProductPreview;
 import com.yandex.market.productservice.dto.projections.ProductPreview;
 import com.yandex.market.productservice.dto.response.ProductResponseDto;
-import com.yandex.market.productservice.model.VisibilityMethod;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -30,9 +29,14 @@ public interface ProductService {
 
     Page<SellerArchivePreview> getArchivedProductsBySellerId(UUID sellerId, Pageable pageable);
 
-    void changeVisibilityForSellerId(UUID sellerId, List<UUID> productIds, VisibilityMethod method, boolean methodAction);
+    void addProductsToArchive(UUID sellerId, List<UUID> productIds);
 
-    void deleteFromArchiveListProductBySellerId(List<UUID> productIds, UUID sellerId);
+    void returnProductsFromArchive(UUID sellerId, List<UUID> productIds);
+
+    void makeProductsVisible(UUID sellerId, List<UUID> productIds);
+    void makeProductsInvisible(UUID sellerId, List<UUID> productIds);
+
+    void deleteProductsBySellerId(UUID sellerId, List<UUID> productIds);
 
     Page<ProductPreview> getProductPreviews(Pageable pageable);
 

@@ -4,10 +4,8 @@ import com.yandex.market.productservice.controller.response.ErrorResponse;
 import com.yandex.market.productservice.dto.projections.SellerArchivePreview;
 import com.yandex.market.productservice.dto.projections.SellerProductPreview;
 
-import com.yandex.market.productservice.model.VisibilityMethod;
 import com.yandex.market.productservice.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -67,37 +65,58 @@ public class SellerController {
         return productService.getArchivedProductsBySellerId(sellerId, pageable);
     }
 
-    @PatchMapping("{sellerId}/products")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    @Operation(operationId = "deleteOrVisibleProductList", summary = "Изменить видимость продукта по ID продавца")
-    @ApiResponse(responseCode = "204", description = "Продукт успешно скрыт / добавлен в архив")
-    public void changeProductVisibilityForSeller(@PathVariable(value = "sellerId") UUID sellerId,
-                                                 @RequestBody List<UUID> productIds,
-                                                 @RequestParam VisibilityMethod method,
-                                                 @RequestParam boolean methodAction) {
-        productService.changeVisibilityForSellerId(sellerId, productIds, method, methodAction);
+    @PatchMapping("{sellerId}/products/archived")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Добавить продукты в архив от лица продавца")
+    @ApiResponse(responseCode = "200", description = "Продукты успешно добавлены в архив")
+    public void moveProductsToArchive(@PathVariable(value = "sellerId") UUID sellerId,
+                                      @RequestBody List<UUID> productIds) {
+        productService.addProductsToArchive(sellerId, productIds);
+    }
+
+    @PatchMapping("{sellerId}/archived-products/unzipped")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Вернуть продукты из архива от лица продавца")
+    @ApiResponse(responseCode = "200", description = "Продукты успешно возращены из архива")
+    public void moveProductsFromArchive(@PathVariable(value = "sellerId") UUID sellerId,
+                                        @RequestBody List<UUID> productIds) {
+        productService.returnProductsFromArchive(sellerId, productIds);
+    }
+
+    @PatchMapping("{sellerId}/products/visible")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Сделать продукты видимыми от лица продавца")
+    @ApiResponse(responseCode = "200", description = "Продукты успешно стали видимыми")
+    public void makeProductsVisible(@PathVariable(value = "sellerId") UUID sellerId,
+                                    @RequestBody List<UUID> productIds) {
+        productService.makeProductsVisible(sellerId, productIds);
+    }
+
+    @PatchMapping("{sellerId}/products/invisible")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Сделать продукты невидимыми от лица продавца")
+    @ApiResponse(responseCode = "200", description = "Продукты успешно стали невидимыми")
+    public void makeProductsInvisible(@PathVariable(value = "sellerId") UUID sellerId,
+                                      @RequestBody List<UUID> productIds) {
+        productService.makeProductsInvisible(sellerId, productIds);
     }
 
     @PatchMapping("{sellerId}/products/price/{productId}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseStatus(HttpStatus.OK)
     @Operation(operationId = "changeProductPrice", summary = "Изменить цену продукта")
-    @ApiResponse(responseCode = "204", description = "Продукт успешно изменён в цене")
-    public void changeProductVisibilityForSeller(
-            @Parameter(name = "sellerId", description = "Идентификатор продавца")
-            @PathVariable(value = "sellerId") UUID sellerId,
-            @Parameter(name = "productId", description = "Идентификатор продукта")
-            @PathVariable(value = "productId") UUID productId,
-            @Parameter(name = "newPrice", description = "Новая цена для продукта")
-            @RequestParam Long updatedPrice) {
+    @ApiResponse(responseCode = "200", description = "Продукт успешно изменён в цене")
+    public void changeProductPrice(@PathVariable(value = "sellerId") UUID sellerId,
+                                   @PathVariable(value = "productId") UUID productId,
+                                   @RequestParam Long updatedPrice) {
         productService.changeProductPrice(sellerId, productId, updatedPrice);
     }
 
-    @DeleteMapping("{sellerId}/products")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    @Operation(operationId = "removeProductsFromArchive", summary = "Удаление списка товаров из базы данных")
-    @ApiResponse(responseCode = "204", description = "Продукт успешно удалён")
-    public void deleteListProductBySellerId(@PathVariable(value = "sellerId") UUID sellerId,
-                                            @RequestBody List<UUID> productIds) {
-        productService.deleteFromArchiveListProductBySellerId(productIds, sellerId);
+    @PatchMapping("{sellerId}/products/deleted")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(operationId = "deleteProducts", summary = "Удаление списка товаров из базы данных")
+    @ApiResponse(responseCode = "200", description = "Продукт успешно удалён")
+    public void deleteProducts(@PathVariable(value = "sellerId") UUID sellerId,
+                               @RequestBody List<UUID> productIds) {
+        productService.deleteProductsBySellerId(sellerId, productIds);
     }
 }
