@@ -30,20 +30,43 @@ import java.util.UUID;
 @RequestMapping("${spring.app.product.url}")
 @Tag(name = "API для работы с сущностью Product")
 @ApiResponses({
-        @ApiResponse(responseCode = "400", description = "На сервер переданы неверные данные",
-                content = @Content(mediaType = "application/json",
-                        schema = @Schema(implementation = ErrorResponse.class))),
-        @ApiResponse(responseCode = "404", description = "Продукт не найден",
-                content = @Content(mediaType = "application/json",
-                        schema = @Schema(implementation = ErrorResponse.class)))})
+        @ApiResponse(
+                responseCode = "400",
+                description = "На сервер переданы неверные данные",
+                content = @Content(
+                        mediaType = "application/json",
+                        schema = @Schema(implementation = ErrorResponse.class)
+                )
+        ),
+        @ApiResponse(
+                responseCode = "404",
+                description = "Продукт не найден",
+                content = @Content(
+                        mediaType = "application/json",
+                        schema = @Schema(implementation = ErrorResponse.class)
+                )
+        )
+})
 public class ProductController {
     private final ProductService productService;
 
-    @PostMapping("/{sellerId}")
+    //todo: x-seller-id x-user-id должны быть хедерах и прокинуть дальше для метрик
+    //todo: контроллер на типы
+    //todo: кэширование
+    //todo: разбить ProductService на другие сервисы TypeService....
+    //todo: postMapping product change url
+
+    @PostMapping("{sellerId}")
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(operationId = "createProduct", summary = "Создание нового продукта")
-    @ApiResponse(responseCode = "201", description = "Продукт успешно создан",
-            content = @Content(mediaType = "application/json", schema = @Schema(implementation = UUID.class)))
+    @ApiResponse(
+            responseCode = "201",
+            description = "Продукт успешно создан",
+            content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = UUID.class)
+            )
+    )
     public UUID createProduct(@Parameter(name = "productRequestDto", description = "Представление созданного продукта")
                               @RequestBody @Valid CreateProductRequest createProductRequest,
                               @Parameter(name = "sellerId", description = "Идентификатор продавца")
@@ -54,8 +77,14 @@ public class ProductController {
     @GetMapping("{externalId}")
     @ResponseStatus(HttpStatus.OK)
     @Operation(operationId = "getProductByExternalId", summary = "Получение товара по externalId")
-    @ApiResponse(responseCode = "200", description = "Продукт успешно получен",
-            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProductResponseDto.class)))
+    @ApiResponse(
+            responseCode = "200",
+            description = "Продукт успешно получен",
+            content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = ProductResponseDto.class)
+            )
+    )
     public ProductResponseDto getProductByExternalId(@PathVariable("externalId") UUID externalId,
                                                      @RequestHeader(value = "X-User-Id", required = false) String userId) {
         return productService.getProductByExternalId(externalId, userId);
@@ -64,8 +93,14 @@ public class ProductController {
     @PutMapping("{externalId}")
     @ResponseStatus(HttpStatus.OK)
     @Operation(operationId = "updateProductByExternalId", summary = "Обновление товара по externalId с входным DTO")
-    @ApiResponse(responseCode = "200", description = "Продукт успешно обновлен",
-            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProductResponseDto.class)))
+    @ApiResponse(
+            responseCode = "200",
+            description = "Продукт успешно обновлен",
+            content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = ProductResponseDto.class)
+            )
+    )
     public ProductResponseDto updateProductByExternalId(@PathVariable UUID externalId,
                                                         @RequestBody @Valid ProductUpdateRequestDto productUpdateRequestDto) {
         return productService.updateProductByExternalId(externalId, productUpdateRequestDto);
@@ -74,8 +109,14 @@ public class ProductController {
     @PostMapping("images/{productId}")
     @ResponseStatus(HttpStatus.OK)
     @Operation(operationId = "addImage", summary = "Добавить изображение продукту")
-    @ApiResponse(responseCode = "204", description = "Изображение продукта успешно добавлено",
-            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProductImageDto.class)))
+    @ApiResponse(
+            responseCode = "204",
+            description = "Изображение продукта успешно добавлено",
+            content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = ProductImageDto.class)
+            )
+    )
     public ProductImageDto addImage(
                                                    @PathVariable UUID productId,
                                                    @RequestBody ProductImageDto productImageDto
@@ -100,7 +141,7 @@ public class ProductController {
     }
 
     @PostMapping("special-prices/{productExternalId}")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.CREATED)
     @Operation(operationId = "createSpecialPrice", summary = "Добавить акцию")
     @ApiResponse(responseCode = "204", description = "Акция успешно добавлена")
     public void createProductSpecialPrice(@RequestBody ProductSpecialPriceDto productSpecialPriceDto,

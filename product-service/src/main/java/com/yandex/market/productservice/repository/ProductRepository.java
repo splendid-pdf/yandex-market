@@ -1,5 +1,6 @@
 package com.yandex.market.productservice.repository;
 
+
 import com.yandex.market.productservice.dto.projections.SellerArchivePreview;
 import com.yandex.market.productservice.dto.projections.SellerProductPreview;
 import com.yandex.market.productservice.dto.projections.ProductPreview;
@@ -66,49 +67,18 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
                 p.seller_external_id=:sellerId AND
                 p.is_archived=true AND product_images.is_main=true AND p.is_deleted=false
             """, nativeQuery = true)
-    Page<SellerArchivePreview> findArchivedProductsPreviewBySellerId(@Param("sellerId") UUID sellerId,
-                                                                     Pageable pageable);
+    Page<SellerArchivePreview> findArchivedProductsPreviewBySellerId(@Param("sellerId") UUID sellerId, Pageable pageable);
 
     @Modifying
     @Query(value = """
                 UPDATE Product p
-                SET p.isVisible=false
-                WHERE p.sellerExternalId=:sellerId AND p.externalId IN :productIds
-            """)
-    void hideProductsBySellerId(List<UUID> productIds, UUID sellerId);
-
-    @Modifying
-    @Query(value = """
-                UPDATE Product p
-                SET p.isVisible=true
-                WHERE p.sellerExternalId=:sellerId AND p.externalId IN :productIds
-            """)
-    void displayProductsBySellerId(List<UUID> productIds, UUID sellerId);
-
-    @Modifying
-    @Query(value = """
-                UPDATE Product p
-                SET p.isVisible=false, p.isArchived = true
-                WHERE p.sellerExternalId=:sellerId AND p.externalId IN :productIds
-            """)
-    void addProductsToArchiveBySellerId(List<UUID> productIds, UUID sellerId);
-
-    @Modifying
-    @Query(value = """
-                UPDATE Product p
-                SET p.isArchived=false
-                WHERE p.sellerExternalId=:sellerId AND p.externalId IN :productIds
-            """)
-    void returnProductsFromArchiveBySellerId(List<UUID> productIds, UUID sellerId);
-
-    @Modifying
-    @Query(value = """
-                DELETE FROM Product p
+                SET p.isDeleted=true,
+                    p.isArchived=false,
+                    p.isVisible=false
                 WHERE p.sellerExternalId=:sellerId AND
-                 p.isArchived=true AND
-                 p.externalId IN :productIds
+                      p.externalId IN :productIds
             """)
-    void deleteProductsBySellerId(List<UUID> productIds, UUID sellerId);
+    void deleteProductsBySellerId(UUID sellerId, List<UUID> productIds);
 
     @Query(value = """
             SELECT
@@ -139,4 +109,34 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
              """,
             nativeQuery = true)
     List<ProductPreview> getProductPreviewsByIdentifiers(Set<UUID> productIdentifiers);
+
+    @Modifying
+    @Query("""
+            UPDATE Product p
+            SET p.price=:updatedPrice
+            WHERE p.externalId=:productId AND p.sellerExternalId=:sellerId
+            """)
+    void updateProductPrice(UUID sellerId, UUID productId, Long updatedPrice);
+
+    @Modifying
+    @Query(value = """
+                UPDATE Product p
+                SET p.isArchived=:isArchive,
+                    p.isVisible=false
+                WHERE p.sellerExternalId=:sellerId AND
+                      p.externalId IN :productIds AND
+                      p.isDeleted=false
+            """)
+    void moveProductsFromAndToArchive(UUID sellerId, List<UUID> productIds, boolean isArchive);
+
+    @Modifying
+    @Query(value = """
+             UPDATE Product p
+             SET p.isVisible=:isVisible
+             WHERE p.sellerExternalId=:sellerId AND
+                   p.externalId IN :productIds AND
+                   p.isDeleted=false AND
+                   p.isArchived=false
+         """)
+    void changeProductVisibility(UUID sellerId, List<UUID> productIds, boolean isVisible);
 }
