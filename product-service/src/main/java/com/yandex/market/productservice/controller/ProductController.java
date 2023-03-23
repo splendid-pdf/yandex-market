@@ -129,13 +129,6 @@ public class ProductController {
         productService.updateProductCharacteristic(characteristicExternalId, productCharacteristicUpdateDto);
     }
 
-    @GetMapping("types/{typeId}")
-    @ResponseStatus(HttpStatus.OK)
-    @Operation(operationId = "getType", summary = "Получить информацию о типах по id")
-    @ApiResponse(responseCode = "200", description = "Информация успешно получена")
-    public TypeResponse getTypeById(@PathVariable @Parameter(description = "Идентификатор типа") UUID typeId) {
-        return productService.getTypeById(typeId);
-    }
 
 
 /*    @GetMapping()

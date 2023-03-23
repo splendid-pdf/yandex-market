@@ -52,7 +52,4 @@ public interface ProductService {
 
     ProductCharacteristicUpdateDto updateProductCharacteristic(UUID productCharacteristicExternalId,
                                                                ProductCharacteristicUpdateDto productCharacteristicUpdateDto);
-
-
-    TypeResponse getTypeById(UUID typeId);
 }
