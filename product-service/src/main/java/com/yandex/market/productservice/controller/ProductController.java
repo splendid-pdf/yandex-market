@@ -141,7 +141,7 @@ public class ProductController {
     }
 
     @PostMapping("special-prices/{productExternalId}")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.CREATED)
     @Operation(operationId = "createSpecialPrice", summary = "Добавить акцию")
     @ApiResponse(responseCode = "204", description = "Акция успешно добавлена")
     public void createProductSpecialPrice(@RequestBody ProductSpecialPriceDto productSpecialPriceDto,
