@@ -104,26 +104,22 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional
-    public void addProductsToArchive(UUID sellerId, List<UUID> productIds) {
-        productRepository.addProductsToArchive(sellerId, productIds);
+    public void moveProductsFromAndToArchive(UUID sellerId, boolean isArchive, List<UUID> productIds) {
+        if (isArchive) {
+            productRepository.addProductsToArchive(sellerId, productIds);
+        } else {
+            productRepository.returnProductsFromArchive(sellerId, productIds);
+        }
     }
 
     @Override
     @Transactional
-    public void returnProductsFromArchive(UUID sellerId, List<UUID> productIds) {
-        productRepository.returnProductsFromArchive(sellerId, productIds);
-    }
-
-    @Override
-    @Transactional
-    public void makeProductsVisible(UUID sellerId, List<UUID> productIds) {
-        productRepository.makeProductsInvisible(sellerId, productIds);
-    }
-
-    @Override
-    @Transactional
-    public void makeProductsInvisible(UUID sellerId, List<UUID> productIds) {
-        productRepository.makeProductsVisible(sellerId, productIds);
+    public void changeProductVisibility(UUID sellerId, boolean isVisible, List<UUID> productIds) {
+        if (isVisible) {
+            productRepository.makeProductsVisible(sellerId, productIds);
+        } else {
+            productRepository.makeProductsInvisible(sellerId, productIds);
+        }
     }
 
     @Override

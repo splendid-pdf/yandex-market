@@ -65,43 +65,27 @@ public class SellerController {
         return productService.getArchivedProductsBySellerId(sellerId, pageable);
     }
 
-    @PatchMapping("{sellerId}/products/archived")
+    @PatchMapping("{sellerId}/products/archive")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Добавить продукты в архив от лица продавца")
     @ApiResponse(responseCode = "200", description = "Продукты успешно добавлены в архив")
     public void moveProductsToArchive(@PathVariable(value = "sellerId") UUID sellerId,
+                                      @RequestParam("is-archive") boolean isArchive,
                                       @RequestBody List<UUID> productIds) {
-        productService.addProductsToArchive(sellerId, productIds);
+        productService.moveProductsFromAndToArchive(sellerId, isArchive, productIds);
     }
 
-    @PatchMapping("{sellerId}/archived-products/unzipped")
-    @ResponseStatus(HttpStatus.OK)
-    @Operation(summary = "Вернуть продукты из архива от лица продавца")
-    @ApiResponse(responseCode = "200", description = "Продукты успешно возращены из архива")
-    public void moveProductsFromArchive(@PathVariable(value = "sellerId") UUID sellerId,
-                                        @RequestBody List<UUID> productIds) {
-        productService.returnProductsFromArchive(sellerId, productIds);
-    }
-
-    @PatchMapping("{sellerId}/products/visible")
+    @PatchMapping("{sellerId}/products/visibility")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Сделать продукты видимыми от лица продавца")
     @ApiResponse(responseCode = "200", description = "Продукты успешно стали видимыми")
     public void makeProductsVisible(@PathVariable(value = "sellerId") UUID sellerId,
+                                    @RequestParam("is-visible") boolean isVisible,
                                     @RequestBody List<UUID> productIds) {
-        productService.makeProductsVisible(sellerId, productIds);
+        productService.changeProductVisibility(sellerId, isVisible, productIds);
     }
 
-    @PatchMapping("{sellerId}/products/invisible")
-    @ResponseStatus(HttpStatus.OK)
-    @Operation(summary = "Сделать продукты невидимыми от лица продавца")
-    @ApiResponse(responseCode = "200", description = "Продукты успешно стали невидимыми")
-    public void makeProductsInvisible(@PathVariable(value = "sellerId") UUID sellerId,
-                                      @RequestBody List<UUID> productIds) {
-        productService.makeProductsInvisible(sellerId, productIds);
-    }
-
-    @PatchMapping("{sellerId}/products/price/{productId}")
+    @PatchMapping("{sellerId}/products/{productId}/price")
     @ResponseStatus(HttpStatus.OK)
     @Operation(operationId = "changeProductPrice", summary = "Изменить цену продукта")
     @ApiResponse(responseCode = "200", description = "Продукт успешно изменён в цене")
@@ -111,7 +95,7 @@ public class SellerController {
         productService.changeProductPrice(sellerId, productId, updatedPrice);
     }
 
-    @PatchMapping("{sellerId}/products/deleted")
+    @DeleteMapping("{sellerId}/products/deleted")
     @ResponseStatus(HttpStatus.OK)
     @Operation(operationId = "deleteProducts", summary = "Удаление списка товаров из базы данных")
     @ApiResponse(responseCode = "200", description = "Продукт успешно удалён")

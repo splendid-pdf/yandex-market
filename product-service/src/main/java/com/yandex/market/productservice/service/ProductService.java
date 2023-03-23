@@ -29,12 +29,16 @@ public interface ProductService {
 
     Page<SellerArchivePreview> getArchivedProductsBySellerId(UUID sellerId, Pageable pageable);
 
-    void addProductsToArchive(UUID sellerId, List<UUID> productIds);
+    void moveProductsFromAndToArchive(UUID sellerId, boolean isArchive, List<UUID> productIds);
 
-    void returnProductsFromArchive(UUID sellerId, List<UUID> productIds);
+    void changeProductVisibility(UUID sellerId, boolean isVisible, List<UUID> productIds);
 
-    void makeProductsVisible(UUID sellerId, List<UUID> productIds);
-    void makeProductsInvisible(UUID sellerId, List<UUID> productIds);
+//    void addProductsToArchive(UUID sellerId, List<UUID> productIds);
+//    void returnProductsFromArchive(UUID sellerId, List<UUID> productIds);
+//
+//    void makeProductsVisible(UUID sellerId, List<UUID> productIds);
+//
+//    void makeProductsInvisible(UUID sellerId, List<UUID> productIds);
 
     void deleteProductsBySellerId(UUID sellerId, List<UUID> productIds);
 
@@ -43,7 +47,7 @@ public interface ProductService {
     List<ProductPreview> getProductPreviewsByIdentifiers(Set<UUID> productIdentifiers);
 
     void changeProductPrice(UUID sellerId, UUID productId, Long newPrice);
-    
+
     ProductImageDto addProductImage(UUID productId, ProductImageDto productImageDto);
 
     void deleteProductImage(String url);
