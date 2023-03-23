@@ -25,6 +25,6 @@ public interface ProductMapper {
     @Mapping(source = "productCharacteristicDto", target = "productCharacteristics")
     @Mapping(source = "productImageDto", target = "productImages")
     @Mapping(source = "productSpecialPriceDto", target = "productSpecialPrices")
-    @Mapping(source = "typeDto", target = "type")
+    @Mapping(source = "typeDto", target = "type", ignore = true)
     Product toProduct(CreateProductRequest createProductRequest);
 }

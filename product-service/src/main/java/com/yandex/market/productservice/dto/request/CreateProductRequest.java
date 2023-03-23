@@ -38,9 +38,6 @@ public record CreateProductRequest(
         @NotEmpty
         Set<@Valid ProductImageDto> productImageDto,
 
-        @NotNull
-        RoomDto roomDto,
-
         Set<@Valid ProductSpecialPriceDto> productSpecialPriceDto
 ) {
 }

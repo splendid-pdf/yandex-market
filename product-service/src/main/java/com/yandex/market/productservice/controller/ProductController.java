@@ -7,6 +7,7 @@ import com.yandex.market.productservice.dto.ProductUpdateRequestDto;
 import com.yandex.market.productservice.dto.request.CreateProductRequest;
 import com.yandex.market.productservice.dto.request.ProductCharacteristicUpdateDto;
 import com.yandex.market.productservice.dto.response.ProductResponseDto;
+import com.yandex.market.productservice.dto.response.TypeResponse;
 import com.yandex.market.productservice.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -38,7 +39,7 @@ import java.util.UUID;
 public class ProductController {
     private final ProductService productService;
 
-    @PostMapping("/{sellerId}/products")
+    @PostMapping("/{sellerId}")
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(operationId = "createProduct", summary = "Создание нового продукта")
     @ApiResponse(responseCode = "201", description = "Продукт успешно создан",
@@ -126,6 +127,14 @@ public class ProductController {
                                           @RequestBody ProductCharacteristicUpdateDto productCharacteristicUpdateDto
     ) {
         productService.updateProductCharacteristic(characteristicExternalId, productCharacteristicUpdateDto);
+    }
+
+    @GetMapping("types/{typeId}")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(operationId = "getType", summary = "Получить информацию о типах по id")
+    @ApiResponse(responseCode = "200", description = "Информация успешно получена")
+    public TypeResponse getTypeById(@PathVariable @Parameter(description = "Идентификатор типа") UUID typeId) {
+        return productService.getTypeById(typeId);
     }
 
 

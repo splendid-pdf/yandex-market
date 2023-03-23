@@ -9,6 +9,7 @@ import com.yandex.market.productservice.dto.request.CreateProductRequest;
 import com.yandex.market.productservice.dto.projections.SellerProductPreview;
 import com.yandex.market.productservice.dto.projections.ProductPreview;
 import com.yandex.market.productservice.dto.response.ProductResponseDto;
+import com.yandex.market.productservice.dto.response.TypeResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -33,13 +34,6 @@ public interface ProductService {
 
     void changeProductVisibility(UUID sellerId, boolean isVisible, List<UUID> productIds);
 
-//    void addProductsToArchive(UUID sellerId, List<UUID> productIds);
-//    void returnProductsFromArchive(UUID sellerId, List<UUID> productIds);
-//
-//    void makeProductsVisible(UUID sellerId, List<UUID> productIds);
-//
-//    void makeProductsInvisible(UUID sellerId, List<UUID> productIds);
-
     void deleteProductsBySellerId(UUID sellerId, List<UUID> productIds);
 
     Page<ProductPreview> getProductPreviews(Pageable pageable);
@@ -61,4 +55,6 @@ public interface ProductService {
 
     ProductCharacteristicUpdateDto updateProductCharacteristic(UUID productCharacteristicExternalId,
                                                                ProductCharacteristicUpdateDto productCharacteristicUpdateDto);
+
+    TypeResponse getTypeById(UUID typeId);
 }
