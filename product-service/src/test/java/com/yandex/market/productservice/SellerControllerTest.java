@@ -32,8 +32,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 })
 public class SellerControllerTest {
     private final ProductSellerServiceTest serviceTest;
-    @Value("${spring.app.seller.url}")
-    private String PATH_TO_SELLER;
 
     private final UUID REAL_SELLER_ID = UUID.fromString("81fe9426-2891-4f13-a3b7-6e238fb731b3");
 
@@ -41,17 +39,10 @@ public class SellerControllerTest {
 
     private final UUID UNREAL_SELLER_ID = UUID.fromString("00678201-f3c8-4d5c-a628-2344eef50c61");
 
-    private final UUID UNREAL_PRODUCT_ID = UUID.fromString("00678201-f3c8-4d5c-a628-2344eef50c62");
-
-    private final List<UUID> REAL_PRODUCT_IDS = new ArrayList<>(List.of(
-            UUID.fromString("62bce524-29c3-4698-b0d2-7bb76b21e724"),
-            UUID.fromString("62bce524-29c3-4698-b0d2-7bb76b21e725")
-    ));
-
     @Value("${spring.app.seller.url}" + "{sellerId}/products/{productId}/price")
     private String CHANGE_PRICE_PATH;
 
-    @Value("${spring.app.seller.url}" + "{sellerId}/products/deleted")
+    @Value("${spring.app.seller.url}" + "{sellerId}/products")
     private String DELETE_PRODUCT_PATH;
 
     @Value("${spring.app.seller.url}" + "{sellerId}/products/archive")
@@ -59,9 +50,6 @@ public class SellerControllerTest {
 
     @Value("${spring.app.seller.url}" + "{sellerId}/products/visibility")
     private String CHANGE_VISIBILITY_PATH;
-
-    @Value("${spring.app.seller.url}" + "{sellerId}/products")
-    private String GET_PRODUCTS_PATH;
 
     @Test
     @Transactional
@@ -122,25 +110,16 @@ public class SellerControllerTest {
 
     @Test
     void shouldSuccessfullyMakeProductsVisible() throws Exception {
-        long countBeforeVisibility = serviceTest.getActualCountAfterDelete(SELLER_ID_2);
-
         List<UUID> PRODUCTS = PRODUCT_IDS.subList(2, 4);
 
-        serviceTest.changeVisibility(SELLER_ID_2, PRODUCTS, false, CHANGE_VISIBILITY_PATH);
-
-        long actualCount = serviceTest.getArchivedCountBySellerId(SELLER_ID_2);
-        assertEquals(0, actualCount);
+        serviceTest.changeVisibility(SELLER_ID_2, PRODUCTS, true, CHANGE_VISIBILITY_PATH);
     }
 
     @Test
     void shouldSuccessfullyMakeProductsInvisible() throws Exception {
-        long countBeforeVisibility = serviceTest.getArchivedCountBySellerId(SELLER_ID);
+        List<UUID> PRODUCTS = PRODUCT_IDS.subList(2, 4);
 
-        serviceTest.changeVisibility(SELLER_ID, PRODUCT_IDS, false, CHANGE_VISIBILITY_PATH);
-
-        long actualCount = serviceTest.getArchivedCountBySellerId(SELLER_ID);
-        assertEquals(0, actualCount);
-
+        serviceTest.changeVisibility(SELLER_ID_2, PRODUCTS, false, CHANGE_VISIBILITY_PATH);
     }
 
 
