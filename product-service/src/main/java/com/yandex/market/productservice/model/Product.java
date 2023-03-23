@@ -60,11 +60,11 @@ public class Product {
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
-    private Set<ProductImage> productImages = new HashSet<>();
+    private List<ProductImage> productImages = new ArrayList<>();
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
-    private Set<ProductSpecialPrice> productSpecialPrices = new HashSet<>();
+    private List<ProductSpecialPrice> productSpecialPrices = new ArrayList<>();
 
     public void addProductCharacteristic(ProductCharacteristic characteristic) {
         characteristic.setProduct(this);

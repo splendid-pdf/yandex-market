@@ -7,6 +7,8 @@ import org.springframework.web.util.pattern.PathPattern;
 import org.springframework.web.util.pattern.PathPatternParser;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Configuration
 public class AppConfig {
@@ -22,9 +24,10 @@ public class AppConfig {
     }
 
     @Bean
-    public List<PathPattern> pathPatterns(SecurityProperties properties, PathPatternParser parser) {
+    public Map<PathPattern, List<String>> pathPatterns(SecurityProperties properties, PathPatternParser parser) {
         return properties.getWhiteList().stream()
-                .map(parser::parse)
-                .toList();
+                .collect(Collectors.toMap(
+                        openedRoute -> parser.parse(openedRoute.getUrl()),
+                        SecurityProperties.OpenedRoute::getMethods));
     }
 }

@@ -10,7 +10,6 @@ import com.yandex.market.productservice.dto.projections.SellerProductPreview;
 import com.yandex.market.productservice.dto.projections.ProductPreview;
 import com.yandex.market.productservice.dto.response.ProductResponseDto;
 import com.yandex.market.productservice.dto.response.TypeResponse;
-import com.yandex.market.productservice.model.VisibilityMethod;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -31,13 +30,17 @@ public interface ProductService {
 
     Page<SellerArchivePreview> getArchivedProductsBySellerId(UUID sellerId, Pageable pageable);
 
-    void changeVisibilityForSellerId(UUID sellerId, List<UUID> productIds, VisibilityMethod method, boolean methodAction);
+    void moveProductsFromAndToArchive(UUID sellerId, boolean isArchive, List<UUID> productIds);
 
-    void deleteFromArchiveListProductBySellerId(List<UUID> productIds, UUID sellerId);
+    void changeProductVisibility(UUID sellerId, boolean isVisible, List<UUID> productIds);
+
+    void deleteProductsBySellerId(UUID sellerId, List<UUID> productIds);
 
     Page<ProductPreview> getProductPreviews(Pageable pageable);
 
     List<ProductPreview> getProductPreviewsByIdentifiers(Set<UUID> productIdentifiers);
+
+    void changeProductPrice(UUID sellerId, UUID productId, Long newPrice);
 
     ProductImageDto addProductImage(UUID productId, ProductImageDto productImageDto);
 
@@ -52,7 +55,6 @@ public interface ProductService {
 
     ProductCharacteristicUpdateDto updateProductCharacteristic(UUID productCharacteristicExternalId,
                                                                ProductCharacteristicUpdateDto productCharacteristicUpdateDto);
-
 
     TypeResponse getTypeById(UUID typeId);
 }
