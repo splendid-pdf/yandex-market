@@ -14,6 +14,7 @@ import org.mapstruct.*;
 )
 public interface ProductMapper {
 
+    @Mapping(source = "sellerExternalId", target = "sellerId")
     ProductResponseDto toResponseDto(Product product);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)

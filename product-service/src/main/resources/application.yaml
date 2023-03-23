@@ -5,7 +5,7 @@ spring:
   application:
     name: product-service
   flyway:
-    enabled: false
+    enabled: true
   app:
     product:
       url: /public/api/v1/products/

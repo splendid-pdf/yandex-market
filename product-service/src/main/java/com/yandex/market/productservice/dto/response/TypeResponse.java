@@ -10,7 +10,7 @@ import java.util.UUID;
 public record TypeResponse(
         UUID id,
         String name,
-        List<TypeCharacteristicDto> typeCharacteristicDtos
+        List<TypeCharacteristicDto> characteristics
 
 ) {
 }

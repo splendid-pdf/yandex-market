@@ -14,6 +14,7 @@ import java.util.UUID;
 @Schema
 public record ProductResponseDto(
          UUID externalId,
+         UUID sellerId,
          UUID articleNumber,
          String name,
          String description,
@@ -25,7 +26,7 @@ public record ProductResponseDto(
          LocalDateTime creationDate,
          TaxType taxType,
          TypeDto type,
-         Set<ProductCharacteristicDto> productCharacteristics,
-         Set<ProductImageDto> productImages,
-         Set<ProductSpecialPriceDto> productSpecialPrices) {
+         Set<ProductCharacteristicDto> characteristics,
+         Set<ProductImageDto> images,
+         Set<ProductSpecialPriceDto> specialPrices) {
 }

@@ -27,17 +27,17 @@ public record CreateProductRequest(
         Long count,
 
         @NotNull
-        TypeDto typeDto,
+        TypeDto type,
 
         @NotEmpty
-        Set<@Valid ProductCharacteristicDto> productCharacteristicDto,
+        Set<@Valid ProductCharacteristicDto> characteristics,
 
         @NotNull
         TaxType taxType,
 
         @NotEmpty
-        Set<@Valid ProductImageDto> productImageDto,
+        Set<@Valid ProductImageDto> images,
 
-        Set<@Valid ProductSpecialPriceDto> productSpecialPriceDto
+        Set<@Valid ProductSpecialPriceDto> specialPrices
 ) {
 }

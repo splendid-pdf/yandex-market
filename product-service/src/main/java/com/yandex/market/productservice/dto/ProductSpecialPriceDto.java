@@ -5,14 +5,13 @@ import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.PositiveOrZero;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Schema
 public record ProductSpecialPriceDto(
         @FutureOrPresent
-        LocalDateTime specialPriceFromDate,
+        LocalDateTime fromDate,
         @FutureOrPresent
-        LocalDateTime specialPriceToDate,
+        LocalDateTime toDate,
         @PositiveOrZero
-        Long specialPrice) {
+        Long price) {
 }
