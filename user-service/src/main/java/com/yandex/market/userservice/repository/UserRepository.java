@@ -22,7 +22,4 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
 
     @Query("FROM User u WHERE u.email=:email AND u.isDeleted=false")
     Optional<User> findUserByEmail(String email);
-
-    @Query("FROM User u WHERE u.phone=:phone AND u.isDeleted=false")
-    Optional<User> findUserByPhone(String phone);
 }
