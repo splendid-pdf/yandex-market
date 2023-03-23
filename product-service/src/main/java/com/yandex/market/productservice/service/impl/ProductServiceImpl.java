@@ -10,19 +10,15 @@ import com.yandex.market.productservice.dto.projections.SellerProductPreview;
 import com.yandex.market.productservice.dto.request.CreateProductRequest;
 import com.yandex.market.productservice.dto.request.ProductCharacteristicUpdateDto;
 import com.yandex.market.productservice.dto.response.ProductResponseDto;
-import com.yandex.market.productservice.mapper.ProductCharacteristicMapper;
-import com.yandex.market.productservice.mapper.ProductImageMapper;
-import com.yandex.market.productservice.mapper.ProductMapper;
-import com.yandex.market.productservice.mapper.ProductSpecialPriceMapper;
+import com.yandex.market.productservice.dto.response.TypeResponse;
+import com.yandex.market.productservice.mapper.*;
 import com.yandex.market.productservice.metric.dto.ProductMetricsDto;
 import com.yandex.market.productservice.metric.enums.UserAction;
 import com.yandex.market.productservice.model.Product;
 import com.yandex.market.productservice.model.ProductImage;
+import com.yandex.market.productservice.model.Type;
 import com.yandex.market.productservice.model.VisibilityMethod;
-import com.yandex.market.productservice.repository.ProductCharacteristicRepository;
-import com.yandex.market.productservice.repository.ProductImageRepository;
-import com.yandex.market.productservice.repository.ProductRepository;
-import com.yandex.market.productservice.repository.ProductSpecialPriceRepository;
+import com.yandex.market.productservice.repository.*;
 import com.yandex.market.productservice.service.ProductService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -52,13 +48,20 @@ public class ProductServiceImpl implements ProductService {
     private final ProductSpecialPriceRepository productSpecialPriceRepository;
     private final ProductCharacteristicMapper productCharacteristicMapper;
     private final ProductCharacteristicRepository productCharacteristicRepository;
+    private final TypeRepository typeRepository;
+    private final TypeMapper typeMapper;
     private final ObjectMapper objectMapper;
     private final KafkaTemplate<String, String> kafkaTemplate;
+
 
     @Override
     @Transactional
     public UUID createProduct(CreateProductRequest createProductRequest, UUID sellerId) {
+        UUID typeId = createProductRequest.typeDto().externalId();
+        Type type = typeRepository.findByExternalId(typeId)
+                .orElseThrow(()-> new EntityNotFoundException(String.format("Type was not found by external id = %s", typeId)));
         Product product = productMapper.toProduct(createProductRequest);
+        type.addProduct(product);
         product.setSellerExternalId(sellerId);
         return productRepository.save(product).getExternalId();
     }
@@ -68,7 +71,7 @@ public class ProductServiceImpl implements ProductService {
     public ProductResponseDto getProductByExternalId(UUID productId, @Nullable String userId) {
         Product product = findProductByExternalId(productId);
 
-        sendMetricsToKafka(UserAction.VIEW_PRODUCT, product, userId);
+//        sendMetricsToKafka(UserAction.VIEW_PRODUCT, product, userId);
 
         return productMapper.toResponseDto(product);
     }
@@ -204,21 +207,28 @@ public class ProductServiceImpl implements ProductService {
         return productCharacteristicUpdateDto;
     }
 
-
-    @SneakyThrows
-    private void sendMetricsToKafka(UserAction userAction, Product product, String userId) {
-        kafkaTemplate.send(
-                "METRICS",
-                "product",
-                objectMapper.writeValueAsString(
-                        ProductMetricsDto.builder()
-                                .productExternalId(product.getExternalId())
-                                .userAction(userAction)
-                                .userId(userId)
-                                .productName(product.getName())
-                                .timestamp(LocalDateTime.now())
-                                .build()));
+    @Override
+    public TypeResponse getTypeById(UUID typeId) {
+        Type type = typeRepository.findByExternalId(typeId)
+                .orElseThrow(()-> new EntityNotFoundException(String.format("Type was not found by external id = %s", typeId)));
+        return typeMapper.toTypeResponse(type);
     }
+
+
+//    @SneakyThrows
+//    private void sendMetricsToKafka(UserAction userAction, Product product, String userId) {
+//        kafkaTemplate.send(
+//                "METRICS",
+//                "product",
+//                objectMapper.writeValueAsString(
+//                        ProductMetricsDto.builder()
+//                                .productExternalId(product.getExternalId())
+//                                .userAction(userAction)
+//                                .userId(userId)
+//                                .productName(product.getName())
+//                                .timestamp(LocalDateTime.now())
+//                                .build()));
+//    }
 
 
     private Product findProductByExternalId(UUID productId) {

@@ -9,6 +9,7 @@ import com.yandex.market.productservice.dto.request.CreateProductRequest;
 import com.yandex.market.productservice.dto.projections.SellerProductPreview;
 import com.yandex.market.productservice.dto.projections.ProductPreview;
 import com.yandex.market.productservice.dto.response.ProductResponseDto;
+import com.yandex.market.productservice.dto.response.TypeResponse;
 import com.yandex.market.productservice.model.VisibilityMethod;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -53,5 +54,5 @@ public interface ProductService {
                                                                ProductCharacteristicUpdateDto productCharacteristicUpdateDto);
 
 
-
+    TypeResponse getTypeById(UUID typeId);
 }
