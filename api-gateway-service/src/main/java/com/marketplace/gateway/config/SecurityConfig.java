@@ -15,38 +15,14 @@ import java.util.List;
 @EnableWebFluxSecurity
 public class SecurityConfig {
     @Bean
-    public SecurityWebFilterChain configure(ServerHttpSecurity http, CorsConfigurationSource source) {
+    public SecurityWebFilterChain configure(ServerHttpSecurity http) {
         http
                 .csrf().disable()
-                .cors().configurationSource(source)
-                .and()
+                .cors().disable()
                 .authorizeExchange()
                 .anyExchange()
                 .permitAll();
 
         return http.formLogin().disable().httpBasic().disable().build();
-    }
-
-    @Bean
-    CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOriginPatterns(List.of("*"));
-        configuration.setAllowedHeaders(List.of(
-                "X-User-Id",
-                "Authorization",
-                "Content-Type",
-                "X-Requested-With",
-                "accept",
-                "Origin",
-                "Access-Control-Request-Method",
-                "Access-Control-Request-Headers"));
-        configuration.setAllowedMethods(List.of("GET", "POST", "OPTIONS", "HEAD"));
-        configuration.setAllowCredentials(true);
-        configuration.setExposedHeaders(List.of("Access-Control-Allow-Origin", "Access-Control-Allow-Credentials"));
-        configuration.setMaxAge(3600L);
-        configuration.setAllowedOriginPatterns(List.of("*"));
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
     }
 }
