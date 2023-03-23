@@ -6,7 +6,7 @@ public enum ValueType {
 
     TEXT {
         public String parse(String value) {
-            return null;
+            return value;
         }
     }, LONG(){
         public Long parse(String value) {
@@ -24,6 +24,8 @@ public enum ValueType {
         public LocalDate parse(String value) {
             return LocalDate.parse(value);
         }
-    }
+    };
+
+    public abstract Object parse(String value);
 
 }
