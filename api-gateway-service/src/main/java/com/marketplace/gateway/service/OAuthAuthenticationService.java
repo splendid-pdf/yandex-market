@@ -3,13 +3,13 @@ package com.marketplace.gateway.service;
 import com.marketplace.gateway.dto.OAuthUserResponse;
 import com.marketplace.gateway.dto.OAuthUser;
 import com.marketplace.gateway.dto.UserLoginRequest;
+import com.marketplace.gateway.exception.AuthenticationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.server.reactive.ServerHttpRequest;
-import org.springframework.security.access.AuthorizationServiceException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.reactive.function.client.ClientResponse;
@@ -24,7 +24,6 @@ import java.util.function.Function;
 
 import static com.marketplace.gateway.util.AuthConstants.X_USER_ID_HEADER;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
-import static org.springframework.security.oauth2.core.OAuth2AccessToken.TokenType.BEARER;
 
 @Slf4j
 @Service
@@ -45,7 +44,7 @@ public class OAuthAuthenticationService {
                 .doOnNext(oAuthUser -> addAuthDataToResponseHeaders(oAuthUser, exchange))
                 .doOnNext(data -> AUTHORIZED_CLIENTS_DATA.put(data.id(), data))
                 .doOnNext(data -> log.info(AUTHORIZED_CLIENTS_DATA.toString()))
-                .map(data -> new OAuthUserResponse(data.id(), data.email()));
+                .map(data -> new OAuthUserResponse(data.id(), data.email(), data.accessToken()));
     }
 
     public Mono<ResponseEntity<Void>> deauthenticate(ServerHttpRequest request) {
@@ -55,7 +54,7 @@ public class OAuthAuthenticationService {
                             .doOnNext(responseEntity ->
                                 AUTHORIZED_CLIENTS_DATA.remove(request.getHeaders().getFirst(X_USER_ID_HEADER)))
                             .doOnNext(data -> log.info(AUTHORIZED_CLIENTS_DATA.toString()))
-                        : Mono.error(() -> new AuthorizationServiceException("User is not authenticated")));
+                        : Mono.error(() -> new AuthenticationException("User is not authenticated")));
     }
 
     public boolean isAuthenticated(String userId, String token) {
@@ -69,12 +68,11 @@ public class OAuthAuthenticationService {
         if (clientResponse.statusCode().is2xxSuccessful()) {
             return clientResponse.bodyToMono(OAuthUser.class);
         }
-        return Mono.error(() -> new AuthorizationServiceException("User was not authenticated"));
+        return Mono.error(() -> new AuthenticationException("User was not authenticated"));
     }
 
     private void addAuthDataToResponseHeaders(OAuthUser data, ServerWebExchange exchange) {
         HttpHeaders headers = exchange.getResponse().getHeaders();
-        headers.add(AUTHORIZATION, "%s %s".formatted(BEARER.getValue(), data.accessToken()));
         headers.add(X_USER_ID_HEADER, data.id());
     }
 
@@ -92,7 +90,7 @@ public class OAuthAuthenticationService {
 
     private Mono<ResponseEntity<Void>> handleRevocationResponse(ClientResponse clientResponse) {
         if (!clientResponse.statusCode().is2xxSuccessful()) {
-            return Mono.error(() -> new AuthorizationServiceException("User is not authenticated"));
+            return Mono.error(() -> new AuthenticationException("User is not authenticated"));
         }
 
         return clientResponse.toBodilessEntity();
