@@ -23,6 +23,6 @@ public class TypeCharacteristic {
     @Enumerated(value = EnumType.STRING)
     private ValueType valueType;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Type type;
 }
