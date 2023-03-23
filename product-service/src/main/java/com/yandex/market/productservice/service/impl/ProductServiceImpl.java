@@ -12,17 +12,13 @@ import com.yandex.market.productservice.dto.request.ProductCharacteristicUpdateD
 import com.yandex.market.productservice.dto.response.ProductResponseDto;
 import com.yandex.market.productservice.dto.response.TypeResponse;
 import com.yandex.market.productservice.mapper.*;
-import com.yandex.market.productservice.metric.dto.ProductMetricsDto;
-import com.yandex.market.productservice.metric.enums.UserAction;
 import com.yandex.market.productservice.model.Product;
 import com.yandex.market.productservice.model.ProductImage;
 import com.yandex.market.productservice.model.Type;
-import com.yandex.market.productservice.model.VisibilityMethod;
 import com.yandex.market.productservice.repository.*;
 import com.yandex.market.productservice.service.ProductService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -30,7 +26,6 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -52,7 +47,6 @@ public class ProductServiceImpl implements ProductService {
     private final TypeMapper typeMapper;
     private final ObjectMapper objectMapper;
     private final KafkaTemplate<String, String> kafkaTemplate;
-
 
     @Override
     @Transactional
@@ -86,9 +80,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<ProductResponseDto> getProductsBySetExternalId(Set<UUID> productIdentifiers, Pageable pageable) {
+    public List<ProductResponseDto> getProductsBySetExternalId(Set<UUID> productIds, Pageable pageable) {
         return productRepository
-                .findByExternalId(productIdentifiers, pageable)
+                .findByExternalId(productIds, pageable)
                 .map(productMapper::toResponseDto)
                 .toList();
     }
@@ -101,37 +95,27 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Transactional
     public Page<SellerArchivePreview> getArchivedProductsBySellerId(UUID sellerId, Pageable pageable) {
         return productRepository.findArchivedProductsPreviewBySellerId(sellerId, pageable);
     }
 
     @Override
     @Transactional
-    public void changeVisibilityForSellerId(UUID sellerId, List<UUID> productIds,
-                                            VisibilityMethod method, boolean methodAction) {
-        switch (method) {
-            case VISIBLE -> {
-                if (methodAction) {
-                    productRepository.displayProductsBySellerId(productIds, sellerId);
-                } else {
-                    productRepository.hideProductsBySellerId(productIds, sellerId);
-                }
-            }
-            case DELETED -> {
-                if (methodAction) {
-                    productRepository.addProductsToArchiveBySellerId(productIds, sellerId);
-                } else {
-                    productRepository.returnProductsFromArchiveBySellerId(productIds, sellerId);
-                }
-            }
-            default -> throw new IllegalArgumentException("Некорректный метод = " + method);
-        }
+    public void moveProductsFromAndToArchive(UUID sellerId, boolean isArchive, List<UUID> productIds) {
+        productRepository.moveProductsFromAndToArchive(sellerId, productIds, isArchive);
     }
 
     @Override
     @Transactional
-    public void deleteFromArchiveListProductBySellerId(List<UUID> productIdentifiers, UUID sellerId) {
-        productRepository.deleteProductsBySellerId(productIdentifiers, sellerId);
+    public void changeProductVisibility(UUID sellerId, boolean isVisible, List<UUID> productIds) {
+        productRepository.changeProductVisibility(sellerId, productIds, isVisible);
+    }
+
+    @Override
+    @Transactional
+    public void deleteProductsBySellerId(UUID sellerId, List<UUID> productIds) {
+        productRepository.deleteProductsBySellerId(sellerId, productIds);
     }
 
     @Override
@@ -140,18 +124,24 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<ProductPreview> getProductPreviewsByIdentifiers(Set<UUID> productIdentifiers) {
-        return productRepository.getProductPreviewsByIdentifiers(productIdentifiers);
+    public List<ProductPreview> getProductPreviewsByIdentifiers(Set<UUID> productIds) {
+        return productRepository.getProductPreviewsByIdentifiers(productIds);
     }
 
-    @Transactional
     @Override
+    @Transactional
     public ProductImageDto addProductImage(UUID productId, ProductImageDto productImageDto) {
         Product product = findProductByExternalId(productId);
         ProductImage productImage = productImageMapper.toProductImage(productImageDto);
         productImageRepository.save(productImage);
         product.addProductImage(productImage);
         return productImageDto;
+    }
+
+    @Override
+    @Transactional
+    public void changeProductPrice(UUID sellerId, UUID productId, Long updatedPrice) {
+        productRepository.updateProductPrice(sellerId, productId, updatedPrice);
     }
 
     @Override
@@ -206,6 +196,7 @@ public class ProductServiceImpl implements ProductService {
         productCharacteristicRepository.save(storedProductCharacteristic);
         return productCharacteristicUpdateDto;
     }
+
 
     @Override
     public TypeResponse getTypeById(UUID typeId) {
