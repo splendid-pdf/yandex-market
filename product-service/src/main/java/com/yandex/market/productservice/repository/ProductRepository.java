@@ -72,45 +72,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Modifying
     @Query(value = """
                 UPDATE Product p
-                SET p.isArchived=true,
-                    p.isVisible=false
-                WHERE p.sellerExternalId=:sellerId AND
-                      p.externalId IN :productIds
-            """)
-    void addProductsToArchive(UUID sellerId, List<UUID> productIds);
-
-    @Modifying
-    @Query(value = """
-                UPDATE Product p
-                SET p.isArchived=false
-                WHERE p.sellerExternalId=:sellerId AND
-                      p.externalId IN :productIds
-            """)
-    void returnProductsFromArchive(UUID sellerId, List<UUID> productIds);
-
-    @Modifying
-    @Query(value = """
-                UPDATE Product p
-                SET p.isVisible=true
-                WHERE p.sellerExternalId=:sellerId AND
-                      p.externalId IN :productIds AND
-                      p.isDeleted=false AND
-                      p.isArchived=false
-            """)
-    void makeProductsVisible(UUID sellerId, List<UUID> productIds);
-
-    @Modifying
-    @Query(value = """
-                UPDATE Product p
-                SET p.isVisible=true
-                WHERE p.sellerExternalId=:sellerId AND
-                      p.externalId IN :productIds
-            """)
-    void makeProductsInvisible(UUID sellerId, List<UUID> productIds);
-
-    @Modifying
-    @Query(value = """
-                UPDATE Product p
                 SET p.isDeleted=true,
                     p.isArchived=false,
                     p.isVisible=false
@@ -156,4 +117,26 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             WHERE p.externalId=:productId AND p.sellerExternalId=:sellerId
             """)
     void updateProductPrice(UUID sellerId, UUID productId, Long updatedPrice);
+
+    @Modifying
+    @Query(value = """
+                UPDATE Product p
+                SET p.isArchived=:isArchive,
+                    p.isVisible=false
+                WHERE p.sellerExternalId=:sellerId AND
+                      p.externalId IN :productIds AND
+                      p.isDeleted=false
+            """)
+    void moveProductsFromAndToArchive(UUID sellerId, List<UUID> productIds, boolean isArchive);
+
+    @Modifying
+    @Query(value = """
+             UPDATE Product p
+             SET p.isVisible=:isVisible
+             WHERE p.sellerExternalId=:sellerId AND
+                   p.externalId IN :productIds AND
+                   p.isDeleted=false AND
+                   p.isArchived=false
+         """)
+    void changeProductVisibility(UUID sellerId, List<UUID> productIds, boolean isVisible);
 }

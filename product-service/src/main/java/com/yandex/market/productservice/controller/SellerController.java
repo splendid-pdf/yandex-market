@@ -95,7 +95,7 @@ public class SellerController {
         productService.changeProductPrice(sellerId, productId, updatedPrice);
     }
 
-    @DeleteMapping("{sellerId}/products/deleted")
+    @DeleteMapping("{sellerId}/products")
     @ResponseStatus(HttpStatus.OK)
     @Operation(operationId = "deleteProducts", summary = "Удаление списка товаров из базы данных")
     @ApiResponse(responseCode = "200", description = "Продукт успешно удалён")
