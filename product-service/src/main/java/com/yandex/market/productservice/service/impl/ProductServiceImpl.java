@@ -12,20 +12,13 @@ import com.yandex.market.productservice.dto.request.ProductCharacteristicUpdateD
 import com.yandex.market.productservice.dto.response.ProductResponseDto;
 import com.yandex.market.productservice.dto.response.TypeResponse;
 import com.yandex.market.productservice.mapper.*;
-import com.yandex.market.productservice.metric.dto.ProductMetricsDto;
-import com.yandex.market.productservice.metric.enums.UserAction;
 import com.yandex.market.productservice.model.Product;
 import com.yandex.market.productservice.model.ProductImage;
-import com.yandex.market.productservice.repository.ProductCharacteristicRepository;
-import com.yandex.market.productservice.repository.ProductImageRepository;
-import com.yandex.market.productservice.repository.ProductRepository;
-import com.yandex.market.productservice.repository.ProductSpecialPriceRepository;
 import com.yandex.market.productservice.model.Type;
 import com.yandex.market.productservice.repository.*;
 import com.yandex.market.productservice.service.ProductService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -33,7 +26,6 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -55,7 +47,6 @@ public class ProductServiceImpl implements ProductService {
     private final TypeMapper typeMapper;
     private final ObjectMapper objectMapper;
     private final KafkaTemplate<String, String> kafkaTemplate;
-
 
     @Override
     @Transactional
