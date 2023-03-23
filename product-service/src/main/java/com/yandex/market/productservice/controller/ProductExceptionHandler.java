@@ -1,6 +1,7 @@
 package com.yandex.market.productservice.controller;
 
 import com.yandex.market.productservice.controller.response.ErrorResponse;
+import com.yandex.market.productservice.exception.InvalidCharacteristicsException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ValidationException;
 import org.springframework.http.HttpStatus;
@@ -16,7 +17,6 @@ public class ProductExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handeValidationException(ValidationException ex) {
         return ErrorResponse.builder()
-                .statusCode(HttpStatus.BAD_REQUEST.name())
                 .message(ex.getMessage())
                 .timestamp(LocalDateTime.now())
                 .build();
@@ -26,7 +26,6 @@ public class ProductExceptionHandler {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handleEntityNotFoundException(EntityNotFoundException ex) {
         return ErrorResponse.builder()
-                .statusCode(HttpStatus.NOT_FOUND.name())
                 .message(ex.getMessage())
                 .timestamp(LocalDateTime.now())
                 .build();
@@ -36,7 +35,15 @@ public class ProductExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleIllegalArgumentException(IllegalArgumentException ex) {
         return ErrorResponse.builder()
-                .statusCode(HttpStatus.BAD_REQUEST.name())
+                .message(ex.getMessage())
+                .timestamp(LocalDateTime.now())
+                .build();
+    }
+
+    @ExceptionHandler(InvalidCharacteristicsException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleInvalidCharacteristicsException(InvalidCharacteristicsException ex) {
+        return ErrorResponse.builder()
                 .message(ex.getMessage())
                 .timestamp(LocalDateTime.now())
                 .build();

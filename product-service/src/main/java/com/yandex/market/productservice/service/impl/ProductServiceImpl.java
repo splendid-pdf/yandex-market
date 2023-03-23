@@ -1,21 +1,28 @@
 package com.yandex.market.productservice.service.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.yandex.market.productservice.dto.ProductRequestDto;
-import com.yandex.market.productservice.dto.projections.SellerProductsPreview;
-import com.yandex.market.productservice.dto.response.ProductPreview;
+import com.yandex.market.productservice.dto.ProductImageDto;
+import com.yandex.market.productservice.dto.ProductSpecialPriceDto;
+import com.yandex.market.productservice.dto.ProductUpdateRequestDto;
+import com.yandex.market.productservice.dto.projections.ProductPreview;
+import com.yandex.market.productservice.dto.projections.SellerArchivePreview;
+import com.yandex.market.productservice.dto.projections.SellerProductPreview;
+import com.yandex.market.productservice.dto.request.CreateProductRequest;
+import com.yandex.market.productservice.dto.request.ProductCharacteristicUpdateDto;
 import com.yandex.market.productservice.dto.response.ProductResponseDto;
-import com.yandex.market.productservice.mapper.ProductMapper;
+import com.yandex.market.productservice.dto.response.TypeResponse;
+import com.yandex.market.productservice.mapper.*;
 import com.yandex.market.productservice.metric.dto.ProductMetricsDto;
 import com.yandex.market.productservice.metric.enums.UserAction;
-import com.yandex.market.productservice.model.DisplayProductMethod;
+import com.yandex.market.productservice.model.*;
 import com.yandex.market.productservice.model.Product;
-import com.yandex.market.productservice.model.VisibilityMethod;
-import com.yandex.market.productservice.repository.ProductRepository;
+import com.yandex.market.productservice.model.ProductImage;
+import com.yandex.market.productservice.model.Type;
+import com.yandex.market.productservice.repository.*;
 import com.yandex.market.productservice.service.ProductService;
+import com.yandex.market.productservice.service.Validator;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,124 +30,209 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
 import static com.yandex.market.productservice.utils.ExceptionMessagesConstants.PRODUCT_NOT_FOUND_ERROR_MESSAGE;
+import static com.yandex.market.productservice.utils.ExceptionMessagesConstants.TYPE_NOT_FOUND_ERROR_MESSAGE;
 
 @Service
 @RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
-    private final ProductRepository repository;
+    private final ProductRepository productRepository;
     private final ProductMapper productMapper;
+    private final ProductImageMapper productImageMapper;
+    private final ProductImageRepository productImageRepository;
+    private final ProductSpecialPriceMapper productSpecialPriceMapper;
+    private final ProductSpecialPriceRepository productSpecialPriceRepository;
+    private final ProductCharacteristicMapper productCharacteristicMapper;
+    private final ProductCharacteristicRepository productCharacteristicRepository;
+    private final TypeRepository typeRepository;
+    private final TypeMapper typeMapper;
     private final ObjectMapper objectMapper;
     private final KafkaTemplate<String, String> kafkaTemplate;
+    private final Validator validator;
 
     @Override
     @Transactional
-    public UUID createProduct(ProductRequestDto productRequestDto, UUID sellerId) {
-        Product product = productMapper.toProduct(productRequestDto);
+    public UUID createProduct(CreateProductRequest createProductRequest, UUID sellerId) {
+        UUID typeId = createProductRequest.typeDto().externalId();
+        Type type = typeRepository.findByExternalId(typeId)
+                .orElseThrow(()-> new EntityNotFoundException(String.format(TYPE_NOT_FOUND_ERROR_MESSAGE, typeId)));
+        Product product = productMapper.toProduct(createProductRequest);
+        type.addProduct(product);
         product.setSellerExternalId(sellerId);
-        return repository.save(product).getExternalId();
+        validator.validateProductCharacteristics(product);
+        return productRepository.save(product).getExternalId();
     }
 
     @Override
     @Transactional(readOnly = true)
-    public ProductResponseDto getProductByExternalId(UUID externalId, @Nullable String userId) {
-        Product product = findProductByExternalId(externalId);
+    public ProductResponseDto getProductByExternalId(UUID productId, @Nullable String userId) {
+        Product product = findProductByExternalId(productId);
 
-        sendMetricsToKafka(UserAction.VIEW_PRODUCT, product, userId);
+//        sendMetricsToKafka(UserAction.VIEW_PRODUCT, product, userId);
 
         return productMapper.toResponseDto(product);
     }
 
     @Override
     @Transactional
-    public ProductResponseDto updateProductByExternalId(UUID externalId, ProductRequestDto productRequestDto) {
-        Product storedProduct = findProductByExternalId(externalId);
-        storedProduct = productMapper.toProduct(productRequestDto, storedProduct);
-        return productMapper.toResponseDto(repository.save(storedProduct));
+    public ProductResponseDto updateProductByExternalId(UUID productId, ProductUpdateRequestDto productUpdateRequestDto) {
+        Product storedProduct = findProductByExternalId(productId);
+        storedProduct = productMapper.toProduct(productUpdateRequestDto, storedProduct);
+        validator.validateProductCharacteristics(storedProduct);
+        return productMapper.toResponseDto(productRepository.save(storedProduct));
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<ProductResponseDto> getProductsBySetExternalId(Set<UUID> externalIdSet, Pageable pageable) {
-        return repository
-                .findByExternalId(externalIdSet, pageable)
+    public List<ProductResponseDto> getProductsBySetExternalId(Set<UUID> productIds, Pageable pageable) {
+        return productRepository
+                .findByExternalId(productIds, pageable)
                 .map(productMapper::toResponseDto)
                 .toList();
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Page<SellerProductsPreview> getPageListOrArchiveBySellerId(UUID sellerId,
-                                                                      DisplayProductMethod method,
-                                                                      Pageable pageable) {
-        return switch (method) {
-            case PRODUCT_LIST -> repository.findProductsPreviewPageBySellerId(sellerId, pageable);
-            case ARCHIVE -> repository.findArchivePreviewPageBySellerId(sellerId, pageable);
-        };
+    public Page<SellerProductPreview> getProductsBySellerId(UUID sellerId,
+                                                            Pageable pageable) {
+        return productRepository.findProductsPreviewBySellerId(sellerId, pageable);
     }
 
     @Override
     @Transactional
-    public void changeVisibilityForSellerId(UUID sellerId, List<UUID> productIds,
-                                            VisibilityMethod method, boolean methodAction) {
-        switch (method) {
-            case VISIBLE -> {
-                if (methodAction) {
-                    repository.displayProductsBySellerId(productIds, sellerId);
-                } else {
-                    repository.hideProductsBySellerId(productIds, sellerId);
-                }
-            }
-            case DELETED -> {
-                if (methodAction) {
-                    repository.addProductsToArchiveBySellerId(productIds, sellerId);
-                } else {
-                    repository.returnProductsFromArchiveBySellerId(productIds, sellerId);
-                }
-            }
-            default -> throw new IllegalArgumentException("Некорректный метод = " + method);
-        }
+    public Page<SellerArchivePreview> getArchivedProductsBySellerId(UUID sellerId, Pageable pageable) {
+        return productRepository.findArchivedProductsPreviewBySellerId(sellerId, pageable);
     }
 
     @Override
     @Transactional
-    public void deleteFromArchiveListProductBySellerId(List<UUID> productIds, UUID sellerId) {
-        repository.deleteProductsBySellerId(productIds, sellerId);
+    public void moveProductsFromAndToArchive(UUID sellerId, boolean isArchive, List<UUID> productIds) {
+        productRepository.moveProductsFromAndToArchive(sellerId, productIds, isArchive);
+    }
+
+    @Override
+    @Transactional
+    public void changeProductVisibility(UUID sellerId, boolean isVisible, List<UUID> productIds) {
+        productRepository.changeProductVisibility(sellerId, productIds, isVisible);
+    }
+
+    @Override
+    @Transactional
+    public void deleteProductsBySellerId(UUID sellerId, List<UUID> productIds) {
+        productRepository.deleteProductsBySellerId(sellerId, productIds);
     }
 
     @Override
     public Page<ProductPreview> getProductPreviews(Pageable pageable) {
-        return repository.getProductsPreview(pageable);
+        return productRepository.getProductsPreview(pageable);
     }
 
     @Override
-    public List<ProductPreview> getProductPreviewsByIdentifiers(Set<UUID> productIdentifiers) {
-        return repository.getProductPreviewsByIdentifiers(productIdentifiers);
+    public List<ProductPreview> getProductPreviewsByIdentifiers(Set<UUID> productIds) {
+        return productRepository.getProductPreviewsByIdentifiers(productIds);
     }
 
-    @SneakyThrows
-    private void sendMetricsToKafka(UserAction userAction, Product product, String userId) {
-        kafkaTemplate.send(
-                "METRICS",
-                "product",
-                objectMapper.writeValueAsString(
-                        ProductMetricsDto.builder()
-                                .productExternalId(product.getExternalId())
-                                .userAction(userAction)
-                                .userId(userId)
-                                .productName(product.getName())
-                                .timestamp(LocalDateTime.now())
-                                .build()));
+    @Override
+    @Transactional
+    public ProductImageDto addProductImage(UUID productId, ProductImageDto productImageDto) {
+        Product product = findProductByExternalId(productId);
+        ProductImage productImage = productImageMapper.toProductImage(productImageDto);
+        productImageRepository.save(productImage);
+        product.addProductImage(productImage);
+        return productImageDto;
+    }
+
+    @Override
+    @Transactional
+    public void changeProductPrice(UUID sellerId, UUID productId, Long updatedPrice) {
+        productRepository.updateProductPrice(sellerId, productId, updatedPrice);
+    }
+
+    @Override
+    @Transactional
+    public void deleteProductImage(String url) {
+        productImageRepository.deleteByUrl(url);
+    }
+
+    @Override
+    @Transactional
+    public UUID addProductSpecialPrice(
+            UUID productId,
+            ProductSpecialPriceDto productSpecialPriceDto
+    ) {
+        Product product = findProductByExternalId(productId);
+        var productSpecialPrice = productSpecialPriceMapper.toProductSpecialPrice(productSpecialPriceDto);
+        product.addProductSpecialPrice(productSpecialPrice);
+        return productSpecialPriceRepository.save(productSpecialPrice).getExternalId();
+    }
+
+    @Override
+    @Transactional
+    public ProductSpecialPriceDto updateSpecialPrice(ProductSpecialPriceDto productSpecialPriceDto,
+                                                     UUID specialPriceId
+    ) {
+        var storedProductSpecialPrice = productSpecialPriceRepository.findByExternalId(specialPriceId)
+                .orElseThrow(() -> new EntityNotFoundException
+                        (PRODUCT_NOT_FOUND_ERROR_MESSAGE + specialPriceId));
+        storedProductSpecialPrice =
+                productSpecialPriceMapper.toProductSpecialPrice(productSpecialPriceDto, storedProductSpecialPrice);
+        productSpecialPriceRepository.save(storedProductSpecialPrice);
+        return productSpecialPriceDto;
+    }
+
+    @Override
+    @Transactional
+    public void deleteProductSpecialPrice(UUID specialPriceId) {
+        productSpecialPriceRepository.deleteByExternalId(specialPriceId);
+    }
+
+    @Override
+    public ProductCharacteristicUpdateDto updateProductCharacteristic(
+            UUID productCharacteristicExternalId,
+            ProductCharacteristicUpdateDto productCharacteristicUpdateDto
+    ) {
+        var storedProductCharacteristic = productCharacteristicRepository
+                .findByExternalId(productCharacteristicExternalId)
+                .orElseThrow(() -> new EntityNotFoundException
+                        (PRODUCT_NOT_FOUND_ERROR_MESSAGE + productCharacteristicExternalId));
+        storedProductCharacteristic = productCharacteristicMapper
+                .toProductCharacteristic(productCharacteristicUpdateDto, storedProductCharacteristic);
+        productCharacteristicRepository.save(storedProductCharacteristic);
+        return productCharacteristicUpdateDto;
     }
 
 
-    private Product findProductByExternalId(UUID externalId) {
-        return repository
-                .findByExternalId(externalId)
-                .orElseThrow(() -> new EntityNotFoundException(PRODUCT_NOT_FOUND_ERROR_MESSAGE + externalId));
+    @Override
+    public TypeResponse getTypeById(UUID typeId) {
+        Type type = typeRepository.findByExternalId(typeId)
+                .orElseThrow(()-> new EntityNotFoundException(String.format(TYPE_NOT_FOUND_ERROR_MESSAGE, typeId)));
+        return typeMapper.toTypeResponse(type);
     }
+
+
+//    @SneakyThrows
+//    private void sendMetricsToKafka(UserAction userAction, Product product, String userId) {
+//        kafkaTemplate.send(
+//                "METRICS",
+//                "product",
+//                objectMapper.writeValueAsString(
+//                        ProductMetricsDto.builder()
+//                                .productExternalId(product.getExternalId())
+//                                .userAction(userAction)
+//                                .userId(userId)
+//                                .productName(product.getName())
+//                                .timestamp(LocalDateTime.now())
+//                                .build()));
+//    }
+
+
+    private Product findProductByExternalId(UUID productId) {
+        return productRepository
+                .findByExternalId(productId)
+                .orElseThrow(() -> new EntityNotFoundException(PRODUCT_NOT_FOUND_ERROR_MESSAGE + productId));
+    }
+}

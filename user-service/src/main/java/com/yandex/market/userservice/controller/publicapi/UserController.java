@@ -1,5 +1,6 @@
 package com.yandex.market.userservice.controller.publicapi;
 
+import com.yandex.market.userservice.dto.request.UserRegistrationDto;
 import com.yandex.market.userservice.dto.request.UserRequestDto;
 import com.yandex.market.userservice.dto.response.ErrorResponse;
 import com.yandex.market.userservice.dto.response.UserResponseDto;
@@ -41,6 +42,19 @@ import static com.yandex.market.util.HttpUtils.PUBLIC_API_V1;
 public class UserController {
 
     private final UserService userService;
+
+    @Operation(
+            operationId = "registration",
+            summary = "Registration user in application",
+            responses = @ApiResponse(responseCode = "200", description = "Successful",
+                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = UUID.class))}
+            ))
+    @PostMapping("/users")
+    @ResponseStatus(HttpStatus.OK)
+    public UUID create(@Parameter(name = "userRegistrationDto", description = "User registration")
+                       @RequestBody UserRegistrationDto userRegistrationDto) {
+        return userService.signUp(userRegistrationDto);
+    }
 
     @Operation(
             summary = "Get a user by external id", security = @SecurityRequirement(name = "bearerAuth"),

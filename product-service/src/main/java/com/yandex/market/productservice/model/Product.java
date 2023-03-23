@@ -4,10 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
-import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.time.LocalDateTime;
+import java.util.*;
 
 @Entity
 @Getter
@@ -32,9 +30,13 @@ public class Product {
 
     private String description;
 
-    private Boolean isVisible;
+    private boolean isVisible;
 
-    private Boolean isDeleted;
+    private boolean isDeleted;
+
+    private boolean isArchived;
+
+    private double rating;
 
     private UUID sellerExternalId;
 
@@ -46,23 +48,23 @@ public class Product {
     private String articleFromSeller;
 
     private Long count;
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Type type;
 
     @CreationTimestamp
-    private LocalDate creationDate;
+    private LocalDateTime creationDate;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
-    private Set<ProductCharacteristic> productCharacteristics = new HashSet<>();
+    private List<ProductCharacteristic> productCharacteristics = new ArrayList<>();
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
-    private Set<ProductImage> productImages = new HashSet<>();
+    private List<ProductImage> productImages = new ArrayList<>();
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
-    private Set<ProductSpecialPrice> productSpecialPrices = new HashSet<>();
+    private List<ProductSpecialPrice> productSpecialPrices = new ArrayList<>();
 
     public void addProductCharacteristic(ProductCharacteristic characteristic) {
         characteristic.setProduct(this);

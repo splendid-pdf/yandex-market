@@ -16,7 +16,7 @@ spring:
         - id: user-info-service-route
           uri: http://127.0.0.1:8080
           predicates:
-            - Path=/*/*/*/users, /*/*/*/users/{externalId}, /*/*/*/users/signup
+            - Path=/*/*/*/users, /*/*/*/users/{externalId}
         - id: product-service-route
           uri: http://127.0.0.1:9090
           predicates:
@@ -68,7 +68,14 @@ management:
 application:
   security:
     white-list:
-      - /public/api/v1/users/signup
+      # users-api
+      - url: /*/*/*/users
+        methods:
+          - POST
+      # products-api
+      - url: /*/*/*/products/{externalId}
+        methods:
+          - GET
 
 logging:
   level:

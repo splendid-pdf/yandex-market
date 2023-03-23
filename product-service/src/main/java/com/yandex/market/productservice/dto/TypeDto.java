@@ -5,13 +5,11 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 import java.util.Set;
+import java.util.UUID;
 
 @Schema
 public record TypeDto(
         @NotBlank
-        String name,
-        @NotNull
-        Set<TypeCharacteristicDto> typeCharacteristicDto,
-        @NotNull
-        Set<RoomDto> roomDto) {
+        UUID externalId
+) {
 }

@@ -1,10 +1,9 @@
 package com.yandex.market.productservice.controller;
 
 import com.yandex.market.productservice.controller.response.ErrorResponse;
-import com.yandex.market.productservice.dto.projections.SellerProductsPreview;
-import com.yandex.market.productservice.dto.response.ProductResponseDto;
-import com.yandex.market.productservice.model.DisplayProductMethod;
-import com.yandex.market.productservice.model.VisibilityMethod;
+import com.yandex.market.productservice.dto.projections.SellerArchivePreview;
+import com.yandex.market.productservice.dto.projections.SellerProductPreview;
+
 import com.yandex.market.productservice.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -46,31 +45,62 @@ public class SellerController {
     @Operation(operationId = "getProductPage", summary = "Метод возращает пагинированный список продуктов продавца")
     @ApiResponse(responseCode = "200", description = "Список продуктов успешно получен",
             content = @Content(mediaType = "application/json",
-                    array = @ArraySchema(schema = @Schema(implementation = ProductResponseDto.class))))
-    public Page<SellerProductsPreview> findPageProductsBySellerId(
+                    array = @ArraySchema(schema = @Schema(implementation = SellerProductPreview.class))))
+    public Page<SellerProductPreview> findProductsBySellerId(
             @PathVariable UUID sellerId,
-            @RequestParam DisplayProductMethod method,
             @PageableDefault(size = 20, sort = "creationDate", direction = Sort.Direction.DESC) Pageable pageable) {
-        return productService.getPageListOrArchiveBySellerId(sellerId, method, pageable);
+        return productService.getProductsBySellerId(sellerId, pageable);
     }
 
-    @PatchMapping("{sellerId}/products")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    @Operation(operationId = "deleteOrVisibleProductList", summary = "Изменить видимость продукта по ID продавца")
-    @ApiResponse(responseCode = "204", description = "Продукт успешно скрыт / добавлен в архив")
-    public void changeProductVisibilityForSeller(@PathVariable(value = "sellerId") UUID sellerId,
-                                                 @RequestBody List<UUID> productIds,
-                                                 @RequestParam VisibilityMethod method,
-                                                 @RequestParam boolean methodAction) {
-        productService.changeVisibilityForSellerId(sellerId, productIds, method, methodAction);
+    @GetMapping("{sellerId}/archived-products")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(operationId = "getArchivedProductPage",
+            summary = "Метод возращает пагинированный список продуктов из архива продавца")
+    @ApiResponse(responseCode = "200", description = "Архив продуктов успешно получен",
+            content = @Content(mediaType = "application/json",
+                    array = @ArraySchema(schema = @Schema(implementation = SellerProductPreview.class))))
+    public Page<SellerArchivePreview> findArchivedProductsBySellerId(
+            @PathVariable UUID sellerId,
+            @PageableDefault(size = 20, sort = "creationDate", direction = Sort.Direction.DESC) Pageable pageable) {
+        return productService.getArchivedProductsBySellerId(sellerId, pageable);
+    }
+
+    @PatchMapping("{sellerId}/products/archive")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Добавить продукты в архив от лица продавца")
+    @ApiResponse(responseCode = "200", description = "Продукты успешно добавлены в архив")
+    public void moveProductsToArchive(@PathVariable(value = "sellerId") UUID sellerId,
+                                      @RequestParam("is-archive") boolean isArchive,
+                                      @RequestBody List<UUID> productIds) {
+        productService.moveProductsFromAndToArchive(sellerId, isArchive, productIds);
+    }
+
+    @PatchMapping("{sellerId}/products/visibility")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Сделать продукты видимыми от лица продавца")
+    @ApiResponse(responseCode = "200", description = "Продукты успешно стали видимыми")
+    public void makeProductsVisible(@PathVariable(value = "sellerId") UUID sellerId,
+                                    @RequestParam("is-visible") boolean isVisible,
+                                    @RequestBody List<UUID> productIds) {
+        productService.changeProductVisibility(sellerId, isVisible, productIds);
+    }
+
+    @PatchMapping("{sellerId}/products/{productId}/price")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(operationId = "changeProductPrice", summary = "Изменить цену продукта")
+    @ApiResponse(responseCode = "200", description = "Продукт успешно изменён в цене")
+    public void changeProductPrice(@PathVariable(value = "sellerId") UUID sellerId,
+                                   @PathVariable(value = "productId") UUID productId,
+                                   @RequestParam Long updatedPrice) {
+        productService.changeProductPrice(sellerId, productId, updatedPrice);
     }
 
     @DeleteMapping("{sellerId}/products")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    @Operation(operationId = "removeProductsFromArchive", summary = "Удаление списка товаров из базы данных")
-    @ApiResponse(responseCode = "204", description = "Продукт успешно удалён")
-    public void deleteListProductBySellerId(@PathVariable(value = "sellerId") UUID sellerId,
-                                            @RequestBody List<UUID> productIds) {
-        productService.deleteFromArchiveListProductBySellerId(productIds, sellerId);
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(operationId = "deleteProducts", summary = "Удаление списка товаров из базы данных")
+    @ApiResponse(responseCode = "200", description = "Продукт успешно удалён")
+    public void deleteProducts(@PathVariable(value = "sellerId") UUID sellerId,
+                               @RequestBody List<UUID> productIds) {
+        productService.deleteProductsBySellerId(sellerId, productIds);
     }
 }
