@@ -11,9 +11,7 @@ public enum UserFieldValidation {
     NAME(UserValidator::validateName),
     PASSWORD(UserValidator::validatePassword),
     PHONE(UserValidator::validatePhone),
-    SEX(UserValidator::validateSex),
-    CONTACT(UserValidator::validateContact);
-
+    SEX(UserValidator::validateSex);
     private final TriConsumer<UserValidator, UserRequestDto, List<String>> consumer;
 
     UserFieldValidation(TriConsumer<UserValidator, UserRequestDto, List<String>> consumer) {

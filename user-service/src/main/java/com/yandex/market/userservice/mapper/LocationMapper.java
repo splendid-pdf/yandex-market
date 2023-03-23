@@ -27,9 +27,7 @@ public class LocationMapper {
                 location.getStreet(),
                 location.getPostcode(),
                 location.getHouseNumber(),
-                location.getApartmentNumber(),
-                location.getLatitude(),
-                location.getLongitude()
+                location.getApartmentNumber()
         );
     }
 }

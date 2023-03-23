@@ -1,7 +1,6 @@
 package com.yandex.market.userservice.dto.response;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.UUID;
 
 public record UserResponseDto(
@@ -14,10 +13,7 @@ public record UserResponseDto(
         LocalDate birthday,
         String sex,
         LocationDto location,
-        List<ContactDto> contacts,
         NotificationSettingsDto notificationSettings,
-        String photoId
+        String photoUrl
 ) {
-
 }
-

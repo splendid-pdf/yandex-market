@@ -7,8 +7,6 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -22,8 +20,8 @@ import java.util.UUID;
 public class User {
 
     @Id
-    @SequenceGenerator(name = "user-generator", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user-generator")
+    @SequenceGenerator(name = "user-sequence", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user-sequence")
     private Long id;
 
     private UUID externalId;
@@ -53,14 +51,10 @@ public class User {
     @Embedded
     private Location location;
 
-    @Builder.Default
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-    private List<Contact> contacts = new ArrayList<>();
-
     @Embedded
     private NotificationSettings notificationSettings;
 
-    private String photoId;
+    private String photoUrl;
 
     private boolean isDeleted;
 
@@ -69,13 +63,4 @@ public class User {
 
     @UpdateTimestamp
     private LocalDateTime modifiedAt;
-
-    public void addContact(Contact contact) {
-        contact.setUser(this);
-        contacts.add(contact);
-    }
-
-    public void removeContact(Contact contact) {
-        contacts.remove(contact);
-    }
 }

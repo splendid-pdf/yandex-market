@@ -7,8 +7,6 @@ public record LocationDto(
         String street,
         String postcode,
         String houseNumber,
-        String apartNumber,
-        Double latitude,
-        Double longitude
+        String apartNumber
 ) {
 }
