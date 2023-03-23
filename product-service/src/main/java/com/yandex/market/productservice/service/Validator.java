@@ -17,7 +17,6 @@ import static com.yandex.market.productservice.utils.ExceptionMessagesConstants.
 
 @Service
 @RequiredArgsConstructor
-@Getter
 public class Validator {
 
     private final TypeRepository  typeRepository;
