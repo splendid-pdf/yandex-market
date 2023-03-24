@@ -21,4 +21,5 @@ public interface ProductCharacteristicMapper {
     @Mapping(target = "id", source = "externalId")
     @Mapping(target = "value", expression = "java(productCharacteristic.getValueType().parse(productCharacteristic.getValue()))")
     ProductCharacteristicResponse toProductCharacteristicDto(ProductCharacteristic productCharacteristic);
+
 }

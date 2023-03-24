@@ -12,4 +12,5 @@ public interface CharacteristicMapper {
     TypeCharacteristic toCharacteristic(TypeCharacteristicResponse typeCharacteristicResponse);
 
     TypeCharacteristicResponse toCharacteristicDto(TypeCharacteristic typeCharacteristic);
+
 }

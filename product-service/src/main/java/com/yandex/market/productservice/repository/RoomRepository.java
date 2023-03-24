@@ -2,7 +2,6 @@ package com.yandex.market.productservice.repository;
 
 import com.yandex.market.productservice.dto.projections.RoomPreview;
 import com.yandex.market.productservice.model.Room;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

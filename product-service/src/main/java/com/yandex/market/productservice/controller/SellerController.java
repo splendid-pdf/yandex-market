@@ -3,7 +3,6 @@ package com.yandex.market.productservice.controller;
 import com.yandex.market.productservice.controller.response.ErrorResponse;
 import com.yandex.market.productservice.dto.projections.SellerArchivePreview;
 import com.yandex.market.productservice.dto.projections.SellerProductPreview;
-
 import com.yandex.market.productservice.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;

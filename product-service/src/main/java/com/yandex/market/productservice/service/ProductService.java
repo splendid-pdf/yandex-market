@@ -1,13 +1,13 @@
 package com.yandex.market.productservice.service;
 
 import com.yandex.market.productservice.dto.ProductImageDto;
+import com.yandex.market.productservice.dto.projections.ProductPreview;
+import com.yandex.market.productservice.dto.projections.SellerArchivePreview;
+import com.yandex.market.productservice.dto.projections.SellerProductPreview;
+import com.yandex.market.productservice.dto.request.CreateProductRequest;
 import com.yandex.market.productservice.dto.request.ProductCharacteristicRequest;
 import com.yandex.market.productservice.dto.request.ProductSpecialPriceRequest;
 import com.yandex.market.productservice.dto.request.ProductUpdateRequest;
-import com.yandex.market.productservice.dto.projections.SellerArchivePreview;
-import com.yandex.market.productservice.dto.request.CreateProductRequest;
-import com.yandex.market.productservice.dto.projections.SellerProductPreview;
-import com.yandex.market.productservice.dto.projections.ProductPreview;
 import com.yandex.market.productservice.dto.response.ProductCharacteristicResponse;
 import com.yandex.market.productservice.dto.response.ProductResponse;
 import com.yandex.market.productservice.dto.response.ProductSpecialPriceResponse;

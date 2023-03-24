@@ -37,4 +37,5 @@ public interface ProductMapper {
     @Mapping(target = "visible", constant = "true")
     @Mapping(source = "type", target = "type", ignore = true)
     Product toProduct(CreateProductRequest createProductRequest);
+
 }

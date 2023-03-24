@@ -12,4 +12,5 @@ public interface RoomMapper {
 
     @Mapping(target = "id", source = "externalId")
     RoomResponse toRoomResponse(Room room);
+
 }

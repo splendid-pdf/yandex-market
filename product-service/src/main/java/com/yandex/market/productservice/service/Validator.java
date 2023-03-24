@@ -3,12 +3,13 @@ package com.yandex.market.productservice.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yandex.market.productservice.exception.InvalidCharacteristicsException;
-import com.yandex.market.productservice.model.*;
+import com.yandex.market.productservice.model.Product;
+import com.yandex.market.productservice.model.ProductCharacteristic;
+import com.yandex.market.productservice.model.TypeCharacteristic;
+import com.yandex.market.productservice.model.ValueType;
 import com.yandex.market.productservice.repository.TypeRepository;
 import jakarta.annotation.PostConstruct;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 
 import java.util.*;

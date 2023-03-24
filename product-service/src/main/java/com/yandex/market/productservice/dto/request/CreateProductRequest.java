@@ -1,6 +1,7 @@
 package com.yandex.market.productservice.dto.request;
 
-import com.yandex.market.productservice.dto.*;
+import com.yandex.market.productservice.dto.ProductImageDto;
+import com.yandex.market.productservice.dto.TypeDto;
 import com.yandex.market.productservice.model.TaxType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;

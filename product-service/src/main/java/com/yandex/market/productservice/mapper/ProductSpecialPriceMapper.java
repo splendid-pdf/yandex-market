@@ -18,4 +18,5 @@ public interface ProductSpecialPriceMapper {
 
     @Mapping(target = "id", source = "externalId")
     ProductSpecialPriceResponse toProductSpecialPriceDto(ProductSpecialPrice productSpecialPrice);
+
 }

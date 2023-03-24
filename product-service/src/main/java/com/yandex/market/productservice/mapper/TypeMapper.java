@@ -18,4 +18,5 @@ public interface TypeMapper {
     @Mapping(source = "externalId", target = "id")
     @Mapping(source = "typeCharacteristics", target = "characteristics")
     TypeResponse toTypeResponse(Type type);
+
 }

@@ -1,14 +1,11 @@
 package com.yandex.market.productservice.service;
 
 import com.yandex.market.productservice.dto.projections.RoomPreview;
-import com.yandex.market.productservice.model.Room;
-import com.yandex.market.productservice.model.Type;
 import com.yandex.market.productservice.repository.RoomRepository;
 import com.yandex.market.productservice.repository.TypeRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +22,6 @@ public class RoomService {
 
     private final RoomRepository roomRepository;
     private final TypeRepository typeRepository;
-
 
     public RoomPreview getRoomById(UUID roomId) {
         return roomRepository.findPreviewByExternalId(roomId)
