@@ -6,7 +6,7 @@ import java.util.UUID;
 
 @Schema
 public record RoomResponse(
-        String name,
-        UUID id
+        UUID id,
+        String name
 ) {
 }

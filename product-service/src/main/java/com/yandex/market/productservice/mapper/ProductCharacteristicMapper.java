@@ -1,7 +1,5 @@
 package com.yandex.market.productservice.mapper;
 
-import com.yandex.market.productservice.dto.ProductCharacteristicDto;
-import com.yandex.market.productservice.dto.request.ProductCharacteristicUpdateDto;
 import com.yandex.market.productservice.model.ProductCharacteristic;
 import org.mapstruct.*;
 

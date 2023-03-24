@@ -30,10 +30,10 @@ public record CreateProductRequest(
         TypeDto type,
 
         @NotEmpty
-        Set<@Valid ProductCharacteristicDto> characteristics,
+        Set<@Valid ProductCharacteristicRequest> characteristics,
 
         @NotNull
-        TaxType taxType,
+        TaxType tax,
 
         @NotEmpty
         Set<@Valid ProductImageDto> images,

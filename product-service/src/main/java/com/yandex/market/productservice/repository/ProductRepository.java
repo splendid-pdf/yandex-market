@@ -29,7 +29,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Query(value = """
             SELECT
                 product_images.url as imageUrl,
-                p.external_id as externalId,
+                p.external_id as id,
                 p.name as name,
                 p.article_number as articleNumber,
                 p.price as price,
@@ -51,7 +51,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Query(value = """
             SELECT
                 product_images.url as imageUrl,
-                p.external_id as externalId,
+                p.external_id as id,
                 p.name as name,
                 p.article_number as articleNumber,
                 p.price as price,
@@ -82,7 +82,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @Query(value = """
             SELECT
-               p.external_id AS externalId,
+               p.external_id AS id,
                p.seller_external_id AS sellerExternalId,
                p.name,
                p.price,
@@ -97,7 +97,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @Query(value = """
             SELECT
-               p.external_id AS externalId,
+               p.external_id AS id,
                p.seller_external_id AS sellerExternalId,
                p.name,
                p.price,

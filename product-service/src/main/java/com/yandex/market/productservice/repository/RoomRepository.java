@@ -20,7 +20,7 @@ public interface RoomRepository extends JpaRepository<Room, Long> {
             value = """
             SELECT
                 r.name AS name,
-                r.external_id AS externalId
+                r.external_id AS id
             FROM
                 rooms AS r
             WHERE
@@ -46,7 +46,7 @@ public interface RoomRepository extends JpaRepository<Room, Long> {
             value = """
             SELECT
                 r.name AS name,
-                r.external_id AS externalId
+                r.external_id AS id
             FROM
                 rooms AS r
             INNER JOIN room_type AS rt ON r.id = rt.room_id

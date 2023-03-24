@@ -2,10 +2,13 @@ package com.yandex.market.productservice.controller;
 
 import com.yandex.market.productservice.controller.response.ErrorResponse;
 import com.yandex.market.productservice.dto.ProductImageDto;
-import com.yandex.market.productservice.dto.ProductUpdateRequestDto;
+import com.yandex.market.productservice.dto.request.ProductCharacteristicRequest;
+import com.yandex.market.productservice.dto.request.ProductSpecialPriceRequest;
+import com.yandex.market.productservice.dto.request.ProductUpdateRequest;
 import com.yandex.market.productservice.dto.request.CreateProductRequest;
-import com.yandex.market.productservice.dto.request.ProductCharacteristicUpdateDto;
-import com.yandex.market.productservice.dto.response.ProductResponseDto;
+import com.yandex.market.productservice.dto.response.ProductCharacteristicResponse;
+import com.yandex.market.productservice.dto.response.ProductResponse;
+import com.yandex.market.productservice.dto.response.ProductSpecialPriceResponse;
 import com.yandex.market.productservice.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -51,10 +54,7 @@ public class ProductController {
     private final ProductService productService;
 
     //todo: x-seller-id x-user-id должны быть хедерах и прокинуть дальше для метрик
-    //todo: контроллер на типы
     //todo: кэширование
-    //todo: разбить ProductService на другие сервисы TypeService....
-    //todo: postMapping product change url
 
     @PostMapping("/sellers/{sellerId}/products")
     @ResponseStatus(HttpStatus.CREATED)
@@ -82,11 +82,11 @@ public class ProductController {
             description = "Продукт успешно получен",
             content = @Content(
                     mediaType = "application/json",
-                    schema = @Schema(implementation = ProductResponseDto.class)
+                    schema = @Schema(implementation = ProductResponse.class)
             )
     )
-    public ProductResponseDto getProductByExternalId(@PathVariable("productId") UUID productId,
-                                                     @RequestHeader(value = "X-User-Id", required = false) String userId) {
+    public ProductResponse getProductByExternalId(@PathVariable("productId") UUID productId,
+                                                  @RequestHeader(value = "X-User-Id", required = false) String userId) {
         return productService.getProductByExternalId(productId, userId);
     }
 
@@ -98,12 +98,12 @@ public class ProductController {
             description = "Продукт успешно обновлен",
             content = @Content(
                     mediaType = "application/json",
-                    schema = @Schema(implementation = ProductResponseDto.class)
+                    schema = @Schema(implementation = ProductResponse.class)
             )
     )
-    public ProductResponseDto updateProductByExternalId(@PathVariable UUID productId,
-                                                        @RequestBody @Valid ProductUpdateRequestDto productUpdateRequestDto) {
-        return productService.updateProductByExternalId(productId, productUpdateRequestDto);
+    public ProductResponse updateProductByExternalId(@PathVariable UUID productId,
+                                                     @RequestBody @Valid ProductUpdateRequest productUpdateRequest) {
+        return productService.updateProductByExternalId(productId, productUpdateRequest);
     }
 
     @PostMapping("/products/{productId}/images")
@@ -144,30 +144,30 @@ public class ProductController {
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(operationId = "createSpecialPrice", summary = "Добавить акцию")
     @ApiResponse(responseCode = "204", description = "Акция успешно добавлена")
-    public void createProductSpecialPrice(@RequestBody ProductSpecialPriceDto productSpecialPriceDto,
+    public UUID createProductSpecialPrice(@RequestBody ProductSpecialPriceRequest productSpecialPriceRequest,
                                           @PathVariable UUID productId
     ) {
-        productService.addProductSpecialPrice(productId, productSpecialPriceDto);
+        return productService.addProductSpecialPrice(productId, productSpecialPriceRequest);
     }
 
     @PutMapping("/products/special-prices/{specialPriceId}")
     @ResponseStatus(HttpStatus.OK)
     @Operation(operationId = "createSpecialPrice", summary = "Изменить акцию")
     @ApiResponse(responseCode = "204", description = "Акция успешно изменена")
-    public ProductSpecialPriceDto updateProductSpecialPrice(@RequestBody ProductSpecialPriceDto productSpecialPriceDto,
-                                                            @PathVariable UUID specialPriceId
+    public ProductSpecialPriceResponse updateProductSpecialPrice(@RequestBody ProductSpecialPriceRequest productSpecialPriceRequest,
+                                                                 @PathVariable UUID specialPriceId
     ) {
-        return productService.updateSpecialPrice(productSpecialPriceDto, specialPriceId);
+        return productService.updateSpecialPrice(productSpecialPriceRequest, specialPriceId);
     }
 
     @PutMapping("/products/characteristics/{characteristicId}")
     @ResponseStatus(HttpStatus.OK)
     @Operation(operationId = "updateProductCharacteristic", summary = "Обновить характеристику продукта")
     @ApiResponse(responseCode = "200", description = "Характеристика успешно обновлена")
-    public void updateProductCharacteristic(@PathVariable UUID characteristicId,
-                                          @RequestBody ProductCharacteristicUpdateDto productCharacteristicUpdateDto
+    public ProductCharacteristicResponse updateProductCharacteristic(@PathVariable UUID characteristicId,
+                                                                     @RequestBody ProductCharacteristicRequest productCharacteristicRequest
     ) {
-        productService.updateProductCharacteristic(characteristicId, productCharacteristicUpdateDto);
+        return productService.updateProductCharacteristic(characteristicId, productCharacteristicRequest);
     }
 
 

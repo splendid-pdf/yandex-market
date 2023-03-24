@@ -1,8 +1,8 @@
 package com.yandex.market.productservice.mapper;
 
-import com.yandex.market.productservice.dto.ProductUpdateRequestDto;
+import com.yandex.market.productservice.dto.request.ProductUpdateRequest;
 import com.yandex.market.productservice.dto.request.CreateProductRequest;
-import com.yandex.market.productservice.dto.response.ProductResponseDto;
+import com.yandex.market.productservice.dto.response.ProductResponse;
 import com.yandex.market.productservice.model.Product;
 import org.mapstruct.*;
 
@@ -15,10 +15,10 @@ import org.mapstruct.*;
 public interface ProductMapper {
 
     @Mapping(source = "sellerExternalId", target = "sellerId")
-    ProductResponseDto toResponseDto(Product product);
+    ProductResponse toResponseDto(Product product);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    Product toProduct(ProductUpdateRequestDto productUpdateRequestDto, @MappingTarget Product product);
+    Product toProduct(ProductUpdateRequest productUpdateRequest, @MappingTarget Product product);
 
     @Mapping(target = "externalId", expression = "java(java.util.UUID.randomUUID())")
     @Mapping(target = "articleNumber", expression = "java(java.util.UUID.randomUUID())")

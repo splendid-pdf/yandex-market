@@ -1,6 +1,5 @@
 package com.yandex.market.productservice.dto.response;
 
-import com.yandex.market.productservice.dto.ProductCharacteristicDto;
 import com.yandex.market.productservice.dto.ProductImageDto;
 import com.yandex.market.productservice.dto.TypeDto;
 import com.yandex.market.productservice.model.TaxType;
@@ -11,7 +10,7 @@ import java.util.Set;
 import java.util.UUID;
 
 @Schema
-public record ProductResponseDto(
+public record ProductResponse(
          UUID id,
          UUID sellerId,
          UUID articleNumber,
@@ -23,10 +22,9 @@ public record ProductResponseDto(
          Boolean isVisible,
          Boolean isArchived,
          LocalDateTime creationDate,
-         TaxType taxType,
+         TaxType tax,
          TypeDto type,
-         Set<ProductCharacteristicDto> characteristics,
+         Set<ProductCharacteristicResponse> characteristics,
          Set<ProductImageDto> images,
-         Set<ProductSpecialPriceResponse> specialPrices,
-         RoomResponse category) {
+         Set<ProductSpecialPriceResponse> specialPrices) {
 }

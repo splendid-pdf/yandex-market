@@ -14,4 +14,5 @@ public interface ProductPreview {
     Long getPrice();
 
     String getImageUrl();
+
 }
