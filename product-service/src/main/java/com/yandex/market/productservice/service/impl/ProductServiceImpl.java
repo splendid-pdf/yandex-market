@@ -82,7 +82,6 @@ public class ProductServiceImpl implements ProductService {
     public ProductResponse updateProductByExternalId(UUID productId, ProductUpdateRequest productUpdateRequest) {
         Product storedProduct = findProductByExternalId(productId);
         storedProduct = productMapper.toProduct(productUpdateRequest, storedProduct);
-        validator.validateProductCharacteristics(storedProduct);
         return productMapper.toResponseDto(productRepository.save(storedProduct));
     }
 
@@ -201,6 +200,7 @@ public class ProductServiceImpl implements ProductService {
                         (PRODUCT_NOT_FOUND_ERROR_MESSAGE + productCharacteristicExternalId));
         storedProductCharacteristic = productCharacteristicMapper
                 .toProductCharacteristic(productCharacteristicRequest, storedProductCharacteristic);
+        validator.validateProductCharacteristics(storedProductCharacteristic.getProduct());
         productCharacteristicRepository.save(storedProductCharacteristic);
         return productCharacteristicMapper.toProductCharacteristicDto(storedProductCharacteristic);
     }

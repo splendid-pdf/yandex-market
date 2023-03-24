@@ -1,5 +1,6 @@
 package com.yandex.market.productservice.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yandex.market.productservice.exception.InvalidCharacteristicsException;
 import com.yandex.market.productservice.model.*;
@@ -33,7 +34,6 @@ public class Validator {
                         .collect(Collectors.toMap(TypeCharacteristic::getName, TypeCharacteristic::getValueType))));
     }
 
-    @SneakyThrows
     public void validateProductCharacteristics(Product product) {
         UUID typeId = product.getType().getExternalId();
 
@@ -53,7 +53,11 @@ public class Validator {
         }
 
         if(!exceptions.isEmpty()) {
-            throw new InvalidCharacteristicsException(objectMapper.writeValueAsString(exceptions));
+            try {
+                throw new InvalidCharacteristicsException(objectMapper.writeValueAsString(exceptions));
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
@@ -64,7 +68,7 @@ public class Validator {
     ) {
         String name = requestedCharacteristic.getName();
         String value = requestedCharacteristic.getValue();
-       // ValueType requestedValueType = requestedCharacteristic.getValueType();
+        ValueType requestedValueType = requestedCharacteristic.getValueType();
         ValueType requiredValueType = requiredCharacteristics.get(name);
 
         if(!requiredCharacteristics.containsKey(name)) {
@@ -72,11 +76,11 @@ public class Validator {
             return;
         }
 
-//        if(requiredCharacteristics.get(name) != requestedValueType) {
-//            exceptions.add(
-//                    String.format(INVALID_CHARACTERISTIC_TYPE, name, requiredValueType, requestedValueType)
-//            );
-//        }
+        if(requiredCharacteristics.get(name) != requestedValueType) {
+            exceptions.add(
+                    String.format(INVALID_CHARACTERISTIC_TYPE, name, requiredValueType, requestedValueType)
+            );
+        }
 
         validateValueType(requiredValueType, name, value, exceptions);
     }

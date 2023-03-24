@@ -12,10 +12,13 @@ public interface ProductCharacteristicMapper {
     @Mapping(target = "externalId", expression = "java(java.util.UUID.randomUUID())")
     ProductCharacteristic toProductCharacteristic(ProductCharacteristicRequest productCharacteristicRequest);
 
+
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    @Mapping(target = "valueType", ignore = true)
     ProductCharacteristic toProductCharacteristic(ProductCharacteristicRequest productCharacteristicRequest,
                                                   @MappingTarget ProductCharacteristic productCharacteristic);
 
     @Mapping(target = "id", source = "externalId")
+    @Mapping(target = "value", expression = "java(productCharacteristic.getValueType().parse(productCharacteristic.getValue()))")
     ProductCharacteristicResponse toProductCharacteristicDto(ProductCharacteristic productCharacteristic);
 }

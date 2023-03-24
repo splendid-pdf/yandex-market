@@ -162,7 +162,7 @@ class ProductServiceApplicationTests {
                 objectMapper.readValue(mvcResult.getResponse().getContentAsString(), ProductResponse.class);
 
         assertNotNull(actualProductResponse);
-        assertEquals(productExternalId, actualProductResponse.externalId());
+        assertEquals(productExternalId, actualProductResponse.id());
     }
 
     @Test
