@@ -32,7 +32,7 @@ import static com.yandex.market.util.HttpUtils.PUBLIC_API_V1;
 @ApiResponses({
         @ApiResponse(
                 responseCode = "400",
-                description = "На сервер переданы неверные данные",
+                description = "РќР° СЃРµСЂРІРµСЂ РїРµСЂРµРґР°РЅС‹ РЅРµРІРµСЂРЅС‹Рµ РґР°РЅРЅС‹Рµ",
                 content = @Content(
                         mediaType = "application/json",
                         schema = @Schema(implementation = ErrorResponse.class)
@@ -40,7 +40,7 @@ import static com.yandex.market.util.HttpUtils.PUBLIC_API_V1;
         ),
         @ApiResponse(
                 responseCode = "404",
-                description = "Тип не найден",
+                description = "РўРёРї С‚РѕРІР°СЂР° РЅРµ РЅР°Р№РґРµРЅ",
                 content = @Content(
                         mediaType = "application/json",
                         schema = @Schema(implementation = ErrorResponse.class)
@@ -53,11 +53,11 @@ public class TypeController {
 
     @GetMapping("/types/{typeId}")
     @ResponseStatus(HttpStatus.OK)
-    @Operation(operationId = "getType", summary = "Получить информацию о типах по id")
-    @ApiResponse(responseCode = "200", description = "Информация успешно получена")
+    @Operation(operationId = "getType", summary = "РџРѕР»СѓС‡РёС‚СЊ С‚РёРї РїРѕ РµРіРѕ id")
+    @ApiResponse(responseCode = "200", description = "РўРёРї С‚РѕРІР°СЂР° СѓСЃРїРµС€РЅРѕ РїРѕР»СѓС‡РµРЅ")
     public TypeResponse getTypeById(
                                     @PathVariable
-                                    @Parameter(description = "Идентификатор типа")
+                                    @Parameter(description = "РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ С‚РёРїР° С‚РѕРІР°СЂР°")
                                     UUID typeId
     ) {
         return typeService.getTypeById(typeId);
@@ -65,8 +65,8 @@ public class TypeController {
 
     @GetMapping("/types")
     @ResponseStatus(HttpStatus.OK)
-    @Operation(operationId = "getAllTypes", summary = "Получить превью для всех типов")
-    @ApiResponse(responseCode = "200", description = "Информация успешно получена")
+    @Operation(operationId = "getAllTypes", summary = "РџРѕР»СѓС‡РёС‚СЊ СЃРїРёСЃРѕРє РІСЃРµС… С‚РёРїРѕРІ С‚РѕРІР°СЂРѕРІ")
+    @ApiResponse(responseCode = "200", description = "РЎРїРёСЃРѕРє С‚РёРїРѕРІ СѓСЃРїРµС€РЅРѕ РїРѕР»СѓС‡РµРЅ")
     public Page<TypePreview> getAllTypes(
                                          @PageableDefault(
                                                  size = 20,
@@ -79,11 +79,11 @@ public class TypeController {
 
     @GetMapping("rooms/{roomId}/types")
     @ResponseStatus(HttpStatus.OK)
-    @Operation(operationId = "getAllTypesByRoomId", summary = "Получить превью для всех типов принадлежащих комнате (категории)")
-    @ApiResponse(responseCode = "200", description = "Информация успешно получена")
+    @Operation(operationId = "getAllTypesByRoomId", summary = "РџРѕР»СѓС‡РёС‚СЊ СЃРїРёСЃРѕРє С‚РёРїРѕРІ С‚РѕРІР°СЂРѕРІ РїСЂРёРЅР°РґР»РµР¶Р°С‰РёС… РєРѕРјРЅР°С‚Рµ")
+    @ApiResponse(responseCode = "200", description = "РЎРїРёСЃРѕРє С‚РёРїРѕРІ С‚РѕРІР°СЂРѕРІ СѓСЃРїРµС€РЅРѕ РїРѕР»СѓС‡РµРЅ")
     public Page<TypePreview> getAllTypesByRoomId(
                                                  @PathVariable
-                                                 @Parameter(description = "Идентификатор комнаты (категории)")
+                                                 @Parameter(description = "РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РєРѕРјРЅР°С‚С‹")
                                                  UUID roomId,
                                                  @PageableDefault(
                                                          size = 20,

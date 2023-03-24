@@ -32,7 +32,7 @@ import static com.yandex.market.util.HttpUtils.PUBLIC_API_V1;
 @ApiResponses({
         @ApiResponse(
                 responseCode = "400",
-                description = "На сервер переданы неверные данные",
+                description = "РќР° СЃРµСЂРІРµСЂ РїРµСЂРµРґР°РЅС‹ РЅРµРІРµСЂРЅС‹Рµ РґР°РЅРЅС‹Рµ",
                 content = @Content(
                         mediaType = "application/json",
                         schema = @Schema(implementation = ErrorResponse.class)
@@ -40,7 +40,7 @@ import static com.yandex.market.util.HttpUtils.PUBLIC_API_V1;
         ),
         @ApiResponse(
                 responseCode = "404",
-                description = "Комната не найдена",
+                description = "РљРѕРјРЅР°С‚Р° РЅРµ РЅР°Р№РґРµРЅР°",
                 content = @Content(
                         mediaType = "application/json",
                         schema = @Schema(implementation = ErrorResponse.class)
@@ -53,11 +53,11 @@ public class RoomController {
 
     @GetMapping("/rooms/{roomId}")
     @ResponseStatus(HttpStatus.OK)
-    @Operation(operationId = "getRoomById", summary = "Получить информацию о комнате по id")
-    @ApiResponse(responseCode = "200", description = "Информация успешно получена")
+    @Operation(operationId = "getRoomById", summary = "РџРѕР»СѓС‡РёС‚СЊ РєРѕРјРЅР°С‚Сѓ РїРѕ РµРµ id")
+    @ApiResponse(responseCode = "200", description = "РљРѕРјРЅР°С‚Р° СѓСЃРїРµС€РЅРѕ РїРѕР»СѓС‡РµРЅР°")
     public RoomPreview getRoomById(
                                     @PathVariable
-                                    @Parameter(description = "Идентификатор комнаты")
+                                    @Parameter(description = "РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РєРѕРјРЅР°С‚С‹")
                                     UUID roomId
     ) {
 
@@ -66,8 +66,8 @@ public class RoomController {
 
     @GetMapping("/rooms")
     @ResponseStatus(HttpStatus.OK)
-    @Operation(operationId = "getAllRooms", summary = "Получить список всех комнат")
-    @ApiResponse(responseCode = "200", description = "Информация успешно получена")
+    @Operation(operationId = "getAllRooms", summary = "РџРѕР»СѓС‡РёС‚СЊ СЃРїРёСЃРѕРє РІСЃРµС… РєРѕРјРЅР°С‚")
+    @ApiResponse(responseCode = "200", description = "РЎРїРёСЃРѕРє РєРѕРјРЅР°С‚ СѓСЃРїРµС€РЅРѕ РїРѕР»СѓС‡РµРЅ")
     public Page<RoomPreview> getAllRooms(
                                          @PageableDefault(
                                                  size = 20,
@@ -81,11 +81,11 @@ public class RoomController {
 
     @GetMapping("/types/{typeId}/rooms")
     @ResponseStatus(HttpStatus.OK)
-    @Operation(operationId = "getRoomById", summary = "Получить информацию о комнате по id")
-    @ApiResponse(responseCode = "200", description = "Информация успешно получена")
+    @Operation(operationId = "getRoomById", summary = "РџРѕР»СѓС‡РёС‚СЊ СЃРїРёСЃРѕРє РєРѕРјРЅР°С‚ РєРѕС‚РѕСЂС‹Рµ РµСЃС‚СЊ Сѓ РїРµСЂРµРґР°РЅРЅРѕРіРѕ С‚РёРїР° С‚РѕРІР°СЂРѕРІ")
+    @ApiResponse(responseCode = "200", description = "РЎРїРёСЃРѕРє РєРѕРјРЅР°С‚ СѓСЃРїРµС€РЅРѕ РїРѕР»СѓС‡РµРЅ")
     public Page<RoomPreview> getAllRoomsTypeId(
                                                @PathVariable
-                                               @Parameter(description = "Идентификатор типа")
+                                               @Parameter(description = "РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ С‚РёРїР° С‚РѕРІР°СЂР°")
                                                UUID typeId,
                                                @PageableDefault(
                                                        size = 20,
