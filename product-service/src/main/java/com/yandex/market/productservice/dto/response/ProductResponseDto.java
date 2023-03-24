@@ -2,7 +2,6 @@ package com.yandex.market.productservice.dto.response;
 
 import com.yandex.market.productservice.dto.ProductCharacteristicDto;
 import com.yandex.market.productservice.dto.ProductImageDto;
-import com.yandex.market.productservice.dto.ProductSpecialPriceDto;
 import com.yandex.market.productservice.dto.TypeDto;
 import com.yandex.market.productservice.model.TaxType;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -13,7 +12,7 @@ import java.util.UUID;
 
 @Schema
 public record ProductResponseDto(
-         UUID externalId,
+         UUID id,
          UUID sellerId,
          UUID articleNumber,
          String name,
@@ -28,5 +27,6 @@ public record ProductResponseDto(
          TypeDto type,
          Set<ProductCharacteristicDto> characteristics,
          Set<ProductImageDto> images,
-         Set<ProductSpecialPriceDto> specialPrices) {
+         Set<ProductSpecialPriceResponse> specialPrices,
+         RoomResponse category) {
 }

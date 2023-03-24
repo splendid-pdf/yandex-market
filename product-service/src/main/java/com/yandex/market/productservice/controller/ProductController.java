@@ -2,12 +2,10 @@ package com.yandex.market.productservice.controller;
 
 import com.yandex.market.productservice.controller.response.ErrorResponse;
 import com.yandex.market.productservice.dto.ProductImageDto;
-import com.yandex.market.productservice.dto.ProductSpecialPriceDto;
 import com.yandex.market.productservice.dto.ProductUpdateRequestDto;
 import com.yandex.market.productservice.dto.request.CreateProductRequest;
 import com.yandex.market.productservice.dto.request.ProductCharacteristicUpdateDto;
 import com.yandex.market.productservice.dto.response.ProductResponseDto;
-import com.yandex.market.productservice.dto.response.TypeResponse;
 import com.yandex.market.productservice.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -30,7 +28,7 @@ import static com.yandex.market.util.HttpUtils.PUBLIC_API_V1;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(PUBLIC_API_V1)
-@Tag(name = "API для работы с сущностью Product")
+@Tag(name = "Product")
 @ApiResponses({
         @ApiResponse(
                 responseCode = "400",
@@ -130,11 +128,11 @@ public class ProductController {
     @ResponseStatus(HttpStatus.OK)
     @Operation(operationId = "deleteImage", summary = "Удалить изображение продукта")
     @ApiResponse(responseCode = "200", description = "Изображение успешно удалено")
-    public void deleteImageByUrl(@RequestParam String url) {
+    public void deleteImageByUrl(@PathVariable String url) {
         productService.deleteProductImage(url);
     }
 
-    @DeleteMapping("special-prices/{specialPriceId}")
+    @DeleteMapping("/products/special-prices/{specialPriceId}")
     @ResponseStatus(HttpStatus.OK)
     @Operation(operationId = "deleteSpecialPrice", summary = "Удалить акцию")
     @ApiResponse(responseCode = "200", description = "Акция успешно удалена")
@@ -166,7 +164,7 @@ public class ProductController {
     @ResponseStatus(HttpStatus.OK)
     @Operation(operationId = "updateProductCharacteristic", summary = "Обновить характеристику продукта")
     @ApiResponse(responseCode = "200", description = "Характеристика успешно обновлена")
-    public void updateProductSpecialPrice(@PathVariable UUID characteristicId,
+    public void updateProductCharacteristic(@PathVariable UUID characteristicId,
                                           @RequestBody ProductCharacteristicUpdateDto productCharacteristicUpdateDto
     ) {
         productService.updateProductCharacteristic(characteristicId, productCharacteristicUpdateDto);

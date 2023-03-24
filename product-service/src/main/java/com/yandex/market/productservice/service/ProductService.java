@@ -1,7 +1,6 @@
 package com.yandex.market.productservice.service;
 
 import com.yandex.market.productservice.dto.ProductImageDto;
-import com.yandex.market.productservice.dto.ProductSpecialPriceDto;
 import com.yandex.market.productservice.dto.ProductUpdateRequestDto;
 import com.yandex.market.productservice.dto.projections.SellerArchivePreview;
 import com.yandex.market.productservice.dto.request.ProductCharacteristicUpdateDto;
@@ -9,7 +8,6 @@ import com.yandex.market.productservice.dto.request.CreateProductRequest;
 import com.yandex.market.productservice.dto.projections.SellerProductPreview;
 import com.yandex.market.productservice.dto.projections.ProductPreview;
 import com.yandex.market.productservice.dto.response.ProductResponseDto;
-import com.yandex.market.productservice.dto.response.TypeResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

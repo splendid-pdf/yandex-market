@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import java.util.UUID;
 
 public interface SellerProductPreview {
-    UUID getExternalId();
+    UUID getId();
 
     String getArticleNumber();
 

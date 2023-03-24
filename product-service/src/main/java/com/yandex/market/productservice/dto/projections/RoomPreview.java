@@ -4,7 +4,7 @@ import java.util.UUID;
 
 public interface RoomPreview {
 
-    UUID getExternalId();
+    UUID getId();
 
     String getName();
 

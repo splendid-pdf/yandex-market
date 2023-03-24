@@ -22,11 +22,13 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
+import static com.yandex.market.util.HttpUtils.PUBLIC_API_V1;
+
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("${spring.app.type.url}")
-@Tag(name = "API для работы с сущностью Type")
+@RequestMapping(PUBLIC_API_V1)
+@Tag(name = "Type")
 @ApiResponses({
         @ApiResponse(
                 responseCode = "400",
@@ -49,7 +51,7 @@ public class TypeController {
 
     private final TypeService typeService;
 
-    @GetMapping("{typeId}")
+    @GetMapping("/types/{typeId}")
     @ResponseStatus(HttpStatus.OK)
     @Operation(operationId = "getType", summary = "Получить информацию о типах по id")
     @ApiResponse(responseCode = "200", description = "Информация успешно получена")
@@ -61,7 +63,7 @@ public class TypeController {
         return typeService.getTypeById(typeId);
     }
 
-    @GetMapping()
+    @GetMapping("/types")
     @ResponseStatus(HttpStatus.OK)
     @Operation(operationId = "getAllTypes", summary = "Получить превью для всех типов")
     @ApiResponse(responseCode = "200", description = "Информация успешно получена")
@@ -75,8 +77,7 @@ public class TypeController {
         return typeService.getAllTypes(pageable);
     }
 
-    //todo: исправить урл
-    @GetMapping("rooms/{roomId}")
+    @GetMapping("rooms/{roomId}/types")
     @ResponseStatus(HttpStatus.OK)
     @Operation(operationId = "getAllTypesByRoomId", summary = "Получить превью для всех типов принадлежащих комнате (категории)")
     @ApiResponse(responseCode = "200", description = "Информация успешно получена")

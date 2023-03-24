@@ -5,9 +5,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @Schema
 public interface ProductPreview {
 
-    String getExternalId();
+    String getId();
 
-    String getSellerExternalId();
+    String getSellerId();
 
     String getName();
 

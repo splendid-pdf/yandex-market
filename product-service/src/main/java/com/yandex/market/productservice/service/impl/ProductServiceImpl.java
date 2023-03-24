@@ -2,7 +2,6 @@ package com.yandex.market.productservice.service.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yandex.market.productservice.dto.ProductImageDto;
-import com.yandex.market.productservice.dto.ProductSpecialPriceDto;
 import com.yandex.market.productservice.dto.ProductUpdateRequestDto;
 import com.yandex.market.productservice.dto.projections.ProductPreview;
 import com.yandex.market.productservice.dto.projections.SellerArchivePreview;
@@ -11,9 +10,6 @@ import com.yandex.market.productservice.dto.request.CreateProductRequest;
 import com.yandex.market.productservice.dto.request.ProductCharacteristicUpdateDto;
 import com.yandex.market.productservice.dto.response.ProductResponseDto;
 import com.yandex.market.productservice.mapper.*;
-import com.yandex.market.productservice.metric.dto.ProductMetricsDto;
-import com.yandex.market.productservice.metric.enums.UserAction;
-import com.yandex.market.productservice.model.*;
 import com.yandex.market.productservice.model.Product;
 import com.yandex.market.productservice.model.ProductImage;
 import com.yandex.market.productservice.model.Type;
@@ -55,7 +51,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @Transactional
     public UUID createProduct(CreateProductRequest createProductRequest, UUID sellerId) {
-        UUID typeId = createProductRequest.typeDto().externalId();
+        UUID typeId = createProductRequest.type().externalId();
         Type type = typeRepository.findByExternalId(typeId)
                 .orElseThrow(()-> new EntityNotFoundException(String.format(TYPE_NOT_FOUND_ERROR_MESSAGE, typeId)));
         Product product = productMapper.toProduct(createProductRequest);

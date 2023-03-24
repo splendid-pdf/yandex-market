@@ -1,7 +1,5 @@
 package com.yandex.market.productservice.mapper;
 
-import com.yandex.market.productservice.dto.ProductSpecialPriceDto;
-import com.yandex.market.productservice.model.Product;
 import com.yandex.market.productservice.model.ProductSpecialPrice;
 import org.mapstruct.*;
 

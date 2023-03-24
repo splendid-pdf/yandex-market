@@ -38,6 +38,6 @@ public record CreateProductRequest(
         @NotEmpty
         Set<@Valid ProductImageDto> images,
 
-        Set<@Valid ProductSpecialPriceDto> specialPrices
+        Set<@Valid ProductSpecialPriceRequest> specialPrices
 ) {
 }

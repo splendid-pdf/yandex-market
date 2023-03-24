@@ -1,4 +1,12 @@
 package com.yandex.market.productservice.dto.response;
 
-public class RoomResponse {
+import io.swagger.v3.oas.annotations.media.Schema;
+
+import java.util.UUID;
+
+@Schema
+public record RoomResponse(
+        String name,
+        UUID id
+) {
 }

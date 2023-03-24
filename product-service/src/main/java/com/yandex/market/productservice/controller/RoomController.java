@@ -22,11 +22,13 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
+import static com.yandex.market.util.HttpUtils.PUBLIC_API_V1;
+
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("${spring.app.room.url}")
-@Tag(name = "API для работы с сущностью Room")
+@RequestMapping(PUBLIC_API_V1)
+@Tag(name = "Room")
 @ApiResponses({
         @ApiResponse(
                 responseCode = "400",
@@ -49,7 +51,7 @@ public class RoomController {
 
     private final RoomService roomService;
 
-    @GetMapping("{roomId}")
+    @GetMapping("/rooms/{roomId}")
     @ResponseStatus(HttpStatus.OK)
     @Operation(operationId = "getRoomById", summary = "Получить информацию о комнате по id")
     @ApiResponse(responseCode = "200", description = "Информация успешно получена")
@@ -58,10 +60,11 @@ public class RoomController {
                                     @Parameter(description = "Идентификатор комнаты")
                                     UUID roomId
     ) {
+
         return roomService.getRoomById(roomId);
     }
 
-    @GetMapping()
+    @GetMapping("/rooms")
     @ResponseStatus(HttpStatus.OK)
     @Operation(operationId = "getAllRooms", summary = "Получить список всех комнат")
     @ApiResponse(responseCode = "200", description = "Информация успешно получена")
@@ -76,7 +79,7 @@ public class RoomController {
         return roomService.getAllRooms(pageable);
     }
 
-    @GetMapping("types/{typeId}")
+    @GetMapping("/types/{typeId}/rooms")
     @ResponseStatus(HttpStatus.OK)
     @Operation(operationId = "getRoomById", summary = "Получить информацию о комнате по id")
     @ApiResponse(responseCode = "200", description = "Информация успешно получена")

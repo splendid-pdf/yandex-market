@@ -34,7 +34,7 @@ public interface RoomRepository extends JpaRepository<Room, Long> {
             value = """
             SELECT
                 r.name AS name,
-                r.external_id AS externalId
+                r.external_id AS id
             FROM
                 rooms AS r
             """,

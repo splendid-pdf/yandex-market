@@ -24,11 +24,13 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.UUID;
 
+import static com.yandex.market.util.HttpUtils.PUBLIC_API_V1;
+
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("${spring.app.seller.url}")
-@Tag(name = "API для работы с сущностью Product для Seller")
+@RequestMapping(PUBLIC_API_V1)
+@Tag(name = "Product для Seller")
 @ApiResponses({
         @ApiResponse(responseCode = "400", description = "На сервер переданы неверные данные",
                 content = @Content(mediaType = "application/json",
@@ -40,7 +42,7 @@ public class SellerController {
 
     private final ProductService productService;
 
-    @GetMapping("{sellerId}/products")
+    @GetMapping("/sellers/{sellerId}/products")
     @ResponseStatus(HttpStatus.OK)
     @Operation(operationId = "getProductPage", summary = "Метод возращает пагинированный список продуктов продавца")
     @ApiResponse(responseCode = "200", description = "Список продуктов успешно получен",
@@ -52,7 +54,7 @@ public class SellerController {
         return productService.getProductsBySellerId(sellerId, pageable);
     }
 
-    @GetMapping("{sellerId}/archived-products")
+    @GetMapping("/sellers/{sellerId}/products/archived-products")
     @ResponseStatus(HttpStatus.OK)
     @Operation(operationId = "getArchivedProductPage",
             summary = "Метод возращает пагинированный список продуктов из архива продавца")
@@ -65,7 +67,7 @@ public class SellerController {
         return productService.getArchivedProductsBySellerId(sellerId, pageable);
     }
 
-    @PatchMapping("{sellerId}/products/archive")
+    @PatchMapping("/sellers/{sellerId}/products/archive")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Добавить продукты в архив от лица продавца")
     @ApiResponse(responseCode = "200", description = "Продукты успешно добавлены в архив")
@@ -75,7 +77,7 @@ public class SellerController {
         productService.moveProductsFromAndToArchive(sellerId, isArchive, productIds);
     }
 
-    @PatchMapping("{sellerId}/products/visibility")
+    @PatchMapping("/sellers/{sellerId}/products/visibility")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Сделать продукты видимыми от лица продавца")
     @ApiResponse(responseCode = "200", description = "Продукты успешно стали видимыми")
@@ -85,7 +87,7 @@ public class SellerController {
         productService.changeProductVisibility(sellerId, isVisible, productIds);
     }
 
-    @PatchMapping("{sellerId}/products/{productId}/price")
+    @PatchMapping("/sellers/{sellerId}/products/{productId}/price")
     @ResponseStatus(HttpStatus.OK)
     @Operation(operationId = "changeProductPrice", summary = "Изменить цену продукта")
     @ApiResponse(responseCode = "200", description = "Продукт успешно изменён в цене")
@@ -95,7 +97,7 @@ public class SellerController {
         productService.changeProductPrice(sellerId, productId, updatedPrice);
     }
 
-    @DeleteMapping("{sellerId}/products")
+    @DeleteMapping("/sellers/{sellerId}/products")
     @ResponseStatus(HttpStatus.OK)
     @Operation(operationId = "deleteProducts", summary = "Удаление списка товаров из базы данных")
     @ApiResponse(responseCode = "200", description = "Продукт успешно удалён")
