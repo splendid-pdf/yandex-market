@@ -35,8 +35,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-import static com.yandex.market.productservice.utils.ExceptionMessagesConstants.PRODUCT_NOT_FOUND_ERROR_MESSAGE;
-import static com.yandex.market.productservice.utils.ExceptionMessagesConstants.TYPE_NOT_FOUND_ERROR_MESSAGE;
+import static com.yandex.market.productservice.utils.ExceptionMessagesConstants.*;
 
 @Service
 @RequiredArgsConstructor
@@ -176,7 +175,7 @@ public class ProductServiceImpl implements ProductService {
     ) {
         var storedProductSpecialPrice = productSpecialPriceRepository.findByExternalId(specialPriceId)
                 .orElseThrow(() -> new EntityNotFoundException
-                        (PRODUCT_NOT_FOUND_ERROR_MESSAGE + specialPriceId));
+                        (String.format(SPECIAL_PRICE_NOT_FOUND_ERROR_MESSAGE, specialPriceId)));
         storedProductSpecialPrice =
                 productSpecialPriceMapper.toProductSpecialPrice(productSpecialPriceRequest, storedProductSpecialPrice);
         productSpecialPriceRepository.save(storedProductSpecialPrice);
@@ -197,7 +196,7 @@ public class ProductServiceImpl implements ProductService {
         var storedProductCharacteristic = productCharacteristicRepository
                 .findByExternalId(productCharacteristicExternalId)
                 .orElseThrow(() -> new EntityNotFoundException
-                        (PRODUCT_NOT_FOUND_ERROR_MESSAGE + productCharacteristicExternalId));
+                        (String.format(PRODUCT_CHARACTERISTIC_NOT_FOUND_ERROR_MESSAGE, productCharacteristicExternalId)));
         storedProductCharacteristic = productCharacteristicMapper
                 .toProductCharacteristic(productCharacteristicRequest, storedProductCharacteristic);
         validator.validateProductCharacteristics(storedProductCharacteristic.getProduct());
@@ -225,6 +224,6 @@ public class ProductServiceImpl implements ProductService {
     private Product findProductByExternalId(UUID productId) {
         return productRepository
                 .findByExternalId(productId)
-                .orElseThrow(() -> new EntityNotFoundException(PRODUCT_NOT_FOUND_ERROR_MESSAGE + productId));
+                .orElseThrow(() -> new EntityNotFoundException(String.format(PRODUCT_NOT_FOUND_ERROR_MESSAGE, productId)));
     }
 }

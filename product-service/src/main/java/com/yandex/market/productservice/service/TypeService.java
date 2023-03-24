@@ -17,6 +17,9 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.UUID;
 
+import static com.yandex.market.productservice.utils.ExceptionMessagesConstants.ROOM_NOT_FOUND_ERROR_MESSAGE;
+import static com.yandex.market.productservice.utils.ExceptionMessagesConstants.TYPE_NOT_FOUND_ERROR_MESSAGE;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -30,7 +33,7 @@ public class TypeService {
 
     public TypeResponse getTypeById(UUID typeId) {
         Type type = typeRepository.findByExternalId(typeId)
-                .orElseThrow(()-> new EntityNotFoundException(String.format("Type was not found by external id = %s", typeId)));
+                .orElseThrow(()-> new EntityNotFoundException(String.format(TYPE_NOT_FOUND_ERROR_MESSAGE, typeId)));
         return typeMapper.toTypeResponse(type);
     }
 
@@ -40,7 +43,7 @@ public class TypeService {
 
     public List<TypePreview> getAllTypesByRoomId(UUID roomId, Pageable pageable) {
         roomRepository.findByExternalId(roomId)
-                .orElseThrow(() -> new EntityNotFoundException("Room was not found by external id = %s"));
+                .orElseThrow(() -> new EntityNotFoundException(String.format(ROOM_NOT_FOUND_ERROR_MESSAGE, roomId)));
         return typeRepository.findAllTypePreviewsByRoomId(roomId, pageable);
     }
 }
