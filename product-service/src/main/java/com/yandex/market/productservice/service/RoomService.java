@@ -20,14 +20,12 @@ import java.util.UUID;
 public class RoomService {
 
     private final RoomRepository roomRepository;
-
     private final TypeRepository typeRepository;
-
 
 
     public RoomPreview getRoomById(UUID roomId) {
         return roomRepository.findPreviewByExternalId(roomId)
-                .orElseThrow(() -> new EntityNotFoundException("room was not found by id = %s"));
+                .orElseThrow(() -> new EntityNotFoundException("Room was not found by id = %s"));
     }
 
     public Page<RoomPreview> getAllRooms(Pageable pageable) {
@@ -36,8 +34,9 @@ public class RoomService {
     }
 
     public Page<RoomPreview> getAllRoomsByTypeId(UUID typeId, Pageable pageable) {
-        Type type  = typeRepository.findByExternalId(typeId)
+        typeRepository.findByExternalId(typeId)
                 .orElseThrow(() -> new EntityNotFoundException("Type was not found by external id = %s"));
         return roomRepository.findAllRoomPreviewsByTypeId(typeId, pageable);
     }
 }
+
