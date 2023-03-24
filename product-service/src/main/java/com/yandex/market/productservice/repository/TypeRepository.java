@@ -35,7 +35,7 @@ public interface TypeRepository extends JpaRepository<Type, Long> {
             """,
             nativeQuery = true
     )
-    Page<TypePreview> findAllTypePreviews(Pageable pageable);
+    List<TypePreview> findAllTypePreviews(Pageable pageable);
 
     @Query(
             value = """
@@ -51,6 +51,6 @@ public interface TypeRepository extends JpaRepository<Type, Long> {
             """,
             nativeQuery = true
     )
-    Page<TypePreview> findAllTypePreviewsByRoomId(@Param("roomId") UUID roomId, Pageable pageable);
+    List<TypePreview> findAllTypePreviewsByRoomId(@Param("roomId") UUID roomId, Pageable pageable);
 
 }

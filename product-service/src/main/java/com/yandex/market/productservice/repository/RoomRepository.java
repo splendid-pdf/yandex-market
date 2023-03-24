@@ -40,7 +40,7 @@ public interface RoomRepository extends JpaRepository<Room, Long> {
             """,
             nativeQuery = true
     )
-    Page<RoomPreview> findAllRoomPreviews(Pageable pageable);
+    List<RoomPreview> findAllRoomPreviews(Pageable pageable);
 
     @Query(
             value = """
@@ -56,6 +56,6 @@ public interface RoomRepository extends JpaRepository<Room, Long> {
             """,
             nativeQuery = true
     )
-    Page<RoomPreview> findAllRoomPreviewsByTypeId(@Param("typeId") UUID typeId, Pageable pageable);
+    List<RoomPreview> findAllRoomPreviewsByTypeId(@Param("typeId") UUID typeId, Pageable pageable);
 
 }

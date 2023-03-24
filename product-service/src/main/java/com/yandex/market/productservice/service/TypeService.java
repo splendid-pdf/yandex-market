@@ -14,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 @Slf4j
@@ -33,12 +34,12 @@ public class TypeService {
         return typeMapper.toTypeResponse(type);
     }
 
-    public Page<TypePreview> getAllTypes(Pageable pageable) {
+    public List<TypePreview> getAllTypes(Pageable pageable) {
         return typeRepository.findAllTypePreviews(pageable);
     }
 
-    public Page<TypePreview> getAllTypesByRoomId(UUID roomId, Pageable pageable) {
-        Room room  = roomRepository.findByExternalId(roomId)
+    public List<TypePreview> getAllTypesByRoomId(UUID roomId, Pageable pageable) {
+        roomRepository.findByExternalId(roomId)
                 .orElseThrow(() -> new EntityNotFoundException("Room was not found by external id = %s"));
         return typeRepository.findAllTypePreviewsByRoomId(roomId, pageable);
     }

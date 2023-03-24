@@ -20,6 +20,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 import static com.yandex.market.util.HttpUtils.PUBLIC_API_V1;
@@ -68,11 +69,11 @@ public class RoomController {
     @ResponseStatus(HttpStatus.OK)
     @Operation(operationId = "getAllRooms", summary = "Получить список всех комнат")
     @ApiResponse(responseCode = "200", description = "Список комнат успешно получен")
-    public Page<RoomPreview> getAllRooms(
+    public List<RoomPreview> getAllRooms(
                                          @PageableDefault(
-                                                 size = 20,
+                                                 size = Integer.MAX_VALUE,
                                                  sort = "name",
-                                                 direction = Sort.Direction.DESC
+                                                 direction = Sort.Direction.ASC
                                          )
                                          Pageable pageable
     ) {
@@ -83,14 +84,14 @@ public class RoomController {
     @ResponseStatus(HttpStatus.OK)
     @Operation(operationId = "getRoomById", summary = "Получить список комнат которые есть у переданного типа товаров")
     @ApiResponse(responseCode = "200", description = "Список комнат успешно получен")
-    public Page<RoomPreview> getAllRoomsTypeId(
+    public List<RoomPreview> getAllRoomsTypeId(
                                                @PathVariable
                                                @Parameter(description = "Идентификатор типа товара")
                                                UUID typeId,
                                                @PageableDefault(
-                                                       size = 20,
+                                                       size = Integer.MAX_VALUE,
                                                        sort = "name",
-                                                       direction = Sort.Direction.DESC
+                                                       direction = Sort.Direction.ASC
                                                )
                                                Pageable pageable
     ) {

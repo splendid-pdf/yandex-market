@@ -20,6 +20,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 import static com.yandex.market.util.HttpUtils.PUBLIC_API_V1;
@@ -67,9 +68,9 @@ public class TypeController {
     @ResponseStatus(HttpStatus.OK)
     @Operation(operationId = "getAllTypes", summary = "Получить список всех типов товаров")
     @ApiResponse(responseCode = "200", description = "Список типов успешно получен")
-    public Page<TypePreview> getAllTypes(
+    public List<TypePreview> getAllTypes(
                                          @PageableDefault(
-                                                 size = 20,
+                                                 size = Integer.MAX_VALUE,
                                                  sort = "name",
                                                  direction = Sort.Direction.DESC)
                                          Pageable pageable
@@ -81,12 +82,12 @@ public class TypeController {
     @ResponseStatus(HttpStatus.OK)
     @Operation(operationId = "getAllTypesByRoomId", summary = "Получить список типов товаров принадлежащих комнате")
     @ApiResponse(responseCode = "200", description = "Список типов товаров успешно получен")
-    public Page<TypePreview> getAllTypesByRoomId(
+    public List<TypePreview> getAllTypesByRoomId(
                                                  @PathVariable
                                                  @Parameter(description = "Идентификатор комнаты")
                                                  UUID roomId,
                                                  @PageableDefault(
-                                                         size = 20,
+                                                         size = Integer.MAX_VALUE,
                                                          sort = "name",
                                                          direction = Sort.Direction.DESC)
                                                  Pageable pageable

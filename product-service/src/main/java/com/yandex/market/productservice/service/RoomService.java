@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 @Slf4j
@@ -28,12 +29,12 @@ public class RoomService {
                 .orElseThrow(() -> new EntityNotFoundException("Room was not found by id = %s"));
     }
 
-    public Page<RoomPreview> getAllRooms(Pageable pageable) {
+    public List<RoomPreview> getAllRooms(Pageable pageable) {
         return roomRepository.findAllRoomPreviews(pageable);
 
     }
 
-    public Page<RoomPreview> getAllRoomsByTypeId(UUID typeId, Pageable pageable) {
+    public List<RoomPreview> getAllRoomsByTypeId(UUID typeId, Pageable pageable) {
         typeRepository.findByExternalId(typeId)
                 .orElseThrow(() -> new EntityNotFoundException("Type was not found by external id = %s"));
         return roomRepository.findAllRoomPreviewsByTypeId(typeId, pageable);
