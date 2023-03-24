@@ -94,7 +94,4 @@ public class TypeController {
     ) {
         return typeService.getAllTypesByRoomId(roomId, pageable);
     }
-
-
-
 }

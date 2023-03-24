@@ -1,5 +1,7 @@
 package com.yandex.market.productservice.mapper;
 
+import com.yandex.market.productservice.dto.request.ProductCharacteristicRequest;
+import com.yandex.market.productservice.dto.response.ProductCharacteristicResponse;
 import com.yandex.market.productservice.model.ProductCharacteristic;
 import org.mapstruct.*;
 
@@ -8,11 +10,12 @@ import org.mapstruct.*;
 public interface ProductCharacteristicMapper {
 
     @Mapping(target = "externalId", expression = "java(java.util.UUID.randomUUID())")
-    ProductCharacteristic toProductCharacteristic(ProductCharacteristicDto productCharacteristicDto);
+    ProductCharacteristic toProductCharacteristic(ProductCharacteristicRequest productCharacteristicRequest);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    ProductCharacteristic toProductCharacteristic(ProductCharacteristicUpdateDto productCharacteristicUpdateDto,
+    ProductCharacteristic toProductCharacteristic(ProductCharacteristicRequest productCharacteristicRequest,
                                                   @MappingTarget ProductCharacteristic productCharacteristic);
 
-    ProductCharacteristicDto toProductCharacteristicDto(ProductCharacteristic productCharacteristic);
+    @Mapping(target = "id", source = "externalId")
+    ProductCharacteristicResponse toProductCharacteristicDto(ProductCharacteristic productCharacteristic);
 }

@@ -64,21 +64,21 @@ public class Validator {
     ) {
         String name = requestedCharacteristic.getName();
         String value = requestedCharacteristic.getValue();
-        ValueType requestedValueType = requestedCharacteristic.getValueType();
+       // ValueType requestedValueType = requestedCharacteristic.getValueType();
         ValueType requiredValueType = requiredCharacteristics.get(name);
 
         if(!requiredCharacteristics.containsKey(name)) {
-            exceptions.add(String.format(INVALID_CHARACTERISTIC, name, requestedValueType));
+            exceptions.add(String.format(INVALID_CHARACTERISTIC, name, name));
             return;
         }
 
-        if(requiredCharacteristics.get(name) != requestedValueType) {
-            exceptions.add(
-                    String.format(INVALID_CHARACTERISTIC_TYPE, name, requiredValueType, requestedValueType)
-            );
-        }
+//        if(requiredCharacteristics.get(name) != requestedValueType) {
+//            exceptions.add(
+//                    String.format(INVALID_CHARACTERISTIC_TYPE, name, requiredValueType, requestedValueType)
+//            );
+//        }
 
-        validateValueType(requestedValueType, name, value, exceptions);
+        validateValueType(requiredValueType, name, value, exceptions);
     }
 
     private void validateValueType(ValueType valueType, String name, String value, List<String> exceptions) {
@@ -89,5 +89,4 @@ public class Validator {
             exceptions.add(String.format(INVALID_CHARACTERISTIC_VALUE, name, value, valueType));
         }
     }
-
 }

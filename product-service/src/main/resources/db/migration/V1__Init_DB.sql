@@ -50,9 +50,9 @@ create table product_special_prices
 (
     id                      bigint not null,
     external_id             uuid,
-    special_price_from_date timestamp,
-    special_price_to_date   timestamp,
-    special_price           bigint,
+    from_date timestamp,
+    to_date   timestamp,
+    price           bigint,
     product_id              bigint REFERENCES products (id),
     primary key (id)
 );

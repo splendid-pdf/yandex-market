@@ -2,17 +2,20 @@ package com.yandex.market.productservice.service.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yandex.market.productservice.dto.ProductImageDto;
-import com.yandex.market.productservice.dto.request.ProductCharacteristicRequest;
-import com.yandex.market.productservice.dto.request.ProductSpecialPriceRequest;
-import com.yandex.market.productservice.dto.request.ProductUpdateRequest;
 import com.yandex.market.productservice.dto.projections.ProductPreview;
 import com.yandex.market.productservice.dto.projections.SellerArchivePreview;
 import com.yandex.market.productservice.dto.projections.SellerProductPreview;
 import com.yandex.market.productservice.dto.request.CreateProductRequest;
+import com.yandex.market.productservice.dto.request.ProductCharacteristicRequest;
+import com.yandex.market.productservice.dto.request.ProductSpecialPriceRequest;
+import com.yandex.market.productservice.dto.request.ProductUpdateRequest;
 import com.yandex.market.productservice.dto.response.ProductCharacteristicResponse;
 import com.yandex.market.productservice.dto.response.ProductResponse;
 import com.yandex.market.productservice.dto.response.ProductSpecialPriceResponse;
-import com.yandex.market.productservice.mapper.*;
+import com.yandex.market.productservice.mapper.ProductCharacteristicMapper;
+import com.yandex.market.productservice.mapper.ProductImageMapper;
+import com.yandex.market.productservice.mapper.ProductMapper;
+import com.yandex.market.productservice.mapper.ProductSpecialPriceMapper;
 import com.yandex.market.productservice.model.Product;
 import com.yandex.market.productservice.model.ProductImage;
 import com.yandex.market.productservice.model.Type;
@@ -54,9 +57,9 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @Transactional
     public UUID createProduct(CreateProductRequest createProductRequest, UUID sellerId) {
-        UUID typeId = createProductRequest.type().externalId();
+        UUID typeId = createProductRequest.type().id();
         Type type = typeRepository.findByExternalId(typeId)
-                .orElseThrow(()-> new EntityNotFoundException(String.format(TYPE_NOT_FOUND_ERROR_MESSAGE, typeId)));
+                .orElseThrow(() -> new EntityNotFoundException(String.format(TYPE_NOT_FOUND_ERROR_MESSAGE, typeId)));
         Product product = productMapper.toProduct(createProductRequest);
         type.addProduct(product);
         product.setSellerExternalId(sellerId);
@@ -178,7 +181,7 @@ public class ProductServiceImpl implements ProductService {
         storedProductSpecialPrice =
                 productSpecialPriceMapper.toProductSpecialPrice(productSpecialPriceRequest, storedProductSpecialPrice);
         productSpecialPriceRepository.save(storedProductSpecialPrice);
-        return productSpecialPriceRequest;
+        return productSpecialPriceMapper.toProductSpecialPriceDto(storedProductSpecialPrice);
     }
 
     @Override
@@ -199,9 +202,8 @@ public class ProductServiceImpl implements ProductService {
         storedProductCharacteristic = productCharacteristicMapper
                 .toProductCharacteristic(productCharacteristicRequest, storedProductCharacteristic);
         productCharacteristicRepository.save(storedProductCharacteristic);
-        return productCharacteristicRequest;
+        return productCharacteristicMapper.toProductCharacteristicDto(storedProductCharacteristic);
     }
-
 
 
 //    @SneakyThrows

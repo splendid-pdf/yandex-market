@@ -10,6 +10,7 @@ import java.util.UUID;
 @Schema
 public record TypeDto(
         @NotBlank
-        UUID externalId
+        UUID id,
+        String name
 ) {
 }

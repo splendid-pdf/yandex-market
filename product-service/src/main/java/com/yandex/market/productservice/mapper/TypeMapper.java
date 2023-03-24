@@ -12,11 +12,10 @@ import org.mapstruct.*;
         unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface TypeMapper {
 
-    Type toType(TypeDto typeDto);
-
+    @Mapping(source = "externalId", target = "id")
     TypeDto toTypeDto(Type type);
 
     @Mapping(source = "externalId", target = "id")
-    @Mapping(source = "typeCharacteristics", target = "typeCharacteristicDtos")
+    @Mapping(source = "typeCharacteristics", target = "characteristics")
     TypeResponse toTypeResponse(Type type);
 }

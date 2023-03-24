@@ -1,15 +1,15 @@
 package com.yandex.market.productservice.mapper;
 
-import com.yandex.market.productservice.dto.RoomDto;
+import com.yandex.market.productservice.dto.response.RoomResponse;
 import com.yandex.market.productservice.model.Room;
-import org.mapstruct.*;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.ReportingPolicy;
 
 @Mapper(componentModel = "spring",
         unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface RoomMapper {
 
-    @Mapping(target = "externalId", expression = "java(java.util.UUID.randomUUID())")
-    Room toRoom(RoomDto roomDto);
-
-    RoomDto toRoomDto(Room room);
+    @Mapping(target = "id", source = "externalId")
+    RoomResponse toRoomResponse(Room room);
 }

@@ -20,6 +20,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -124,11 +125,11 @@ public class ProductController {
         return productService.addProductImage(productId, productImageDto);
     }
 
-    @DeleteMapping("/products/images/{imageUrl}")
+    @DeleteMapping("/products/images")
     @ResponseStatus(HttpStatus.OK)
     @Operation(operationId = "deleteImage", summary = "Удалить изображение продукта")
     @ApiResponse(responseCode = "200", description = "Изображение успешно удалено")
-    public void deleteImageByUrl(@PathVariable String url) {
+    public void deleteImageByUrl(@RequestParam String url) {
         productService.deleteProductImage(url);
     }
 

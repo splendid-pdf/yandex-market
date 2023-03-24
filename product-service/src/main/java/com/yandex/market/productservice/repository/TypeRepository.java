@@ -29,7 +29,7 @@ public interface TypeRepository extends JpaRepository<Type, Long> {
             value = """
             SELECT
                 t.name AS name,
-                t.external_id AS externalId
+                t.external_id AS id
             FROM
                 types AS t
             """,
@@ -41,7 +41,7 @@ public interface TypeRepository extends JpaRepository<Type, Long> {
             value = """
             SELECT
                 t.name AS name,
-                t.external_id AS externalId
+                t.external_id AS id
             FROM
                 rooms AS r
             INNER JOIN room_type AS rt ON r.id = rt.room_id
