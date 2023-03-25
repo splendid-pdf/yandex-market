@@ -12,9 +12,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -52,47 +49,34 @@ public class RoomController {
 
     @GetMapping("/rooms/{roomId}")
     @ResponseStatus(HttpStatus.OK)
-    @Operation(operationId = "getRoomById", summary = "Получить комнату по ее id")
+    @Operation(operationId = "getRoomPreviewById", summary = "Получить комнату по ее id")
     @ApiResponse(responseCode = "200", description = "Комната успешно получена")
-    public RoomPreview getRoomById(
+    public RoomPreview getRoomPreviewById(
                                     @PathVariable
                                     @Parameter(description = "Идентификатор комнаты")
                                     UUID roomId
     ) {
 
-        return roomService.getRoomById(roomId);
+        return roomService.getRoomPreviewById(roomId);
     }
 
     @GetMapping("/rooms")
     @ResponseStatus(HttpStatus.OK)
-    @Operation(operationId = "getAllRooms", summary = "Получить список всех комнат")
+    @Operation(operationId = "getRoomPreviews", summary = "Получить список всех комнат")
     @ApiResponse(responseCode = "200", description = "Список комнат успешно получен")
-    public List<RoomPreview> getAllRooms(
-                                         @PageableDefault(
-                                                 size = Integer.MAX_VALUE,
-                                                 sort = "name",
-                                                 direction = Sort.Direction.ASC
-                                         )
-                                         Pageable pageable
-    ) {
-        return roomService.getAllRooms(pageable);
+    public List<RoomPreview> getRoomPreviews() {
+        return roomService.getRoomPreviews();
     }
 
     @GetMapping("/types/{typeId}/rooms")
     @ResponseStatus(HttpStatus.OK)
-    @Operation(operationId = "getRoomById", summary = "Получить список комнат которые есть у переданного типа товаров")
+    @Operation(operationId = "getRoomPreviewsByTypeId", summary = "Получить список комнат которые есть у переданного типа товаров")
     @ApiResponse(responseCode = "200", description = "Список комнат успешно получен")
-    public List<RoomPreview> getAllRoomsTypeId(
+    public List<RoomPreview> getRoomPreviewsByTypeId(
                                                @PathVariable
                                                @Parameter(description = "Идентификатор типа товара")
-                                               UUID typeId,
-                                               @PageableDefault(
-                                                       size = Integer.MAX_VALUE,
-                                                       sort = "name",
-                                                       direction = Sort.Direction.ASC
-                                               )
-                                               Pageable pageable
+                                               UUID typeId
     ) {
-        return roomService.getAllRoomsByTypeId(typeId, pageable);
+        return roomService.getRoomPreviewsByTypeId(typeId);
     }
 }

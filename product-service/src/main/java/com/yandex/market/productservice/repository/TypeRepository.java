@@ -2,7 +2,7 @@ package com.yandex.market.productservice.repository;
 
 import com.yandex.market.productservice.dto.projections.TypePreview;
 import com.yandex.market.productservice.model.Type;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -33,7 +33,7 @@ public interface TypeRepository extends JpaRepository<Type, Long> {
             """,
             nativeQuery = true
     )
-    List<TypePreview> findAllTypePreviews(Pageable pageable);
+    List<TypePreview> findTypePreviews(Sort sort);
 
     @Query(
             value = """
@@ -49,6 +49,6 @@ public interface TypeRepository extends JpaRepository<Type, Long> {
             """,
             nativeQuery = true
     )
-    List<TypePreview> findAllTypePreviewsByRoomId(@Param("roomId") UUID roomId, Pageable pageable);
+    List<TypePreview> findTypePreviewsByRoomId(@Param("roomId") UUID roomId, Sort sort);
 
 }

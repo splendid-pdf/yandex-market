@@ -13,9 +13,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -53,7 +50,7 @@ public class TypeController {
 
     @GetMapping("/types/{typeId}")
     @ResponseStatus(HttpStatus.OK)
-    @Operation(operationId = "getType", summary = "Получить тип по его id")
+    @Operation(operationId = "getTypeById", summary = "Получить тип по его id")
     @ApiResponse(responseCode = "200", description = "Тип товара успешно получен")
     public TypeResponse getTypeById(
                                     @PathVariable
@@ -65,33 +62,20 @@ public class TypeController {
 
     @GetMapping("/types")
     @ResponseStatus(HttpStatus.OK)
-    @Operation(operationId = "getAllTypes", summary = "Получить список всех типов товаров")
+    @Operation(operationId = "getTypePreviews", summary = "Получить список всех типов товаров")
     @ApiResponse(responseCode = "200", description = "Список типов успешно получен")
-    public List<TypePreview> getAllTypes(
-                                         @PageableDefault(
-                                                 size = Integer.MAX_VALUE,
-                                                 sort = "name",
-                                                 direction = Sort.Direction.DESC)
-                                         Pageable pageable
-    ) {
-        return typeService.getAllTypes(pageable);
+    public List<TypePreview> getTypePreviews() {
+        return typeService.getTypePreviews();
     }
 
     @GetMapping("rooms/{roomId}/types")
     @ResponseStatus(HttpStatus.OK)
-    @Operation(operationId = "getAllTypesByRoomId", summary = "Получить список типов товаров принадлежащих комнате")
+    @Operation(operationId = "getTypePreviewsByRoomId", summary = "Получить список типов товаров принадлежащих комнате")
     @ApiResponse(responseCode = "200", description = "Список типов товаров успешно получен")
-    public List<TypePreview> getAllTypesByRoomId(
+    public List<TypePreview> getTypePreviewsByRoomId(
                                                  @PathVariable
                                                  @Parameter(description = "Идентификатор комнаты")
-                                                 UUID roomId,
-                                                 @PageableDefault(
-                                                         size = Integer.MAX_VALUE,
-                                                         sort = "name",
-                                                         direction = Sort.Direction.DESC)
-                                                 Pageable pageable
-
-    ) {
-        return typeService.getAllTypesByRoomId(roomId, pageable);
+                                                 UUID roomId) {
+        return typeService.getTypePreviewsByRoomId(roomId);
     }
 }

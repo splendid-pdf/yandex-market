@@ -107,7 +107,7 @@ public class ProductController {
     }
 
     @PostMapping("/products/{productId}/images")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.CREATED)
     @Operation(operationId = "addImage", summary = "Добавить изображение продукту")
     @ApiResponse(
             responseCode = "204",
