@@ -2,7 +2,7 @@ package com.marketplace.gateway.dto;
 
 import java.time.Instant;
 
-public record OAuthUser(
+public record OAuthClient(
         String id,
         String email,
         String accessToken,

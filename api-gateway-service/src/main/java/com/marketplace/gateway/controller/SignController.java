@@ -1,7 +1,7 @@
 package com.marketplace.gateway.controller;
 
-import com.marketplace.gateway.dto.OAuthUserResponse;
-import com.marketplace.gateway.dto.UserLoginRequest;
+import com.marketplace.gateway.dto.OAuthClientResponse;
+import com.marketplace.gateway.dto.LoginRequest;
 import com.marketplace.gateway.service.OAuthAuthenticationService;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
@@ -15,33 +15,38 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
 @RestController
-@RequestMapping("/public/api/v1/oauth")
+@RequestMapping("/public/api/v1")
 @RequiredArgsConstructor
 @ApiResponses(value = {@ApiResponse(responseCode = "401", description = "Unauthorized")})
 public class SignController {
 
     private final OAuthAuthenticationService authenticationService;
 
-    @PostMapping("/login")
+    @PostMapping("/users/oauth/login")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successfully Logged In"),
+            @ApiResponse(responseCode = "200", description = "User successfully logged in"),
     })
-    public Mono<OAuthUserResponse> login(@RequestBody Mono<UserLoginRequest> request,
-                                         ServerWebExchange exchange) {
-        return authenticationService.authenticate(request, exchange);
+    public Mono<OAuthClientResponse> loginUser(@RequestBody Mono<LoginRequest> request) {
+        return authenticationService.authenticateUser(request);
     }
 
-    @PostMapping("/logout")
+    @PostMapping("/sellers/oauth/login")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Seller successfully logged in"),
+    })
+    public Mono<OAuthClientResponse> loginSeller(@RequestBody Mono<LoginRequest> request) {
+        return authenticationService.authenticateSeller(request);
+    }
+
+    @PostMapping("/oauth/logout")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Successfully Logged out")
     })
     @Parameters(value = {
-            @Parameter(in = ParameterIn.HEADER, name = "Authorization", required = true),
-            @Parameter(in = ParameterIn.HEADER, name = "X-User-Id", required = true)
+            @Parameter(in = ParameterIn.HEADER, name = "Authorization", required = true)
     })
     public Mono<ResponseEntity<Void>> logout(ServerHttpRequest request) {
         return authenticationService.deauthenticate(request);

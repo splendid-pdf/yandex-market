@@ -20,6 +20,6 @@ public class SecurityProperties {
     @AllArgsConstructor
     public static class OpenedRoute {
         private String url;
-        private List<String> methods;
+        private String methods;
     }
 }
