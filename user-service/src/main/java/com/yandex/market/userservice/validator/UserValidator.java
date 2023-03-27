@@ -45,18 +45,11 @@ public class UserValidator {
     public void validateName(@NotNull UserRequestDto userRequestDto, @NotNull List<String> exceptionMessages) {
         val firstName = userRequestDto.firstName();
         val lastName = userRequestDto.lastName();
-        val middleName = userRequestDto.middleName();
 
         if (StringUtils.isNotBlank(firstName) && !NAME_PATTERN.matcher(firstName).matches()) {
             exceptionMessages
                     .add(properties.getMessageByErrorCode(INCORRECT_FIRST_NAME_VALIDATION_ERROR_CODE)
                             .formatted(firstName));
-        }
-
-        if (StringUtils.isNotBlank(middleName) && !NAME_PATTERN.matcher(middleName).matches()) {
-            exceptionMessages
-                    .add(properties.getMessageByErrorCode(INCORRECT_MIDDLE_NAME_VALIDATION_ERROR_CODE)
-                            .formatted(middleName));
         }
 
         if (StringUtils.isNotBlank(lastName) && !NAME_PATTERN.matcher(lastName).matches()) {
