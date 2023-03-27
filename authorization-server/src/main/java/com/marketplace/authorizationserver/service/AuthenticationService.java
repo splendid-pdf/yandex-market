@@ -1,8 +1,10 @@
 package com.marketplace.authorizationserver.service;
 
 import com.marketplace.authorizationserver.config.properties.SecurityProperties;
-import com.marketplace.authorizationserver.dto.OAuthUserData;
+import com.marketplace.authorizationserver.dto.OAuthClientData;
 import com.marketplace.authorizationserver.dto.UserLoginRequest;
+import com.marketplace.authorizationserver.service.provider.SellerAuthenticationProvider;
+import com.marketplace.authorizationserver.service.provider.UserAuthenticationProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.security.access.AuthorizationServiceException;
@@ -22,52 +24,39 @@ import java.lang.reflect.Field;
 import java.util.Map;
 import java.util.Set;
 
+import static com.yandex.market.auth.util.ClientAttributes.SELLER_ID;
+import static com.yandex.market.auth.util.ClientAttributes.USER_ID;
 import static org.springframework.security.oauth2.core.OAuth2AccessToken.TokenType.BEARER;
 
 @Service
 @RequiredArgsConstructor
 public class AuthenticationService {
     private final TokenService tokenService;
-    private final UserAuthenticationProvider provider;
     private final SecurityProperties securityProperties;
     private final OAuth2AuthorizationService authorizationService;
+    private final UserAuthenticationProvider userAuthenticationProvider;
+    private final SellerAuthenticationProvider sellerAuthenticationProvider;
 
-    @SuppressWarnings("unchecked")
-    public OAuthUserData authenticate(UserLoginRequest request) {
-        Authentication authentication = provider.authenticate(
+
+    public OAuthClientData authenticate(UserLoginRequest request) {
+        Authentication authentication = userAuthenticationProvider.authenticate(
                 new UsernamePasswordAuthenticationToken(request.email(), request.password()));
-        String email = authentication.getPrincipal().toString();
-        String userId = ((Map<String, String>) authentication.getDetails()).get("user-id");
+        return getoAuthClientData(authentication);
+    }
 
-        if (authentication.isAuthenticated()) {
-            OAuth2AccessToken accessToken =
-                    tokenService.createAccessToken(authentication, securityProperties.getAccessTokenLifetimeInMinutes());
-            OAuth2RefreshToken refreshToken =
-                    tokenService.createRefreshToken(authentication, securityProperties.getRefreshTokenLifetimeInMinutes());
-
-            OAuth2Authorization authorizationObject = getoAuth2Authorization(email, userId, accessToken, refreshToken);
-
-            authorizationService.save(authorizationObject);
-
-            return new OAuthUserData(
-                    userId,
-                    email,
-                    accessToken.getTokenValue(),
-                    refreshToken.getTokenValue(),
-                    accessToken.getExpiresAt()
-            );
-        }
-
-        throw new AuthorizationServiceException("User with id '%s' wasn't authenticated".formatted(userId));
+    public OAuthClientData authenticateSeller(UserLoginRequest request) {
+        Authentication authentication = sellerAuthenticationProvider.authenticate(
+                new UsernamePasswordAuthenticationToken(request.email(), request.password()));
+        return getoAuthClientData(authentication);
     }
 
     public void revokeAuthentication(String token, OAuth2TokenType tokenType) {
-        OAuth2Authorization authorization = null;
         if (StringUtils.hasText(token)) {
             token = token.contains(BEARER.getValue())
                     ? token.replaceFirst(BEARER.getValue(), "").trim()
                     : token;
-            authorization = authorizationService.findByToken(token, tokenType);
+
+            OAuth2Authorization authorization = authorizationService.findByToken(token, tokenType);
 
             if (authorization != null) {
                 authorizationService.remove(authorization);
@@ -79,10 +68,40 @@ public class AuthenticationService {
         }
     }
 
+    @SuppressWarnings("unchecked")
+    private OAuthClientData getoAuthClientData(Authentication authentication) {
+        Map<String, String> details = (Map<String, String>) authentication.getDetails();
+        String email = authentication.getPrincipal().toString();
+        String clientId = details.containsKey(USER_ID)
+                ? details.get(USER_ID)
+                : details.get(SELLER_ID);
+
+        if (authentication.isAuthenticated()) {
+            OAuth2AccessToken accessToken =
+                    tokenService.createAccessToken(authentication, securityProperties.getAccessTokenLifetimeInMinutes());
+            OAuth2RefreshToken refreshToken =
+                    tokenService.createRefreshToken(authentication, securityProperties.getRefreshTokenLifetimeInMinutes());
+
+            OAuth2Authorization authorizationObject = getoAuth2Authorization(email, clientId, accessToken, refreshToken);
+
+            authorizationService.save(authorizationObject);
+
+            return new OAuthClientData(
+                    clientId,
+                    email,
+                    accessToken.getTokenValue(),
+                    refreshToken.getTokenValue(),
+                    accessToken.getExpiresAt()
+            );
+        }
+
+        throw new AuthorizationServiceException("User with id '%s' wasn't authenticated".formatted(clientId));
+    }
+
     @SneakyThrows
     private OAuth2Authorization getoAuth2Authorization(
             String email,
-            String userId,
+            String clientId,
             OAuth2AccessToken accessToken,
             OAuth2RefreshToken refreshToken
     ) {
@@ -107,7 +126,7 @@ public class AuthenticationService {
         fieldTokens.setAccessible(true);
         fieldAttributes.setAccessible(true);
 
-        fieldId.set(authorizationObject, userId);
+        fieldId.set(authorizationObject, clientId);
         fieldClientId.set(authorizationObject, securityProperties.getClientId());
         fieldPrincipalName.set(authorizationObject, email);
         fieldGrantType.set(authorizationObject, AuthorizationGrantType.PASSWORD);

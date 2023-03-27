@@ -1,5 +1,6 @@
 package com.yandex.market.sellerinfoservice.service;
 
+import com.yandex.market.auth.dto.ClientAuthDetails;
 import com.yandex.market.sellerinfoservice.dto.SellerRequestDto;
 import com.yandex.market.sellerinfoservice.dto.SellerResponseDto;
 
@@ -10,6 +11,8 @@ public interface SellerService {
     UUID createSeller(SellerRequestDto sellerRequestDto);
 
     SellerResponseDto getSellerByExternalId(UUID sellerExternalId);
+
+    ClientAuthDetails getSellerAuthDetails(String email);
 
     SellerResponseDto updateSellerWithDto(UUID sellerId, SellerRequestDto sellerRequestDto);
 

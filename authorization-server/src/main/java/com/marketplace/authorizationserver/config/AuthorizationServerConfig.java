@@ -82,7 +82,10 @@ public class AuthorizationServerConfig {
                 .csrf().disable()
                 .cors().disable()
                 .authorizeHttpRequests(request ->
-                        request.requestMatchers("/public/api/v1/oauth/**").permitAll())
+                        request.requestMatchers(
+                                "/public/api/v1/oauth/**",
+                                "/public/api/v1/users/oauth/**",
+                                "/public/api/v1/sellers/oauth/**").permitAll())
                 .authorizeHttpRequests(authorize -> authorize
                         .anyRequest().authenticated()
                 )

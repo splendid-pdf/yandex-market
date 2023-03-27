@@ -15,6 +15,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -54,6 +55,14 @@ public class SellerController {
     @Operation(operationId = "getSellerByExternalId", summary = "Получение продавца по externalId")
     @ApiResponse(responseCode = "200", description = "OK",
             content = @Content(mediaType = "application/json", schema = @Schema(implementation = SellerResponseDto.class)))
+    @PreAuthorize(value = """
+            @permissionService.hasPermission(
+                #externalId,
+                T(com.yandex.market.auth.model.Role).SELLER,
+                T(com.yandex.market.auth.util.ClientAttributes).SELLER_ID
+            )
+            """
+    )
     public SellerResponseDto getSellerByExternalId(
             @Parameter(name = "externalId", description = "Индификатор продавца")
             @PathVariable("externalId") UUID externalId) {
@@ -70,6 +79,14 @@ public class SellerController {
             summary = "Поиск по продавца Id и обновление с помощью Dto",
             description = "Обновление продавца на основе входящего объекта DTO и продавца UUID")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize(value = """
+            @permissionService.hasPermission(
+                #externalId,
+                T(com.yandex.market.auth.model.Role).SELLER,
+                T(com.yandex.market.auth.util.ClientAttributes).SELLER_ID
+            )
+            """
+    )
     public SellerResponseDto updateSeller(
             @Parameter(name = "externalId", description = "Индификатор продавца")
             @PathVariable UUID externalId,
@@ -83,6 +100,14 @@ public class SellerController {
             @ApiResponse(description = "Продавец успешно удален", responseCode = "200"),
             @ApiResponse(description = "Такого продавца не существует", responseCode = "404")
     })
+    @PreAuthorize(value = """
+            @permissionService.hasPermission(
+                #externalId,
+                T(com.yandex.market.auth.model.Role).SELLER,
+                T(com.yandex.market.auth.util.ClientAttributes).SELLER_ID
+            )
+            """
+    )
     public void deleteSeller(@Parameter(name = "externalId", description = "Индентификатор продавца")
                              @PathVariable UUID externalId) {
         sellerService.deleteSellerByExternalId(externalId);

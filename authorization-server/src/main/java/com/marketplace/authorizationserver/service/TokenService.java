@@ -1,6 +1,5 @@
 package com.marketplace.authorizationserver.service;
 
-import com.marketplace.authorizationserver.config.properties.SecurityProperties;
 import com.nimbusds.jwt.SignedJWT;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -20,6 +19,9 @@ import java.util.Set;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static com.yandex.market.auth.util.ClientAttributes.SELLER_ID;
+import static com.yandex.market.auth.util.ClientAttributes.USER_ID;
+
 @Service
 @RequiredArgsConstructor
 public class TokenService  {
@@ -37,7 +39,7 @@ public class TokenService  {
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toSet());
 
-        JwtClaimsSet jwtClaimsSet = JwtClaimsSet.builder()
+        JwtClaimsSet.Builder builder = JwtClaimsSet.builder()
                 .issuer("http://51.250.102.12:9000")
                 .issuedAt(issuedAt)
                 .notBefore(issuedAt)
@@ -45,9 +47,13 @@ public class TokenService  {
                 .audience(List.of("client"))
                 .subject(authentication.getName())
                 .claim("scope", scopes)
-                .claim("authorities", authorities)
-                .claim("user-id", ((Map<String, String>) authentication.getDetails()).get("user-id"))
-                .build();
+                .claim("authorities", authorities);
+
+        Map<String, String> clientDetails = (Map<String, String>) authentication.getDetails();
+
+        JwtClaimsSet jwtClaimsSet = clientDetails.containsKey(USER_ID)
+                ? builder.claim(USER_ID, clientDetails.get(USER_ID)).build()
+                : builder.claim(SELLER_ID, clientDetails.get(SELLER_ID)).build();
 
         String tokenValue = jwtEncoder.encode(JwtEncoderParameters.from(jwtClaimsSet)).getTokenValue();
 
@@ -64,7 +70,7 @@ public class TokenService  {
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toSet());
 
-        JwtClaimsSet jwtClaimsSet = JwtClaimsSet.builder()
+        JwtClaimsSet.Builder builder = JwtClaimsSet.builder()
                 .issuer("http://51.250.102.12:9000")
                 .issuedAt(issuedAt)
                 .notBefore(issuedAt)
@@ -72,9 +78,13 @@ public class TokenService  {
                 .audience(List.of("client"))
                 .subject(authentication.getName())
                 .claim("scope", scopes)
-                .claim("authorities", authorities)
-                .claim("user-id", ((Map<String, String>) authentication.getDetails()).get("user-id"))
-                .build();
+                .claim("authorities", authorities);
+
+        Map<String, String> clientDetails = (Map<String, String>) authentication.getDetails();
+
+        JwtClaimsSet jwtClaimsSet = clientDetails.containsKey(USER_ID)
+                ? builder.claim(USER_ID, clientDetails.get(USER_ID)).build()
+                : builder.claim(SELLER_ID, clientDetails.get(SELLER_ID)).build();
 
         String tokenValue = jwtEncoder.encode(JwtEncoderParameters.from(jwtClaimsSet)).getTokenValue();
 

@@ -1,5 +1,6 @@
 package com.yandex.market.userservice.model;
 
+import com.yandex.market.auth.model.Role;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
