@@ -62,16 +62,16 @@ public class TypeController {
 
     @GetMapping("/types")
     @ResponseStatus(HttpStatus.OK)
-    @Operation(operationId = "getTypePreviews", summary = "Получить список всех типов товаров")
-    @ApiResponse(responseCode = "200", description = "Список типов успешно получен")
+    @Operation(operationId = "getTypePreviews", summary = "Получить отсортированный список всех типов товаров")
+    @ApiResponse(responseCode = "200", description = "Отсортированный список типов успешно получен")
     public List<TypePreview> getTypePreviews() {
         return typeService.getTypePreviews();
     }
 
     @GetMapping("rooms/{roomId}/types")
     @ResponseStatus(HttpStatus.OK)
-    @Operation(operationId = "getTypePreviewsByRoomId", summary = "Получить список типов товаров принадлежащих комнате")
-    @ApiResponse(responseCode = "200", description = "Список типов товаров успешно получен")
+    @Operation(operationId = "getTypePreviewsByRoomId", summary = "Получить отсортированный список типов товаров принадлежащих комнате")
+    @ApiResponse(responseCode = "200", description = "Отсортированный список типов товаров успешно получен")
     public List<TypePreview> getTypePreviewsByRoomId(
                                                  @PathVariable
                                                  @Parameter(description = "Идентификатор комнаты")
