@@ -1,13 +1,15 @@
 package com.yandex.market.productservice.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yandex.market.productservice.exception.InvalidCharacteristicsException;
-import com.yandex.market.productservice.model.*;
+import com.yandex.market.productservice.model.Product;
+import com.yandex.market.productservice.model.ProductCharacteristic;
+import com.yandex.market.productservice.model.TypeCharacteristic;
+import com.yandex.market.productservice.model.ValueType;
 import com.yandex.market.productservice.repository.TypeRepository;
 import jakarta.annotation.PostConstruct;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -33,7 +35,6 @@ public class Validator {
                         .collect(Collectors.toMap(TypeCharacteristic::getName, TypeCharacteristic::getValueType))));
     }
 
-    @SneakyThrows
     public void validateProductCharacteristics(Product product) {
         UUID typeId = product.getType().getExternalId();
 
@@ -53,7 +54,11 @@ public class Validator {
         }
 
         if(!exceptions.isEmpty()) {
-            throw new InvalidCharacteristicsException(objectMapper.writeValueAsString(exceptions));
+            try {
+                throw new InvalidCharacteristicsException(objectMapper.writeValueAsString(exceptions));
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
@@ -68,7 +73,7 @@ public class Validator {
         ValueType requiredValueType = requiredCharacteristics.get(name);
 
         if(!requiredCharacteristics.containsKey(name)) {
-            exceptions.add(String.format(INVALID_CHARACTERISTIC, name, requestedValueType));
+            exceptions.add(String.format(INVALID_CHARACTERISTIC, name, name));
             return;
         }
 
@@ -78,7 +83,7 @@ public class Validator {
             );
         }
 
-        validateValueType(requestedValueType, name, value, exceptions);
+        validateValueType(requiredValueType, name, value, exceptions);
     }
 
     private void validateValueType(ValueType valueType, String name, String value, List<String> exceptions) {
@@ -89,5 +94,4 @@ public class Validator {
             exceptions.add(String.format(INVALID_CHARACTERISTIC_VALUE, name, value, valueType));
         }
     }
-
 }

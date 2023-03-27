@@ -11,4 +11,5 @@ public interface ProductImageMapper {
 
     ProductImage toProductImage(ProductImageDto productImageDto);
     ProductImageDto toProductImageDto(ProductImage productImage);
+
 }

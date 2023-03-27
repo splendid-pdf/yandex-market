@@ -5,7 +5,7 @@ import java.util.UUID;
 
 public interface SellerArchivePreview {
 
-    UUID getExternalId();
+    UUID getId();
 
     String getArticleNumber();
 

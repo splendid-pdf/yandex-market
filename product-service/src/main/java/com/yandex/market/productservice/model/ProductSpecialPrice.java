@@ -24,11 +24,11 @@ public class ProductSpecialPrice {
 
     private UUID externalId;
 
-    private LocalDateTime specialPriceFromDate;
+    private LocalDateTime fromDate;
 
-    private LocalDateTime specialPriceToDate;
+    private LocalDateTime toDate;
 
-    private Long specialPrice;
+    private Long price;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore
