@@ -15,7 +15,6 @@ import org.springframework.web.util.pattern.PathPattern;
 import java.util.Map;
 import java.util.List;
 
-import static com.marketplace.gateway.util.AuthConstants.X_USER_ID_HEADER;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.security.oauth2.core.OAuth2AccessToken.TokenType.BEARER;
 
@@ -48,18 +47,17 @@ public class AuthFilter extends AbstractGatewayFilterFactory<AuthFilter.Config> 
                     exchange.getRequest().getCookies());
 
             if (openedRoutes.entrySet().stream().noneMatch(route -> isOpenedRoute(requestedPath, exchange, route))) {
-                String userId = exchange.getRequest().getHeaders().getFirst(X_USER_ID_HEADER);
                 String bearerToken = exchange.getRequest().getHeaders().getFirst(AUTHORIZATION);
 
-                if (StringUtils.hasText(bearerToken) && StringUtils.hasText(userId)) {
+                if (StringUtils.hasText(bearerToken)) {
                     String token = bearerToken.replaceFirst(BEARER.getValue(), "").trim();
 
-                    if (!authenticationService.isAuthenticated(userId, token)) {
-                        throw new AuthenticationException("User is not authenticated");
+                    if (!authenticationService.isAuthenticated(token)) {
+                        throw new AuthenticationException("Client is not authenticated");
                     }
 
                 } else {
-                    throw new MissingAuthHeaderException("X-User-Id and Authorization headers must be provided");
+                    throw new MissingAuthHeaderException("Authorization header must be provided");
                 }
             }
             return chain.filter(exchange);

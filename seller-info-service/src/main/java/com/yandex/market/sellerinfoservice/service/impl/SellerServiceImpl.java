@@ -1,5 +1,6 @@
 package com.yandex.market.sellerinfoservice.service.impl;
 
+import com.yandex.market.auth.dto.ClientAuthDetails;
 import com.yandex.market.sellerinfoservice.dto.SellerRequestDto;
 import com.yandex.market.sellerinfoservice.dto.SellerResponseDto;
 import com.yandex.market.sellerinfoservice.mapper.SellerMapper;
@@ -38,6 +39,13 @@ public class SellerServiceImpl implements SellerService {
         return sellerMapper.toSellerResponseDto(sellerRepository
                 .findByExternalId(sellerExternalId)
                 .orElseThrow(() -> new EntityNotFoundException(SELLER_NOT_FOUND_EXCEPTION + sellerExternalId)));
+    }
+
+    @Override
+    @Transactional
+    public ClientAuthDetails getSellerAuthDetails(String email) {
+        return sellerRepository.findSellerAuthDetailsByEmail(email)
+                .orElseThrow(() -> new EntityNotFoundException("No seller with email " + email));
     }
 
     @Override

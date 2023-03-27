@@ -1,8 +1,8 @@
-package com.marketplace.authorizationserver.dto;
+package com.yandex.market.auth.dto;
 
 import java.util.UUID;
 
-public record UserAuthDto(
+public record ClientAuthDetails(
         UUID uuid,
         String email,
         String password,

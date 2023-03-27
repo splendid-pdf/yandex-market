@@ -1,6 +1,8 @@
-package com.marketplace.authorizationserver.service;
+package com.marketplace.authorizationserver.service.provider;
 
-import com.marketplace.authorizationserver.model.AuthUserDetails;
+import com.marketplace.authorizationserver.dto.AuthClientDetails;
+import com.marketplace.authorizationserver.service.CustomUserDetailsService;
+import com.marketplace.authorizationserver.service.SellerDetailsService;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -9,16 +11,15 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.util.Map;
 
-@Service
+@Component
 @RequiredArgsConstructor
-public class UserAuthenticationProvider implements AuthenticationProvider {
+public class SellerAuthenticationProvider implements AuthenticationProvider {
+    private final SellerDetailsService detailsService;
 
-    private final UserDetailsService userDetailsService;
     private final AuthenticationManagerBuilder auth;
 
     @PostConstruct
@@ -30,12 +31,12 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         String email = authentication.getName();
         String password = authentication.getCredentials().toString();
-        AuthUserDetails userDetails = (AuthUserDetails) userDetailsService.loadUserByUsername(email);
-        if (password.equals(userDetails.getPassword())) {
+        AuthClientDetails clientDetails = (AuthClientDetails) detailsService.loadUserByUsername(email);
+        if (password.equals(clientDetails.getPassword())) {
             UsernamePasswordAuthenticationToken token =
-                    new UsernamePasswordAuthenticationToken(email, password, userDetails.getAuthorities());
-            
-            token.setDetails(Map.of("user-id", userDetails.getExternalId()));
+                    new UsernamePasswordAuthenticationToken(email, password, clientDetails.getAuthorities());
+
+            token.setDetails(Map.of("seller-id", clientDetails.getExternalId()));
             return token;
         }
         throw new BadCredentialsException("Bad credentials for email: " + email);

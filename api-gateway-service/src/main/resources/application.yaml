@@ -33,6 +33,10 @@ spring:
           uri: http://127.0.0.1:8083
           predicates:
             - Path=/*/*/*/users/{userId}/reviews, /*/*/*/products/{productId}/reviews, /*/*/*/users/reviews/{reviewId}
+        - id: seller-service
+          uri: http://127.0.0.1:8085
+          predicates:
+            - Path=/*/*/*/sellers, /*/*/*/sellers/{externalId}
       default-filters:
         - name: AuthFilter
 
@@ -70,12 +74,13 @@ application:
     white-list:
       # users-api
       - url: /*/*/*/users
-        methods:
-          - POST
+        methods: POST
+      # sellers-api
+      - url: /*/*/*/sellers
+        methods: POST
       # products-api
       - url: /*/*/*/products/{externalId}
-        methods:
-          - GET
+        methods: GET
 
 logging:
   level:

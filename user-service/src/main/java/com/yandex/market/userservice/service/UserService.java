@@ -1,12 +1,12 @@
 package com.yandex.market.userservice.service;
 
-import com.yandex.market.userservice.dto.request.UserAuthenticationDto;
+import com.yandex.market.auth.dto.ClientAuthDetails;
 import com.yandex.market.userservice.dto.request.UserRegistrationDto;
 import com.yandex.market.userservice.dto.request.UserRequestDto;
 import com.yandex.market.userservice.dto.response.UserResponseDto;
 import com.yandex.market.userservice.mapper.UserRequestMapper;
 import com.yandex.market.userservice.mapper.UserResponseMapper;
-import com.yandex.market.userservice.model.Role;
+import com.yandex.market.auth.model.Role;
 import com.yandex.market.userservice.model.User;
 import com.yandex.market.userservice.repository.UserRepository;
 import com.yandex.market.userservice.validator.UserRegistrationValidator;
@@ -87,16 +87,9 @@ public class UserService {
         return userResponseMapper.map(storedUser);
     }
 
-    public UserAuthenticationDto authenticate(String email) {
-        User user = userRepository.findUserByEmail(email)
+    public ClientAuthDetails getUserDetails(String email) {
+        return userRepository.findUserByEmail(email)
                 .orElseThrow(() -> new EntityNotFoundException(USER_NOT_FOUND_BY_EMAIL_ERROR_MESSAGE + email));
-
-        return new UserAuthenticationDto(
-                user.getExternalId(),
-                user.getEmail(),
-                user.getPassword(),
-                user.getRole().name()
-        );
     }
 
     private void checkEmailForUniqueness(String email) {

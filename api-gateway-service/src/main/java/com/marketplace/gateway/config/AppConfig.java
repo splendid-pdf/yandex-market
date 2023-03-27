@@ -6,6 +6,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.pattern.PathPattern;
 import org.springframework.web.util.pattern.PathPatternParser;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -25,9 +26,15 @@ public class AppConfig {
 
     @Bean
     public Map<PathPattern, List<String>> pathPatterns(SecurityProperties properties, PathPatternParser parser) {
-        return properties.getWhiteList().stream()
-                .collect(Collectors.toMap(
-                        openedRoute -> parser.parse(openedRoute.getUrl()),
-                        SecurityProperties.OpenedRoute::getMethods));
+        return properties.getWhiteList()
+                .stream()
+                .collect(
+                        Collectors.toMap(
+                            openedRoute -> parser.parse(openedRoute.getUrl()),
+                            openedRoute -> Arrays.stream(openedRoute.getMethods().split(","))
+                                .map(String::trim)
+                                .toList()
+                        )
+                );
     }
 }

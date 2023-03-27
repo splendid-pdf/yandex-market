@@ -1,5 +1,6 @@
 package com.yandex.market.userservice.repository;
 
+import com.yandex.market.auth.dto.ClientAuthDetails;
 import com.yandex.market.userservice.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -20,6 +21,11 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
     @Query("FROM User u WHERE u.externalId=:externalId AND u.isDeleted=false")
     Optional<User> findByExternalId(@Param("externalId") UUID externalId);
 
-    @Query("FROM User u WHERE u.email=:email AND u.isDeleted=false")
-    Optional<User> findUserByEmail(String email);
+    @Query(value = """
+        SELECT new com.yandex.market.auth.dto.ClientAuthDetails(u.externalId, u.email, u.password, upper(u.role))
+        FROM User u
+        WHERE u.email = :email AND u.isDeleted = false
+        """
+    )
+    Optional<ClientAuthDetails> findUserByEmail(String email);
 }

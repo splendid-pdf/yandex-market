@@ -1,7 +1,8 @@
-package com.yandex.market.userservice.model;
+package com.yandex.market.auth.model;
 
 public enum Role {
     USER("ROLE_USER"),
+    SELLER("ROLE_SELLER"),
     ADMIN("ROLE_ADMIN");
 
     private final String key;

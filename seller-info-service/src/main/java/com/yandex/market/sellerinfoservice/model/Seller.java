@@ -1,9 +1,12 @@
 package com.yandex.market.sellerinfoservice.model;
 
-import io.swagger.v3.oas.annotations.media.Schema;
+import com.yandex.market.auth.model.Role;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -14,7 +17,6 @@ import java.util.UUID;
 @AllArgsConstructor
 @Table(name = "sellers")
 @EqualsAndHashCode(of = "id")
-@Schema(description = "Модель для \"Продавца\"")
 public class Seller {
 
     @Id
@@ -30,9 +32,14 @@ public class Seller {
 
     private String email;
 
+    private String password;
+
     private String legalAddress;
 
     private String companyName;
+
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     private String imageUrl;
 
@@ -48,4 +55,12 @@ public class Seller {
     private String paymentAccount;
 
     private String corporateAccount;
+
+    private boolean isDeleted;
+
+    @CreationTimestamp
+    private LocalDateTime createdAt;
+
+    @UpdateTimestamp
+    private LocalDateTime modifiedAt;
 }

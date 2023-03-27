@@ -1,8 +1,8 @@
 package com.marketplace.authorizationserver.service;
 
-import com.yandex.market.auth.dto.ClientAuthDetails;
-import com.marketplace.authorizationserver.gateway.UserRestClient;
 import com.marketplace.authorizationserver.dto.AuthClientDetails;
+import com.yandex.market.auth.dto.ClientAuthDetails;
+import com.marketplace.authorizationserver.gateway.SellerAuthClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,13 +14,12 @@ import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
-public class CustomUserDetailsService implements UserDetailsService {
-
-    private final UserRestClient authClient;
+public class SellerDetailsService implements UserDetailsService {
+    private final SellerAuthClient authClient;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        ClientAuthDetails clientAuthDetails = authClient.receiveUserAuthDetails(email);
+        ClientAuthDetails clientAuthDetails = authClient.receiveSellerAuthDetails(email);
 
         return new AuthClientDetails(
                 clientAuthDetails.email(),
