@@ -16,7 +16,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Slf4j
 public class AggregatorService {
-//
+
     private final RestTemplate restTemplate;
 
     private static final String URL_GET_PRODUCT = "http://51.250.102.12:9090/public/api/v1/products/{productId}";
@@ -147,9 +147,4 @@ public class AggregatorService {
         return new HttpEntity<>(productRequestDto, headers);
     }
 
-    public void getProductAndSellerDetails(String productId){
-        ProductResponseDto productResponseDto = restTemplate.getForObject(URL_GET_PRODUCT, ProductResponseDto.class, productId);
-//        UUID sellerId = productResponseDto.restTemplate.getForObject();
-
-    }
 }

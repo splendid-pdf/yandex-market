@@ -1,9 +1,13 @@
 package com.yandex.market.productservice.utils;
 
 public final class ExceptionMessagesConstants {
-    public static final String PRODUCT_NOT_FOUND_ERROR_MESSAGE = "Product was not found by given externalId = ";
-
+    public static final String PRODUCT_NOT_FOUND_ERROR_MESSAGE = "Product was not found by given externalId = %s";
+    public static final String ROOM_NOT_FOUND_ERROR_MESSAGE = "Room was not found by given externalId = %s";
     public static final String TYPE_NOT_FOUND_ERROR_MESSAGE = "Type was not found by given externalId = %s";
+    public static final String PRODUCT_CHARACTERISTIC_NOT_FOUND_ERROR_MESSAGE = "Product characteristic was not found " +
+            "by given externalId = %s";
+    public static final String SPECIAL_PRICE_NOT_FOUND_ERROR_MESSAGE = "Special price was not found " +
+            "by given externalId = %s";
 
     public static final String INVALID_CHARACTERISTICS_SIZE = "Incorrect number of characteristics. " +
             "Required = %s. Requested = %s";

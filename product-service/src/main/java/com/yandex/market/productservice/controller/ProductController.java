@@ -2,12 +2,13 @@ package com.yandex.market.productservice.controller;
 
 import com.yandex.market.productservice.controller.response.ErrorResponse;
 import com.yandex.market.productservice.dto.ProductImageDto;
-import com.yandex.market.productservice.dto.ProductSpecialPriceDto;
-import com.yandex.market.productservice.dto.ProductUpdateRequestDto;
 import com.yandex.market.productservice.dto.request.CreateProductRequest;
-import com.yandex.market.productservice.dto.request.ProductCharacteristicUpdateDto;
-import com.yandex.market.productservice.dto.response.ProductResponseDto;
-import com.yandex.market.productservice.dto.response.TypeResponse;
+import com.yandex.market.productservice.dto.request.ProductCharacteristicRequest;
+import com.yandex.market.productservice.dto.request.ProductSpecialPriceRequest;
+import com.yandex.market.productservice.dto.request.ProductUpdateRequest;
+import com.yandex.market.productservice.dto.response.ProductCharacteristicResponse;
+import com.yandex.market.productservice.dto.response.ProductResponse;
+import com.yandex.market.productservice.dto.response.ProductSpecialPriceResponse;
 import com.yandex.market.productservice.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -24,11 +25,13 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
+import static com.yandex.market.util.HttpUtils.PUBLIC_API_V1;
+
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("${spring.app.product.url}")
-@Tag(name = "API для работы с сущностью Product")
+@RequestMapping(PUBLIC_API_V1)
+@Tag(name = "Product")
 @ApiResponses({
         @ApiResponse(
                 responseCode = "400",
@@ -51,12 +54,9 @@ public class ProductController {
     private final ProductService productService;
 
     //todo: x-seller-id x-user-id должны быть хедерах и прокинуть дальше для метрик
-    //todo: контроллер на типы
     //todo: кэширование
-    //todo: разбить ProductService на другие сервисы TypeService....
-    //todo: postMapping product change url
 
-    @PostMapping("{sellerId}")
+    @PostMapping("/sellers/{sellerId}/products")
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(operationId = "createProduct", summary = "Создание нового продукта")
     @ApiResponse(
@@ -74,40 +74,40 @@ public class ProductController {
         return productService.createProduct(createProductRequest, sellerId);
     }
 
-    @GetMapping("{externalId}")
+    @GetMapping("/products/{productId}")
     @ResponseStatus(HttpStatus.OK)
-    @Operation(operationId = "getProductByExternalId", summary = "Получение товара по externalId")
+    @Operation(operationId = "getProductById", summary = "Получение товара по id")
     @ApiResponse(
             responseCode = "200",
             description = "Продукт успешно получен",
             content = @Content(
                     mediaType = "application/json",
-                    schema = @Schema(implementation = ProductResponseDto.class)
+                    schema = @Schema(implementation = ProductResponse.class)
             )
     )
-    public ProductResponseDto getProductByExternalId(@PathVariable("externalId") UUID externalId,
-                                                     @RequestHeader(value = "X-User-Id", required = false) String userId) {
-        return productService.getProductByExternalId(externalId, userId);
+    public ProductResponse getProductByExternalId(@PathVariable("productId") UUID productId,
+                                                  @RequestHeader(value = "X-User-Id", required = false) String userId) {
+        return productService.getProductByExternalId(productId, userId);
     }
 
-    @PutMapping("{externalId}")
+    @PutMapping("/products/{productId}")
     @ResponseStatus(HttpStatus.OK)
-    @Operation(operationId = "updateProductByExternalId", summary = "Обновление товара по externalId с входным DTO")
+    @Operation(operationId = "updateProductById", summary = "Обновление товара по id")
     @ApiResponse(
             responseCode = "200",
             description = "Продукт успешно обновлен",
             content = @Content(
                     mediaType = "application/json",
-                    schema = @Schema(implementation = ProductResponseDto.class)
+                    schema = @Schema(implementation = ProductResponse.class)
             )
     )
-    public ProductResponseDto updateProductByExternalId(@PathVariable UUID externalId,
-                                                        @RequestBody @Valid ProductUpdateRequestDto productUpdateRequestDto) {
-        return productService.updateProductByExternalId(externalId, productUpdateRequestDto);
+    public ProductResponse updateProductByExternalId(@PathVariable UUID productId,
+                                                     @RequestBody @Valid ProductUpdateRequest productUpdateRequest) {
+        return productService.updateProductByExternalId(productId, productUpdateRequest);
     }
 
-    @PostMapping("images/{productId}")
-    @ResponseStatus(HttpStatus.OK)
+    @PostMapping("/products/{productId}/images")
+    @ResponseStatus(HttpStatus.CREATED)
     @Operation(operationId = "addImage", summary = "Добавить изображение продукту")
     @ApiResponse(
             responseCode = "204",
@@ -118,21 +118,21 @@ public class ProductController {
             )
     )
     public ProductImageDto addImage(
-                                                   @PathVariable UUID productId,
-                                                   @RequestBody ProductImageDto productImageDto
+            @PathVariable UUID productId,
+            @RequestBody ProductImageDto productImageDto
     ) {
         return productService.addProductImage(productId, productImageDto);
     }
 
-    @DeleteMapping("images")
+    @DeleteMapping("/products/images")
     @ResponseStatus(HttpStatus.OK)
     @Operation(operationId = "deleteImage", summary = "Удалить изображение продукта")
     @ApiResponse(responseCode = "200", description = "Изображение успешно удалено")
     public void deleteImageByUrl(@RequestParam String url) {
-         productService.deleteProductImage(url);
+        productService.deleteProductImage(url);
     }
 
-    @DeleteMapping("special-prices/{specialPriceId}")
+    @DeleteMapping("/products/special-prices/{specialPriceId}")
     @ResponseStatus(HttpStatus.OK)
     @Operation(operationId = "deleteSpecialPrice", summary = "Удалить акцию")
     @ApiResponse(responseCode = "200", description = "Акция успешно удалена")
@@ -140,43 +140,36 @@ public class ProductController {
         productService.deleteProductSpecialPrice(specialPriceId);
     }
 
-    @PostMapping("special-prices/{productExternalId}")
+    @PostMapping("/products/{productId}/special-prices")
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(operationId = "createSpecialPrice", summary = "Добавить акцию")
     @ApiResponse(responseCode = "204", description = "Акция успешно добавлена")
-    public void createProductSpecialPrice(@RequestBody ProductSpecialPriceDto productSpecialPriceDto,
-                                          @PathVariable UUID productExternalId
+    public UUID createProductSpecialPrice(@RequestBody ProductSpecialPriceRequest productSpecialPriceRequest,
+                                          @PathVariable UUID productId
     ) {
-        productService.addProductSpecialPrice(productExternalId, productSpecialPriceDto);
+        return productService.addProductSpecialPrice(productId, productSpecialPriceRequest);
     }
 
-    @PutMapping("special-prices/{specialPriceExternalId}")
+    @PutMapping("/products/special-prices/{specialPriceId}")
     @ResponseStatus(HttpStatus.OK)
     @Operation(operationId = "createSpecialPrice", summary = "Изменить акцию")
     @ApiResponse(responseCode = "204", description = "Акция успешно изменена")
-    public ProductSpecialPriceDto updateProductSpecialPrice(@RequestBody ProductSpecialPriceDto productSpecialPriceDto,
-                                          @PathVariable UUID specialPriceExternalId
+    public ProductSpecialPriceResponse updateProductSpecialPrice(@RequestBody ProductSpecialPriceRequest productSpecialPriceRequest,
+                                                                 @PathVariable UUID specialPriceId
     ) {
-        return productService.updateSpecialPrice(productSpecialPriceDto, specialPriceExternalId);
+        return productService.updateSpecialPrice(productSpecialPriceRequest, specialPriceId);
     }
 
-    @PutMapping("characteristics/{characteristicExternalId}")
+    @PutMapping("/products/characteristics/{characteristicId}")
     @ResponseStatus(HttpStatus.OK)
     @Operation(operationId = "updateProductCharacteristic", summary = "Обновить характеристику продукта")
     @ApiResponse(responseCode = "200", description = "Характеристика успешно обновлена")
-    public void updateProductSpecialPrice(@PathVariable UUID characteristicExternalId,
-                                          @RequestBody ProductCharacteristicUpdateDto productCharacteristicUpdateDto
+    public ProductCharacteristicResponse updateProductCharacteristic(@PathVariable UUID characteristicId,
+                                                                     @RequestBody ProductCharacteristicRequest productCharacteristicRequest
     ) {
-        productService.updateProductCharacteristic(characteristicExternalId, productCharacteristicUpdateDto);
+        return productService.updateProductCharacteristic(characteristicId, productCharacteristicRequest);
     }
 
-    @GetMapping("types/{typeId}")
-    @ResponseStatus(HttpStatus.OK)
-    @Operation(operationId = "getType", summary = "Получить информацию о типах по id")
-    @ApiResponse(responseCode = "200", description = "Информация успешно получена")
-    public TypeResponse getTypeById(@PathVariable @Parameter(description = "Идентификатор типа") UUID typeId) {
-        return productService.getTypeById(typeId);
-    }
 
 
 /*    @GetMapping()

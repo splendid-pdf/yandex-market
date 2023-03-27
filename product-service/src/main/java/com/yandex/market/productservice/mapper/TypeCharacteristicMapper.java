@@ -1,8 +1,6 @@
 package com.yandex.market.productservice.mapper;
 
-import com.yandex.market.productservice.dto.TypeCharacteristicDto;
-import com.yandex.market.productservice.dto.TypeDto;
-import com.yandex.market.productservice.model.Type;
+import com.yandex.market.productservice.dto.response.TypeCharacteristicResponse;
 import com.yandex.market.productservice.model.TypeCharacteristic;
 import org.mapstruct.Builder;
 import org.mapstruct.CollectionMappingStrategy;
@@ -15,8 +13,8 @@ import org.mapstruct.ReportingPolicy;
         unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface TypeCharacteristicMapper {
 
-    TypeCharacteristic toTypeCharacteristic(TypeCharacteristicDto typeCharacteristicDto);
+    TypeCharacteristic toTypeCharacteristic(TypeCharacteristicResponse typeCharacteristicResponse);
 
-    TypeCharacteristicDto toDto(TypeCharacteristic typeCharacteristic);
+    TypeCharacteristicResponse toDto(TypeCharacteristic typeCharacteristic);
 
 }

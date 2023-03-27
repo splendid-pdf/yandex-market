@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yandex.market.productservice.controller.response.ErrorResponse;
-import com.yandex.market.productservice.dto.response.ProductResponseDto;
+import com.yandex.market.productservice.dto.response.ProductResponse;
 import com.yandex.market.productservice.mapper.ProductMapper;
 import com.yandex.market.productservice.repository.ProductRepository;
 import com.yandex.market.productservice.service.ProductService;
@@ -75,7 +75,7 @@ class ProductServiceApplicationTests {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        Page<ProductResponseDto> productsBySellerId = getPageOfProductFromMvcResult(mvcResult);
+        Page<ProductResponse> productsBySellerId = getPageOfProductFromMvcResult(mvcResult);
 
         long expectedTotalElements = 3;
 
@@ -109,7 +109,7 @@ class ProductServiceApplicationTests {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        Page<ProductResponseDto> productsBySellerId = getPageOfProductFromMvcResult(mvcResult);
+        Page<ProductResponse> productsBySellerId = getPageOfProductFromMvcResult(mvcResult);
 
         long expectedTotalElements = 1;
 
@@ -158,11 +158,11 @@ class ProductServiceApplicationTests {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        ProductResponseDto actualProductResponseDto =
-                objectMapper.readValue(mvcResult.getResponse().getContentAsString(), ProductResponseDto.class);
+        ProductResponse actualProductResponse =
+                objectMapper.readValue(mvcResult.getResponse().getContentAsString(), ProductResponse.class);
 
-        assertNotNull(actualProductResponseDto);
-        assertEquals(productExternalId, actualProductResponseDto.externalId());
+        assertNotNull(actualProductResponse);
+        assertEquals(productExternalId, actualProductResponse.id());
     }
 
     @Test
@@ -179,10 +179,10 @@ class ProductServiceApplicationTests {
         assertNotNull(objectMapper.readValue(mvcResult.getResponse().getContentAsString(), ErrorResponse.class));
     }
 
-    private Page<ProductResponseDto> getPageOfProductFromMvcResult(MvcResult mvcResult)
+    private Page<ProductResponse> getPageOfProductFromMvcResult(MvcResult mvcResult)
             throws UnsupportedEncodingException, JsonProcessingException {
         return objectMapper.readValue(
-                mvcResult.getResponse().getContentAsString(), new TypeReference<RestPageImpl<ProductResponseDto>>() {
+                mvcResult.getResponse().getContentAsString(), new TypeReference<RestPageImpl<ProductResponse>>() {
                 });
     }
 }
