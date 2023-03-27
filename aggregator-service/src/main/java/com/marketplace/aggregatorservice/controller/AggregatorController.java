@@ -36,11 +36,6 @@ public class AggregatorController {
         return aggregatorService.postProduct();
     }
 
-    @GetMapping("/loc")
-    public URI getProductLocation() {
-        return aggregatorService.postProductLocatin();
-    }
-
     @GetMapping("/orders/{externalId}")
     public OrderResponseDto getOrder(@PathVariable("externalId") String externalId) {
         return aggregatorService.getOrder(externalId);

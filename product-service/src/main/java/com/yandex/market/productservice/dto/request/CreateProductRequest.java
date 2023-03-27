@@ -1,6 +1,7 @@
 package com.yandex.market.productservice.dto.request;
 
-import com.yandex.market.productservice.dto.*;
+import com.yandex.market.productservice.dto.ProductImageDto;
+import com.yandex.market.productservice.dto.TypeDto;
 import com.yandex.market.productservice.model.TaxType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
@@ -27,17 +28,17 @@ public record CreateProductRequest(
         Long count,
 
         @NotNull
-        TypeDto typeDto,
+        TypeDto type,
 
         @NotEmpty
-        Set<@Valid ProductCharacteristicDto> productCharacteristicDto,
+        Set<@Valid ProductCharacteristicRequest> characteristics,
 
         @NotNull
-        TaxType taxType,
+        TaxType tax,
 
         @NotEmpty
-        Set<@Valid ProductImageDto> productImageDto,
+        Set<@Valid ProductImageDto> images,
 
-        Set<@Valid ProductSpecialPriceDto> productSpecialPriceDto
+        Set<@Valid ProductSpecialPriceRequest> specialPrices
 ) {
 }

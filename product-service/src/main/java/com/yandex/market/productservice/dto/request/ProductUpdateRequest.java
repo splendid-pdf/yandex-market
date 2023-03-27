@@ -1,10 +1,10 @@
-package com.yandex.market.productservice.dto;
+package com.yandex.market.productservice.dto.request;
 
 import com.yandex.market.productservice.model.TaxType;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema
-public record ProductUpdateRequestDto(
+public record ProductUpdateRequest(
 
         String name,
 
@@ -16,15 +16,11 @@ public record ProductUpdateRequestDto(
 
         Long count,
 
-        TaxType taxType,
+        TaxType tax,
 
         boolean isArchived,
 
-        boolean isDeleted,
-
-        boolean isVisible,
-
-        double rating
+        boolean isVisible
 
 ) {
 }

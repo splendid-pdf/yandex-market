@@ -1,9 +1,9 @@
 package com.yandex.market.productservice.repository;
 
 
+import com.yandex.market.productservice.dto.projections.ProductPreview;
 import com.yandex.market.productservice.dto.projections.SellerArchivePreview;
 import com.yandex.market.productservice.dto.projections.SellerProductPreview;
-import com.yandex.market.productservice.dto.projections.ProductPreview;
 import com.yandex.market.productservice.model.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -29,7 +29,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Query(value = """
             SELECT
                 product_images.url as imageUrl,
-                p.external_id as externalId,
+                p.external_id as id,
+                p.seller_external_id as sellerId,
                 p.name as name,
                 p.article_number as articleNumber,
                 p.price as price,
@@ -51,7 +52,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Query(value = """
             SELECT
                 product_images.url as imageUrl,
-                p.external_id as externalId,
+                p.external_id as id,
                 p.name as name,
                 p.article_number as articleNumber,
                 p.price as price,
@@ -73,17 +74,17 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Query(value = """
                 UPDATE Product p
                 SET p.isDeleted=true,
-                    p.isArchived=false,
+                    p.isArchived=true,
                     p.isVisible=false
                 WHERE p.sellerExternalId=:sellerId AND
-                      p.externalId IN :productIds
+                      p.externalId IN :productIds AND p.isArchived = true
             """)
     void deleteProductsBySellerId(UUID sellerId, List<UUID> productIds);
 
     @Query(value = """
             SELECT
-               p.external_id AS externalId,
-               p.seller_external_id AS sellerExternalId,
+               p.external_id AS id,
+               p.seller_external_id AS sellerId,
                p.name,
                p.price,
                product_image.url AS imageUrl
@@ -97,8 +98,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @Query(value = """
             SELECT
-               p.external_id AS externalId,
-               p.seller_external_id AS sellerExternalId,
+               p.external_id AS id,
+               p.seller_external_id AS sellerId,
                p.name,
                p.price,
                product_image.url AS imageUrl

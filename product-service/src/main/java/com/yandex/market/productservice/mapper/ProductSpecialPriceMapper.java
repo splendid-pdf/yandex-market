@@ -1,7 +1,7 @@
 package com.yandex.market.productservice.mapper;
 
-import com.yandex.market.productservice.dto.ProductSpecialPriceDto;
-import com.yandex.market.productservice.model.Product;
+import com.yandex.market.productservice.dto.request.ProductSpecialPriceRequest;
+import com.yandex.market.productservice.dto.response.ProductSpecialPriceResponse;
 import com.yandex.market.productservice.model.ProductSpecialPrice;
 import org.mapstruct.*;
 
@@ -10,11 +10,13 @@ import org.mapstruct.*;
 public interface ProductSpecialPriceMapper {
 
     @Mapping(target = "externalId", expression = "java(java.util.UUID.randomUUID())")
-    ProductSpecialPrice toProductSpecialPrice(ProductSpecialPriceDto productSpecialPriceDto);
+    ProductSpecialPrice toProductSpecialPrice(ProductSpecialPriceRequest productSpecialPriceRequest);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    ProductSpecialPrice toProductSpecialPrice(ProductSpecialPriceDto productSpecialPriceDto,
+    ProductSpecialPrice toProductSpecialPrice(ProductSpecialPriceRequest productSpecialPriceRequest,
                                               @MappingTarget ProductSpecialPrice productSpecialPrice);
 
-    ProductSpecialPriceDto toProductSpecialPriceDto(ProductSpecialPrice productSpecialPrice);
+    @Mapping(target = "id", source = "externalId")
+    ProductSpecialPriceResponse toProductSpecialPriceDto(ProductSpecialPrice productSpecialPrice);
+
 }

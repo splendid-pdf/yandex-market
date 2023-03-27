@@ -5,12 +5,16 @@ spring:
   application:
     name: product-service
   flyway:
-    enabled: false
+    enabled: true
   app:
     product:
       url: /public/api/v1/products/
     seller:
       url: /public/api/v1/sellers/
+    type:
+      url: /public/api/v1/types/
+    room:
+      url: /public/api/v1/rooms/
 
   config:
     import: "optional:configserver:"

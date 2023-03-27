@@ -2,19 +2,20 @@ package com.yandex.market.productservice.service.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yandex.market.productservice.dto.ProductImageDto;
-import com.yandex.market.productservice.dto.ProductSpecialPriceDto;
-import com.yandex.market.productservice.dto.ProductUpdateRequestDto;
 import com.yandex.market.productservice.dto.projections.ProductPreview;
 import com.yandex.market.productservice.dto.projections.SellerArchivePreview;
 import com.yandex.market.productservice.dto.projections.SellerProductPreview;
 import com.yandex.market.productservice.dto.request.CreateProductRequest;
-import com.yandex.market.productservice.dto.request.ProductCharacteristicUpdateDto;
-import com.yandex.market.productservice.dto.response.ProductResponseDto;
-import com.yandex.market.productservice.dto.response.TypeResponse;
-import com.yandex.market.productservice.mapper.*;
-import com.yandex.market.productservice.metric.dto.ProductMetricsDto;
-import com.yandex.market.productservice.metric.enums.UserAction;
-import com.yandex.market.productservice.model.*;
+import com.yandex.market.productservice.dto.request.ProductCharacteristicRequest;
+import com.yandex.market.productservice.dto.request.ProductSpecialPriceRequest;
+import com.yandex.market.productservice.dto.request.ProductUpdateRequest;
+import com.yandex.market.productservice.dto.response.ProductCharacteristicResponse;
+import com.yandex.market.productservice.dto.response.ProductResponse;
+import com.yandex.market.productservice.dto.response.ProductSpecialPriceResponse;
+import com.yandex.market.productservice.mapper.ProductCharacteristicMapper;
+import com.yandex.market.productservice.mapper.ProductImageMapper;
+import com.yandex.market.productservice.mapper.ProductMapper;
+import com.yandex.market.productservice.mapper.ProductSpecialPriceMapper;
 import com.yandex.market.productservice.model.Product;
 import com.yandex.market.productservice.model.ProductImage;
 import com.yandex.market.productservice.model.Type;
@@ -34,8 +35,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-import static com.yandex.market.productservice.utils.ExceptionMessagesConstants.PRODUCT_NOT_FOUND_ERROR_MESSAGE;
-import static com.yandex.market.productservice.utils.ExceptionMessagesConstants.TYPE_NOT_FOUND_ERROR_MESSAGE;
+import static com.yandex.market.productservice.utils.ExceptionMessagesConstants.*;
 
 @Service
 @RequiredArgsConstructor
@@ -49,7 +49,6 @@ public class ProductServiceImpl implements ProductService {
     private final ProductCharacteristicMapper productCharacteristicMapper;
     private final ProductCharacteristicRepository productCharacteristicRepository;
     private final TypeRepository typeRepository;
-    private final TypeMapper typeMapper;
     private final ObjectMapper objectMapper;
     private final KafkaTemplate<String, String> kafkaTemplate;
     private final Validator validator;
@@ -57,9 +56,9 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @Transactional
     public UUID createProduct(CreateProductRequest createProductRequest, UUID sellerId) {
-        UUID typeId = createProductRequest.typeDto().externalId();
+        UUID typeId = createProductRequest.type().id();
         Type type = typeRepository.findByExternalId(typeId)
-                .orElseThrow(()-> new EntityNotFoundException(String.format(TYPE_NOT_FOUND_ERROR_MESSAGE, typeId)));
+                .orElseThrow(() -> new EntityNotFoundException(String.format(TYPE_NOT_FOUND_ERROR_MESSAGE, typeId)));
         Product product = productMapper.toProduct(createProductRequest);
         type.addProduct(product);
         product.setSellerExternalId(sellerId);
@@ -69,7 +68,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional(readOnly = true)
-    public ProductResponseDto getProductByExternalId(UUID productId, @Nullable String userId) {
+    public ProductResponse getProductByExternalId(UUID productId, @Nullable String userId) {
         Product product = findProductByExternalId(productId);
 
 //        sendMetricsToKafka(UserAction.VIEW_PRODUCT, product, userId);
@@ -79,16 +78,15 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional
-    public ProductResponseDto updateProductByExternalId(UUID productId, ProductUpdateRequestDto productUpdateRequestDto) {
+    public ProductResponse updateProductByExternalId(UUID productId, ProductUpdateRequest productUpdateRequest) {
         Product storedProduct = findProductByExternalId(productId);
-        storedProduct = productMapper.toProduct(productUpdateRequestDto, storedProduct);
-        validator.validateProductCharacteristics(storedProduct);
+        storedProduct = productMapper.toProduct(productUpdateRequest, storedProduct);
         return productMapper.toResponseDto(productRepository.save(storedProduct));
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<ProductResponseDto> getProductsBySetExternalId(Set<UUID> productIds, Pageable pageable) {
+    public List<ProductResponse> getProductsBySetExternalId(Set<UUID> productIds, Pageable pageable) {
         return productRepository
                 .findByExternalId(productIds, pageable)
                 .map(productMapper::toResponseDto)
@@ -162,26 +160,26 @@ public class ProductServiceImpl implements ProductService {
     @Transactional
     public UUID addProductSpecialPrice(
             UUID productId,
-            ProductSpecialPriceDto productSpecialPriceDto
+            ProductSpecialPriceRequest productSpecialPriceRequest
     ) {
         Product product = findProductByExternalId(productId);
-        var productSpecialPrice = productSpecialPriceMapper.toProductSpecialPrice(productSpecialPriceDto);
+        var productSpecialPrice = productSpecialPriceMapper.toProductSpecialPrice(productSpecialPriceRequest);
         product.addProductSpecialPrice(productSpecialPrice);
         return productSpecialPriceRepository.save(productSpecialPrice).getExternalId();
     }
 
     @Override
     @Transactional
-    public ProductSpecialPriceDto updateSpecialPrice(ProductSpecialPriceDto productSpecialPriceDto,
-                                                     UUID specialPriceId
+    public ProductSpecialPriceResponse updateSpecialPrice(ProductSpecialPriceRequest productSpecialPriceRequest,
+                                                          UUID specialPriceId
     ) {
         var storedProductSpecialPrice = productSpecialPriceRepository.findByExternalId(specialPriceId)
                 .orElseThrow(() -> new EntityNotFoundException
-                        (PRODUCT_NOT_FOUND_ERROR_MESSAGE + specialPriceId));
+                        (String.format(SPECIAL_PRICE_NOT_FOUND_ERROR_MESSAGE, specialPriceId)));
         storedProductSpecialPrice =
-                productSpecialPriceMapper.toProductSpecialPrice(productSpecialPriceDto, storedProductSpecialPrice);
+                productSpecialPriceMapper.toProductSpecialPrice(productSpecialPriceRequest, storedProductSpecialPrice);
         productSpecialPriceRepository.save(storedProductSpecialPrice);
-        return productSpecialPriceDto;
+        return productSpecialPriceMapper.toProductSpecialPriceDto(storedProductSpecialPrice);
     }
 
     @Override
@@ -191,26 +189,19 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductCharacteristicUpdateDto updateProductCharacteristic(
+    public ProductCharacteristicResponse updateProductCharacteristic(
             UUID productCharacteristicExternalId,
-            ProductCharacteristicUpdateDto productCharacteristicUpdateDto
+            ProductCharacteristicRequest productCharacteristicRequest
     ) {
         var storedProductCharacteristic = productCharacteristicRepository
                 .findByExternalId(productCharacteristicExternalId)
                 .orElseThrow(() -> new EntityNotFoundException
-                        (PRODUCT_NOT_FOUND_ERROR_MESSAGE + productCharacteristicExternalId));
+                        (String.format(PRODUCT_CHARACTERISTIC_NOT_FOUND_ERROR_MESSAGE, productCharacteristicExternalId)));
         storedProductCharacteristic = productCharacteristicMapper
-                .toProductCharacteristic(productCharacteristicUpdateDto, storedProductCharacteristic);
+                .toProductCharacteristic(productCharacteristicRequest, storedProductCharacteristic);
+        validator.validateProductCharacteristics(storedProductCharacteristic.getProduct());
         productCharacteristicRepository.save(storedProductCharacteristic);
-        return productCharacteristicUpdateDto;
-    }
-
-
-    @Override
-    public TypeResponse getTypeById(UUID typeId) {
-        Type type = typeRepository.findByExternalId(typeId)
-                .orElseThrow(()-> new EntityNotFoundException(String.format(TYPE_NOT_FOUND_ERROR_MESSAGE, typeId)));
-        return typeMapper.toTypeResponse(type);
+        return productCharacteristicMapper.toProductCharacteristicDto(storedProductCharacteristic);
     }
 
 
@@ -233,6 +224,6 @@ public class ProductServiceImpl implements ProductService {
     private Product findProductByExternalId(UUID productId) {
         return productRepository
                 .findByExternalId(productId)
-                .orElseThrow(() -> new EntityNotFoundException(PRODUCT_NOT_FOUND_ERROR_MESSAGE + productId));
+                .orElseThrow(() -> new EntityNotFoundException(String.format(PRODUCT_NOT_FOUND_ERROR_MESSAGE, productId)));
     }
 }

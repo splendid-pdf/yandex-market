@@ -1,7 +1,7 @@
 package com.yandex.market.productservice.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.yandex.market.productservice.dto.response.ProductResponseDto;
+import com.yandex.market.productservice.dto.response.ProductResponse;
 import com.yandex.market.productservice.mapper.ProductMapper;
 import com.yandex.market.productservice.repository.ProductRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -38,7 +38,7 @@ public class ProductSellerServiceTest {
                 .andReturn();
     }
 
-    public ProductResponseDto findProductByExternalId(UUID externalId) {
+    public ProductResponse findProductByExternalId(UUID externalId) {
         return productMapper.toResponseDto(
                 productRepository
                         .findByExternalId(externalId)

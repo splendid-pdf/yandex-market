@@ -1,4 +1,4 @@
-package com.yandex.market.productservice.dto;
+package com.yandex.market.productservice.dto.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.FutureOrPresent;
@@ -8,11 +8,13 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Schema
-public record ProductSpecialPriceDto(
+public record ProductSpecialPriceResponse(
+        UUID id,
         @FutureOrPresent
-        LocalDateTime specialPriceFromDate,
+        LocalDateTime fromDate,
         @FutureOrPresent
-        LocalDateTime specialPriceToDate,
+        LocalDateTime toDate,
         @PositiveOrZero
-        Long specialPrice) {
+        Long price
+) {
 }

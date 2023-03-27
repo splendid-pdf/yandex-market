@@ -1,15 +1,16 @@
 package com.yandex.market.productservice.service;
 
 import com.yandex.market.productservice.dto.ProductImageDto;
-import com.yandex.market.productservice.dto.ProductSpecialPriceDto;
-import com.yandex.market.productservice.dto.ProductUpdateRequestDto;
-import com.yandex.market.productservice.dto.projections.SellerArchivePreview;
-import com.yandex.market.productservice.dto.request.ProductCharacteristicUpdateDto;
-import com.yandex.market.productservice.dto.request.CreateProductRequest;
-import com.yandex.market.productservice.dto.projections.SellerProductPreview;
 import com.yandex.market.productservice.dto.projections.ProductPreview;
-import com.yandex.market.productservice.dto.response.ProductResponseDto;
-import com.yandex.market.productservice.dto.response.TypeResponse;
+import com.yandex.market.productservice.dto.projections.SellerArchivePreview;
+import com.yandex.market.productservice.dto.projections.SellerProductPreview;
+import com.yandex.market.productservice.dto.request.CreateProductRequest;
+import com.yandex.market.productservice.dto.request.ProductCharacteristicRequest;
+import com.yandex.market.productservice.dto.request.ProductSpecialPriceRequest;
+import com.yandex.market.productservice.dto.request.ProductUpdateRequest;
+import com.yandex.market.productservice.dto.response.ProductCharacteristicResponse;
+import com.yandex.market.productservice.dto.response.ProductResponse;
+import com.yandex.market.productservice.dto.response.ProductSpecialPriceResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -20,11 +21,11 @@ import java.util.UUID;
 public interface ProductService {
     UUID createProduct(CreateProductRequest createProductRequest, UUID sellerExternalId);
 
-    ProductResponseDto getProductByExternalId(UUID externalId, String userId);
+    ProductResponse getProductByExternalId(UUID externalId, String userId);
 
-    ProductResponseDto updateProductByExternalId(UUID externalId, ProductUpdateRequestDto productUpdateRequestDto);
+    ProductResponse updateProductByExternalId(UUID externalId, ProductUpdateRequest productUpdateRequest);
 
-    List<ProductResponseDto> getProductsBySetExternalId(Set<UUID> externalIdSet, Pageable pageable);
+    List<ProductResponse> getProductsBySetExternalId(Set<UUID> externalIdSet, Pageable pageable);
 
     Page<SellerProductPreview> getProductsBySellerId(UUID sellerId, Pageable pageable);
 
@@ -46,15 +47,13 @@ public interface ProductService {
 
     void deleteProductImage(String url);
 
-    UUID addProductSpecialPrice(UUID productId, ProductSpecialPriceDto productSpecialPriceDto);
+    UUID addProductSpecialPrice(UUID productId, ProductSpecialPriceRequest productSpecialPriceRequest);
 
-    ProductSpecialPriceDto updateSpecialPrice(ProductSpecialPriceDto productSpecialPriceDto,
-                                              UUID specialPriceId);
+    ProductSpecialPriceResponse updateSpecialPrice(ProductSpecialPriceRequest productSpecialPriceRequest,
+                                                   UUID specialPriceId);
 
     void deleteProductSpecialPrice(UUID specialPriceId);
 
-    ProductCharacteristicUpdateDto updateProductCharacteristic(UUID productCharacteristicExternalId,
-                                                               ProductCharacteristicUpdateDto productCharacteristicUpdateDto);
-
-    TypeResponse getTypeById(UUID typeId);
+    ProductCharacteristicResponse updateProductCharacteristic(UUID productCharacteristicExternalId,
+                                                              ProductCharacteristicRequest productCharacteristicRequest);
 }
