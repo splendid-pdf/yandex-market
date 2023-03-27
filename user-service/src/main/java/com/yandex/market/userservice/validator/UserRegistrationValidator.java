@@ -53,6 +53,4 @@ public class UserRegistrationValidator {
             throw new ValidationException(objectMapper.writeValueAsString(exceptionMessages));
         }
     }
-
-
 }

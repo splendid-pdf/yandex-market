@@ -14,4 +14,3 @@ public class NotificationSettings {
     private boolean isAllowedToSendDiscountsAndPromotionsMailingLists;
     private boolean isAllowedToSendPopularArticles;
 }
-

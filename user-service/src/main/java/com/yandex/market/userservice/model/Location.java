@@ -17,6 +17,4 @@ public class Location {
     private String street;
     private String houseNumber;
     private String apartmentNumber;
-    private Double latitude;
-    private Double longitude;
 }

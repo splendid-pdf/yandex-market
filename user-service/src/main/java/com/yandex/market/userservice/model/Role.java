@@ -13,14 +13,4 @@ public enum Role {
     public String getKey() {
         return key;
     }
-
-    public static Role findRoleByKey(String key) {
-        for (Role role : values()) {
-            if (role.key.equals(key)) {
-                return role;
-            }
-        }
-
-        throw new IllegalArgumentException("There is no role for key: " + key);
-    }
 }
