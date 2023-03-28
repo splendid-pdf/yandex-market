@@ -2,7 +2,6 @@ package com.yandex.market.productservice.repository;
 
 import com.yandex.market.productservice.dto.projections.TypePreview;
 import com.yandex.market.productservice.model.Type;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -30,10 +29,12 @@ public interface TypeRepository extends JpaRepository<Type, Long> {
                 t.external_id AS id
             FROM
                 types AS t
+            ORDER BY
+                t.name
             """,
             nativeQuery = true
     )
-    List<TypePreview> findTypePreviews(Sort sort);
+    List<TypePreview> findTypePreviews();
 
     @Query(
             value = """
@@ -45,10 +46,12 @@ public interface TypeRepository extends JpaRepository<Type, Long> {
             INNER JOIN room_type AS rt ON r.id = rt.room_id
             INNER JOIN types as t ON t.id = rt.type_id
             WHERE
-            r.external_id=:roomId
+                r.external_id=:roomId
+            ORDER BY
+                t.name
             """,
             nativeQuery = true
     )
-    List<TypePreview> findTypePreviewsByRoomId(@Param("roomId") UUID roomId, Sort sort);
+    List<TypePreview> findTypePreviewsByRoomId(@Param("roomId") UUID roomId);
 
 }
