@@ -19,11 +19,11 @@ import java.util.Set;
 import java.util.UUID;
 
 public interface ProductService {
-    UUID createProduct(CreateProductRequest createProductRequest, UUID sellerExternalId);
+    UUID createProduct(CreateProductRequest createProductRequest, UUID sellerId);
 
-    ProductResponse getProductByExternalId(UUID externalId, String userId);
+    ProductResponse getProductByExternalId(UUID productId, String userId);
 
-    ProductResponse updateProductByExternalId(UUID externalId, ProductUpdateRequest productUpdateRequest);
+    ProductResponse updateProductByExternalId(UUID productId, ProductUpdateRequest productUpdateRequest);
 
     List<ProductResponse> getProductsBySetExternalId(Set<UUID> externalIdSet, Pageable pageable);
 
@@ -39,21 +39,21 @@ public interface ProductService {
 
     Page<ProductPreview> getProductPreviews(Pageable pageable);
 
-    List<ProductPreview> getProductPreviewsByIdentifiers(Set<UUID> productIdentifiers);
+    List<ProductPreview> getProductPreviewsByIds(Set<UUID> productIdentifiers);
 
-    void changeProductPrice(UUID sellerId, UUID productId, Long newPrice);
+    void changeProductPrice(UUID sellerId, UUID productId, Long updatedPrice);
 
-    ProductImageDto addProductImage(UUID productId, ProductImageDto productImageDto);
+    void changeProductCount(UUID sellerId, UUID productId, Long updatedCount);
 
-    void deleteProductImage(String url);
+    ProductImageDto addProductImage(UUID productId, ProductImageDto image);
 
-    UUID addProductSpecialPrice(UUID productId, ProductSpecialPriceRequest productSpecialPriceRequest);
+    void deleteProductImage(String imageUrl);
 
-    ProductSpecialPriceResponse updateSpecialPrice(ProductSpecialPriceRequest productSpecialPriceRequest,
-                                                   UUID specialPriceId);
+    UUID addProductSpecialPrice(UUID productId, ProductSpecialPriceRequest request);
+
+    ProductSpecialPriceResponse updateSpecialPrice(ProductSpecialPriceRequest request, UUID specialPriceId);
 
     void deleteProductSpecialPrice(UUID specialPriceId);
 
-    ProductCharacteristicResponse updateProductCharacteristic(UUID productCharacteristicExternalId,
-                                                              ProductCharacteristicRequest productCharacteristicRequest);
+    ProductCharacteristicResponse updateProductCharacteristic(UUID characteristicId, ProductCharacteristicRequest request);
 }
