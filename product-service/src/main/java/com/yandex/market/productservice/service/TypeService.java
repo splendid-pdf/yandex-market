@@ -8,7 +8,6 @@ import com.yandex.market.productservice.repository.TypeRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -33,11 +32,11 @@ public class TypeService {
     }
 
     public List<TypePreview> getTypePreviews() {
-        return typeRepository.findTypePreviews(Sort.by("name"));
+        return typeRepository.findTypePreviews();
     }
 
     public List<TypePreview> getTypePreviewsByRoomId(UUID roomId) {
-        List<TypePreview> typePreviews = typeRepository.findTypePreviewsByRoomId(roomId, Sort.by("name"));
+        List<TypePreview> typePreviews = typeRepository.findTypePreviewsByRoomId(roomId);
         if(typePreviews.isEmpty()) {
             throw new EntityNotFoundException(String.format(ROOM_NOT_FOUND_ERROR_MESSAGE, roomId));
         }
