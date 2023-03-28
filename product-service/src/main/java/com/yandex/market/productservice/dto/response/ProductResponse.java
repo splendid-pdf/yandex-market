@@ -1,7 +1,6 @@
 package com.yandex.market.productservice.dto.response;
 
 import com.yandex.market.productservice.dto.ProductImageDto;
-import com.yandex.market.productservice.dto.TypeDto;
 import com.yandex.market.productservice.model.TaxType;
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -13,8 +12,8 @@ import java.util.UUID;
 public record ProductResponse(
          UUID id,
          UUID sellerId,
-         UUID articleNumber,
          String name,
+         String brand,
          String description,
          Long price,
          Long count,
@@ -23,8 +22,7 @@ public record ProductResponse(
          Boolean isArchived,
          LocalDateTime creationDate,
          TaxType tax,
-         TypeDto type,
+         TypePreviewResponse type,
          Set<ProductCharacteristicResponse> characteristics,
-         Set<ProductImageDto> images,
-         Set<ProductSpecialPriceResponse> specialPrices) {
+         Set<ProductImageDto> images) {
 }

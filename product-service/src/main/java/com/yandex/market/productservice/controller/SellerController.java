@@ -43,7 +43,7 @@ public class SellerController {
 
     @GetMapping("/sellers/{sellerId}/products")
     @ResponseStatus(HttpStatus.OK)
-    @Operation(operationId = "getProductPage", summary = "Метод возращает пагинированный список продуктов продавца")
+    @Operation(operationId = "getProductPage", summary = "Метод возвращает отсортированную страницу со списком продуктов продавца")
     @ApiResponse(responseCode = "200", description = "Список продуктов успешно получен",
             content = @Content(mediaType = "application/json",
                     array = @ArraySchema(schema = @Schema(implementation = SellerProductPreview.class))))
@@ -56,7 +56,7 @@ public class SellerController {
     @GetMapping("/sellers/{sellerId}/products/archived-products")
     @ResponseStatus(HttpStatus.OK)
     @Operation(operationId = "getArchivedProductPage",
-            summary = "Метод возращает пагинированный список продуктов из архива продавца")
+            summary = "Метод возвращает отсортированную страницу продуктов из архива продавца")
     @ApiResponse(responseCode = "200", description = "Архив продуктов успешно получен",
             content = @Content(mediaType = "application/json",
                     array = @ArraySchema(schema = @Schema(implementation = SellerProductPreview.class))))
@@ -67,9 +67,9 @@ public class SellerController {
     }
 
     @PatchMapping("/sellers/{sellerId}/products/archive")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(summary = "Добавить продукты в архив от лица продавца")
-    @ApiResponse(responseCode = "200", description = "Продукты успешно добавлены в архив")
+    @ApiResponse(responseCode = "204", description = "Продукты успешно добавлены в архив")
     public void moveProductsToArchive(@PathVariable(value = "sellerId") UUID sellerId,
                                       @RequestParam("is-archive") boolean isArchive,
                                       @RequestBody List<UUID> productIds) {
@@ -77,9 +77,9 @@ public class SellerController {
     }
 
     @PatchMapping("/sellers/{sellerId}/products/visibility")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(summary = "Сделать продукты видимыми от лица продавца")
-    @ApiResponse(responseCode = "200", description = "Продукты успешно стали видимыми")
+    @ApiResponse(responseCode = "204", description = "Продукты успешно стали видимыми")
     public void makeProductsVisible(@PathVariable(value = "sellerId") UUID sellerId,
                                     @RequestParam("is-visible") boolean isVisible,
                                     @RequestBody List<UUID> productIds) {
@@ -87,9 +87,9 @@ public class SellerController {
     }
 
     @PatchMapping("/sellers/{sellerId}/products/{productId}/price")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(operationId = "changeProductPrice", summary = "Изменить цену продукта")
-    @ApiResponse(responseCode = "200", description = "Продукт успешно изменён в цене")
+    @ApiResponse(responseCode = "204", description = "Продукт успешно изменён в цене")
     public void changeProductPrice(@PathVariable(value = "sellerId") UUID sellerId,
                                    @PathVariable(value = "productId") UUID productId,
                                    @RequestParam Long updatedPrice) {
@@ -97,9 +97,9 @@ public class SellerController {
     }
 
     @DeleteMapping("/sellers/{sellerId}/products")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(operationId = "deleteProducts", summary = "Удаление списка товаров из базы данных")
-    @ApiResponse(responseCode = "200", description = "Продукт успешно удалён")
+    @ApiResponse(responseCode = "204", description = "Продукт успешно удалён")
     public void deleteProducts(@PathVariable(value = "sellerId") UUID sellerId,
                                @RequestBody List<UUID> productIds) {
         productService.deleteProductsBySellerId(sellerId, productIds);

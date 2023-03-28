@@ -53,7 +53,6 @@ import static com.yandex.market.util.HttpUtils.PUBLIC_API_V1;
 public class ProductController {
     private final ProductService productService;
 
-    //todo: x-seller-id x-user-id должны быть хедерах и прокинуть дальше для метрик
     //todo: кэширование
 
     @PostMapping("/sellers/{sellerId}/products")
@@ -85,9 +84,8 @@ public class ProductController {
                     schema = @Schema(implementation = ProductResponse.class)
             )
     )
-    public ProductResponse getProductByExternalId(@PathVariable("productId") UUID productId,
-                                                  @RequestHeader(value = "X-User-Id", required = false) String userId) {
-        return productService.getProductByExternalId(productId, userId);
+    public ProductResponse getProductByExternalId(@PathVariable("productId") UUID productId) {
+        return productService.getProductByExternalId(productId);
     }
 
     @PutMapping("/products/{productId}")
@@ -110,7 +108,7 @@ public class ProductController {
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(operationId = "addImage", summary = "Добавить изображение продукту")
     @ApiResponse(
-            responseCode = "204",
+            responseCode = "201",
             description = "Изображение продукта успешно добавлено",
             content = @Content(
                     mediaType = "application/json",
@@ -125,17 +123,17 @@ public class ProductController {
     }
 
     @DeleteMapping("/products/images")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(operationId = "deleteImage", summary = "Удалить изображение продукта")
-    @ApiResponse(responseCode = "200", description = "Изображение успешно удалено")
+    @ApiResponse(responseCode = "204", description = "Изображение успешно удалено")
     public void deleteImageByUrl(@RequestParam String url) {
         productService.deleteProductImage(url);
     }
 
     @DeleteMapping("/products/special-prices/{specialPriceId}")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(operationId = "deleteSpecialPrice", summary = "Удалить акцию")
-    @ApiResponse(responseCode = "200", description = "Акция успешно удалена")
+    @ApiResponse(responseCode = "204", description = "Акция успешно удалена")
     public void deleteSpecialPrice(@PathVariable UUID specialPriceId) {
         productService.deleteProductSpecialPrice(specialPriceId);
     }
@@ -143,7 +141,7 @@ public class ProductController {
     @PostMapping("/products/{productId}/special-prices")
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(operationId = "createSpecialPrice", summary = "Добавить акцию")
-    @ApiResponse(responseCode = "204", description = "Акция успешно добавлена")
+    @ApiResponse(responseCode = "201", description = "Акция успешно добавлена")
     public UUID createProductSpecialPrice(@RequestBody ProductSpecialPriceRequest productSpecialPriceRequest,
                                           @PathVariable UUID productId
     ) {
@@ -153,7 +151,7 @@ public class ProductController {
     @PutMapping("/products/special-prices/{specialPriceId}")
     @ResponseStatus(HttpStatus.OK)
     @Operation(operationId = "createSpecialPrice", summary = "Изменить акцию")
-    @ApiResponse(responseCode = "204", description = "Акция успешно изменена")
+    @ApiResponse(responseCode = "200", description = "Акция успешно изменена")
     public ProductSpecialPriceResponse updateProductSpecialPrice(@RequestBody ProductSpecialPriceRequest productSpecialPriceRequest,
                                                                  @PathVariable UUID specialPriceId
     ) {

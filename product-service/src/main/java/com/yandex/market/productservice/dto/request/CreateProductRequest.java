@@ -1,13 +1,12 @@
 package com.yandex.market.productservice.dto.request;
 
 import com.yandex.market.productservice.dto.ProductImageDto;
-import com.yandex.market.productservice.dto.TypeDto;
-import com.yandex.market.productservice.model.TaxType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 
 import java.util.Set;
+import java.util.UUID;
 
 @Schema
 public record CreateProductRequest(
@@ -21,6 +20,9 @@ public record CreateProductRequest(
         @NotBlank
         String articleFromSeller,
 
+        @NotBlank
+        String brand,
+
         @PositiveOrZero
         Long price,
 
@@ -28,17 +30,12 @@ public record CreateProductRequest(
         Long count,
 
         @NotNull
-        TypeDto type,
+        UUID typeId,
 
         @NotEmpty
         Set<@Valid ProductCharacteristicRequest> characteristics,
 
-        @NotNull
-        TaxType tax,
-
         @NotEmpty
-        Set<@Valid ProductImageDto> images,
-
-        Set<@Valid ProductSpecialPriceRequest> specialPrices
+        Set<@Valid ProductImageDto> images
 ) {
 }
