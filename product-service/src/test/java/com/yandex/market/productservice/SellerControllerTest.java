@@ -27,10 +27,6 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
 @Sql(scripts = {"classpath:db/insert_tests_fields.sql", "classpath:db/insert_types.sql"},
         executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-//@SqlGroup({
-//        @Sql(value = "classpath:db/insert_types.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD),
-//        @Sql(value = "classpath:db/insert_tests_fields.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-//})
 public class SellerControllerTest {
     private final ProductSellerServiceTest serviceTest;
 
