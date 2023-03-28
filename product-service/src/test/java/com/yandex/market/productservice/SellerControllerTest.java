@@ -120,28 +120,10 @@ public class SellerControllerTest {
         assertEquals(countBeforeArchived - PRODUCTS.size(), actualCount);
     }
 
-    //
-//    @Test
-//    @Disabled
-//    void shouldSuccessfullyMakeProductsVisible() throws Exception {
-//        List<UUID> PRODUCTS = PRODUCT_IDS.subList(2, 4);
-//
-//        serviceTest.changeVisibility(SELLER_ID_2, PRODUCTS, true, CHANGE_VISIBILITY_PATH);
-//    }
-//
-//    @Test
-//    @Disabled
-//    void shouldSuccessfullyMakeProductsInvisible() throws Exception {
-//        List<UUID> PRODUCTS = PRODUCT_IDS.subList(2, 4);
-//
-//        serviceTest.changeVisibility(SELLER_ID_2, PRODUCTS, false, CHANGE_VISIBILITY_PATH);
-//    }
-//
-//
-//    /**
-//     * @value <productIds> list elements (2 - exists, 0 - not exists)
-//     * allProducts = 3, deleted = 2, left = 1
-//     */
+    /**
+     * @value <productIds> list elements (2 - exists, 0 - not exists)
+     * allProducts = 3, deleted = 2, left = 1
+     */
     @Test
     @Disabled
     void shouldDeleteListProductBySellerIdSuccessDeleted() throws Exception {
