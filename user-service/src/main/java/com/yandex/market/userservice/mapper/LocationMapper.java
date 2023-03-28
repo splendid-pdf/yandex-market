@@ -9,25 +9,15 @@ public class LocationMapper {
 
     public Location map(LocationDto locationDto) {
         return Location.builder()
-                .country(locationDto.country())
-                .region(locationDto.region())
                 .city(locationDto.city())
-                .postcode(locationDto.postcode())
-                .street(locationDto.street())
-                .houseNumber(String.valueOf(locationDto.houseNumber()))
-                .apartmentNumber(String.valueOf(locationDto.apartNumber()))
+                .deliveryAddress(locationDto.deliveryAddress())
                 .build();
     }
 
     public LocationDto mapToDto(Location location) {
         return new LocationDto(
-                location.getCountry(),
                 location.getCity(),
-                location.getRegion(),
-                location.getStreet(),
-                location.getPostcode(),
-                location.getHouseNumber(),
-                location.getApartmentNumber()
+                location.getDeliveryAddress()
         );
     }
 }

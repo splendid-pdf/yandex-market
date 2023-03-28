@@ -1,6 +1,5 @@
 package com.yandex.market.userservice.validator;
 
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yandex.market.userservice.config.properties.ErrorInfoProperties;
 import com.yandex.market.userservice.dto.request.UserRegistrationDto;

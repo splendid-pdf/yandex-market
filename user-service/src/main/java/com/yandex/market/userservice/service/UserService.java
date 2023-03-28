@@ -124,13 +124,10 @@ public class UserService {
 
     private void updateUser(User storedUser, User updatedUser) {
         storedUser.setFirstName(updatedUser.getFirstName());
-        storedUser.setMiddleName(updatedUser.getMiddleName());
         storedUser.setLastName(updatedUser.getLastName());
-        storedUser.setBirthday(updatedUser.getBirthday());
         storedUser.setSex(updatedUser.getSex());
         storedUser.setLocation(updatedUser.getLocation());
         storedUser.setLogin(updatedUser.getLogin());
-        storedUser.setNotificationSettings(updatedUser.getNotificationSettings());
         storedUser.setPhotoUrl(updatedUser.getPhotoUrl());
     }
 

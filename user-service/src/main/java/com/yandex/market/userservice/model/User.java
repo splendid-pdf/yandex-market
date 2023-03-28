@@ -6,7 +6,6 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -29,8 +28,6 @@ public class User {
 
     private String firstName;
 
-    private String middleName;
-
     private String lastName;
 
     private String phone;
@@ -44,16 +41,11 @@ public class User {
     @Enumerated(value = EnumType.STRING)
     private Role role;
 
-    private LocalDate birthday;
-
     @Enumerated(value = EnumType.STRING)
     private Sex sex;
 
     @Embedded
     private Location location;
-
-    @Embedded
-    private NotificationSettings notificationSettings;
 
     private String photoUrl;
 

@@ -11,7 +11,6 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class UserResponseMapper implements Mapper<User, UserResponseDto> {
     private final LocationMapper locationMapper;
-    private final NotificationSettingsMapper notificationSettingsMapper;
 
     @Override
     public UserResponseDto map(User user) {
@@ -19,22 +18,15 @@ public class UserResponseMapper implements Mapper<User, UserResponseDto> {
 
         val locationDto = user.getLocation() != null ? locationMapper.mapToDto(user.getLocation()) : null;
 
-        val notificationSettingsDto = user.getNotificationSettings() != null
-                ? notificationSettingsMapper.notificationSettingsToDto(user.getNotificationSettings())
-                : null;
-
         return new UserResponseDto(
                 user.getExternalId(),
                 user.getFirstName(),
-                user.getMiddleName(),
                 user.getLastName(),
                 user.getPhone(),
                 user.getEmail(),
-                user.getBirthday(),
                 sex,
-                locationDto,
-                notificationSettingsDto,
-                user.getPhotoUrl()
+                user.getPhotoUrl(),
+                locationDto
         );
     }
 }
