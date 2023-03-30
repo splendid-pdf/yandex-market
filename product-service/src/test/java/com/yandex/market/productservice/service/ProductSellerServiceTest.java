@@ -10,7 +10,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultMatcher;
 
 import java.util.List;
 import java.util.UUID;
@@ -23,19 +22,24 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Service
 @RequiredArgsConstructor
 public class ProductSellerServiceTest {
-
     private final MockMvc mockMvc;
     private final ProductRepository productRepository;
     private final ProductService productService;
     private final ProductMapper productMapper;
     private final ObjectMapper objectMapper;
 
-    public void changePrice(UUID sellerId, UUID productId, long updatePrice, String path, ResultMatcher status) throws Exception {
+    public void changePrice(UUID sellerId, UUID productId, long updatePrice, String path) throws Exception {
         mockMvc.perform(patch(path, sellerId, productId)
-                        .param("updatedPrice", String.valueOf(updatePrice))
+                        .param("updated-price", String.valueOf(updatePrice))
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status)
-                .andReturn();
+                .andExpect(status().isOk());
+    }
+
+    public void changeCount(UUID sellerId, UUID productId, long updateCount, String path) throws Exception {
+        mockMvc.perform(patch(path, sellerId, productId)
+                        .param("updated-count", String.valueOf(updateCount))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
     }
 
     public ProductResponse findProductByExternalId(UUID externalId) {

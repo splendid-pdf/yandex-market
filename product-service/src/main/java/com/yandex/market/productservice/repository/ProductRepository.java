@@ -118,6 +118,14 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     void updateProductPrice(UUID sellerId, UUID productId, Long updatedPrice);
 
     @Modifying
+    @Query("""
+            UPDATE Product p
+            SET p.count=:updatedCount
+            WHERE p.externalId=:productId AND p.sellerExternalId=:sellerId
+            """)
+    void updateProductCount(UUID sellerId, UUID productId, Long updatedCount);
+
+    @Modifying
     @Query(value = """
                 UPDATE Product p
                 SET p.isArchived=:isArchive,

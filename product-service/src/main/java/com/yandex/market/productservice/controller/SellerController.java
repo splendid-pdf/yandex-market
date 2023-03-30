@@ -92,8 +92,18 @@ public class SellerController {
     @ApiResponse(responseCode = "204", description = "Продукт успешно изменён в цене")
     public void changeProductPrice(@PathVariable(value = "sellerId") UUID sellerId,
                                    @PathVariable(value = "productId") UUID productId,
-                                   @RequestParam Long updatedPrice) {
+                                   @RequestParam(value = "updated-price") Long updatedPrice) {
         productService.changeProductPrice(sellerId, productId, updatedPrice);
+    }
+
+    @PatchMapping("/sellers/{sellerId}/products/{productId}/count")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(operationId = "changeProductCount", summary = "Изменить количество продуктов")
+    @ApiResponse(responseCode = "200", description = "Продукт успешно изменён в количестве")
+    public void changeProductCount(@PathVariable(value = "sellerId") UUID sellerId,
+                                   @PathVariable(value = "productId") UUID productId,
+                                   @RequestParam(value = "updated-count") Long updatedCount) {
+        productService.changeProductCount(sellerId, productId, updatedCount);
     }
 
     @DeleteMapping("/sellers/{sellerId}/products")

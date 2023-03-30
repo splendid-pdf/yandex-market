@@ -130,7 +130,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<ProductPreview> getProductPreviewsByIdentifiers(Set<UUID> productIds) {
+    public List<ProductPreview> getProductPreviewsByIds(Set<UUID> productIds) {
         return productRepository.getProductPreviewsByIdentifiers(productIds);
     }
 
@@ -148,6 +148,12 @@ public class ProductServiceImpl implements ProductService {
     @Transactional
     public void changeProductPrice(UUID sellerId, UUID productId, Long updatedPrice) {
         productRepository.updateProductPrice(sellerId, productId, updatedPrice);
+    }
+
+    @Override
+    @Transactional
+    public void changeProductCount(UUID sellerId, UUID productId, Long updatedCount) {
+        productRepository.updateProductCount(sellerId, productId, updatedCount);
     }
 
     @Override
