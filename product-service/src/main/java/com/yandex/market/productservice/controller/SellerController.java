@@ -53,7 +53,7 @@ public class SellerController {
         return productService.getProductsBySellerId(sellerId, pageable);
     }
 
-    @GetMapping("/sellers/{sellerId}/products/archived-products")
+    @GetMapping("/sellers/{sellerId}/archive/products")
     @ResponseStatus(HttpStatus.OK)
     @Operation(operationId = "getArchivedProductPage",
             summary = "Метод возвращает отсортированную страницу продуктов из архива продавца")
@@ -66,7 +66,7 @@ public class SellerController {
         return productService.getArchivedProductsBySellerId(sellerId, pageable);
     }
 
-    @PatchMapping("/sellers/{sellerId}/products/archive")
+    @PatchMapping("/sellers/{sellerId}/archive/products")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(summary = "Добавить продукты в архив от лица продавца")
     @ApiResponse(responseCode = "204", description = "Продукты успешно добавлены в архив")
