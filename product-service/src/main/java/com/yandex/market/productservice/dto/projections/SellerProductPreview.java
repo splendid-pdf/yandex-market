@@ -6,8 +6,6 @@ import java.util.UUID;
 public interface SellerProductPreview {
     UUID getId();
 
-    String getArticleNumber();
-
     String getName();
 
     Long getPrice();
