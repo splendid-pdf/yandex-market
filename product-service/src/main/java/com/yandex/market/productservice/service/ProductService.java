@@ -21,7 +21,7 @@ import java.util.UUID;
 public interface ProductService {
     UUID createProduct(CreateProductRequest createProductRequest, UUID sellerId);
 
-    ProductResponse getProductByExternalId(UUID productId, String userId);
+    ProductResponse getProductByExternalId(UUID productId);
 
     ProductResponse updateProductByExternalId(UUID productId, ProductUpdateRequest productUpdateRequest);
 

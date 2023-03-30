@@ -133,7 +133,7 @@ class ProductServiceApplicationTests {
 
         UUID actualProductExternalId = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), UUID.class);
 
-        Assertions.assertNotNull(productService.getProductByExternalId(actualProductExternalId, null));
+        Assertions.assertNotNull(productService.getProductByExternalId(actualProductExternalId));
     }
 
     @Test
