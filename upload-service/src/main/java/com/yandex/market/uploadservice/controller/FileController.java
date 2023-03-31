@@ -3,7 +3,7 @@ package com.yandex.market.uploadservice.controller;
 import com.amazonaws.services.s3.Headers;
 import com.yandex.market.uploadservice.model.FileDetails;
 import com.yandex.market.uploadservice.model.FileType;
-import com.yandex.market.uploadservice.service.StorageService;
+import com.yandex.market.uploadservice.service.*;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,10 +18,12 @@ import java.net.URL;
 import java.util.List;
 import java.util.Set;
 
+import static com.yandex.market.util.HttpUtils.PUBLIC_API_V1;
+
 @Slf4j
 @Tag(name = "files")
 @RestController
-@RequestMapping("public/api/v1")
+@RequestMapping(PUBLIC_API_V1)
 @RequiredArgsConstructor
 public class FileController {
 
@@ -33,7 +35,7 @@ public class FileController {
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE
     )
     @ResponseStatus(HttpStatus.OK)
-    public String upload(
+    public URL upload(
             @RequestPart MultipartFile file,
             @RequestParam("fileId") String fileId,
             @RequestParam("fileType") FileType fileType

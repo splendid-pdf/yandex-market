@@ -20,10 +20,10 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     public ErrorResponse handleSizeLimitException(SizeLimitFileExceededException e) {
         ErrorResponse errorResponse = new ErrorResponse(
                 e.getMessage(),
-                UUID.randomUUID(),
+                UUID.randomUUID().toString(),
                 OffsetDateTime.now()
         );
-        log.debug("Error with exceeding the maximum file size with this id was handled = {}", errorResponse.errorId());
+        log.debug("Error with exceeding the maximum file size");
         return errorResponse;
     }
 
@@ -31,10 +31,10 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     public ErrorResponse handleIllegalArgumentException(IllegalArgumentException e) {
         ErrorResponse errorResponse = new ErrorResponse(
                 e.getMessage(),
-                UUID.randomUUID(),
+                UUID.randomUUID().toString(),
                 OffsetDateTime.now()
         );
-        log.debug("Error processed with incorrect data entered with this id = {}", errorResponse.errorId());
+        log.debug("Error processed with incorrect data entered");
         return errorResponse;
     }
 
@@ -42,10 +42,10 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     public ErrorResponse handleAmazonS3Exception(AmazonS3Exception e) {
         ErrorResponse errorResponse = new ErrorResponse(
                 e.getErrorMessage(),
-                UUID.randomUUID(),
+                UUID.randomUUID().toString(),
                 OffsetDateTime.now()
         );
-        log.debug("", errorResponse.errorId());
+        log.debug("");
         return errorResponse;
     }
 
@@ -53,10 +53,10 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     public ErrorResponse handleBadRequestException(BadRequestException e) {
         ErrorResponse errorResponse = new ErrorResponse(
                 e.getMessage(),
-                UUID.randomUUID(),
+                UUID.randomUUID().toString(),
                 OffsetDateTime.now()
         );
-        log.debug("Error in incorrectly transmitted data with this id = {}", errorResponse.errorId());
+        log.debug("Error in incorrectly transmitted data");
         return errorResponse;
     }
 }

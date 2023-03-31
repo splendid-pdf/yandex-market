@@ -10,7 +10,6 @@ import com.yandex.market.uploadservice.config.properties.ObjectStorageProperties
 import com.yandex.market.uploadservice.model.FileDetails;
 import com.yandex.market.uploadservice.model.FileType;
 import com.yandex.market.uploadservice.validator.FileValidator;
-import jakarta.activation.MimetypesFileTypeMap;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -44,7 +43,7 @@ public class StorageService {
     @Value("${application.validation.maximum_files_count}")
     private Integer maxFilesCount;
 
-    public String uploadFile(MultipartFile file, String fileId, FileType fileType) {
+    public URL uploadFile(MultipartFile file, String fileId, FileType fileType) {
         validator.validate(file);
         try {
             val bucketName = properties.getBucketName();
@@ -59,7 +58,7 @@ public class StorageService {
                     metadata
             );
 
-            return objectId;
+            return getFileUrlById(fileId, fileType);
         } catch (IOException e) {
             log.error("Failed to upload a file = {}", file);
             throw new BadRequestException(UPLOAD_FILE_EXCEPTION_MESSAGE.formatted(file.getName()));
