@@ -44,6 +44,6 @@ public class ProductPreviewController {
     @ApiResponse(responseCode = "200", description = "OK",
             content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProductPreview.class)))
     public List<ProductPreview> getProductPreviewsByIdentifiers(@RequestBody ProductRepresentationSetDto productRepresentationSetDto) {
-        return productService.getProductPreviewsByIdentifiers(productRepresentationSetDto.productIdentifiers());
+        return productService.getProductPreviewsByIds(productRepresentationSetDto.productIdentifiers());
     }
 }

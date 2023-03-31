@@ -27,7 +27,7 @@ import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.kafka.core.KafkaTemplate;
+//import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -50,13 +50,13 @@ public class ProductServiceImpl implements ProductService {
     private final ProductCharacteristicRepository productCharacteristicRepository;
     private final TypeRepository typeRepository;
     private final ObjectMapper objectMapper;
-    private final KafkaTemplate<String, String> kafkaTemplate;
+//    private final KafkaTemplate<String, String> kafkaTemplate;
     private final Validator validator;
 
     @Override
     @Transactional
     public UUID createProduct(CreateProductRequest createProductRequest, UUID sellerId) {
-        UUID typeId = createProductRequest.type().id();
+        UUID typeId = createProductRequest.typeId();
         Type type = typeRepository.findByExternalId(typeId)
                 .orElseThrow(() -> new EntityNotFoundException(String.format(TYPE_NOT_FOUND_ERROR_MESSAGE, typeId)));
         Product product = productMapper.toProduct(createProductRequest);
@@ -68,7 +68,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional(readOnly = true)
-    public ProductResponse getProductByExternalId(UUID productId, @Nullable String userId) {
+    public ProductResponse getProductByExternalId(UUID productId) {
         Product product = findProductByExternalId(productId);
 
 //        sendMetricsToKafka(UserAction.VIEW_PRODUCT, product, userId);
@@ -130,7 +130,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<ProductPreview> getProductPreviewsByIdentifiers(Set<UUID> productIds) {
+    public List<ProductPreview> getProductPreviewsByIds(Set<UUID> productIds) {
         return productRepository.getProductPreviewsByIdentifiers(productIds);
     }
 
@@ -148,6 +148,12 @@ public class ProductServiceImpl implements ProductService {
     @Transactional
     public void changeProductPrice(UUID sellerId, UUID productId, Long updatedPrice) {
         productRepository.updateProductPrice(sellerId, productId, updatedPrice);
+    }
+
+    @Override
+    @Transactional
+    public void changeProductCount(UUID sellerId, UUID productId, Long updatedCount) {
+        productRepository.updateProductCount(sellerId, productId, updatedCount);
     }
 
     @Override
