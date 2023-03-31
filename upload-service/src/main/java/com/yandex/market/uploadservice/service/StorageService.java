@@ -58,7 +58,7 @@ public class StorageService {
                     metadata
             );
 
-            return getFileUrlById(fileId, fileType);
+            return getUrl(fileType, bucketName, objectId);
         } catch (IOException e) {
             log.error("Failed to upload a file = {}", file);
             throw new BadRequestException(UPLOAD_FILE_EXCEPTION_MESSAGE.formatted(file.getName()));
@@ -69,15 +69,7 @@ public class StorageService {
         try {
             val bucketName = properties.getBucketName();
             val objectId = createObjectId(fileId, fileType);
-            val expirationTime = new DateTime().plusMinutes(properties.getExpirationTime()).toDate();
-            if (FileType.CHECK == fileType) {
-                return amazonS3.generatePresignedUrl(
-                        bucketName,
-                        objectId,
-                        expirationTime
-                );
-            }
-            return amazonS3.generatePresignedUrl(new GeneratePresignedUrlRequest(bucketName, objectId));
+            return getUrl(fileType, bucketName, objectId);
         } catch (AmazonS3Exception exception) {
             log.error("Failed to retrieve a file by fileId = {}", fileId);
             throw new BadRequestException(GET_FILE_URL_EXCEPTION_MESSAGE.formatted(fileId));
@@ -114,6 +106,18 @@ public class StorageService {
                 .stream()
                 .map(fileId -> getFileUrlById(fileId, fileType))
                 .collect(Collectors.toSet());
+    }
+
+    private URL getUrl(FileType fileType, String bucketName, String objectId) {
+        val expirationTime = new DateTime().plusMinutes(properties.getExpirationTime()).toDate();
+        if (FileType.CHECK == fileType) {
+            return amazonS3.generatePresignedUrl(
+                    bucketName,
+                    objectId,
+                    expirationTime
+            );
+        }
+        return amazonS3.generatePresignedUrl(new GeneratePresignedUrlRequest(bucketName, objectId));
     }
 
     private String createObjectId(String fileId, FileType fileType) {
