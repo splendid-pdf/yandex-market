@@ -32,7 +32,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
                 p.external_id as id,
                 p.seller_external_id as sellerId,
                 p.name as name,
-                p.article_number as articleNumber,
                 p.price as price,
                 p.count as count,
                 p.is_visible as isVisible,
@@ -54,7 +53,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
                 product_images.url as imageUrl,
                 p.external_id as id,
                 p.name as name,
-                p.article_number as articleNumber,
                 p.price as price,
                 p.count as count,
                 p.is_visible as isVisible,
@@ -118,6 +116,14 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             WHERE p.externalId=:productId AND p.sellerExternalId=:sellerId
             """)
     void updateProductPrice(UUID sellerId, UUID productId, Long updatedPrice);
+
+    @Modifying
+    @Query("""
+            UPDATE Product p
+            SET p.count=:updatedCount
+            WHERE p.externalId=:productId AND p.sellerExternalId=:sellerId
+            """)
+    void updateProductCount(UUID sellerId, UUID productId, Long updatedCount);
 
     @Modifying
     @Query(value = """

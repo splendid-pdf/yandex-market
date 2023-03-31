@@ -7,8 +7,6 @@ public interface SellerArchivePreview {
 
     UUID getId();
 
-    String getArticleNumber();
-
     String getName();
 
     Long getPrice();

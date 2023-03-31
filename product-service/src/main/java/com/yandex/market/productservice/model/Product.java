@@ -24,9 +24,9 @@ public class Product {
 
     private UUID externalId;
 
-    private UUID articleNumber;
-
     private String name;
+
+    private String brand;
 
     private String description;
 
