@@ -37,10 +37,9 @@ public class FileController {
     @ResponseStatus(HttpStatus.OK)
     public URL upload(
             @RequestPart MultipartFile file,
-            @RequestParam("fileId") String fileId,
             @RequestParam("fileType") FileType fileType
     ) {
-        return storageService.uploadFile(file, fileId, fileType);
+        return storageService.uploadFile(file, fileType);
     }
 
     @GetMapping(value = "/url")

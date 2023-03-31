@@ -8,9 +8,9 @@ import org.springframework.stereotype.Component;
 
 import java.util.Map;
 
-@Component
 @Getter
 @Setter
+@Component
 @ConfigurationProperties(prefix = "application")
 public class FileRestrictionProperties {
     private Map<String, FileSizeRestriction> extension;

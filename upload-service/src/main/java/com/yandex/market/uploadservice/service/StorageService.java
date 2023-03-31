@@ -6,6 +6,7 @@ import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.S3Object;
 import com.yandex.market.exception.BadRequestException;
+import com.yandex.market.uploadservice.config.properties.FileNameGenerator;
 import com.yandex.market.uploadservice.config.properties.ObjectStorageProperties;
 import com.yandex.market.uploadservice.model.FileDetails;
 import com.yandex.market.uploadservice.model.FileType;
@@ -22,9 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.yandex.market.uploadservice.utils.Constants.*;
@@ -39,18 +38,18 @@ public class StorageService {
     private final AmazonS3 amazonS3;
     private final FileValidator validator;
     private final ObjectStorageProperties properties;
+    private final FileNameGenerator fileNameGenerator;
 
     @Value("${application.validation.maximum_files_count}")
     private Integer maxFilesCount;
 
-    public URL uploadFile(MultipartFile file, String fileId, FileType fileType) {
+    public URL uploadFile(MultipartFile file, FileType fileType) {
         validator.validate(file);
         try {
             val bucketName = properties.getBucketName();
-            val objectId = createObjectId(fileId, fileType);
+            val objectId = createFileName(fileType);
             val inputStream = file.getInputStream();
             val metadata = createMetadata(file);
-
             amazonS3.putObject(
                     bucketName,
                     objectId,
@@ -122,6 +121,10 @@ public class StorageService {
 
     private String createObjectId(String fileId, FileType fileType) {
         return fileType.getFolder() + fileId;
+    }
+
+    private String createFileName(FileType fileType){
+        return fileType.getFolder() + fileNameGenerator.generateFileName();
     }
 
     private String getExtension(String filename) {
