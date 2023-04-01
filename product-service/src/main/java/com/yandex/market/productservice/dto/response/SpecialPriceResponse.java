@@ -8,13 +8,12 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Schema
-public record ProductSpecialPriceResponse(
+public record SpecialPriceResponse(
+
         UUID id,
-        @FutureOrPresent
         LocalDateTime fromDate,
-        @FutureOrPresent
         LocalDateTime toDate,
-        @PositiveOrZero
         Long price
+
 ) {
 }

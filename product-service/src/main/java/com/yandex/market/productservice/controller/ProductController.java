@@ -1,28 +1,31 @@
 package com.yandex.market.productservice.controller;
 
-import com.yandex.market.productservice.controller.response.ErrorResponse;
 import com.yandex.market.productservice.dto.ProductImageDto;
+import com.yandex.market.productservice.dto.ProductRepresentationSetDto;
+import com.yandex.market.productservice.dto.projections.SellerProductPreview;
+import com.yandex.market.productservice.dto.projections.UserProductPreview;
 import com.yandex.market.productservice.dto.request.CreateProductRequest;
 import com.yandex.market.productservice.dto.request.ProductCharacteristicRequest;
-import com.yandex.market.productservice.dto.request.ProductSpecialPriceRequest;
+import com.yandex.market.productservice.dto.request.SpecialPriceRequest;
 import com.yandex.market.productservice.dto.request.ProductUpdateRequest;
 import com.yandex.market.productservice.dto.response.ProductCharacteristicResponse;
 import com.yandex.market.productservice.dto.response.ProductResponse;
-import com.yandex.market.productservice.dto.response.ProductSpecialPriceResponse;
+import com.yandex.market.productservice.dto.response.SpecialPriceResponse;
 import com.yandex.market.productservice.service.ProductService;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.validator.constraints.URL;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 import static com.yandex.market.util.HttpUtils.PUBLIC_API_V1;
@@ -31,153 +34,166 @@ import static com.yandex.market.util.HttpUtils.PUBLIC_API_V1;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(PUBLIC_API_V1)
-@Tag(name = "Product")
-@ApiResponses({
-        @ApiResponse(
-                responseCode = "400",
-                description = "На сервер переданы неверные данные",
-                content = @Content(
-                        mediaType = "application/json",
-                        schema = @Schema(implementation = ErrorResponse.class)
-                )
-        ),
-        @ApiResponse(
-                responseCode = "404",
-                description = "Продукт не найден",
-                content = @Content(
-                        mediaType = "application/json",
-                        schema = @Schema(implementation = ErrorResponse.class)
-                )
-        )
-})
-public class ProductController {
+public class ProductController implements ProductApi {
     private final ProductService productService;
 
     //todo: кэширование
+    //todo: id в error response
+    //todo: немного рефактора везде(теперь реально немного, убрать хард код где - то импорты)
+    //todo: фильтр (поиск по имени и характеристикам)
+    //todo: возможность добавлять новые комнаты и типы только для админов, тянем секьюрити помни про валидатор и мапу там
+    //todo: возможность редактировать комнаты и типы только для админов, тянем секьюрити помни про валидатор и мапу там
+    //todo: фильтр (поиск по имени и характеристикам) глянь Specification
+    //todo: главная страница магазина
+    //todo: характеристикам завести название группы характеристик. Например у веса ширины глубины
+    // это поле будет иметь значение габариты и тд. По хорошему менять базу отношения в базе и заводить новую таблитцу,
+    // но как же впадлу. Поэтому ограничемся полем
+    //todo мапу из валидатора вынести в отдельный бин и инжектить куда надо чтобы в бд не обращаться лишний раз
+
+    //todo: Протянуть секьюрити для seller (ЭТО Я ПРЯМО СЕЙЧАС СДЕЛАЮ)
+    //todo: Протянуть секьюрити в доку (ЭТО Я ПРЯМО СЕЙЧАС СДЕЛАЮ)
+    //todo: После этого все затестить локальны и выкатить на наш сервак. (ЭТО Я ПРЯМО СЕЙЧАС СДЕЛАЮ)
+    //todo: ДОБЕЙ КОНТРАКТЫ!!!!!! и все протестируй(немного впадлу просто проверь работу и отдай тестировщикам) (ЭТО Я ПРЯМО СЕЙЧАС СДЕЛАЮ)
+    //todo: отдай это все фронтам наконец и учи теорию!!!!! (ЭТО Я ПРЯМО СЕЙЧАС СДЕЛАЮ)
+
+
 
     @PostMapping("/sellers/{sellerId}/products")
     @ResponseStatus(HttpStatus.CREATED)
-    @Operation(operationId = "createProduct", summary = "Создание нового продукта")
-    @ApiResponse(
-            responseCode = "201",
-            description = "Продукт успешно создан",
-            content = @Content(
-                    mediaType = "application/json",
-                    schema = @Schema(implementation = UUID.class)
-            )
-    )
-    public UUID createProduct(@Parameter(name = "productRequestDto", description = "Представление созданного продукта")
-                              @RequestBody @Valid CreateProductRequest createProductRequest,
-                              @Parameter(name = "sellerId", description = "Идентификатор продавца")
-                              @PathVariable("sellerId") UUID sellerId) {
+    public UUID createProduct(@PathVariable UUID sellerId,
+                              @RequestBody @Valid CreateProductRequest createProductRequest) {
         return productService.createProduct(createProductRequest, sellerId);
     }
 
-    @GetMapping("/products/{productId}")
+    @GetMapping("/sellers/{sellerId}/products/{productId}")
     @ResponseStatus(HttpStatus.OK)
-    @Operation(operationId = "getProductById", summary = "Получение товара по id")
-    @ApiResponse(
-            responseCode = "200",
-            description = "Продукт успешно получен",
-            content = @Content(
-                    mediaType = "application/json",
-                    schema = @Schema(implementation = ProductResponse.class)
-            )
-    )
-    public ProductResponse getProductByExternalId(@PathVariable("productId") UUID productId) {
-        return productService.getProductByExternalId(productId);
+    public ProductResponse getProductById(@PathVariable UUID sellerId,
+                                          @PathVariable UUID productId) {
+        return productService.getProductById(productId);
     }
 
-    @PutMapping("/products/{productId}")
+    @PutMapping("/sellers/{sellerId}/products/{productId}")
     @ResponseStatus(HttpStatus.OK)
-    @Operation(operationId = "updateProductById", summary = "Обновление товара по id")
-    @ApiResponse(
-            responseCode = "200",
-            description = "Продукт успешно обновлен",
-            content = @Content(
-                    mediaType = "application/json",
-                    schema = @Schema(implementation = ProductResponse.class)
-            )
-    )
-    public ProductResponse updateProductByExternalId(@PathVariable UUID productId,
-                                                     @RequestBody @Valid ProductUpdateRequest productUpdateRequest) {
-        return productService.updateProductByExternalId(productId, productUpdateRequest);
+    public ProductResponse updateProductById(@PathVariable UUID sellerId,
+                                             @PathVariable UUID productId,
+                                             @RequestBody @Valid ProductUpdateRequest productUpdateRequest) {
+        return productService.updateProductById(productId, productUpdateRequest);
     }
 
-    @PostMapping("/products/{productId}/images")
-    @ResponseStatus(HttpStatus.CREATED)
-    @Operation(operationId = "addImage", summary = "Добавить изображение продукту")
-    @ApiResponse(
-            responseCode = "201",
-            description = "Изображение продукта успешно добавлено",
-            content = @Content(
-                    mediaType = "application/json",
-                    schema = @Schema(implementation = ProductImageDto.class)
-            )
-    )
-    public ProductImageDto addImage(
-            @PathVariable UUID productId,
-            @RequestBody ProductImageDto productImageDto
-    ) {
-        return productService.addProductImage(productId, productImageDto);
-    }
-
-    @DeleteMapping("/products/images")
+    @DeleteMapping("/sellers/{sellerId}/products")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @Operation(operationId = "deleteImage", summary = "Удалить изображение продукта")
-    @ApiResponse(responseCode = "204", description = "Изображение успешно удалено")
-    public void deleteImageByUrl(@RequestParam String url) {
+    public void deleteProductsList(@PathVariable UUID sellerId,
+                                   @RequestParam List<UUID> productIds) {
+        productService.deleteProductsBySellerId(sellerId, productIds);
+    }
+
+    @PostMapping("/sellers/{sellerId}/products/{productId}/images")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ProductImageDto addImage(@PathVariable UUID sellerId,
+                                    @PathVariable UUID productId,
+                                    @RequestBody @Valid ProductImageDto productImage) {
+        return productService.addProductImage(productId, productImage);
+    }
+
+    @DeleteMapping("/sellers/{sellerId}/products/images")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteImageByUrl(@PathVariable UUID sellerId,
+                                 @RequestParam @URL String url) {
         productService.deleteProductImage(url);
     }
 
-    @DeleteMapping("/products/special-prices/{specialPriceId}")
+    @PostMapping("/sellers/{sellerId}/products/{productId}/special-prices")
+    @ResponseStatus(HttpStatus.CREATED)
+    public UUID createSpecialPriceByProductId(@PathVariable UUID sellerId,
+                                              @PathVariable UUID productId,
+                                              @RequestBody @Valid SpecialPriceRequest specialPriceRequest) {
+        return productService.addProductSpecialPrice(productId, specialPriceRequest);
+    }
+
+    @PutMapping("/sellers/{sellerId}/products/special-prices/{specialPriceId}")
+    @ResponseStatus(HttpStatus.OK)
+    public SpecialPriceResponse updateSpecialPriceById(@PathVariable UUID sellerId,
+                                                       @PathVariable UUID specialPriceId,
+                                                       @RequestBody @Valid SpecialPriceRequest specialPriceRequest) {
+        return productService.updateSpecialPrice(specialPriceRequest, specialPriceId);
+    }
+
+    @DeleteMapping("/sellers/{sellerId}/products/special-prices/{specialPriceId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @Operation(operationId = "deleteSpecialPrice", summary = "Удалить акцию")
-    @ApiResponse(responseCode = "204", description = "Акция успешно удалена")
-    public void deleteSpecialPrice(@PathVariable UUID specialPriceId) {
+    public void deleteSpecialPriceById(@PathVariable UUID sellerId,
+                                       @PathVariable UUID specialPriceId) {
         productService.deleteProductSpecialPrice(specialPriceId);
     }
 
-    @PostMapping("/products/{productId}/special-prices")
-    @ResponseStatus(HttpStatus.CREATED)
-    @Operation(operationId = "createSpecialPrice", summary = "Добавить акцию")
-    @ApiResponse(responseCode = "201", description = "Акция успешно добавлена")
-    public UUID createProductSpecialPrice(@RequestBody ProductSpecialPriceRequest productSpecialPriceRequest,
-                                          @PathVariable UUID productId
-    ) {
-        return productService.addProductSpecialPrice(productId, productSpecialPriceRequest);
-    }
-
-    @PutMapping("/products/special-prices/{specialPriceId}")
+    @PutMapping("/sellers/{sellerId}/products/characteristics/{characteristicId}")
     @ResponseStatus(HttpStatus.OK)
-    @Operation(operationId = "createSpecialPrice", summary = "Изменить акцию")
-    @ApiResponse(responseCode = "200", description = "Акция успешно изменена")
-    public ProductSpecialPriceResponse updateProductSpecialPrice(@RequestBody ProductSpecialPriceRequest productSpecialPriceRequest,
-                                                                 @PathVariable UUID specialPriceId
-    ) {
-        return productService.updateSpecialPrice(productSpecialPriceRequest, specialPriceId);
-    }
-
-    @PutMapping("/products/characteristics/{characteristicId}")
-    @ResponseStatus(HttpStatus.OK)
-    @Operation(operationId = "updateProductCharacteristic", summary = "Обновить характеристику продукта")
-    @ApiResponse(responseCode = "200", description = "Характеристика успешно обновлена")
-    public ProductCharacteristicResponse updateProductCharacteristic(@PathVariable UUID characteristicId,
-                                                                     @RequestBody ProductCharacteristicRequest productCharacteristicRequest
+    public ProductCharacteristicResponse updateProductCharacteristicById(
+                                        @PathVariable UUID sellerId,
+                                        @PathVariable UUID characteristicId,
+                                        @RequestBody @Valid ProductCharacteristicRequest productCharacteristicRequest
     ) {
         return productService.updateProductCharacteristic(characteristicId, productCharacteristicRequest);
     }
 
-
-
-/*    @GetMapping()
+    @GetMapping("/sellers/{sellerId}/products")
     @ResponseStatus(HttpStatus.OK)
-    @Operation(operationId = "getProductsBySetExternalId", summary = "Получения списка товаров по externalId каждого товара")
-    @ApiResponse(responseCode = "200", description = "Продукт успешно обновлен",
-            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProductResponseDto.class)))
-    public List<ProductResponseDto> getProductsBySetExternalId(
-            @RequestParam(name = "extId") Set<UUID> externalIdSet,
-            @PageableDefault(sort = {"name"}, direction = Sort.Direction.ASC) Pageable pageable) {
-        return productService.getProductsBySetExternalId(externalIdSet, pageable);
-    }*/
+    public Page<SellerProductPreview> getProductPreviewsBySellerId(
+                @PathVariable UUID sellerId,
+                @PageableDefault(size = 20, sort = "creationDate", direction = Sort.Direction.DESC) Pageable pageable
+    ) {
+        return productService.getProductsBySellerId(sellerId, pageable);
+    }
+
+    @GetMapping("/sellers/{sellerId}/archive/products")
+    @ResponseStatus(HttpStatus.OK)
+    public Page<SellerProductPreview> getArchivedProductPreviewsBySellerId(
+            @PathVariable UUID sellerId,
+            @PageableDefault(size = 20, sort = "creationDate", direction = Sort.Direction.DESC) Pageable pageable) {
+        return productService.getArchivedProductsBySellerId(sellerId, pageable);
+    }
+
+    @PatchMapping("/sellers/{sellerId}/archive/products")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void changeIsArchiveField(@PathVariable UUID sellerId,
+                                     @RequestParam("is-archive") boolean isArchive,
+                                     @RequestParam List<UUID> productIds) {
+        productService.changeIsArchiveField(isArchive, productIds);
+    }
+
+    @PatchMapping("/sellers/{sellerId}/products/visibility")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void changeProductsVisibility(@PathVariable UUID sellerId,
+                                         @RequestParam("is-visible") boolean isVisible,
+                                         @RequestParam List<UUID> productIds) {
+        productService.changeProductVisibility(isVisible, productIds);
+    }
+
+    @PatchMapping("/sellers/{sellerId}/products/{productId}/price")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void changeProductPriceById(@PathVariable UUID sellerId,
+                                       @PathVariable UUID productId,
+                                       @RequestParam(value = "price") @Positive Long updatedPrice) {
+        productService.changeProductPrice(productId, updatedPrice);
+    }
+
+    @PatchMapping("/sellers/{sellerId}/products/{productId}/count")
+    @ResponseStatus(HttpStatus.OK)
+    public void changeProductCountById(@PathVariable UUID sellerId,
+                                       @PathVariable UUID productId,
+                                       @RequestParam(value = "count") @PositiveOrZero Long updatedCount) {
+        productService.changeProductCount(productId, updatedCount);
+    }
+
+    @GetMapping("/product-previews")
+    @ResponseStatus(HttpStatus.OK)
+    public Page<UserProductPreview> getAllProductPreviews(@PageableDefault Pageable pageable) {
+        return productService.getProductPreviews(pageable);
+    }
+
+    @PostMapping("/product-previews")
+    @ResponseStatus(HttpStatus.OK)
+    public List<UserProductPreview> getProductPreviewsByIdentifiers(@RequestBody ProductRepresentationSetDto productRepresentationSetDto) {
+        return productService.getProductPreviewsByIds(productRepresentationSetDto.productIdentifiers());
+    }
+
 }
