@@ -20,7 +20,7 @@ spring:
         - id: product-service-route
           uri: http://127.0.0.1:9090
           predicates:
-            - Path=/*/*/*/products, /*/*/*/products/{externalId}, /*/*/*/products/search, /*/*/*/*/*/products, /*/*/*/*/*/products/categories, /*/*/*/*/*/products/categories/**, /*/*/*/*/*/products/search/by-name
+            - Path=/*/*/*/products, /*/*/*/products/{externalId}, /*/*/*/products/search, /*/*/*/*/*/products, /*/*/*/*/*/products/categories, /*/*/*/*/*/products/categories/**, /*/*/*/*/*/products/search/by-name, /*/*/*/*/{sellerId}/products, /*/*/*/*/{sellerId}/products/**, /*/*/*/*/{sellerId}/products/{productId}, /*/*/*/*/{sellerId}/products/{productId}/**, /*/*/*/*/{sellerId}/products/special-prices/{specialPriceId}, /*/*/*/*/{sellerId}/products/characteristics/{characteristicId}, /*/*/*/product-previews, /*/*/*/*/{sellerId}/archive/products,
         - id: favorite-service-route
           uri: http://127.0.0.1:8082
           predicates:
@@ -79,8 +79,8 @@ application:
       - url: /*/*/*/sellers
         methods: POST
       # products-api
-      - url: /*/*/*/products/{externalId}
-        methods: GET
+#      - url: /*/*/*/products/{externalId}
+#        methods: GET
 
 logging:
   level:
