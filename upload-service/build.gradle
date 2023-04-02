@@ -17,6 +17,10 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework:spring-context-support:6.0.4'
+	implementation 'org.springframework.data:spring-data-mongodb:4.0.4'
+
+	implementation 'com.google.guava:guava:11.0'
+
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'

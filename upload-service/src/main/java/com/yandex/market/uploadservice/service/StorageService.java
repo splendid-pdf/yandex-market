@@ -5,17 +5,20 @@ import com.amazonaws.services.s3.model.AmazonS3Exception;
 import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.S3Object;
+import com.google.common.hash.Hashing;
 import com.yandex.market.exception.BadRequestException;
-import com.yandex.market.uploadservice.config.properties.FileNameGenerator;
 import com.yandex.market.uploadservice.config.properties.ObjectStorageProperties;
 import com.yandex.market.uploadservice.model.FileDetails;
+import com.yandex.market.uploadservice.model.FileMetaInfo;
 import com.yandex.market.uploadservice.model.FileType;
+import com.yandex.market.uploadservice.repository.FileMetaInfoRepository;
 import com.yandex.market.uploadservice.validator.FileValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.apache.commons.io.FilenameUtils;
 import org.joda.time.DateTime;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.ConfigurableMimeFileTypeMap;
 import org.springframework.stereotype.Service;
@@ -23,7 +26,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.*;
+import java.time.OffsetDateTime;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.yandex.market.uploadservice.utils.Constants.*;
@@ -37,27 +44,37 @@ public class StorageService {
 
     private final AmazonS3 amazonS3;
     private final FileValidator validator;
+    private final FileMetaInfoRepository repository;
     private final ObjectStorageProperties properties;
-    private final FileNameGenerator fileNameGenerator;
-
     @Value("${application.validation.maximum_files_count}")
     private Integer maxFilesCount;
 
-    public URL uploadFile(MultipartFile file, FileType fileType) {
+    public URL uploadFile(MultipartFile file, FileType fileType, String idempotencyKey) {
         validator.validate(file);
         try {
             val bucketName = properties.getBucketName();
-            val objectId = createFileName(fileType);
             val inputStream = file.getInputStream();
             val metadata = createMetadata(file);
-            amazonS3.putObject(
-                    bucketName,
-                    objectId,
-                    inputStream,
-                    metadata
-            );
+            val hash = getHash(file);
 
-            return getUrl(fileType, bucketName, objectId);
+            Optional<FileMetaInfo> fileMetaInfo = repository.findByHashAndIdempotencyKey(hash, idempotencyKey);
+
+            if (fileMetaInfo.isEmpty()) {
+                val info = repository.save(
+                        createFileMetaInfo(hash, file.getOriginalFilename(), idempotencyKey)
+                );
+                val objectId = createFileName(fileType, info.getId());
+
+
+                amazonS3.putObject(
+                        bucketName,
+                        objectId,
+                        inputStream,
+                        metadata
+                );
+                return getUrl(fileType, bucketName, objectId);
+            }
+            return getUrl(fileType, bucketName, createFileName(fileType, fileMetaInfo.get().getId()));
         } catch (IOException e) {
             log.error("Failed to upload a file = {}", file);
             throw new BadRequestException(UPLOAD_FILE_EXCEPTION_MESSAGE.formatted(file.getName()));
@@ -107,6 +124,31 @@ public class StorageService {
                 .collect(Collectors.toSet());
     }
 
+    private String createObjectId(String fileId, FileType fileType) {
+        return fileType.getFolder() + fileId;
+    }
+
+    private String createFileName(FileType fileType, String id) {
+        return fileType.getFolder() + "id" + id;
+    }
+
+    private ObjectMetadata createMetadata(MultipartFile file) {
+        ObjectMetadata metadata = new ObjectMetadata();
+        metadata.setContentType(file.getContentType());
+        metadata.setContentLength(file.getSize());
+        metadata.setUserMetadata(Map.of(EXTENSION, "." + getExtension(file.getOriginalFilename())));
+        return metadata;
+    }
+
+    private FileMetaInfo createFileMetaInfo(String hash, String filename, String idempotencyKey) {
+        return FileMetaInfo.builder()
+                .hash(hash)
+                .fileName(filename)
+                .idempotencyKey(idempotencyKey)
+                .timestamp(OffsetDateTime.now())
+                .build();
+    }
+
     private URL getUrl(FileType fileType, String bucketName, String objectId) {
         val expirationTime = new DateTime().plusMinutes(properties.getExpirationTime()).toDate();
         if (FileType.CHECK == fileType) {
@@ -119,24 +161,12 @@ public class StorageService {
         return amazonS3.generatePresignedUrl(new GeneratePresignedUrlRequest(bucketName, objectId));
     }
 
-    private String createObjectId(String fileId, FileType fileType) {
-        return fileType.getFolder() + fileId;
-    }
-
-    private String createFileName(FileType fileType){
-        return fileType.getFolder() + fileNameGenerator.generateFileName();
+    private static String getHash(MultipartFile file) throws IOException {
+        return String.valueOf(Hashing.murmur3_128().hashBytes(file.getBytes()).asLong());
     }
 
     private String getExtension(String filename) {
         return FilenameUtils.getExtension(filename);
-    }
-
-    private ObjectMetadata createMetadata(MultipartFile file) {
-        ObjectMetadata metadata = new ObjectMetadata();
-        metadata.setContentType(file.getContentType());
-        metadata.setContentLength(file.getSize());
-        metadata.setUserMetadata(Map.of(EXTENSION, "." + getExtension(file.getOriginalFilename())));
-        return metadata;
     }
 
     private String getFileExtension(S3Object s3Object) {

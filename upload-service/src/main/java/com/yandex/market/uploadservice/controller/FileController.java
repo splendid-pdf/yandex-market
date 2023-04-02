@@ -3,7 +3,7 @@ package com.yandex.market.uploadservice.controller;
 import com.amazonaws.services.s3.Headers;
 import com.yandex.market.uploadservice.model.FileDetails;
 import com.yandex.market.uploadservice.model.FileType;
-import com.yandex.market.uploadservice.service.*;
+import com.yandex.market.uploadservice.service.StorageService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,6 +29,7 @@ public class FileController {
 
     private final StorageService storageService;
 
+
     @PostMapping(
             value = "/upload",
             produces = MediaType.APPLICATION_JSON_VALUE,
@@ -37,9 +38,11 @@ public class FileController {
     @ResponseStatus(HttpStatus.OK)
     public URL upload(
             @RequestPart MultipartFile file,
-            @RequestParam("fileType") FileType fileType
+            @RequestParam("fileType") FileType fileType,
+            @RequestBody String idempotencyKey
     ) {
-        return storageService.uploadFile(file, fileType);
+
+        return storageService.uploadFile(file, fileType, idempotencyKey);
     }
 
     @GetMapping(value = "/url")
