@@ -1,6 +1,7 @@
 package com.yandex.market.sellerinfoservice.controller;
 
 import com.yandex.market.sellerinfoservice.controller.response.ErrorResponse;
+import com.yandex.market.sellerinfoservice.dto.SellerRegistration;
 import com.yandex.market.sellerinfoservice.dto.SellerRequestDto;
 import com.yandex.market.sellerinfoservice.dto.SellerResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
@@ -10,6 +11,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -50,6 +52,7 @@ import java.util.UUID;
                 ))
 })
 public interface SellerApi {
+
     @Operation(summary = "Создание нового продавца",
             responses = {@ApiResponse(responseCode = "201",
                     description = "Новый продавец создан",
@@ -57,7 +60,7 @@ public interface SellerApi {
                             schema = @Schema(implementation = UUID.class))),
                     @ApiResponse(responseCode = "409", description = "Ошибка при создании нового продавца")
             })
-    UUID createSeller(@RequestBody SellerRequestDto sellerRequestDto);
+    UUID createSeller(@RequestBody @Valid SellerRegistration sellerRegistration);
 
     @Operation(operationId = "getSellerByExternalId", summary = "Получение продавца по externalId")
     @ApiResponses({
