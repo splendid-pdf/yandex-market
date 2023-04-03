@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -35,6 +36,12 @@ public class FileValidator {
                     file.getSize(),
                     maxFileSizeInBytes
             );
+        }
+    }
+
+    public void validateImpotencyKey(String key) {
+        if (StringUtils.isBlank(key)) {
+            throw new IllegalArgumentException("Key cannot be empty");
         }
     }
 

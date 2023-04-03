@@ -50,6 +50,7 @@ public class StorageService {
 
     public URL uploadFile(MultipartFile file, FileType fileType, String idempotencyKey) {
         validator.validate(file);
+        validator.validateImpotencyKey(idempotencyKey);
         try {
             val bucketName = properties.getBucketName();
             val inputStream = file.getInputStream();
@@ -182,4 +183,6 @@ public class StorageService {
             );
         }
     }
+
+
 }
