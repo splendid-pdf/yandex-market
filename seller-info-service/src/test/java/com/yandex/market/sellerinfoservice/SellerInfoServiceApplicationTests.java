@@ -2,7 +2,7 @@ package com.yandex.market.sellerinfoservice;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
-import com.yandex.market.sellerinfoservice.dto.SellerRequestDto;
+import com.yandex.market.sellerinfoservice.dto.SellerRegistrationDto;
 import com.yandex.market.sellerinfoservice.service.SellerService;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
@@ -85,14 +85,14 @@ class SellerInfoServiceApplicationTests {
                 .andExpect(status().isConflict());
 
         Assertions.assertThrows(EntityExistsException.class, () -> sellerService
-                .createSeller(objectMapper.readValue(Files.readString(Path.of(CREATE_SELLER_REQUEST_DTO_JSON)), SellerRequestDto.class)));
+                .createSeller(objectMapper.readValue(Files.readString(Path.of(CREATE_SELLER_REQUEST_DTO_JSON)), SellerRegistrationDto.class)));
     }
 
     @Test
     @Transactional
     void createSellerService() throws IOException {
         UUID actualSellerExternalId = sellerService
-                .createSeller(objectMapper.readValue(Files.readString(Path.of(CREATE_SELLER_REQUEST_DTO_JSON)), SellerRequestDto.class));
+                .createSeller(objectMapper.readValue(Files.readString(Path.of(CREATE_SELLER_REQUEST_DTO_JSON)), SellerRegistrationDto.class));
         Assertions.assertNotNull(sellerService.getSellerByExternalId(actualSellerExternalId));
     }
 
@@ -100,7 +100,7 @@ class SellerInfoServiceApplicationTests {
     @Transactional
     void createSellerServiceNegative() {
         Assertions.assertThrows(InvalidFormatException.class, () -> sellerService
-                .createSeller(objectMapper.readValue(Files.readString(Path.of(CREATE_SELLER_REQUEST_DTO_NEGATIVE_JSON)), SellerRequestDto.class)));
+                .createSeller(objectMapper.readValue(Files.readString(Path.of(CREATE_SELLER_REQUEST_DTO_NEGATIVE_JSON)), SellerRegistrationDto.class)));
     }
 
     @Test
@@ -108,7 +108,7 @@ class SellerInfoServiceApplicationTests {
     @Sql("/db/insert_test_seller.sql")
     void createSellerServiceNegativeServiceExistException() {
         Assertions.assertThrows(EntityExistsException.class, () -> sellerService
-                .createSeller(objectMapper.readValue(Files.readString(Path.of(CREATE_SELLER_REQUEST_DTO_JSON)), SellerRequestDto.class)));
+                .createSeller(objectMapper.readValue(Files.readString(Path.of(CREATE_SELLER_REQUEST_DTO_JSON)), SellerRegistrationDto.class)));
     }
 
     @Test

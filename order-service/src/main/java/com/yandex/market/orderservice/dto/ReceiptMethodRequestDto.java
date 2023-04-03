@@ -38,5 +38,5 @@ public record ReceiptMethodRequestDto(
         @NotNull(message = "Время конца периода доставки должно быть заполнено")
         LocalTime deliveryEnd,
         @PositiveOrZero(message = "Цена доставки не может быть отрицательной")
-        double deliveryCost) {
+        Long deliveryCost) {
 }

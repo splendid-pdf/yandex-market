@@ -3,6 +3,7 @@ package com.yandex.market.orderservice.service;
 import com.yandex.market.orderservice.dto.OrderPreviewDto;
 import com.yandex.market.orderservice.dto.OrderRequestDto;
 import com.yandex.market.orderservice.dto.OrderResponseDto;
+import com.yandex.market.orderservice.dto.seller.SellerOrderPreview;
 import com.yandex.market.orderservice.mapper.OrderMapper;
 import com.yandex.market.orderservice.model.Order;
 import com.yandex.market.orderservice.model.OrderStatus;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.ByteArrayInputStream;
+import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -57,6 +59,12 @@ public class OrderService {
                 .stream()
                 .map(orderMapper::toOrderPreviewDto)
                 .collect(Collectors.toList()));
+    }
+
+    public List<SellerOrderPreview> getOrderPreviewsBySellerId(UUID sellerId) {
+        List<Order> ordersBySellerId = orderRepository.getOrdersBySellerId(sellerId);
+        return ordersBySellerId.stream()
+                .map(orderMapper::toSellerPreview).collect(Collectors.toList());
     }
 
     @Transactional
