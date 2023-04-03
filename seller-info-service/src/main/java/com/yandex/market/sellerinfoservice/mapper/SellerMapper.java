@@ -1,6 +1,6 @@
 package com.yandex.market.sellerinfoservice.mapper;
 
-import com.yandex.market.sellerinfoservice.dto.SellerRegistrationDto;
+import com.yandex.market.sellerinfoservice.dto.SellerRegistration;
 import com.yandex.market.sellerinfoservice.dto.SellerRequestDto;
 import com.yandex.market.sellerinfoservice.dto.SellerResponseDto;
 import com.yandex.market.sellerinfoservice.model.Seller;
@@ -25,5 +25,5 @@ public interface SellerMapper {
 
     @Mapping(target = "role", constant = "SELLER")
     @Mapping(target = "externalId", expression = "java(UUID.randomUUID())")
-    Seller toSeller(SellerRegistrationDto sellerRegistrationDto);
+    Seller toSeller(SellerRegistration sellerRegistration);
 }

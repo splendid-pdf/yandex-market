@@ -1,7 +1,7 @@
 package com.yandex.market.sellerinfoservice.controller;
 
 import com.yandex.market.sellerinfoservice.controller.response.ErrorResponse;
-import com.yandex.market.sellerinfoservice.dto.SellerRegistrationDto;
+import com.yandex.market.sellerinfoservice.dto.SellerRegistration;
 import com.yandex.market.sellerinfoservice.dto.SellerRequestDto;
 import com.yandex.market.sellerinfoservice.dto.SellerResponseDto;
 import com.yandex.market.sellerinfoservice.service.SellerService;
@@ -49,8 +49,8 @@ public class SellerController {
                             schema = @Schema(implementation = UUID.class))),
             @ApiResponse(description = "Ошибка при создании нового продавца", responseCode = "409")
     })
-    public UUID createSeller(@RequestBody @Valid SellerRegistrationDto sellerRegistrationDto) {
-        return sellerService.createSeller(sellerRegistrationDto);
+    public UUID createSeller(@RequestBody @Valid SellerRegistration sellerRegistration) {
+        return sellerService.createSeller(sellerRegistration);
     }
 
     @GetMapping("sellers/{externalId}")

@@ -1,7 +1,7 @@
 package com.yandex.market.sellerinfoservice.service.impl;
 
 import com.yandex.market.auth.dto.ClientAuthDetails;
-import com.yandex.market.sellerinfoservice.dto.SellerRegistrationDto;
+import com.yandex.market.sellerinfoservice.dto.SellerRegistration;
 import com.yandex.market.sellerinfoservice.dto.SellerRequestDto;
 import com.yandex.market.sellerinfoservice.dto.SellerResponseDto;
 import com.yandex.market.sellerinfoservice.mapper.SellerMapper;
@@ -26,12 +26,12 @@ public class SellerServiceImpl implements SellerService {
     private final static String SELLER_NOT_FOUND_EXCEPTION = "Seller not found with seller id = ";
 
     @Override
-    public UUID createSeller(SellerRegistrationDto sellerRegistrationDto) {
-        if (sellerRepository.existsSellerByEmail(sellerRegistrationDto.email())) {
-            throw new EntityExistsException("Seller with email " + sellerRegistrationDto.email() + " already exist");
+    public UUID createSeller(SellerRegistration sellerRegistration) {
+        if (sellerRepository.existsSellerByEmail(sellerRegistration.email())) {
+            throw new EntityExistsException("Seller with email " + sellerRegistration.email() + " already exist");
         }
 
-        Seller seller = sellerMapper.toSeller(sellerRegistrationDto);
+        Seller seller = sellerMapper.toSeller(sellerRegistration);
         return sellerRepository.save(seller).getExternalId();
     }
 
