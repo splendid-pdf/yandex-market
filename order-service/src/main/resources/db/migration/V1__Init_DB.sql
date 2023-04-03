@@ -26,23 +26,22 @@ create table orders
     delivery_date      date         not null,
     delivery_start     time         not null,
     delivery_end       time         not null,
-    delivery_cost      float        not null,
+    delivery_cost      BIGINT       not null,
     delivery_method    varchar(255) not null,
     primary key (id)
 );
 
-
 create table ordered_products
 (
-    id             bigint       not null,
-    product_id     uuid         not null,
-    name           varchar(255) not null,
-    amount         integer      not null,
-    price          float        not null,
-    description    varchar(255) not null,
-    photo_url      varchar(255) not null,
-    branch_id      uuid         not null,
-    shop_system_id uuid         not null,
-    order_id       bigint REFERENCES orders (id),
+    id                  bigint       not null,
+    product_id          uuid         not null,
+    name                varchar(255) not null,
+    article_from_seller varchar(255) not null,
+    amount              integer      not null,
+    price               BIGINT       not null,
+    description         varchar(255) not null,
+    photo_url           varchar(255) not null,
+    seller_id           uuid         not null,
+    order_id            bigint REFERENCES orders (id),
     primary key (id)
 );

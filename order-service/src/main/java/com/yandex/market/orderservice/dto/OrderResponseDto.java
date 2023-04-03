@@ -15,7 +15,7 @@ public record OrderResponseDto(
         UUID userId,
         OrderStatus orderStatus,
         PaymentType paymentType,
-        double price,
+        Long price,
         boolean paid,
         LocalDateTime paymentDateTime,
         LocalDateTime creationTimestamp,

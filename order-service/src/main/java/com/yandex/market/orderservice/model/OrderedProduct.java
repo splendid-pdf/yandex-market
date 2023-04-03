@@ -23,17 +23,17 @@ public class OrderedProduct {
 
     private UUID productId;
 
+    private String articleFromSeller;
+
     private int amount;
 
     private String name;
 
-    private double price;
+    private Long price;
 
     private String description;
 
     private String photoUrl;
 
-    private UUID branchId;
-
-    private UUID shopSystemId;
+    private UUID sellerId;
 }
