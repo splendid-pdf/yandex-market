@@ -8,6 +8,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.oauth2.jose.jws.SignatureAlgorithm;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
@@ -26,17 +27,17 @@ public class SecurityConfig {
         return new PermissionService();
     }
 
-//    @Bean
-//    public WebSecurityCustomizer webSecurityCustomizer() {
-//        return web -> web.ignoring()
-//                .requestMatchers("/public/api/v1/users/signup")
-//                .requestMatchers("/private/api/v1/users/auth-details/**")
-//                .requestMatchers("/actuator/**")
-//                .requestMatchers("/v3/api-docs/**")
-//                .requestMatchers("/swagger-ui*/**")
-//                .requestMatchers("/swagger-resources/**")
-//                .requestMatchers("/webjars/**");
-//    }
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return web -> web.ignoring()
+                .requestMatchers("/public/api/v1/users/signup")
+                .requestMatchers("/private/api/v1/users/auth-details/**")
+                .requestMatchers("/actuator/**")
+                .requestMatchers("/v3/api-docs/**")
+                .requestMatchers("/swagger-ui*/**")
+                .requestMatchers("/swagger-resources/**")
+                .requestMatchers("/webjars/**");
+    }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {

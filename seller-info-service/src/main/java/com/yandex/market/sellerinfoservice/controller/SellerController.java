@@ -1,5 +1,6 @@
 package com.yandex.market.sellerinfoservice.controller;
 
+import com.yandex.market.sellerinfoservice.dto.SellerRegistration;
 import com.yandex.market.sellerinfoservice.dto.SellerRequestDto;
 import com.yandex.market.sellerinfoservice.dto.SellerResponseDto;
 import com.yandex.market.sellerinfoservice.service.SellerService;
@@ -8,6 +9,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -33,8 +35,8 @@ public class SellerController implements SellerApi{
                             schema = @Schema(implementation = UUID.class))),
             @ApiResponse(description = "Ошибка при создании нового продавца", responseCode = "409")
     })
-    public UUID createSeller(@RequestBody SellerRequestDto sellerRequestDto) {
-        return sellerService.createSeller(sellerRequestDto);
+    public UUID createSeller(@RequestBody @Valid SellerRegistration sellerRegistration) {
+        return sellerService.createSeller(sellerRegistration);
     }
 
     @GetMapping("sellers/{externalId}")
