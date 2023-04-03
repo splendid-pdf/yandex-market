@@ -1,6 +1,8 @@
 package com.yandex.market.productservice.exception;
 
-public class InvalidCharacteristicsException extends RuntimeException {
+import jakarta.validation.ValidationException;
+
+public class InvalidCharacteristicsException extends ValidationException {
 
     public InvalidCharacteristicsException(String message) {
         super(message);

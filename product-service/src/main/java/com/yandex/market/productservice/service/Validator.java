@@ -2,16 +2,18 @@ package com.yandex.market.productservice.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.yandex.market.productservice.dto.ProductImageDto;
+import com.yandex.market.productservice.dto.request.SpecialPriceRequest;
 import com.yandex.market.productservice.exception.InvalidCharacteristicsException;
-import com.yandex.market.productservice.model.Product;
-import com.yandex.market.productservice.model.ProductCharacteristic;
-import com.yandex.market.productservice.model.TypeCharacteristic;
-import com.yandex.market.productservice.model.ValueType;
+import com.yandex.market.productservice.exception.SpecialPriceCreatingException;
+import com.yandex.market.productservice.exception.TooMuchMainImagesException;
+import com.yandex.market.productservice.model.*;
 import com.yandex.market.productservice.repository.TypeRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -62,6 +64,21 @@ public class Validator {
         }
     }
 
+    public void validateImages(List<ProductImageDto> productImages) {
+        long mainImagesCount = productImages.stream().filter(ProductImageDto::isMain).count();
+        if(mainImagesCount > 1) {
+            throw new TooMuchMainImagesException("Too much main images");
+        }
+    }
+
+    public void validateSpecialPrice(SpecialPriceRequest specialPriceRequest) {
+        LocalDateTime from = specialPriceRequest.fromDate();
+        LocalDateTime to = specialPriceRequest.toDate();
+        if(from.isAfter(to)) {
+            throw new SpecialPriceCreatingException("from date cannot be after to date");
+        }
+    }
+
     private void validateCharacteristic(
                                         ProductCharacteristic requestedCharacteristic,
                                         Map<String, ValueType> requiredCharacteristics,
@@ -94,4 +111,6 @@ public class Validator {
             exceptions.add(String.format(INVALID_CHARACTERISTIC_VALUE, name, value, valueType));
         }
     }
+
 }
+
