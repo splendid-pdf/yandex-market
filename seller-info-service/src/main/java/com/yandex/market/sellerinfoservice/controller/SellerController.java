@@ -29,12 +29,6 @@ public class SellerController implements SellerApi{
 
     @PostMapping("sellers")
     @ResponseStatus(HttpStatus.CREATED)
-    @Operation(summary = "Создание нового продавца", responses = {
-            @ApiResponse(description = "Новый продавец создан", responseCode = "201",
-                    content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = UUID.class))),
-            @ApiResponse(description = "Ошибка при создании нового продавца", responseCode = "409")
-    })
     public UUID createSeller(@RequestBody @Valid SellerRegistration sellerRegistration) {
         return sellerService.createSeller(sellerRegistration);
     }
