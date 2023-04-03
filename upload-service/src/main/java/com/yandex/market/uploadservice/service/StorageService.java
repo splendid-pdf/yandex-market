@@ -48,23 +48,21 @@ public class StorageService {
     @Value("${application.validation.maximum_files_count}")
     private Integer maxFilesCount;
 
-    public URL uploadFile(MultipartFile file, FileType fileType, String idempotencyKey) {
+    public URL uploadFile(MultipartFile file, FileType fileType) {
         validator.validate(file);
-        validator.validateImpotencyKey(idempotencyKey);
         try {
             val bucketName = properties.getBucketName();
             val inputStream = file.getInputStream();
             val metadata = createMetadata(file);
             val hash = getHash(file);
 
-            Optional<FileMetaInfo> fileMetaInfo = repository.findByHashAndIdempotencyKey(hash, idempotencyKey);
+            Optional<FileMetaInfo> fileMetaInfo = repository.findByHash(hash);
 
             if (fileMetaInfo.isEmpty()) {
                 val info = repository.save(
-                        createFileMetaInfo(hash, file.getOriginalFilename(), idempotencyKey)
+                        createFileMetaInfo(hash, file.getOriginalFilename())
                 );
                 val objectId = createFileName(fileType, info.getId());
-
 
                 amazonS3.putObject(
                         bucketName,
@@ -140,11 +138,10 @@ public class StorageService {
         return metadata;
     }
 
-    private FileMetaInfo createFileMetaInfo(String hash, String filename, String idempotencyKey) {
+    private FileMetaInfo createFileMetaInfo(String hash, String filename) {
         return FileMetaInfo.builder()
                 .hash(hash)
                 .fileName(filename)
-                .idempotencyKey(idempotencyKey)
                 .timestamp(LocalDateTime.now())
                 .build();
     }
@@ -183,6 +180,4 @@ public class StorageService {
             );
         }
     }
-
-
 }

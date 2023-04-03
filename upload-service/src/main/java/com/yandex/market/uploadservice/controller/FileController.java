@@ -29,7 +29,6 @@ public class FileController {
 
     private final StorageService storageService;
 
-
     @PostMapping(
             value = "/upload",
             produces = MediaType.APPLICATION_JSON_VALUE,
@@ -38,11 +37,10 @@ public class FileController {
     @ResponseStatus(HttpStatus.OK)
     public URL upload(
             @RequestPart MultipartFile file,
-            @RequestParam("fileType") FileType fileType,
-            @RequestParam("key") String idempotencyKey
+            @RequestParam("fileType") FileType fileType
     ) {
 
-        return storageService.uploadFile(file, fileType, idempotencyKey);
+        return storageService.uploadFile(file, fileType);
     }
 
     @GetMapping(value = "/url")

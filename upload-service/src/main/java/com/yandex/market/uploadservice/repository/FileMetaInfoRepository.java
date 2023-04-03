@@ -8,5 +8,5 @@ import java.util.Optional;
 
 @Repository
 public interface FileMetaInfoRepository extends MongoRepository<FileMetaInfo, String> {
-    Optional<FileMetaInfo> findByHashAndIdempotencyKey(String hash, String idempotencyKey);
+    Optional<FileMetaInfo> findByHash(String hash);
 }

@@ -17,6 +17,5 @@ public class FileMetaInfo {
     private String id;
     private String hash;
     private String fileName;
-    private String idempotencyKey;
     private LocalDateTime timestamp;
 }
