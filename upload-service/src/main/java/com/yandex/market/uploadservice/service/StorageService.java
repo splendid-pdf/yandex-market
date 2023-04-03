@@ -18,7 +18,6 @@ import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.apache.commons.io.FilenameUtils;
 import org.joda.time.DateTime;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.ConfigurableMimeFileTypeMap;
 import org.springframework.stereotype.Service;
@@ -26,7 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.net.URL;
-import java.time.OffsetDateTime;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -145,7 +144,7 @@ public class StorageService {
                 .hash(hash)
                 .fileName(filename)
                 .idempotencyKey(idempotencyKey)
-                .timestamp(OffsetDateTime.now())
+                .timestamp(LocalDateTime.now())
                 .build();
     }
 

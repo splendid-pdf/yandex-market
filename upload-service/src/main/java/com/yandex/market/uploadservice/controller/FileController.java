@@ -39,7 +39,7 @@ public class FileController {
     public URL upload(
             @RequestPart MultipartFile file,
             @RequestParam("fileType") FileType fileType,
-            @RequestBody String idempotencyKey
+            @RequestParam("key") String idempotencyKey
     ) {
 
         return storageService.uploadFile(file, fileType, idempotencyKey);

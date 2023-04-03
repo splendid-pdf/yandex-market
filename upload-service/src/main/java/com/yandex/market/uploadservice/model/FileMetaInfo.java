@@ -4,7 +4,7 @@ import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.time.OffsetDateTime;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -18,5 +18,5 @@ public class FileMetaInfo {
     private String hash;
     private String fileName;
     private String idempotencyKey;
-    private OffsetDateTime timestamp;
+    private LocalDateTime timestamp;
 }
