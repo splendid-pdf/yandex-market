@@ -3,8 +3,8 @@ package com.yandex.market.orderservice.dto;
 import com.yandex.market.orderservice.model.PaymentType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.*;
-import lombok.Data;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PositiveOrZero;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -14,7 +14,7 @@ public record OrderRequestDto(
         @NotNull(message = "Способ оплаты должен быть заполнен")
         PaymentType paymentType,
         @PositiveOrZero(message = "Цена заказа не может быть отрицательной")
-        double price,
+        Long price,
         boolean paid,
         LocalDateTime paymentDateTime,
         @Valid

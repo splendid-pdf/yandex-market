@@ -3,6 +3,7 @@ package com.yandex.market.orderservice.mapper;
 import com.yandex.market.orderservice.dto.OrderPreviewDto;
 import com.yandex.market.orderservice.dto.OrderRequestDto;
 import com.yandex.market.orderservice.dto.OrderResponseDto;
+import com.yandex.market.orderservice.dto.seller.SellerOrderPreview;
 import com.yandex.market.orderservice.model.Order;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -20,4 +21,8 @@ public interface OrderMapper {
     @Mapping(source = "order.orderedProducts", target = "orderedProductPreviews")
     @Mapping(source = "order.receiptMethod", target = "receiptMethod")
     OrderPreviewDto toOrderPreviewDto(Order order);
+
+    @Mapping(target = "sellerOrderContactPreview", source = "order.receiptMethod")
+    @Mapping(target = "orderedProductPreviews", source = "order.orderedProducts")
+    SellerOrderPreview toSellerPreview(Order order);
 }
