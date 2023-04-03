@@ -1,6 +1,7 @@
 package com.yandex.market.productservice.repository;
 
 
+import com.yandex.market.productservice.dto.projections.SellerArchiveProductPreview;
 import com.yandex.market.productservice.dto.projections.UserProductPreview;
 import com.yandex.market.productservice.dto.projections.SellerProductPreview;
 import com.yandex.market.productservice.model.Product;
@@ -60,7 +61,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
                 p.count as count,
                 types.name as type,
                 p.creation_date as creationDate
-                p.is_visible as isVisible,
                 product_images.url as imageUrl,
             FROM
                 products AS p
@@ -72,7 +72,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
                 product_images.is_main=true
                 AND p.is_deleted=false
             """, nativeQuery = true)
-    Page<SellerProductPreview> findArchivedProductsPreviewBySellerId(@Param("sellerId") UUID sellerId, Pageable pageable);
+    Page<SellerArchiveProductPreview> findArchivedProductsPreviewBySellerId(@Param("sellerId") UUID sellerId, Pageable pageable);
 
     @Modifying
     @Query(value = """

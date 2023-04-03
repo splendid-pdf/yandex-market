@@ -12,7 +12,7 @@ import java.util.UUID;
 public record CreateProductRequest(
 
         @NotBlank(message = "The name of the product must be indicated")
-        @Size(min = 3, max = 30, message = "The product name must be in the range from 3 to 30 characters")
+        @Size(min = 3, max = 128, message = "The product name must be in the range from 3 to 128 characters")
         String name,
 
         @Size(max = 200, message = "The product description must be in the range from 0 to 200 characters")

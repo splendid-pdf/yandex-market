@@ -2,6 +2,7 @@ package com.yandex.market.productservice.controller;
 
 import com.yandex.market.productservice.dto.ProductImageDto;
 import com.yandex.market.productservice.dto.ProductRepresentationSetDto;
+import com.yandex.market.productservice.dto.projections.SellerArchiveProductPreview;
 import com.yandex.market.productservice.dto.projections.SellerProductPreview;
 import com.yandex.market.productservice.dto.projections.UserProductPreview;
 import com.yandex.market.productservice.dto.request.CreateProductRequest;
@@ -50,14 +51,6 @@ public class ProductController implements ProductApi {
     // но как же впадлу. Поэтому ограничемся полем
     //todo мапу из валидатора вынести в отдельный бин и инжектить куда надо чтобы в бд не обращаться лишний раз
 
-    //todo: После этого все затестить локальны и выкатить на наш сервак. (ЭТО Я ПРЯМО СЕЙЧАС СДЕЛАЮ)
-    //todo: ДОБЕЙ КОНТРАКТЫ!!!!!! и все протестируй(немного впадлу просто проверь работу и отдай тестировщикам) (ЭТО Я ПРЯМО СЕЙЧАС СДЕЛАЮ)
-    //todo: отдай это все фронтам наконец и учи теорию!!!!! (ЭТО Я ПРЯМО СЕЙЧАС СДЕЛАЮ)
-
-    //todo: расписать вайт листы
-    //todo: Чтобы протестить надо запустить апи гейтевей, аус сервис, селлер сервис, продукт сервис
-    //todo: /public/api/v1/sellers/oauth/login идем сюда и логинимся. Потом дадут токен. Этот бирер токен
-    // вставляю в бирер авторизацию и жизнь прекрасна
 
 
     @PostMapping("/sellers/{sellerId}/products")
@@ -148,7 +141,7 @@ public class ProductController implements ProductApi {
 
     @GetMapping("/sellers/{sellerId}/archive/products")
     @ResponseStatus(HttpStatus.OK)
-    public Page<SellerProductPreview> getArchivedProductPreviewsBySellerId(
+    public Page<SellerArchiveProductPreview> getArchivedProductPreviewsBySellerId(
             @PathVariable UUID sellerId,
             @PageableDefault(size = 20, sort = "creationDate", direction = Sort.Direction.DESC) Pageable pageable) {
         return productService.getArchivedProductsBySellerId(sellerId, pageable);
@@ -167,7 +160,7 @@ public class ProductController implements ProductApi {
     public void changeProductsVisibility(@PathVariable UUID sellerId,
                                          @RequestParam("is-visible") boolean isVisible,
                                          @RequestParam List<UUID> productIds) {
-        productService.changeProductVisibility(isVisible, productIds);
+        productService.changeProductsVisibility(isVisible, productIds);
     }
 
     @PatchMapping("/sellers/{sellerId}/products/{productId}/price")

@@ -21,7 +21,7 @@ spring:
     database: POSTGRESQL
     show-sql: true
     hibernate:
-      ddl-auto: update # далее validate
+      ddl-auto: validate # далее validate
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect

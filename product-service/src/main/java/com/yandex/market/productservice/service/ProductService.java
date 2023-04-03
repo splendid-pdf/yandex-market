@@ -2,6 +2,7 @@ package com.yandex.market.productservice.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yandex.market.productservice.dto.ProductImageDto;
+import com.yandex.market.productservice.dto.projections.SellerArchiveProductPreview;
 import com.yandex.market.productservice.dto.projections.UserProductPreview;
 import com.yandex.market.productservice.dto.projections.SellerProductPreview;
 import com.yandex.market.productservice.dto.request.CreateProductRequest;
@@ -54,13 +55,17 @@ public class ProductService {
     public UUID createProduct(CreateProductRequest createProductRequest, UUID sellerId) {
         UUID typeId = createProductRequest.typeId();
         List<ProductImageDto> productImages = createProductRequest.images();
+
         validator.validateImages(productImages);
+
         Type type = typeRepository.findByExternalId(typeId)
                 .orElseThrow(() -> new EntityNotFoundException(String.format(TYPE_NOT_FOUND_ERROR_MESSAGE, typeId)));
+
         Product product = productMapper.toProduct(createProductRequest);
         type.addProduct(product);
         product.setSellerExternalId(sellerId);
         validator.validateProductCharacteristics(product);
+
         return productRepository.save(product).getExternalId();
     }
 
@@ -89,7 +94,7 @@ public class ProductService {
     }
 
     @Transactional
-    public Page<SellerProductPreview> getArchivedProductsBySellerId(UUID sellerId, Pageable pageable) {
+    public Page<SellerArchiveProductPreview> getArchivedProductsBySellerId(UUID sellerId, Pageable pageable) {
         return productRepository.findArchivedProductsPreviewBySellerId(sellerId, pageable);
     }
 
@@ -99,7 +104,7 @@ public class ProductService {
     }
 
     @Transactional
-    public void changeProductVisibility(boolean isVisible, List<UUID> productIds) {
+    public void changeProductsVisibility(boolean isVisible, List<UUID> productIds) {
         productRepository.changeProductVisibility(productIds, isVisible);
     }
 
@@ -116,6 +121,7 @@ public class ProductService {
         Product product = findProductByExternalId(productId);
         ProductImage productImage = productImageMapper.toProductImage(productImageDto);
         productImageRepository.save(productImage);
+
         if (productImageDto.isMain()) {
             product.getProductImages()
                     .stream()
@@ -124,6 +130,7 @@ public class ProductService {
                     .ifPresent(image -> image.setMain(false));
         }
         product.addProductImage(productImage);
+
         return productImageDto;
     }
 
@@ -154,12 +161,15 @@ public class ProductService {
     @Transactional
     public SpecialPriceResponse updateSpecialPrice(SpecialPriceRequest specialPriceRequest, UUID specialPriceId) {
         validator.validateSpecialPrice(specialPriceRequest);
+
         var storedProductSpecialPrice = productSpecialPriceRepository.findByExternalId(specialPriceId)
                 .orElseThrow(() -> new EntityNotFoundException
                         (String.format(SPECIAL_PRICE_NOT_FOUND_ERROR_MESSAGE, specialPriceId)));
-        storedProductSpecialPrice =
-                productSpecialPriceMapper.toProductSpecialPrice(specialPriceRequest, storedProductSpecialPrice);
+
+        storedProductSpecialPrice = productSpecialPriceMapper
+                .toProductSpecialPrice(specialPriceRequest, storedProductSpecialPrice);
         productSpecialPriceRepository.save(storedProductSpecialPrice);
+
         return productSpecialPriceMapper.toProductSpecialPriceDto(storedProductSpecialPrice);
     }
 
@@ -170,14 +180,18 @@ public class ProductService {
 
     public ProductCharacteristicResponse updateProductCharacteristic(
             UUID productCharacteristicExternalId,
-            ProductCharacteristicRequest productCharacteristicRequest) {
+            ProductCharacteristicRequest productCharacteristicRequest
+    ) {
         var storedProductCharacteristic = productCharacteristicRepository
                 .findByExternalId(productCharacteristicExternalId)
                 .orElseThrow(() -> new EntityNotFoundException
                         (String.format(PRODUCT_CHARACTERISTIC_NOT_FOUND_ERROR_MESSAGE, productCharacteristicExternalId)));
+
         storedProductCharacteristic = productCharacteristicMapper
                 .toProductCharacteristic(productCharacteristicRequest, storedProductCharacteristic);
+
         validator.validateProductCharacteristics(storedProductCharacteristic.getProduct());
+
         productCharacteristicRepository.save(storedProductCharacteristic);
         return productCharacteristicMapper.toProductCharacteristicDto(storedProductCharacteristic);
     }

@@ -3,6 +3,7 @@ package com.yandex.market.productservice.controller;
 import com.yandex.market.model.ErrorResponse;
 import com.yandex.market.productservice.dto.ProductImageDto;
 import com.yandex.market.productservice.dto.ProductRepresentationSetDto;
+import com.yandex.market.productservice.dto.projections.SellerArchiveProductPreview;
 import com.yandex.market.productservice.dto.projections.SellerProductPreview;
 import com.yandex.market.productservice.dto.projections.UserProductPreview;
 import com.yandex.market.productservice.dto.request.CreateProductRequest;
@@ -289,7 +290,7 @@ public interface ProductApi {
             )
             """
     )
-    Page<SellerProductPreview> getArchivedProductPreviewsBySellerId(
+    Page<SellerArchiveProductPreview> getArchivedProductPreviewsBySellerId(
             @Parameter(name = "sellerId", description = "Идентификатор продавца", required = true)
             UUID sellerId,
             @Parameter(name = "pageable", description = "pageable")
