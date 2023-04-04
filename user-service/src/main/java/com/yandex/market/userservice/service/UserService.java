@@ -79,6 +79,7 @@ public class UserService {
 
         val updatedUser = userRequestMapper.map(userRequestDto);
 
+        setPhoneIfChangedAndRemainedUnique(storedUser, updatedUser);
         setEmailIfChangedAndRemainedUnique(storedUser, updatedUser);
         updateUser(storedUser, updatedUser);
 
