@@ -42,4 +42,10 @@ public class SecurityConfig {
                 .build();
     }
 
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return web -> web.ignoring()
+                .requestMatchers("/public/api/v1/product-previews");
+    }
+
 }
