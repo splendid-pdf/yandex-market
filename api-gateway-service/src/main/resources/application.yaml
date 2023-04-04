@@ -78,6 +78,8 @@ application:
       # sellers-api
       - url: /*/*/*/sellers
         methods: POST
+      - url: /*/*/*/product-previews
+        methods: POST, GET
       # products-api
 #      - url: /*/*/*/products/{externalId}
 #        methods: GET
@@ -85,3 +87,4 @@ application:
 logging:
   level:
     org: INFO
+
