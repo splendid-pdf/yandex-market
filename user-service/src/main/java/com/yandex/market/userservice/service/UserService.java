@@ -39,7 +39,6 @@ public class UserService {
     private final UserResponseMapper userResponseMapper;
     private final UserRegistrationValidator userRegistrationValidator;
 
-
     public UUID signUp(UserRegistrationDto userDto) {
         userRegistrationValidator.validate(userDto);
 
