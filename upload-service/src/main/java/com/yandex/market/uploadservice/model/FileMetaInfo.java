@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 public class FileMetaInfo {
     @Id
     private String id;
+    private String url;
     private String hash;
     private String fileName;
     private LocalDateTime timestamp;
