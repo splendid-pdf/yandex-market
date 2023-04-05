@@ -124,9 +124,8 @@ public class UserService {
         storedUser.setFirstName(updatedUser.getFirstName());
         storedUser.setLastName(updatedUser.getLastName());
         storedUser.setSex(updatedUser.getSex());
-        storedUser.setLocation(updatedUser.getLocation());
-        storedUser.setLogin(updatedUser.getLogin());
         storedUser.setPhotoUrl(updatedUser.getPhotoUrl());
+        storedUser.setLocation(updatedUser.getLocation());
     }
 
     private void setEmailIfChangedAndRemainedUnique(User storedUser, User updatedUser) {

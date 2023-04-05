@@ -24,7 +24,6 @@ public class UserRequestMapper implements Mapper<UserRequestDto, User> {
                 .phone(userRequestDto.phone())
                 .email(userRequestDto.email())
                 .login(trimEmailForLogin(userRequestDto))
-                .password(userRequestDto.password())
                 .sex(getSex(userRequestDto.sex()))
                 .location(locationMapper.map(userRequestDto.location()))
                 .photoUrl(userRequestDto.photoUrl())
