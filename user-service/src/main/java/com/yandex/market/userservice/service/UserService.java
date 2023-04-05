@@ -39,7 +39,6 @@ public class UserService {
     private final UserResponseMapper userResponseMapper;
     private final UserRegistrationValidator userRegistrationValidator;
 
-
     public UUID signUp(UserRegistrationDto userDto) {
         userRegistrationValidator.validate(userDto);
 
@@ -79,9 +78,8 @@ public class UserService {
 
         val updatedUser = userRequestMapper.map(userRequestDto);
 
-        setEmailIfChangedAndRemainedUnique(storedUser, updatedUser);
         setPhoneIfChangedAndRemainedUnique(storedUser, updatedUser);
-
+        setEmailIfChangedAndRemainedUnique(storedUser, updatedUser);
         updateUser(storedUser, updatedUser);
 
         return userResponseMapper.map(storedUser);
@@ -126,9 +124,8 @@ public class UserService {
         storedUser.setFirstName(updatedUser.getFirstName());
         storedUser.setLastName(updatedUser.getLastName());
         storedUser.setSex(updatedUser.getSex());
-        storedUser.setLocation(updatedUser.getLocation());
-        storedUser.setLogin(updatedUser.getLogin());
         storedUser.setPhotoUrl(updatedUser.getPhotoUrl());
+        storedUser.setLocation(updatedUser.getLocation());
     }
 
     private void setEmailIfChangedAndRemainedUnique(User storedUser, User updatedUser) {
