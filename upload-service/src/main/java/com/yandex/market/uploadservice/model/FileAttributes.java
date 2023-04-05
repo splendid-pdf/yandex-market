@@ -10,6 +10,6 @@ import java.net.URL;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FileAttributes {
-    private String filename;
+    private String id;
     private URL url;
 }
