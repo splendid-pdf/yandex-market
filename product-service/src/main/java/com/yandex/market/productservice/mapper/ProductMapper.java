@@ -1,7 +1,8 @@
 package com.yandex.market.productservice.mapper;
 
-import com.yandex.market.productservice.dto.ProductRequestDto;
-import com.yandex.market.productservice.dto.response.ProductResponseDto;
+import com.yandex.market.productservice.dto.request.CreateProductRequest;
+import com.yandex.market.productservice.dto.request.ProductUpdateRequest;
+import com.yandex.market.productservice.dto.response.ProductResponse;
 import com.yandex.market.productservice.model.Product;
 import org.mapstruct.*;
 
@@ -13,23 +14,24 @@ import org.mapstruct.*;
 )
 public interface ProductMapper {
 
-    ProductResponseDto toResponseDto(Product product);
+    @Mapping(source = "sellerExternalId", target = "sellerId")
+    @Mapping(source = "externalId", target = "id")
+    @Mapping(source = "productCharacteristics", target = "characteristics")
+    @Mapping(source = "productImages", target = "images")
+    @Mapping(source = "taxType", target = "tax")
+    @Mapping(source = "visible", target = "isVisible")
+    @Mapping(source = "archived", target = "isArchived")
+    ProductResponse toResponseDto(Product product);
 
-    @Mapping(target = "isDeleted", ignore = true)
-    @Mapping(target = "externalId", expression = "java(UUID.randomUUID())")
-    @Mapping(target = "articleNumber", expression = "java(UUID.randomUUID())")
-    @Mapping(source = "productRequestDto.productCharacteristicDto", target = "productCharacteristics")
-    @Mapping(source = "productRequestDto.productImageDto", target = "productImages")
-    @Mapping(source = "productRequestDto.productSpecialPriceDto", target = "productSpecialPrices")
-    @Mapping(source = "productRequestDto.typeDto", target = "type")
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    Product toProduct(ProductRequestDto productRequestDto, @MappingTarget Product product);
+    Product toProduct(ProductUpdateRequest productUpdateRequest, @MappingTarget Product product);
 
     @Mapping(target = "externalId", expression = "java(java.util.UUID.randomUUID())")
-    @Mapping(target = "articleNumber", expression = "java(java.util.UUID.randomUUID())")
-    @Mapping(source = "productRequestDto.productCharacteristicDto", target = "productCharacteristics")
-    @Mapping(source = "productRequestDto.productImageDto", target = "productImages")
-    @Mapping(source = "productRequestDto.productSpecialPriceDto", target = "productSpecialPrices")
-    @Mapping(source = "productRequestDto.typeDto", target = "type")
-    Product toProduct(ProductRequestDto productRequestDto);
+    @Mapping(source = "characteristics", target = "productCharacteristics")
+    @Mapping(source = "images", target = "productImages")
+    @Mapping(target = "taxType", expression = "java(TaxType.MAX)")
+    @Mapping(target = "visible", constant = "true")
+    @Mapping(source = "typeId", target = "type", ignore = true)
+    Product toProduct(CreateProductRequest createProductRequest);
+
 }

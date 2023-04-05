@@ -3,6 +3,7 @@ package com.yandex.market.orderservice.controller;
 import com.yandex.market.orderservice.dto.OrderPreviewDto;
 import com.yandex.market.orderservice.dto.OrderRequestDto;
 import com.yandex.market.orderservice.dto.OrderResponseDto;
+import com.yandex.market.orderservice.dto.seller.SellerOrderPreview;
 import com.yandex.market.orderservice.service.OrderService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -27,6 +28,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.ByteArrayInputStream;
+import java.util.List;
 import java.util.UUID;
 
 import static com.yandex.market.util.HttpUtils.PUBLIC_API_V1;
@@ -68,7 +70,7 @@ public class OrderController {
     public OrderResponseDto getByExternalId(
             @Parameter(name = EXTERNAL_ID, description = "Order's identifier")
             @PathVariable(EXTERNAL_ID) UUID externalId) {
-        log.info("Received a request to get orders by order identifier: {}",externalId);
+        log.info("Received a request to get orders by order identifier: {}", externalId);
         return orderService.getOrderResponseDtoByExternalId(externalId);
     }
 
@@ -84,6 +86,19 @@ public class OrderController {
             @PageableDefault(sort = "creationTimestamp", direction = Sort.Direction.DESC) Pageable pageable) {
         log.info("Received a request to get orders by user identifier: {}", userId);
         return orderService.getOrdersByUserId(userId, pageable);
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/sellers/{sellerId}/orders")
+    @Operation(operationId = "getOrderBySellerId", summary = "Get seller orders by seller identifier")
+    @ApiResponse(responseCode = "200", description = SUCCESSFUL_OPERATION,
+            content = @Content(mediaType = APPLICATION_JSON,
+                    array = @ArraySchema(schema = @Schema(implementation = OrderResponseDto.class))))
+    public List<SellerOrderPreview> getOrderBySellerId(
+            @Parameter(name = "sellerId", description = "User's identifier")
+            @PathVariable("sellerId") UUID sellerId) {
+        log.info("Received a request to get orders by seller identifier: {}", sellerId);
+        return orderService.getOrderPreviewsBySellerId(sellerId);
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -105,7 +120,7 @@ public class OrderController {
             @RequestBody @Valid OrderRequestDto orderRequestDto,
             @Parameter(name = EXTERNAL_ID, description = "Order's identifier")
             @PathVariable(EXTERNAL_ID) UUID externalId) {
-        log.info("Received a request to update an order: {}",externalId);
+        log.info("Received a request to update an order: {}", externalId);
         return orderService.update(orderRequestDto, externalId);
     }
 

@@ -12,4 +12,4 @@ include 'metrics-service'
 include 'api-gateway-service'
 include 'authorization-server'
 include 'seller-info-service'
-
+include 'compositor-service'

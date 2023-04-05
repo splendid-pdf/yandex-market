@@ -1,16 +1,12 @@
 server:
   port: 9090
 
+
 spring:
   application:
     name: product-service
   flyway:
-    enabled: false
-  app:
-    product:
-      url: /public/api/v1/products/
-    seller:
-      url: /public/api/v1/sellers/
+    enabled: true
 
   config:
     import: "optional:configserver:"
@@ -25,7 +21,7 @@ spring:
     database: POSTGRESQL
     show-sql: true
     hibernate:
-      ddl-auto: update # далее validate
+      ddl-auto: validate # далее validate
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
@@ -39,5 +35,16 @@ spring:
       port: 6379
       database: 0
 
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://127.0.0.1:9000/oauth2/jwks
+
+
   kafka:
     bootstrap-servers: localhost:9092
+
+logging:
+  level:
+    web: DEBUG

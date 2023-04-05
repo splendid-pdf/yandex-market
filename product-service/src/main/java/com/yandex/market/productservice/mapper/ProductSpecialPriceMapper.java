@@ -1,14 +1,22 @@
 package com.yandex.market.productservice.mapper;
 
-import com.yandex.market.productservice.dto.ProductSpecialPriceDto;
+import com.yandex.market.productservice.dto.request.SpecialPriceRequest;
+import com.yandex.market.productservice.dto.response.SpecialPriceResponse;
 import com.yandex.market.productservice.model.ProductSpecialPrice;
-import org.mapstruct.Mapper;
-import org.mapstruct.ReportingPolicy;
+import org.mapstruct.*;
 
 @Mapper(componentModel = "spring",
         unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface ProductSpecialPriceMapper {
 
-    ProductSpecialPrice toProductSpecialPrice(ProductSpecialPriceDto productSpecialPriceDto);
-    ProductSpecialPriceDto toProductSpecialPriceDto(ProductSpecialPrice productSpecialPrice);
+    @Mapping(target = "externalId", expression = "java(java.util.UUID.randomUUID())")
+    ProductSpecialPrice toProductSpecialPrice(SpecialPriceRequest specialPriceRequest);
+
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    ProductSpecialPrice toProductSpecialPrice(SpecialPriceRequest specialPriceRequest,
+                                              @MappingTarget ProductSpecialPrice productSpecialPrice);
+
+    @Mapping(target = "id", source = "externalId")
+    SpecialPriceResponse toProductSpecialPriceDto(ProductSpecialPrice productSpecialPrice);
+
 }

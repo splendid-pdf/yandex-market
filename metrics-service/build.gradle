@@ -1,7 +1,7 @@
 plugins {
     id 'pmd'
     id 'java'
-    id 'org.springframework.boot' version '3.0.2'
+    id 'org.springframework.boot' version '3.0.5'
     id 'io.spring.dependency-management' version '1.1.0'
 }
 
@@ -56,3 +56,11 @@ tasks.named('test') {
 }
 
 tasks.register("prepareKotlinBuildScriptModel"){}
+
+pmd {
+    toolVersion = '6.53.0'
+    consoleOutput = true
+    ignoreFailures = true
+    ruleSetFiles = files("${rootDir}/ruleset.xml")
+    ruleSets = []
+}

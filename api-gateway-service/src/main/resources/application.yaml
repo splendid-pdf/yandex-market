@@ -16,11 +16,11 @@ spring:
         - id: user-info-service-route
           uri: http://127.0.0.1:8080
           predicates:
-            - Path=/*/*/*/users, /*/*/*/users/{externalId}, /*/*/*/users/signup
+            - Path=/*/*/*/users, /*/*/*/users/{externalId}
         - id: product-service-route
           uri: http://127.0.0.1:9090
           predicates:
-            - Path=/*/*/*/products, /*/*/*/products/{externalId}, /*/*/*/products/search, /*/*/*/*/*/products, /*/*/*/*/*/products/categories, /*/*/*/*/*/products/categories/**, /*/*/*/*/*/products/search/by-name
+            - Path=/*/*/*/products, /*/*/*/products/{externalId}, /*/*/*/products/search, /*/*/*/*/*/products, /*/*/*/*/*/products/categories, /*/*/*/*/*/products/categories/**, /*/*/*/*/*/products/search/by-name, /*/*/*/*/{sellerId}/products, /*/*/*/*/{sellerId}/products/**, /*/*/*/*/{sellerId}/products/{productId}, /*/*/*/*/{sellerId}/products/{productId}/**, /*/*/*/*/{sellerId}/products/special-prices/{specialPriceId}, /*/*/*/*/{sellerId}/products/characteristics/{characteristicId}, /*/*/*/product-previews, /*/*/*/*/{sellerId}/archive/products,
         - id: favorite-service-route
           uri: http://127.0.0.1:8082
           predicates:
@@ -33,6 +33,10 @@ spring:
           uri: http://127.0.0.1:8083
           predicates:
             - Path=/*/*/*/users/{userId}/reviews, /*/*/*/products/{productId}/reviews, /*/*/*/users/reviews/{reviewId}
+        - id: seller-service
+          uri: http://127.0.0.1:8085
+          predicates:
+            - Path=/*/*/*/sellers, /*/*/*/sellers/{externalId}
       default-filters:
         - name: AuthFilter
 
@@ -68,7 +72,22 @@ management:
 application:
   security:
     white-list:
-      - /public/api/v1/users/signup
+      # users-api
+      - url: /*/*/*/users
+        methods: POST
+      # sellers-api
+      - url: /*/*/*/sellers
+        methods: POST
+      - url: /*/*/*/product-previews
+        methods: POST, GET
+      # products-api
+#      - url: /*/*/*/products/{externalId}
+#        methods: GET
+      - url: /*/*/*/products/{externalId}
+        methods: GET
+      # upload-api
+      - url: /*/*/*/upload
+        methods: POST
 
 logging:
   level:

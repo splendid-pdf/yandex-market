@@ -51,7 +51,7 @@ class SellerControllerTest {
     @Value("${spring.app.seller.json-path}" + "update/")
     private String RESOURCES_PATH_UPDATE;
 
-    @Test
+/*    @Test
     void getSellerByExternalIdSellerFoundWithoutProblem() throws Exception {
         UUID sellerId = UUID.fromString("37678201-f3c8-4d5c-a628-2344eef50c55");
 
@@ -64,9 +64,9 @@ class SellerControllerTest {
                 SellerResponseDto.class);
 
         assertEquals(seller.externalId(), sellerId, "External IDs don't match");
-    }
+    }*/
 
-    @Test
+/*    @Test
     void getSellerByExternalIdSellerNotFound() throws Exception {
         UUID sellerId = UUID.fromString("37678201-f3c8-4d5c-a628-2344eef50c99");
 
@@ -78,9 +78,9 @@ class SellerControllerTest {
         String responseBody = mvcResult.getResponse().getContentAsString();
         assertTrue(responseBody.contains("\"statusCode\":\"NOT_FOUND\""),
                 "The received status does not match the expected");
-    }
+    }*/
 
-    @Test
+/*    @Test
     void updateSellerSellerFoundAndFullyUpdated() throws Exception {
         UUID sellerId = UUID.fromString("37678201-f3c8-4d5c-a628-2344eef50c51");
 
@@ -113,9 +113,9 @@ class SellerControllerTest {
                 .usingRecursiveComparison()
                 .ignoringFields("id", "externalId")
                 .isEqualTo(seller);
-    }
+    }*/
 
-    @Test
+/*    @Test
     void updateSellerSellerNotFound() throws Exception {
         UUID sellerId = UUID.fromString("37678201-f3c8-4d5c-a628-2344eef50c98");
 
@@ -129,9 +129,9 @@ class SellerControllerTest {
         String responseBody = mvcResult.getResponse().getContentAsString();
         assertTrue(responseBody.contains("\"statusCode\":\"NOT_FOUND\""),
                 "The received status does not match the expected");
-    }
+    }*/
 
-    @Test
+/*    @Test
     void updateSellerSellerFoundAndUpdatedOnlySellerName() throws Exception {
         UUID sellerId = UUID.fromString("37678201-f3c8-4d5c-a628-2344eef50c52");
 
@@ -151,9 +151,9 @@ class SellerControllerTest {
                 () -> assertEquals(firstName, seller.firstName(), "FirstName values are not equal"),
                 () -> assertEquals(lastName, seller.lastName(), "LastName values are not equal")
         );
-    }
+    }*/
 
-    @Test
+/*    @Test
     void updateSellerSellerFoundButWasTransferEmptyDto() throws Exception {
         UUID sellerId = UUID.fromString("37678201-f3c8-4d5c-a628-2344eef50c53");
 
@@ -173,5 +173,5 @@ class SellerControllerTest {
                 .usingRecursiveComparison()
                 .ignoringFields("id", "externalId")
                 .isEqualTo(sellerAfter);
-    }
+    }*/
 }

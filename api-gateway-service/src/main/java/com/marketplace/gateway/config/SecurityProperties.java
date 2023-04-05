@@ -1,6 +1,6 @@
 package com.marketplace.gateway.config;
 
-import jakarta.annotation.PostConstruct;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -13,5 +13,13 @@ import java.util.List;
 @Component
 @ConfigurationProperties(prefix = "application.security")
 public class SecurityProperties {
-    private List<String> whiteList;
+    private List<OpenedRoute> whiteList;
+
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    public static class OpenedRoute {
+        private String url;
+        private String methods;
+    }
 }

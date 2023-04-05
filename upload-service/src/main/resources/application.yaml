@@ -22,6 +22,10 @@ spring:
     name: upload-service
   config:
     import: optional:configserver:http://localhost:8888
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/upload-service
+      database: upload-service
 
 server:
   port: 9001

@@ -11,9 +11,8 @@ import java.util.UUID;
 public record OrderPreviewDto(
         UUID externalId,
         OrderStatus orderStatus,
-        double price,
+        Long price,
         boolean paid,
-        int quantity,
         LocalDateTime creationTimestamp,
         ReceiptMethodPreviewDto receiptMethod,
         List<OrderedProductPreviewDto> orderedProductPreviews

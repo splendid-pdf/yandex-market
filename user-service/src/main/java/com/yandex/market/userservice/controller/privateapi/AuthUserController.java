@@ -1,24 +1,21 @@
 package com.yandex.market.userservice.controller.privateapi;
 
-import com.yandex.market.userservice.dto.request.UserAuthenticationDto;
+import com.yandex.market.auth.dto.ClientAuthDetails;
 import com.yandex.market.userservice.service.UserService;
-import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Hidden;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+@Hidden
 @RestController
-@Tag(name = "private")
 @RequiredArgsConstructor
-@RequestMapping("/private/api/v1/users/auth-details")
+@RequestMapping("/private/api/v1/users/auth")
 public class AuthUserController {
 
     private final UserService userService;
 
-    @GetMapping("/{email}")
-    public UserAuthenticationDto authenticate(@PathVariable("email") String email) {
-        return userService.authenticate(email);
+    @GetMapping
+    public ClientAuthDetails authenticate(@RequestParam String email) {
+        return userService.getUserDetails(email);
     }
 }

@@ -1,12 +1,12 @@
 package com.yandex.market.userservice.service;
 
-import com.yandex.market.userservice.dto.request.UserAuthenticationDto;
+import com.yandex.market.auth.dto.ClientAuthDetails;
 import com.yandex.market.userservice.dto.request.UserRegistrationDto;
 import com.yandex.market.userservice.dto.request.UserRequestDto;
 import com.yandex.market.userservice.dto.response.UserResponseDto;
 import com.yandex.market.userservice.mapper.UserRequestMapper;
 import com.yandex.market.userservice.mapper.UserResponseMapper;
-import com.yandex.market.userservice.model.Role;
+import com.yandex.market.auth.model.Role;
 import com.yandex.market.userservice.model.User;
 import com.yandex.market.userservice.repository.UserRepository;
 import com.yandex.market.userservice.validator.UserRegistrationValidator;
@@ -23,10 +23,8 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collection;
 import java.util.UUID;
 import java.util.regex.Matcher;
-import java.util.stream.Stream;
 
 import static com.yandex.market.userservice.utils.ExceptionMessagesConstants.*;
 import static com.yandex.market.userservice.utils.PatternConstants.GROUPED_PHONE_NUMBERS_PATTERN;
@@ -40,7 +38,6 @@ public class UserService {
     private final UserRequestMapper userRequestMapper;
     private final UserResponseMapper userResponseMapper;
     private final UserRegistrationValidator userRegistrationValidator;
-
 
     public UUID signUp(UserRegistrationDto userDto) {
         userRegistrationValidator.validate(userDto);
@@ -81,24 +78,16 @@ public class UserService {
 
         val updatedUser = userRequestMapper.map(userRequestDto);
 
-        setEmailIfChangedAndRemainedUnique(storedUser, updatedUser);
         setPhoneIfChangedAndRemainedUnique(storedUser, updatedUser);
-
+        setEmailIfChangedAndRemainedUnique(storedUser, updatedUser);
         updateUser(storedUser, updatedUser);
 
         return userResponseMapper.map(storedUser);
     }
 
-    public UserAuthenticationDto authenticate(String email) {
-        User user = userRepository.findUserByEmail(email)
+    public ClientAuthDetails getUserDetails(String email) {
+        return userRepository.findUserByEmail(email)
                 .orElseThrow(() -> new EntityNotFoundException(USER_NOT_FOUND_BY_EMAIL_ERROR_MESSAGE + email));
-
-        return new UserAuthenticationDto(
-                user.getExternalId(),
-                user.getEmail(),
-                user.getPassword(),
-                user.getRole().name()
-        );
     }
 
     private void checkEmailForUniqueness(String email) {
@@ -133,17 +122,10 @@ public class UserService {
 
     private void updateUser(User storedUser, User updatedUser) {
         storedUser.setFirstName(updatedUser.getFirstName());
-        storedUser.setMiddleName(updatedUser.getMiddleName());
         storedUser.setLastName(updatedUser.getLastName());
-        storedUser.setBirthday(updatedUser.getBirthday());
-        Stream.ofNullable(updatedUser.getContacts())
-                .flatMap(Collection::stream)
-                .forEach(storedUser::addContact);
         storedUser.setSex(updatedUser.getSex());
+        storedUser.setPhotoUrl(updatedUser.getPhotoUrl());
         storedUser.setLocation(updatedUser.getLocation());
-        storedUser.setLogin(updatedUser.getLogin());
-        storedUser.setNotificationSettings(updatedUser.getNotificationSettings());
-        storedUser.setPhotoId(updatedUser.getPhotoId());
     }
 
     private void setEmailIfChangedAndRemainedUnique(User storedUser, User updatedUser) {

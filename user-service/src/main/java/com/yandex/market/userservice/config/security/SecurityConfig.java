@@ -1,5 +1,6 @@
 package com.yandex.market.userservice.config.security;
 
+import com.yandex.market.auth.service.PermissionService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,6 +24,11 @@ public class SecurityConfig {
     private String jwkSetUri;
 
     @Bean
+    public PermissionService permissionService() {
+        return new PermissionService();
+    }
+
+    @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
@@ -43,6 +49,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
+                .csrf().disable()
                 .oauth2ResourceServer(resourceServer -> resourceServer
                         .jwt().decoder(jwtDecoder())
                 );

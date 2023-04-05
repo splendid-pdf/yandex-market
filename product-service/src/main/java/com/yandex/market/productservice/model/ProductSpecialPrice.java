@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
 @Getter
@@ -21,11 +22,13 @@ public class ProductSpecialPrice {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "product_special_prices_sequence")
     private Long id;
 
-    private LocalDateTime specialPriceFromDate;
+    private UUID externalId;
 
-    private LocalDateTime specialPriceToDate;
+    private LocalDateTime fromDate;
 
-    private Long specialPrice;
+    private LocalDateTime toDate;
+
+    private Long price;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore

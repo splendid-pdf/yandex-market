@@ -1,15 +1,14 @@
 package com.marketplace.authorizationserver.service;
 
-import com.marketplace.authorizationserver.config.properties.SecurityProperties;
-import com.marketplace.authorizationserver.dto.UserAuthDto;
-import com.marketplace.authorizationserver.model.AuthUserDetails;
+import com.yandex.market.auth.dto.ClientAuthDetails;
+import com.marketplace.authorizationserver.gateway.UserRestClient;
+import com.marketplace.authorizationserver.dto.AuthClientDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.Set;
 
@@ -17,34 +16,17 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
 
-    private static final String ROLE_PREFIX = "ROLE_";
-
-    private final SecurityProperties securityProperties;
-
-    private final RestTemplate restTemplate;
+    private final UserRestClient authClient;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        UserAuthDto userAuthDto = getUserAuthDto(email);
+        ClientAuthDetails clientAuthDetails = authClient.receiveUserAuthDetails(email);
 
-        return new AuthUserDetails(
-                userAuthDto.email(),
-                userAuthDto.password(),
-                Set.of(new SimpleGrantedAuthority(ROLE_PREFIX.concat(userAuthDto.role()))),
-                userAuthDto.uuid().toString()
+        return new AuthClientDetails(
+                clientAuthDetails.email(),
+                clientAuthDetails.password(),
+                Set.of(new SimpleGrantedAuthority("ROLE_".concat(clientAuthDetails.role()))),
+                clientAuthDetails.uuid().toString()
         );
-    }
-
-    private UserAuthDto getUserAuthDto(String email) {
-        UserAuthDto userAuthDto = restTemplate.getForObject(
-                securityProperties.getDataProviderUri() + email,
-                UserAuthDto.class
-        );
-
-        if (userAuthDto == null) {
-            throw new UsernameNotFoundException("User not found by email: " + email);
-        }
-
-        return userAuthDto;
     }
 }

@@ -1,8 +1,7 @@
 plugins {
     id 'pmd'
     id 'java'
-    id 'org.openapi.generator' version '6.2.1'
-    id 'org.springframework.boot' version '3.0.2'
+    id 'org.springframework.boot' version '3.0.5'
     id 'io.spring.dependency-management' version '1.1.0'
 }
 
@@ -34,6 +33,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework:spring-jdbc'
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
 
     //spring cloud
     implementation 'org.springframework.cloud:spring-cloud-config-client'
@@ -64,10 +65,7 @@ dependencies {
     runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
 
     //kafka
-    implementation 'org.springframework.kafka:spring-kafka:3.0.2'
-
-
-
+//    implementation 'org.springframework.kafka:spring-kafka:3.0.5'
 
     // tests
     testImplementation 'org.springframework.boot:spring-boot-starter-test'

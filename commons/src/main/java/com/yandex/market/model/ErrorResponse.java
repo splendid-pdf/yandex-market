@@ -4,5 +4,5 @@ import java.time.OffsetDateTime;
 import java.util.UUID;
 
 
-public record ErrorResponse(String message, UUID errorId, OffsetDateTime timestamp) {
+public record ErrorResponse(String id, String message, OffsetDateTime timestamp) {
 }

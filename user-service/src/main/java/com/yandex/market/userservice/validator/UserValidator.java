@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yandex.market.userservice.config.properties.ErrorInfoProperties;
 import com.yandex.market.userservice.dto.request.UserRequestDto;
 import com.yandex.market.userservice.model.Sex;
-import com.yandex.market.userservice.model.SocialNetwork;
 import com.yandex.market.userservice.validator.enums.UserFieldValidation;
 import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
@@ -46,18 +45,11 @@ public class UserValidator {
     public void validateName(@NotNull UserRequestDto userRequestDto, @NotNull List<String> exceptionMessages) {
         val firstName = userRequestDto.firstName();
         val lastName = userRequestDto.lastName();
-        val middleName = userRequestDto.middleName();
 
         if (StringUtils.isNotBlank(firstName) && !NAME_PATTERN.matcher(firstName).matches()) {
             exceptionMessages
                     .add(properties.getMessageByErrorCode(INCORRECT_FIRST_NAME_VALIDATION_ERROR_CODE)
                             .formatted(firstName));
-        }
-
-        if (StringUtils.isNotBlank(middleName) && !NAME_PATTERN.matcher(middleName).matches()) {
-            exceptionMessages
-                    .add(properties.getMessageByErrorCode(INCORRECT_MIDDLE_NAME_VALIDATION_ERROR_CODE)
-                            .formatted(middleName));
         }
 
         if (StringUtils.isNotBlank(lastName) && !NAME_PATTERN.matcher(lastName).matches()) {
@@ -81,17 +73,6 @@ public class UserValidator {
         }
     }
 
-    public void validatePassword(@NotNull UserRequestDto userRequestDto, @NotNull List<String> exceptionMessages) {
-        val password = userRequestDto.password();
-
-        if (StringUtils.isBlank(password)) {
-            exceptionMessages.add(properties.getMessageByErrorCode(BLANK_PASSWORD_VALIDATION_ERROR_CODE));
-        } else if (!PASSWORD_PATTERN.matcher(password).matches()) {
-            exceptionMessages.add(properties.getMessageByErrorCode(INCORRECT_PASSWORD_VALIDATION_ERROR_CODE)
-                    .formatted(password));
-        }
-    }
-
     public void validatePhone(@NotNull UserRequestDto userRequestDto, @NotNull List<String> exceptionMessages) {
         val phone = userRequestDto.phone();
 
@@ -106,28 +87,6 @@ public class UserValidator {
         if (StringUtils.isNotBlank(sex) && !EnumUtils.isValidEnumIgnoreCase(Sex.class, sex)) {
             exceptionMessages.add(properties.getMessageByErrorCode(INCORRECT_SEX_TYPE_ERROR_CODE)
                     .formatted(sex));
-        }
-    }
-
-    public void validateContact(@NotNull UserRequestDto userRequestDto, @NotNull List<String> exceptionMessages) {
-        if (!CollectionUtils.isEmpty(userRequestDto.contacts())) {
-            userRequestDto.contacts().forEach(contactDto -> {
-                val networkValue = contactDto.value();
-                val socialNetwork = contactDto.type();
-
-                if (!EnumUtils.isValidEnumIgnoreCase(SocialNetwork.class, socialNetwork) && socialNetwork != null) {
-                    exceptionMessages.add(properties.getMessageByErrorCode(INCORRECT_SOCIAL_NETWORK_ERROR_CODE)
-                            .formatted(socialNetwork));
-                    if (StringUtils.isBlank(networkValue) && networkValue != null) {
-                        exceptionMessages.add(properties.getMessageByErrorCode(INCORRECT_SOCIAL_NETWORK_VALUE_ERROR_CODE)
-                                .formatted(networkValue));
-                    }
-                } else if (StringUtils.isBlank(networkValue) && socialNetwork != null) {
-                    exceptionMessages.add(properties.getMessageByErrorCode(BLANK_SOCIAL_NETWORK_VALUE_ERROR_CODE));
-                } else if (networkValue != null && StringUtils.isBlank(socialNetwork)) {
-                    exceptionMessages.add(properties.getMessageByErrorCode(BLANK_SOCIAL_NETWORK_ERROR_CODE));
-                }
-            });
         }
     }
 }
