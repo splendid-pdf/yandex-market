@@ -35,9 +35,9 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
                 p.price as price,
                 p.count as count,
                 types.name as type,
-                p.creation_date as creationDate
+                p.creation_date as creationDate,
                 p.is_visible as isVisible,
-                product_images.url as imageUrl,
+                product_images.url as imageUrl
             FROM
                 products AS p
                 LEFT JOIN product_images ON product_images.product_id=p.id
@@ -60,8 +60,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
                 p.price as price,
                 p.count as count,
                 types.name as type,
-                p.creation_date as creationDate
-                product_images.url as imageUrl,
+                p.creation_date as creationDate,
+                product_images.url as imageUrl
             FROM
                 products AS p
                 LEFT JOIN product_images ON product_images.product_id=p.id
