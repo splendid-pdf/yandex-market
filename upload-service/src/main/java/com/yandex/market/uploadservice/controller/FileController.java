@@ -1,6 +1,7 @@
 package com.yandex.market.uploadservice.controller;
 
 import com.amazonaws.services.s3.Headers;
+import com.yandex.market.uploadservice.model.FileAttributes;
 import com.yandex.market.uploadservice.model.FileDetails;
 import com.yandex.market.uploadservice.model.FileType;
 import com.yandex.market.uploadservice.service.StorageService;
@@ -14,43 +15,33 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.net.URL;
-import java.util.List;
-import java.util.Set;
+import static com.yandex.market.util.HttpUtils.PUBLIC_API_V1;
 
 @Slf4j
 @Tag(name = "files")
 @RestController
-@RequestMapping("public/api/v1")
+@RequestMapping(PUBLIC_API_V1)
 @RequiredArgsConstructor
 public class FileController {
 
     private final StorageService storageService;
 
     @PostMapping(
-            value = "/upload",
+            value = "/files",
             produces = MediaType.APPLICATION_JSON_VALUE,
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE
     )
     @ResponseStatus(HttpStatus.OK)
-    public String upload(
+    public FileAttributes upload(
             @RequestPart MultipartFile file,
-            @RequestParam("fileId") String fileId,
             @RequestParam("fileType") FileType fileType
     ) {
-        return storageService.uploadFile(file, fileId, fileType);
+
+        return storageService.uploadFile(file, fileType);
     }
 
-    @GetMapping(value = "/url")
-    @ResponseStatus(HttpStatus.OK)
-    public URL getFileUrlById(
-            @RequestParam("fileId") String fileId,
-            @RequestParam("fileType") FileType fileType
-    ) {
-        return storageService.getFileUrlById(fileId, fileType);
-    }
 
-    @GetMapping(value = "/download")
+    @GetMapping(value = "/files")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<byte[]> download(
             @RequestParam("fileId") String fileId,
@@ -61,7 +52,7 @@ public class FileController {
         return new ResponseEntity<>(fileDetails.getContent(), headers, HttpStatus.OK);
     }
 
-    @DeleteMapping(value = "/delete")
+    @DeleteMapping(value = "/files")
     @ResponseStatus(HttpStatus.OK)
     public void delete(
             @RequestParam("fileId") String fileId,
@@ -70,14 +61,14 @@ public class FileController {
         storageService.deleteFile(fileId, fileType);
     }
 
-    @GetMapping(value = "/urls")
-    @ResponseStatus(HttpStatus.OK)
-    public Set<URL> getUrlsByIds(
-            @RequestBody List<String> fileIds,
-            @RequestParam("fileType") FileType fileType
-    ) {
-        return storageService.getUrlsByObjectIds(fileIds, fileType);
-    }
+//    @GetMapping(value = "/urls")
+//    @ResponseStatus(HttpStatus.OK)
+//    public Set<URL> getUrlsByIds(
+//            @RequestBody List<String> fileIds,
+//            @RequestParam("fileType") FileType fileType
+//    ) {
+//        return storageService.getUrlsByObjectIds(fileIds, fileType);
+//    }
 
     private HttpHeaders createFileDownloadHeaders(FileDetails fileDetails) {
         HttpHeaders headers = new HttpHeaders();

@@ -83,8 +83,12 @@ application:
       # products-api
 #      - url: /*/*/*/products/{externalId}
 #        methods: GET
+      - url: /*/*/*/products/{externalId}
+        methods: GET
+      # upload-api
+      - url: /*/*/*/upload
+        methods: POST
 
 logging:
   level:
     org: INFO
-
