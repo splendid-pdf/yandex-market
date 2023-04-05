@@ -7,7 +7,6 @@ import java.util.UUID;
 
 @Schema
 public record TypePreviewResponse(
-        @NotBlank
         UUID id,
         String name
 ) {

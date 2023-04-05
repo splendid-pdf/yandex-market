@@ -73,17 +73,6 @@ public class UserValidator {
         }
     }
 
-    public void validatePassword(@NotNull UserRequestDto userRequestDto, @NotNull List<String> exceptionMessages) {
-        val password = userRequestDto.password();
-
-        if (StringUtils.isBlank(password)) {
-            exceptionMessages.add(properties.getMessageByErrorCode(BLANK_PASSWORD_VALIDATION_ERROR_CODE));
-        } else if (!PASSWORD_PATTERN.matcher(password).matches()) {
-            exceptionMessages.add(properties.getMessageByErrorCode(INCORRECT_PASSWORD_VALIDATION_ERROR_CODE)
-                    .formatted(password));
-        }
-    }
-
     public void validatePhone(@NotNull UserRequestDto userRequestDto, @NotNull List<String> exceptionMessages) {
         val phone = userRequestDto.phone();
 

@@ -35,5 +35,5 @@ public class ReceiptMethod {
 
     private LocalTime deliveryEnd;
 
-    private double deliveryCost;
+    private Long deliveryCost;
 }
