@@ -7,7 +7,6 @@ public record UserRequestDto(
         String lastName,
         String phone,
         String email,
-        String password,
         String sex,
         String photoUrl,
         LocationDto location
