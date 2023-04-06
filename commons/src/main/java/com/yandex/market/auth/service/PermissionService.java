@@ -11,6 +11,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+
 @Slf4j
 public class PermissionService {
 
@@ -20,7 +21,7 @@ public class PermissionService {
             String idAttribute
     ) {
         Map<String, Object> tokenAttributes = getTokenAttributes();
-        return !tokenAttributes.isEmpty() && checkPermission(id,  role, idAttribute, tokenAttributes);
+        return !tokenAttributes.isEmpty() && checkPermission(id, role, idAttribute, tokenAttributes);
     }
 
     private Map<String, Object> getTokenAttributes() {

@@ -22,9 +22,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
+import static com.yandex.market.util.HttpUtils.PUBLIC_API_V1;
+
 @Slf4j
 @RestController
-@RequestMapping("${spring.application.url}")
+@RequestMapping(PUBLIC_API_V1)
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 @Tag(name = "favorite items")
 @ApiResponses({
@@ -34,41 +36,41 @@ public class FavoriteItemController {
 
     private final FavoriteItemService favoriteItemService;
 
-    @PostMapping("/{userId}/favorites/{productId}")
+    @PostMapping("/users/{userId}/favorites/{productId}")
     @ResponseStatus(HttpStatus.CREATED)
-    @Operation(operationId = "createFavorites", summary = "Add product in favorites for user")
+    @Operation(operationId = "createFavorites", summary = "Добавление продукта во вкладку избранное клиента")
     @ApiResponse(responseCode = "201", description = "CREATED",
             content = @Content(mediaType = "application/json",
                     schema = @Schema(implementation = UUID.class)))
-    private UUID createFavorites(
-            @Parameter(name = "userId", description = "User's identifier") @PathVariable UUID userId,
-            @Parameter(name = "productId", description = "Product's identifier") @PathVariable UUID productId) {
+    public UUID createFavorites(
+            @Parameter(name = "userId", description = "Идентификатор клиента") @PathVariable UUID userId,
+            @Parameter(name = "productId", description = "Идентификатор продукта") @PathVariable UUID productId) {
         log.info("Received a request to added product '%s' in favorites for user '%s'".formatted(productId, userId));
         return favoriteItemService.addItemInFavorites(productId, userId);
     }
 
-    @GetMapping("/{userId}/favorites")
+    @GetMapping("/users/{userId}/favorites")
     @ResponseStatus(HttpStatus.OK)
-    @Operation(operationId = "getFavorites", summary = "Get favorites product of user")
+    @Operation(operationId = "getFavorites", summary = "Получение избранных продуктов клиента")
     @ApiResponse(responseCode = "200", description = "OK",
             content = @Content(mediaType = "application/json",
                     array = @ArraySchema(schema = @Schema(implementation = FavoriteItemResponseDto.class))))
-    private Page<FavoriteItemResponseDto> getFavorites(
-            @Parameter(name = "userId", description = "User's identifier")
+    public Page<FavoriteItemResponseDto> getFavorites(
+            @Parameter(name = "userId", description = "Идентификатор клиента")
             @PathVariable("userId") UUID userId,
             @PageableDefault(sort = "addedAt", direction = Sort.Direction.DESC) Pageable page) {
         log.info("Received a request to get favorites products of user: \"%s\"".formatted(userId));
         return favoriteItemService.getFavoritesByUserId(userId, page);
     }
 
-    @DeleteMapping("/{userId}/favorites/{productId}")
+    @DeleteMapping("/users/{userId}/favorites/{productId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @Operation(operationId = "deleteFavorites", summary = "Delete favorites product of user")
+    @Operation(operationId = "deleteFavorites", summary = "Удаление продукта с избранных клиента")
     @ApiResponse(responseCode = "204", description = "NO_CONTENT")
-    private void deleteFavorites(
-            @Parameter(name = "userId", description = "User's identifier")
+    public void deleteFavorites(
+            @Parameter(name = "userId", description = "Идентификатор клиента")
             @PathVariable("userId") UUID userId,
-            @Parameter(name = "productId", description = "Product's identifier")
+            @Parameter(name = "productId", description = "Идентификатор продукта")
             @PathVariable("productId") UUID productId) {
         log.info("Received a request to delete favorites product \"%s\" of user: \"%s\""
                 .formatted(productId, userId));
