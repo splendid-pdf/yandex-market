@@ -4,18 +4,61 @@ import com.yandex.market.auth.dto.ClientAuthDetails;
 import com.yandex.market.sellerinfoservice.dto.SellerRegistration;
 import com.yandex.market.sellerinfoservice.dto.SellerRequestDto;
 import com.yandex.market.sellerinfoservice.dto.SellerResponseDto;
+import com.yandex.market.sellerinfoservice.mapper.SellerMapper;
+import com.yandex.market.sellerinfoservice.model.Seller;
+import com.yandex.market.sellerinfoservice.repository.SellerRepository;
+import jakarta.persistence.EntityExistsException;
+import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
-public interface SellerService {
+@Service
+@RequiredArgsConstructor
+public class SellerService {
+    private final SellerRepository sellerRepository;
 
-    UUID createSeller(SellerRegistration sellerRegistration);
+    private final SellerMapper sellerMapper;
 
-    SellerResponseDto getSellerByExternalId(UUID sellerExternalId);
+    private final static String SELLER_NOT_FOUND_EXCEPTION = "Seller not found with seller id = ";
 
-    ClientAuthDetails getSellerAuthDetails(String email);
+    public UUID createSeller(SellerRegistration sellerRegistration) {
+        if (sellerRepository.existsSellerByEmail(sellerRegistration.email())) {
+            throw new EntityExistsException("Seller with email " + sellerRegistration.email() + " already exist");
+        }
 
-    SellerResponseDto updateSellerWithDto(UUID sellerId, SellerRequestDto sellerRequestDto);
+        Seller seller = sellerMapper.toSeller(sellerRegistration);
+        return sellerRepository.save(seller).getExternalId();
+    }
 
-    void deleteSellerByExternalId(UUID sellerExternalId);
+    public SellerResponseDto getSellerByExternalId(UUID sellerExternalId) {
+        return sellerMapper.toSellerResponseDto(sellerRepository
+                .findByExternalId(sellerExternalId)
+                .orElseThrow(() -> new EntityNotFoundException(SELLER_NOT_FOUND_EXCEPTION + sellerExternalId)));
+    }
+
+    @Transactional
+    public ClientAuthDetails getSellerAuthDetails(String email) {
+        return sellerRepository.findSellerAuthDetailsByEmail(email)
+                .orElseThrow(() -> new EntityNotFoundException("No seller with email " + email));
+    }
+
+    @Transactional
+    public SellerResponseDto updateSellerWithDto(UUID sellerId, SellerRequestDto sellerRequestDto) {
+        Seller seller = sellerRepository
+                .findByExternalId(sellerId)
+                .orElseThrow(() -> new EntityNotFoundException(SELLER_NOT_FOUND_EXCEPTION + sellerId));
+        sellerMapper.updateSellerModel(sellerRequestDto, seller);
+        return sellerMapper.toSellerResponseDto(seller);
+    }
+
+    @Transactional
+    public void deleteSellerByExternalId(UUID sellerExternalId) {
+        Seller seller = sellerRepository
+                .findByExternalId(sellerExternalId)
+                .orElseThrow(() -> new EntityNotFoundException(SELLER_NOT_FOUND_EXCEPTION + sellerExternalId));
+        sellerRepository.deleteById(seller.getId());
+    }
 }
