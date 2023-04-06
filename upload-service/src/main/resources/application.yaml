@@ -27,8 +27,18 @@ spring:
       uri: mongodb://localhost:27017/upload-service
       database: upload-service
 
-server:
-  port: 9001
+management:
+  endpoints:
+    web:
+      exposure:
+        include: prometheus,health
+  metrics:
+    tags:
+      application: ${spring.application.name}
+  server:
+    port: 9001
+    ssl:
+      enabled: false
 
 logging:
   level:
