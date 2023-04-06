@@ -61,8 +61,7 @@ public class StorageService {
                 val url = generateUrl(fileType, bucketName, objectId).toString();
 
                 val info = repository.save(
-                        createFileMetaInfo(hash, url,
-                                fileName)
+                        createFileMetaInfo(hash, url, fileName)
                 );
 
                 amazonS3.putObject(
@@ -72,8 +71,9 @@ public class StorageService {
                         metadata
                 );
 
-                return new FileAttributes(info.getId(), new URL(info.getUrl()));
+                return new FileAttributes(info.getFileName(), new URL(info.getUrl()));
             }
+
             return new FileAttributes(fileMetaInfo.get().getFileName(), new URL(fileMetaInfo.get().getUrl()));
         } catch (IOException e) {
             log.error("Failed to upload a file = {}", file);
