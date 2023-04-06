@@ -1,5 +1,5 @@
 server:
-  port: 8082
+  port: 8083
   error:
     include-message: always
 
@@ -8,12 +8,15 @@ spring:
     name: favorites-service
     url: /public/api/v1/users/
 
+  config:
+    import: "optional:configserver:"
+
   jackson:
     serialization:
       fail-on-empty-beans: false
 
   flyway:
-    baseline-on-migrate: true
+    enabled: false
 
   jpa:
     database: POSTGRESQL
@@ -30,9 +33,9 @@ spring:
           provider_disables_autocommit: true
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/${DB_NAME}
-    username: ${POSTGRES_USER}
-    password: ${PASSWORD}
+    url: jdbc:postgresql://localhost:5432/favorite
+    username: postgres
+    password: admin
     driverClassName: org.postgresql.Driver
     hikari:
       auto-commit: false
