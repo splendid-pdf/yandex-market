@@ -71,7 +71,7 @@ public class StorageService {
                         metadata
                 );
 
-                return new FileAttributes(info.getId(), new URL(info.getUrl()));
+                return new FileAttributes(info.getFileName(), new URL(info.getUrl()));
             }
 
             return new FileAttributes(fileMetaInfo.get().getFileName(), new URL(fileMetaInfo.get().getUrl()));
