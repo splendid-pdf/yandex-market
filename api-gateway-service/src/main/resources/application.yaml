@@ -86,7 +86,7 @@ application:
       - url: /*/*/*/products/{externalId}
         methods: GET
       # upload-api
-      - url: /*/*/*/upload
+      - url: /*/*/*/files
         methods: POST, GET, DELETE
 
 logging:
