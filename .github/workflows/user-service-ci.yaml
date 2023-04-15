@@ -1,7 +1,9 @@
 name: CI for user-service
 
 on:
-  pull_request:
+  push:
+    branches:
+      - feature/update-ci-cd-pipes
     paths:
       - 'user-service/**'
 
