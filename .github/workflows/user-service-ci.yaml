@@ -3,7 +3,7 @@ name: CI for user-service
 on:
   pull_request:
     paths:
-      - '/user-service/**'
+      - 'user-service/**'
 
 jobs:
   build-action:
