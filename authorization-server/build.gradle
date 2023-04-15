@@ -1,5 +1,5 @@
 plugins {
-    id 'java'
+    id 'com.marketplace.common'
     id 'org.springframework.boot' version '3.0.5'
     id 'io.spring.dependency-management' version '1.1.0'
 }
@@ -26,10 +26,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-security'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
-    //utils
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
-    annotationProcessor 'org.projectlombok:lombok'
-    compileOnly 'org.projectlombok:lombok'
 
     testImplementation 'org.springframework.security:spring-security-test'
 }
@@ -54,8 +51,4 @@ bootBuildImage {
             password = rootProject.property('dockerHubPassword')
         }
     }
-}
-
-tasks.named('test') {
-    useJUnitPlatform()
 }

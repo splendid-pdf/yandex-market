@@ -1,0 +1,46 @@
+plugins {
+    id 'java'
+    id 'pmd'
+}
+
+group = 'com.marketplace'
+version = '0.0.1-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+compileJava {
+    options.encoding = 'UTF-8'
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
+dependencies {
+    compileOnly libs.lombok
+    compileOnly libs.jetbrains.annotations
+
+    implementation libs.guava
+    implementation libs.mapstruct
+    implementation libs.apache.commons.lang3
+    implementation libs.apache.commons.validator
+    implementation libs.apache.commons.collections
+
+    annotationProcessor libs.lombok
+    annotationProcessor libs.mapstruct.processor
+
+    testCompileOnly libs.lombok
+    testAnnotationProcessor libs.lombok
+}
+
+pmd {
+    toolVersion = '6.53.0'
+    consoleOutput = true
+    ignoreFailures = true
+    ruleSetFiles = files("${rootDir}/ruleset.xml")
+    ruleSets = []
+}
+
+test {
+    useJUnitPlatform()
+}
