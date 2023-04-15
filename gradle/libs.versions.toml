@@ -1,0 +1,68 @@
+[versions]
+# plugins-versions
+jib = "3.3.1"
+spring-boot = "3.0.5"
+spring-dependency-management = "1.1.0"
+
+spring-cloud = "2022.0.1"
+spring-openapi-webmvc = "2.0.2"
+spring-error-handling = "4.1.0"
+
+prometheus = "1.10.5"
+
+flyway = "9.16.0"
+postgres = "42.5.4"
+
+
+# util-versions
+guava = "31.1-jre"
+lombok = "1.18.26"
+mapstruct = "1.5.3.Final"
+h2-database = "2.1.214"
+jetbrains-annotations = "24.0.1"
+apache-commons-lang3 = "3.12.0"
+apache-commons-validator = "1.7"
+apache-commons-collections = "3.2.2"
+
+# test
+mockito-inline = "4.10.0"
+testcontainers = "1.17.6"
+
+[libraries]
+# spring
+spring-actuator = { module = "org.springframework.boot:spring-boot-starter-actuator", version.ref = "spring-boot" }
+spring-validation = { module = "org.springframework.boot:spring-boot-starter-validation", version.ref = "spring-boot" }
+spring-openapi-webmvc = { module = "org.springdoc:springdoc-openapi-starter-webmvc-ui", version.ref = "spring-openapi-webmvc" }
+spring-error-handling = { module = "io.github.wimdeblauwe:error-handling-spring-boot-starter", version.ref = "spring-error-handling" }
+spring-config-processor = { module = "org.springframework.boot:spring-boot-configuration-processor", version.ref = "spring-boot" }
+spring-cloud-dependencies = { module = "org.springframework.cloud:spring-cloud-dependencies", version.ref = "spring-cloud" }
+
+# other
+prometheus = { module = "io.micrometer:micrometer-registry-prometheus", version.ref = "prometheus" }
+
+# db
+flyway = { module = "org.flywaydb:flyway-core", version.ref = "flyway" }
+postgres = { module = "org.postgresql:postgresql", version.ref = "postgres" }
+
+
+# util
+guava = { module = "com.google.guava:guava", version.ref = "guava" }
+lombok = { module = "org.projectlombok:lombok", version.ref = "lombok" }
+mapstruct = { module = "org.mapstruct:mapstruct", version.ref = "mapstruct" }
+mapstruct-processor = { module = "org.mapstruct:mapstruct-processor", version.ref = "mapstruct" }
+jetbrains-annotations = { module = "org.jetbrains:annotations", version.ref = "jetbrains-annotations" }
+apache-commons-lang3 = { module = "org.apache.commons:commons-lang3", version.ref = "apache-commons-lang3" }
+apache-commons-validator = { module = "commons-validator:commons-validator", version.ref = "apache-commons-validator" }
+apache-commons-collections = { module = "commons-collections:commons-collections", version.ref = "apache-commons-collections" }
+
+# test
+h2-database = { module = "com.h2database:h2", version.ref = "h2-database" }
+mockito-inline = { module = "org.mockito:mockito-inline", version.ref = "mockito-inline" }
+testcontainers-junit = { module = "org.testcontainers:junit-jupiter", version.ref = "testcontainers" }
+testcontainers-postgresql = { module = "org.testcontainers:postgresql", version.ref = "testcontainers" }
+
+[plugins]
+jib = { id = "com.google.cloud.tools.jib", version.ref = "jib" }
+flyway = { id = "org.flywaydb.flyway", version.ref = "flyway" }
+spring-boot = { id = "org.springframework.boot", version.ref = "spring-boot" }
+spring-dependency-management = { id = "io.spring.dependency-management", version.ref = "spring-dependency-management" }

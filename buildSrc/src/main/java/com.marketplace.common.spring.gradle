@@ -1,0 +1,9 @@
+dependencies {
+    implementation libs.spring.actuator
+    implementation libs.spring.validation
+    implementation libs.spring.openapi.webmvc
+    implementation libs.spring.error.handling
+
+    runtimeOnly libs.prometheus
+    annotationProcessor libs.spring.config.processor
+}

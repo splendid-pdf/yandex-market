@@ -1,6 +1,5 @@
 plugins {
-	id 'pmd'
-	id 'java'
+	id 'com.marketplace.common'
 	id "org.flywaydb.flyway" version "9.14.1"
 	id 'org.springframework.boot' version '3.0.5'
 	id 'io.spring.dependency-management' version '1.1.0'
@@ -23,34 +22,21 @@ dependencies {
 	//spring cloud
 	implementation 'org.springframework.cloud:spring-cloud-config-client'
 
-	// mapper
-	implementation 'org.mapstruct:mapstruct:1.5.3.Final'
-
 	// pdf
 	implementation 'com.itextpdf:itextpdf:5.5.13.3'
 
 	// open api
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
 
-	// utils
-	implementation 'org.apache.commons:commons-lang3:3.12.0'
-
-	// lombok
-	compileOnly 'org.projectlombok:lombok'
-	testCompileOnly 'org.projectlombok:lombok:1.18.24'
-	testAnnotationProcessor 'org.projectlombok:lombok:1.18.24'
-
 	// db
 	runtimeOnly 'org.postgresql:postgresql'
 	implementation "org.flywaydb:flyway-core:${flywayCoreVersion}"
 
 	// monitoring
-	runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
+	runtimeOnly 'io.micrometer:micrometer-registry-prometheus:1.10.5'
 
 	// annotation processor
 	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
-	annotationProcessor 'org.projectlombok:lombok'
-	annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.3.Final'
 
 	// tests
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
@@ -81,14 +67,6 @@ bootBuildImage {
 	}
 }
 
-tasks.named('test') {
-	useJUnitPlatform()
-}
-
-pmd {
-	toolVersion = '6.53.0'
-	consoleOutput = true
-	ignoreFailures = true
-	ruleSetFiles = files("${rootDir}/ruleset.xml")
-	ruleSets = []
+repositories {
+	mavenCentral()
 }
