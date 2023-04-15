@@ -2,11 +2,8 @@ name: CI for user-service
 
 on:
   pull_request:
-    branches:
-      - develop
     paths:
       - '/user-service/**'
-    types: [edited, opened, synchronize]
 
 jobs:
   build-action:
