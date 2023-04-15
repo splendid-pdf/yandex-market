@@ -1,23 +1,29 @@
-name: Build Action
+name: CI for user-service
 
 on:
   pull_request:
     branches:
       - develop
-      - develop/*
+    paths:
+      - ./user-service/**
+    types: [edited, opened, synchronize]
 
 jobs:
   build-action:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+
       - uses: actions/setup-java@v3
         with:
           distribution: 'corretto'
           java-version: '17'
-          cache: 'gradle'
+
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v2
+
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
-      - name: Build project
-        run: ./gradlew clean build -x test --no-daemon
 
+      - name: Build project
+        run: ./gradlew :user-service:build --no-daemon
