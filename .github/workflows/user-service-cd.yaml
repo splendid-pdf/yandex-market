@@ -24,8 +24,8 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Build and publish image
-        run: ./gradlew :user-service:bootBuildImage
+#      - name: Build and publish image
+#        run: ./gradlew :user-service:bootBuildImage
 
       - name: Executing remote ssh commands using ssh key
         uses: appleboy/ssh-action@v0.1.10
@@ -34,4 +34,4 @@ jobs:
           username: ${{ secrets.SECRET_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SECRET_PORT }}
-          script: whoami
+          script: docker restart 91549c82bcb9
