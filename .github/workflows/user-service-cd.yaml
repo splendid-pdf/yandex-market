@@ -34,4 +34,4 @@ jobs:
           username: ${{ secrets.SECRET_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SECRET_PORT }}
-          script: docker restart 91549c82bcb9
+          script: ansible-playbook /home/support/ansible/docker/user-service/replace-container.yaml
