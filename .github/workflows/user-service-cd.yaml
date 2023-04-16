@@ -5,10 +5,10 @@ on:
     branches:
       - develop
     paths:
-      - '/user-service/**'
+      - 'user-service/**'
 
 jobs:
-  build-action:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -30,8 +30,8 @@ jobs:
       - name: Executing remote ssh commands using ssh key
         uses: appleboy/ssh-action@v0.1.10
         with:
-          host: ${{ SECRET_HOST }}
-          username: ${{ SECRET_USERNAME }}
-          key: ${{ SSH_PRIVATE_KEY }}
-          port: ${{ SECRET_PORT }}
-          script: whoami
+          host: ${{ secrets.SECRET_HOST }}
+          username: ${{ secrets.SECRET_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SECRET_PORT }}
+          script: ansible-playbook /home/support/ansible/docker/user-service/replace-container.yaml
