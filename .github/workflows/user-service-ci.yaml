@@ -1,7 +1,9 @@
 name: CI for user-service
 
 on:
-  push:
+  pull_request:
+    branches:
+      - develop
     paths:
       - 'user-service/**'
 
