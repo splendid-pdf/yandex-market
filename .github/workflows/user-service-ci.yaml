@@ -8,8 +8,7 @@ on:
       - 'user-service/**'
 
 jobs:
-  build:
-    name: Build and analyze
+  build-action:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -39,5 +38,4 @@ jobs:
       - name: Build and analyze
         run: ./gradlew :user-service:build  :user-service:sonarqube --info
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
