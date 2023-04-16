@@ -3,7 +3,7 @@ name: CI for user-service
 on:
   pull_request:
     branches:
-      - master
+      - develop
     paths:
       - 'user-service/**'
 
@@ -18,11 +18,21 @@ jobs:
           distribution: 'corretto'
           java-version: '17'
 
+      - name: Cache SonarCloud packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.sonar/cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
+
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v2
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Build project
-        run: ./gradlew :user-service:build --no-daemon
+      - name: Build and analyze
+        run: ./gradlew :user-service:build  :user-service:sonarqube --info
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
