@@ -8,15 +8,19 @@ on:
       - 'user-service/**'
 
 jobs:
-  build-action:
+  build:
+    name: Build and analyze
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-
-      - uses: actions/setup-java@v3
         with:
+          fetch-depth: 0
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: 17
           distribution: 'corretto'
-          java-version: '17'
 
       - name: Cache SonarCloud packages
         uses: actions/cache@v3
@@ -25,11 +29,12 @@ jobs:
           key: ${{ runner.os }}-sonar
           restore-keys: ${{ runner.os }}-sonar
 
-      - name: Setup Gradle
-        uses: gradle/gradle-build-action@v2
-
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
+      - name: Cache Gradle packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
+          restore-keys: ${{ runner.os }}-gradle
 
       - name: Build and analyze
         run: ./gradlew :user-service:build  :user-service:sonarqube --info
