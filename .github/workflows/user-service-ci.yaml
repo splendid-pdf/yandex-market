@@ -1,7 +1,7 @@
 name: CI for user-service
 
 on:
-  pull_request:
+  push:
     paths:
       - 'user-service/**'
 
