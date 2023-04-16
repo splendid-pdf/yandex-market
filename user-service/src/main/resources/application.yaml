@@ -33,13 +33,6 @@ spring:
     driver-class-name: org.postgresql.Driver
 
 app:
-  api:
-    rest:
-      connection-timeout-in-ms: 1000
-      read-connection-timeout-in-ms: 1000
-      geocoder:
-        url: https://catalog.api.2gis.com/3.0/items/geocode?q=%s&fields=items.point&key=%s
-        api-key: ${api-key:ruogpy7686}
   validation:
     error-info:
       BLANK_FIRST_NAME_VALIDATION_ERROR_CODE: 'Firstname can not be blank'
