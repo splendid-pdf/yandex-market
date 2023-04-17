@@ -34,11 +34,9 @@ dependencies {
 }
 
 pmd {
-    toolVersion = '6.53.0'
-    consoleOutput = true
-    ignoreFailures = true
-    ruleSetFiles = files("${rootDir}/ruleset.xml")
-    ruleSets = []
+    toolVersion = '6.55.0'
+    ignoreFailures = false
+    ruleSets = ["category/java/errorprone.xml", "category/java/bestpractices.xml"]
 }
 
 test {
