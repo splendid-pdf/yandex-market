@@ -1,8 +1,8 @@
 name: user-service ci/cd pipeline
 
 env:
-  USERNAME: pipeliner
-  USER_EMAIL: pipeliner@mail.ru
+  USERNAME: github-actions
+  USER_EMAIL: actions@mail.com
   SERVICE_NAME: user-service
 
 on:
@@ -13,7 +13,7 @@ on:
       - 'user-service/**'
 
 jobs:
-  build-action:
+  build:
     if: ${{ github.event.pull_request.merged == false }}
     runs-on: ubuntu-latest
     steps:

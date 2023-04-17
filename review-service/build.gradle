@@ -1,6 +1,7 @@
 plugins {
     id 'com.marketplace.common'
     id 'com.marketplace.common.spring'
+    alias libs.plugins.jib
     alias libs.plugins.flyway
     alias libs.plugins.spring.boot
     alias libs.plugins.spring.dependency.management
@@ -42,17 +43,20 @@ dependencyManagement {
     }
 }
 
-bootBuildImage {
-    def account = rootProject.property('dockerHubUsername')
-    imageName = "${account}/${project.name}:${project.version}"
-    publish = true
-    environment = [
-            "BP_JVM_VERSION" : "${compileJava.sourceCompatibility}"
-    ]
-    docker {
-        publishRegistry {
-            username = account
-            password = rootProject.property('dockerHubPassword')
+jib {
+    from {
+        image = 'gcr.io/distroless/java17-debian11'
+    }
+    to {
+        image = "${dockerHubUsername}/${project.name}:${project.version}"
+        tags = [version, project.getVersion()] as List<String>
+        auth {
+            username = dockerHubUsername
+            password = dockerHubPassword
         }
+    }
+    container {
+        creationTime = Instant.now().toString()
+        format = com.google.cloud.tools.jib.api.buildplan.ImageFormat.OCI
     }
 }

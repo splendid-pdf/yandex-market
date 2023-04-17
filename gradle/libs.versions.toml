@@ -30,15 +30,22 @@ testcontainers = "1.17.6"
 
 [libraries]
 # spring
+spring-web = { module = "org.springframework.boot:spring-boot-starter-web", version.ref = "spring-boot" }
+spring-redis = { module = "org.springframework.boot:spring-boot-starter-data-redis", version.ref = "spring-boot"}
+spring-security = { module = "org.springframework.boot:spring-boot-starter-security", version.ref = "spring-boot"}
+spring-data-jpa = { module = "org.springframework.boot:spring-boot-starter-data-jpa", version.ref = "spring-boot"}
 spring-actuator = { module = "org.springframework.boot:spring-boot-starter-actuator", version.ref = "spring-boot" }
 spring-validation = { module = "org.springframework.boot:spring-boot-starter-validation", version.ref = "spring-boot" }
+spring-config-client = { module = "org.springframework.cloud:spring-cloud-config-client", version.ref = "spring-boot" }
 spring-openapi-webmvc = { module = "org.springdoc:springdoc-openapi-starter-webmvc-ui", version.ref = "spring-openapi-webmvc" }
 spring-error-handling = { module = "io.github.wimdeblauwe:error-handling-spring-boot-starter", version.ref = "spring-error-handling" }
 spring-config-processor = { module = "org.springframework.boot:spring-boot-configuration-processor", version.ref = "spring-boot" }
 spring-cloud-dependencies = { module = "org.springframework.cloud:spring-cloud-dependencies", version.ref = "spring-cloud" }
+spring-oauth2-resource-server = { module = "org.springframework.boot:spring-boot-starter-oauth2-resource-server", version.ref = "spring-boot" }
 
 # other
 prometheus = { module = "io.micrometer:micrometer-registry-prometheus", version.ref = "prometheus" }
+spring-devtools = { module = "org.springframework.boot:spring-boot-devtools", version.ref = "spring-boot" }
 
 # db
 flyway = { module = "org.flywaydb:flyway-core", version.ref = "flyway" }
@@ -57,9 +64,11 @@ apache-commons-collections = { module = "commons-collections:commons-collections
 
 # test
 h2-database = { module = "com.h2database:h2", version.ref = "h2-database" }
+spring-test = { module = "org.springframework.boot:spring-boot-starter-test", version.ref = "spring-boot" }
 mockito-inline = { module = "org.mockito:mockito-inline", version.ref = "mockito-inline" }
 testcontainers-junit = { module = "org.testcontainers:junit-jupiter", version.ref = "testcontainers" }
 testcontainers-postgresql = { module = "org.testcontainers:postgresql", version.ref = "testcontainers" }
+
 
 [plugins]
 jib = { id = "com.google.cloud.tools.jib", version.ref = "jib" }
