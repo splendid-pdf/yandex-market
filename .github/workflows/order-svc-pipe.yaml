@@ -11,6 +11,11 @@ on:
       - develop
     paths:
       - 'order-service/**'
+  push:
+    branches:
+      - develop
+    paths:
+      - 'order-service/**'
 
 jobs:
   build:
@@ -59,7 +64,7 @@ jobs:
 #            git push
 #          fi
   deploy:
-    if: ${{ github.event.pull_request.merged == true }}
+    if: ${{ github.event_name == 'push' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
