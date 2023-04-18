@@ -88,4 +88,4 @@ jobs:
           username: ${{ secrets.SECRET_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SECRET_PORT }}
-          script: ansible-playbook /home/support/ansible/docker/${{ env.SERVICE_NAME }}/replace-container.yaml
+          script: ansible-playbook -i /home/support/ansible/hosts.txt /home/support/ansible/docker/${{ env.SERVICE_NAME }}/replace-container.yaml
