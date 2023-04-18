@@ -39,12 +39,6 @@ public class FileValidator {
         }
     }
 
-    public void validateImpotencyKey(String key) {
-        if (StringUtils.isBlank(key)) {
-            throw new IllegalArgumentException("Key cannot be empty");
-        }
-    }
-
     private String getExtension(String filename) {
         return FilenameUtils.getExtension(filename);
     }

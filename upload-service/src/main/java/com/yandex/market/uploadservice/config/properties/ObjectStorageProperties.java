@@ -16,6 +16,6 @@ public class ObjectStorageProperties {
     private String region;
     private String bucketName;
     private BasicAWSCredentials credentials;
-    private Integer expirationTime;
+    private Integer urlExpirationTimeInMinutes;
     private Integer maximumFilesCount;
 }

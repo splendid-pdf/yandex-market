@@ -15,7 +15,7 @@ application:
     credentials:
       secret-key: ${SECRET_KEY}
       access-key: ${ACCESS_KEY}
-    expiration-time: 60 # in minutes
+    url-expiration-time-in-minutes: 525600 # 1 year
 
 spring:
   application:

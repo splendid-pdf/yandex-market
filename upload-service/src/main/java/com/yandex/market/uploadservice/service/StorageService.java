@@ -24,9 +24,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 import static com.yandex.market.uploadservice.utils.Constants.DOWNLOAD_FILE_EXCEPTION_MESSAGE;
 import static com.yandex.market.uploadservice.utils.Constants.UPLOAD_FILE_EXCEPTION_MESSAGE;
@@ -45,7 +47,7 @@ public class StorageService {
 //    @Value("${application.validation.maximum_files_count}")
 //    private Integer maxFilesCount;
 
-    public FileAttributes uploadFile(MultipartFile file, FileType fileType) {
+    public URL uploadFile(MultipartFile file, FileType fileType) {
         validator.validate(file);
         try {
             val bucketName = properties.getBucketName();
@@ -55,26 +57,26 @@ public class StorageService {
 
             Optional<FileMetaInfo> fileMetaInfo = repository.findByHash(hash);
 
-            if (fileMetaInfo.isEmpty()) {
-                val fileName = createFileName(hash);
-                val objectId = createObjectId(fileName, fileType);
-                val url = generateUrl(fileType, bucketName, objectId).toString();
-
-                val info = repository.save(
-                        createFileMetaInfo(hash, url, fileName)
-                );
-
-                amazonS3.putObject(
-                        bucketName,
-                        objectId,
-                        inputStream,
-                        metadata
-                );
-
-                return new FileAttributes(info.getFileName(), new URL(info.getUrl()));
+            if (fileMetaInfo.isPresent()) {
+                return new URL(fileMetaInfo.get().getUrl());
             }
 
-            return new FileAttributes(fileMetaInfo.get().getFileName(), new URL(fileMetaInfo.get().getUrl()));
+            val fileName = createFileName(hash);
+            val objectId = createObjectId(fileName, fileType);
+            val url = generateUrl(fileType, bucketName, objectId).toString();
+
+            val info = repository.save(
+                    createFileMetaInfo(hash, url, fileName)
+            );
+
+            amazonS3.putObject(
+                    bucketName,
+                    objectId,
+                    inputStream,
+                    metadata
+            );
+
+            return new URL(info.getUrl());
         } catch (IOException e) {
             log.error("Failed to upload a file = {}", file);
             throw new BadRequestException(UPLOAD_FILE_EXCEPTION_MESSAGE.formatted(file.getName()));
@@ -113,6 +115,11 @@ public class StorageService {
 //                .collect(Collectors.toSet());
 //    }
 
+    private String generateId() {
+        UUID uuid = UUID.randomUUID();
+        String idPart = uuid.toString().substring(0, 8);
+        return idPart.concat("-").concat(String.valueOf(Instant.now().getEpochSecond()));
+    }
     private String createObjectId(String fileId, FileType fileType) {
         return fileType.getFolder() + fileId;
     }
@@ -125,7 +132,8 @@ public class StorageService {
         ObjectMetadata metadata = new ObjectMetadata();
         metadata.setContentType(file.getContentType());
         metadata.setContentLength(file.getSize());
-        metadata.setUserMetadata(Map.of(EXTENSION, "." + getExtension(file.getOriginalFilename())));
+//        непонимаю зачем это
+//        metadata.setUserMetadata(Map.of(EXTENSION, "." + getExtension(file.getOriginalFilename())));
         return metadata;
     }
 
@@ -138,8 +146,9 @@ public class StorageService {
                 .build();
     }
 
+    //todo: минуты на года поменять
     private URL generateUrl(FileType fileType, String bucketName, String objectId) {
-        val expirationTime = new DateTime().plusMinutes(properties.getExpirationTime()).toDate();
+        val expirationTime = new DateTime().plusMinutes(properties.getUrlExpirationTimeInMinutes()).toDate();
         if (FileType.CHECK == fileType) {
             return amazonS3.generatePresignedUrl(
                     bucketName,
@@ -151,12 +160,13 @@ public class StorageService {
     }
 
     private static String getHash(MultipartFile file) throws IOException {
-        return String.valueOf(Hashing.murmur3_128().hashBytes(file.getBytes()).asLong());
+        return String.valueOf(Hashing.murmur3_128().hashBytes(file.getBytes()));
     }
 
-    private String getExtension(String filename) {
-        return FilenameUtils.getExtension(filename);
-    }
+//    мб этот метод не нужен будет
+//    private String getExtension(String filename) {
+//        return FilenameUtils.getExtension(filename);
+//    }
 
     private String getFileExtension(S3Object s3Object) {
         return s3Object

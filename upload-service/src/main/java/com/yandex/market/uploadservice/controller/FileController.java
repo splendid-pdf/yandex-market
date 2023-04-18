@@ -15,6 +15,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.net.URL;
+
 import static com.yandex.market.util.HttpUtils.PUBLIC_API_V1;
 
 @Slf4j
@@ -32,21 +34,14 @@ public class FileController {
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE
     )
     @ResponseStatus(HttpStatus.OK)
-    public FileAttributes upload(
-            @RequestPart MultipartFile file,
-            @RequestParam("fileType") FileType fileType
-    ) {
-
-        return storageService.uploadFile(file, fileType);
+    public URL upload(@RequestPart MultipartFile file) {
+        return storageService.uploadFile(file);
     }
-
 
     @GetMapping(value = "/files")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<byte[]> download(
-            @RequestParam("fileId") String fileId,
-            @RequestParam("fileType") FileType fileType
-    ) {
+    public ResponseEntity<byte[]> download(@RequestParam("fileId") String fileId,
+                                           @RequestParam("fileType") FileType fileType) {
         FileDetails fileDetails = storageService.downloadFile(fileId, fileType);
         HttpHeaders headers = createFileDownloadHeaders(fileDetails);
         return new ResponseEntity<>(fileDetails.getContent(), headers, HttpStatus.OK);
@@ -54,10 +49,8 @@ public class FileController {
 
     @DeleteMapping(value = "/files")
     @ResponseStatus(HttpStatus.OK)
-    public void delete(
-            @RequestParam("fileId") String fileId,
-            @RequestParam("fileType") FileType fileType
-    ) {
+    public void delete(@RequestParam("fileId") String fileId,
+                       @RequestParam("fileType") FileType fileType) {
         storageService.deleteFile(fileId, fileType);
     }
 

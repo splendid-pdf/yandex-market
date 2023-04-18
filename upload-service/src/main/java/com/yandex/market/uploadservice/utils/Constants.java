@@ -4,6 +4,7 @@ import lombok.experimental.UtilityClass;
 
 @UtilityClass
 public class Constants {
+    //todo:  в ямл
     public static final String [] SUPPORTED_CONTENT_TYPES = {"image/jpeg", "image/jpg", "image/png", "application/pdf"};
     public static final String MAX_FILE_SIZE_EXCEPTION_MESSAGE = "File too large";
     public static final String EMPTY_FILE_EXCEPTION_MESSAGE = "Put some object";
