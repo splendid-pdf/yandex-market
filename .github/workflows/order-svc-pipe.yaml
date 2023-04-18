@@ -17,7 +17,7 @@ on:
 
 jobs:
   build:
-    if: ${{ github.event.pull_request.merged == false }}
+    if: ${{ github.event_name == 'pull_request' }}
     runs-on: ubuntu-latest
     steps:
       - name: Download repo
@@ -88,4 +88,4 @@ jobs:
           username: ${{ secrets.SECRET_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SECRET_PORT }}
-          script: ansible-playbook /home/support/ansible/docker/${{ env.SERVICE_NAME }}/replace-container.yaml
+          script: ansible-playbook -i /home/support/ansible/hosts.txt /home/support/ansible/docker/${{ env.SERVICE_NAME }}/replace-container.yaml
