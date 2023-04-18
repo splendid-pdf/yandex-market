@@ -7,6 +7,7 @@ import java.util.List;
 
 public record SellerOrderPreview(
 
+        String orderNumber,
         LocalDateTime creationTimestamp,
         OrderStatus orderStatus,
         SellerOrderContactPreview sellerOrderContactPreview,
