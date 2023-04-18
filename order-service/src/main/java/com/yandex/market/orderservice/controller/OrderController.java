@@ -45,6 +45,8 @@ import static com.yandex.market.util.HttpUtils.PUBLIC_API_V1;
 public class OrderController {
 
     public static final String EXTERNAL_ID = "externalId";
+
+    public static final String STATUS_OK = "200";
     public static final String USER_ID = "userId";
     public static final String SUCCESSFUL_OPERATION = "Successful operation";
     public static final String APPLICATION_JSON = "application/json";
@@ -66,8 +68,8 @@ public class OrderController {
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/orders/{orderId}")
     @Operation(operationId = "getByOrderId", summary = "Get order information by it is external id")
-    @ApiResponse(responseCode = "200", description = SUCCESSFUL_OPERATION, content =
-    @Content(mediaType = APPLICATION_JSON, schema = @Schema(implementation = OrderResponse.class)))
+    @ApiResponse(responseCode = STATUS_OK, description = SUCCESSFUL_OPERATION,
+            content = @Content(mediaType = APPLICATION_JSON, schema = @Schema(implementation = OrderResponse.class)))
     public OrderResponse getByOrderId(
             @Parameter(name = "orderId", description = "Order's identifier")
             @PathVariable("orderId") UUID orderId) {
@@ -78,7 +80,7 @@ public class OrderController {
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/users/{userId}/orders/previews")
     @Operation(operationId = "getOrderByUserId", summary = "Get user orders by user identifier")
-    @ApiResponse(responseCode = "200", description = SUCCESSFUL_OPERATION,
+    @ApiResponse(responseCode = STATUS_OK, description = SUCCESSFUL_OPERATION,
             content = @Content(mediaType = APPLICATION_JSON,
                     array = @ArraySchema(schema = @Schema(implementation = OrderResponse.class))))
     public Page<OrderResponsePreview> getOrderByUserId(
@@ -92,7 +94,7 @@ public class OrderController {
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/sellers/{sellerId}/orders")
     @Operation(operationId = "getOrderBySellerId", summary = "Get seller orders by seller identifier")
-    @ApiResponse(responseCode = "200", description = SUCCESSFUL_OPERATION,
+    @ApiResponse(responseCode = STATUS_OK, description = SUCCESSFUL_OPERATION,
             content = @Content(mediaType = APPLICATION_JSON,
                     array = @ArraySchema(schema = @Schema(implementation = OrderResponse.class))))
     public List<SellerOrderPreview> getOrderBySellerId(
@@ -128,7 +130,7 @@ public class OrderController {
     @ResponseStatus(HttpStatus.OK)
     @PutMapping("/orders/{orderId}/status")
     @Operation(operationId = "updateOrderStatus", summary = "Update order status by order id")
-    @ApiResponse(responseCode = "200", description = SUCCESSFUL_OPERATION)
+    @ApiResponse(responseCode = STATUS_OK, description = SUCCESSFUL_OPERATION)
     public OrderResponse updateOrderStatus(
             @Parameter(name = "orderId", description = "Order's identifier")
             @PathVariable("orderId") UUID orderId,
