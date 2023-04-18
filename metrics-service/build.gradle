@@ -1,3 +1,5 @@
+import com.google.cloud.tools.jib.api.buildplan.ImageFormat
+
 plugins {
     id 'com.marketplace.common'
     alias libs.plugins.jib
@@ -60,8 +62,7 @@ jib {
         }
     }
     container {
-        creationTime = Instant.now().toString()
-        format = com.google.cloud.tools.jib.api.buildplan.ImageFormat.OCI
+        format = ImageFormat.OCI
     }
 }
 

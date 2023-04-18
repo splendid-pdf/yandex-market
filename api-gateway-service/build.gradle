@@ -55,7 +55,6 @@ jib {
         }
     }
     container {
-        creationTime = Instant.now().toString()
         format = ImageFormat.OCI
     }
 }

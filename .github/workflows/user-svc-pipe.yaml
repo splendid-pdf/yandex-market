@@ -38,16 +38,16 @@ jobs:
       - name: Generate JaCoCo report
         run: ./gradlew :${{ env.SERVICE_NAME }}:jacocoTestReport
 
-      - name: Generate JaCoCo Badges for user-service
+      - name: Verify test coverage
+        run: ./gradlew :${{ env.SERVICE_NAME }}:jacocoTestCoverageVerification
+
+      - name: Generate JaCoCo Badges for ${{ env.SERVICE_NAME }}
         id: jacocoUserService
         uses: cicirello/jacoco-badge-generator@v2
         with:
-          generate-branches-badge: true
           jacoco-csv-file: ${{ env.SERVICE_NAME }}/build/reports/jacoco/test/jacocoTestReport.csv
           coverage-badge-filename: jacoco-user-svc.svg
-          branches-badge-filename: branches-user-svc.svg
-          coverage-label: coverage (user-service)
-          branches-label: branches (user-service)
+          coverage-label: coverage (${{ env.SERVICE_NAME }})
 
       - name: Commit the badge (if it changed)
         run: |
@@ -77,7 +77,7 @@ jobs:
         run: chmod +x gradlew
 
       - name: Build and publish image
-        run: ./gradlew :${{ env.SERVICE_NAME }}:bootBuildImage
+        run: ./gradlew :${{ env.SERVICE_NAME }}:jib
 
       - name: Executing remote ssh commands using ssh key
         uses: appleboy/ssh-action@v0.1.10

@@ -1,3 +1,5 @@
+import com.google.cloud.tools.jib.api.buildplan.ImageFormat
+
 plugins {
 	id 'com.marketplace.common'
 	alias libs.plugins.jib
@@ -55,14 +57,13 @@ jib {
 	}
 	to {
 		image = "${dockerHubUsername}/${project.name}:${project.version}"
-		tags = [version, project.getVersion()] as List<String>
+		tags = [version, project.version] as List<String>
 		auth {
 			username = dockerHubUsername
 			password = dockerHubPassword
 		}
 	}
 	container {
-		creationTime = Instant.now().toString()
-		format = com.google.cloud.tools.jib.api.buildplan.ImageFormat.OCI
+		format = ImageFormat.OCI
 	}
 }
