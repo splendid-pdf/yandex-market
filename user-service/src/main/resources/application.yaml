@@ -50,4 +50,4 @@ app:
 
 logging:
   level:
-    web: DEBUG
+    web: INFO

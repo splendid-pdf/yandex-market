@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 @Schema
-public record AddressRequestDto(
+public record AddressRequest(
         @NotBlank(message = "Страна получателя должна быть заполнена")
         String country,
         @NotBlank(message = "Регион получателя должен быть заполнен")

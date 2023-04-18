@@ -22,5 +22,4 @@ public class CompositorController {
     public List<ProductPreviewMainPage> getProductPreviewImage(){
         return compositorService.getNewestProducts();
     }
-
 }

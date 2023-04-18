@@ -1,0 +1,17 @@
+ext {
+    libpacks = [
+            testing: [
+
+            ],
+            springBase: [
+
+            ],
+            commonUtils: [
+                    libs.guava,
+                    libs.mapstruct,
+                    libs.apache.commons.lang3,
+                    libs.apache.commons.validator,
+                    libs.apache.commons.collections
+            ]
+    ]
+}

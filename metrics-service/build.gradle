@@ -1,7 +1,10 @@
+import com.google.cloud.tools.jib.api.buildplan.ImageFormat
+
 plugins {
     id 'com.marketplace.common'
-    id 'org.springframework.boot' version '3.0.5'
-    id 'io.spring.dependency-management' version '1.1.0'
+    alias libs.plugins.jib
+    alias libs.plugins.spring.boot
+    alias libs.plugins.spring.dependency.management
 }
 
 ext {
@@ -46,8 +49,21 @@ dependencyManagement {
     }
 }
 
-repositories {
-    mavenCentral()
+jib {
+    from {
+        image = 'gcr.io/distroless/java17-debian11'
+    }
+    to {
+        image = "${dockerHubUsername}/${project.name}:${project.version}"
+        tags = [version, project.getVersion()] as List<String>
+        auth {
+            username = dockerHubUsername
+            password = dockerHubPassword
+        }
+    }
+    container {
+        format = ImageFormat.OCI
+    }
 }
 
 tasks.register("prepareKotlinBuildScriptModel"){}

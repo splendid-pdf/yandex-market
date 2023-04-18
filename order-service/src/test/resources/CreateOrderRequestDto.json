@@ -1,48 +1,47 @@
 {
-  "paymentType" : "CARD_UPON_RECEIPT",
-  "price" : 1000.00,
-  "paid" : false,
-  "paymentDateTime" : "2023-05-13T10:14:33",
-  "creationTimestamp" : "2023-01-13T10:14:33",
-  "receiptMethod" : {
-    "deliveryMethod" : "HOME_DELIVERY",
-    "address" : {
-      "country" : "Russia",
-      "region" : "Len Obl",
-      "city" : "St Pets",
-      "postCode" : "171717",
-      "street" : "ul.Dobra",
-      "houseNumber" : "45",
-      "officeNumber" : "123"
-    },
-    "receiverName" : "Ivan",
-    "receiverPhone" : "+79193545678",
-    "receiverEmail" : "asdsad@mail.ru",
-    "deliveryDate" : "2023-05-14",
-    "deliveryStart" : "11:00:00",
-    "deliveryEnd" : "20:00:00",
-    "deliveryCost" : 2.00
-  },
-  "orderedProducts" : [
+  "price": 23,
+  "paymentType": "CASH",
+  "paymentDateTime": "2023-06-13T10:14:33",
+  "paid": true,
+  "orderedProducts": [
     {
-      "productId" : "9b114634-56d7-4660-801f-b18b1806f137",
-      "amount" : 1,
-      "branchId" : "e0e738a2-a2e0-4e15-bd73-c39f9ef0ece0",
-      "shopSystemId" : "118cb1f0-cb45-4ec7-89c3-f253a73d0d03",
-      "name" : "графический планшет",
-      "description" : "мощный хороший",
-      "price" : 1000.00,
-      "photoUrl" : "https://asd.asfds.yandex.ru"
+      "productId": "94adc50a-6c63-4a5c-a066-7609ea3f0be4",
+      "amount": 2,
+      "sellerId": "94adc50a-6c63-4a5c-a066-7609ea3f0be5",
+      "articleFromSeller": "articleFromSeller",
+      "name": "keyboard",
+      "description": "first product",
+      "price": 23,
+      "photoUrl": "photo1"
     },
     {
-      "productId" : "9b114634-56d7-4660-801f-b18b1806f137",
-      "amount" : 2,
-      "branchId" : "e0e738a2-a2e0-4e15-bd73-c39f9ef0ece0",
-      "shopSystemId" : "118cb1f0-cb45-4ec7-89c3-f253a73d0d03",
-      "name" : "графический планшет",
-      "description" : "мощный хороший",
-      "price" : 1000.00,
-      "photoUrl" : "https://asd.asfds.yandex.ru"
+      "productId": "94adc50a-6c63-4a5c-a066-7609ea3f0be4",
+      "amount": 2,
+      "sellerId": "94adc50a-6c63-4a5c-a066-7609ea3f0be5",
+      "articleFromSeller": "articleFromSeller",
+      "name": "mouse",
+      "description": "second product",
+      "price": 23,
+      "photoUrl": "secondUrl"
     }
-  ]
+  ],
+  "receiptMethod": {
+    "deliveryMethod": "HOME_DELIVERY",
+    "address": {
+      "country": "country",
+      "region": "region",
+      "city": "city",
+      "postCode": "123456",
+      "street": "street",
+      "houseNumber": "24",
+      "officeNumber": "1"
+    },
+    "receiverName": "receiverName",
+    "receiverPhone": "+79196578832",
+    "receiverEmail": "asd@mail.ru",
+    "deliveryDate": "2023-06-13",
+    "deliveryStart": "2023-06-13T10:14:33",
+    "deliveryEnd": "2023-06-13T10:14:33",
+    "deliveryCost": 10
+  }
 }

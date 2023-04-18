@@ -13,6 +13,7 @@ import com.yandex.market.uploadservice.model.FileMetaInfo;
 import com.yandex.market.uploadservice.model.FileType;
 import com.yandex.market.uploadservice.repository.FileMetaInfoRepository;
 import com.yandex.market.uploadservice.validator.FileValidator;
+import jdk.dynalink.linker.LinkerServices;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -25,6 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDateTime;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.Optional;
 
