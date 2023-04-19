@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -50,30 +51,24 @@ public class StorageService {
     public URL uploadFile(MultipartFile file, FileType fileType) {
         validator.validate(file);
         try {
-            val bucketName = properties.getBucketName();
-            val inputStream = file.getInputStream();
-            val metadata = createMetadata(file);
-            val hash = getHash(file);
+            String bucketName = properties.getBucketName();
+            InputStream fileInputStream = file.getInputStream();
+            ObjectMetadata metadata = createMetadata(file);
+            String fileHash = getHash(file);
 
-            Optional<FileMetaInfo> fileMetaInfo = repository.findByHash(hash);
+            Optional<FileMetaInfo> fileMetaInfo = repository.findByHash(fileHash);
 
             if (fileMetaInfo.isPresent()) {
                 return new URL(fileMetaInfo.get().getUrl());
             }
 
-            val fileName = createFileName(hash);
-            val objectId = createObjectId(fileName, fileType);
-            val url = generateUrl(fileType, bucketName, objectId).toString();
+            String fileName = createFileName(fileHash);
+            String objectId = generateId();
+            String url = generateUrl(fileType, bucketName, objectId).toString();
+            amazonS3.putObject(bucketName, objectId, fileInputStream, metadata);
 
-            val info = repository.save(
-                    createFileMetaInfo(hash, url, fileName)
-            );
-
-            amazonS3.putObject(
-                    bucketName,
-                    objectId,
-                    inputStream,
-                    metadata
+            FileMetaInfo info = repository.save(
+                    createFileMetaInfo(fileHash, url, fileName)
             );
 
             return new URL(info.getUrl());
@@ -117,8 +112,10 @@ public class StorageService {
 
     private String generateId() {
         UUID uuid = UUID.randomUUID();
-        String idPart = uuid.toString().substring(0, 8);
-        return idPart.concat("-").concat(String.valueOf(Instant.now().getEpochSecond()));
+        String id = "%s-%s";
+        String idFirstPart = uuid.toString().substring(0, 8);
+        String idSecondPart = String.valueOf(Instant.now().getEpochSecond());
+        return id.formatted(idFirstPart, idSecondPart);
     }
     private String createObjectId(String fileId, FileType fileType) {
         return fileType.getFolder() + fileId;

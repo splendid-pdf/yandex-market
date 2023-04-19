@@ -7,6 +7,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.stereotype.Component;
 
+import java.util.HashSet;
+import java.util.function.Function;
+
 @Component
 @RequiredArgsConstructor
 public class UserResponseMapper implements Mapper<User, UserResponseDto> {
@@ -15,7 +18,6 @@ public class UserResponseMapper implements Mapper<User, UserResponseDto> {
     @Override
     public UserResponseDto map(User user) {
         val sex = user.getSex() != null ? user.getSex().name() : null;
-
         val locationDto = user.getLocation() != null ? locationMapper.mapToDto(user.getLocation()) : null;
 
         return new UserResponseDto(

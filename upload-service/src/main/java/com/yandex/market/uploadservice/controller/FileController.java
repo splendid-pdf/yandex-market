@@ -54,15 +54,6 @@ public class FileController {
         storageService.deleteFile(fileId, fileType);
     }
 
-//    @GetMapping(value = "/urls")
-//    @ResponseStatus(HttpStatus.OK)
-//    public Set<URL> getUrlsByIds(
-//            @RequestBody List<String> fileIds,
-//            @RequestParam("fileType") FileType fileType
-//    ) {
-//        return storageService.getUrlsByObjectIds(fileIds, fileType);
-//    }
-
     private HttpHeaders createFileDownloadHeaders(FileDetails fileDetails) {
         HttpHeaders headers = new HttpHeaders();
         headers.add(Headers.CONTENT_DISPOSITION, "attachment; filename=" + fileDetails.getFilename());
