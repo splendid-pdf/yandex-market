@@ -10,7 +10,6 @@ import java.util.UUID;
 
 @Schema
 public record CreateProductRequest(
-
         @NotBlank(message = "The name of the product must be indicated")
         @Size(min = 3, max = 128, message = "The product name must be in the range from 3 to 128 characters")
         String name,
