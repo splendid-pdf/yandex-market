@@ -44,6 +44,7 @@ public class SellerControllerTest {
             CHANGE_VISIBILITY_PATH = SELLER_PATH + "/{sellerId}/products/visibility";
 
     @Test
+    @Sql({"", ""})
     @Transactional
     void shouldChangeProductPriceSellerAndProductFoundAndChanged() throws Exception {
         long updatePrice = 30L;
