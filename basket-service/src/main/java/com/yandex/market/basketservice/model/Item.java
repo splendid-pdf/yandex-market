@@ -11,20 +11,14 @@ import java.util.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "products")
-@EqualsAndHashCode(of = "id")
-public class Product {
+@Table(name = "items")
+@EqualsAndHashCode(of = {"externalId"})
+public class Item {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
+    @Column(name = "external_id")
     private UUID externalId;
-
-    private Integer availableAmountOfItems;
-
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
-    @Builder.Default
-    private Set<Basket2Product> basket2Products = new HashSet<>();
-
 }

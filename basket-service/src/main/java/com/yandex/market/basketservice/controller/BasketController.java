@@ -1,10 +1,9 @@
 package com.yandex.market.basketservice.controller;
 
-import com.yandex.market.basketservice.dto.ProductResponseDto;
-import com.yandex.market.basketservice.dto.ProductRequestDto;
+import com.yandex.market.basketservice.dto.ItemResponse;
+import com.yandex.market.basketservice.dto.ItemRequest;
 import com.yandex.market.basketservice.service.BasketService;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -23,31 +22,29 @@ public class BasketController {
 
     private final BasketService basketService;
 
-    @GetMapping("/{userId}/basket/products")
+    @GetMapping("/users/{userId}/basket/products")
     @ResponseStatus(OK)
-    public Page<ProductResponseDto> getAllProducts(@PathVariable UUID userId,
-                                                   @PageableDefault(size = 10,sort = "id", direction = Sort.Direction.DESC)Pageable pageable) {
-        return basketService.getAllProducts(userId, pageable);
+    public Page<ItemResponse> getAllItemsInsideBasketByUserId(@PathVariable UUID userId,
+                                                              @PageableDefault(
+                                                                      size = 10,
+                                                                      sort = "id",
+                                                                      direction = Sort.Direction.DESC
+                                                              ) Pageable pageable
+    ) {
+        return basketService.getAllItemsInsideBasketByUserId(userId, pageable);
     }
 
-    @SneakyThrows
-    @PostMapping("/{userId}/basket/product")
+    @PatchMapping("/users/{userId}/basket/product")
     @ResponseStatus(OK)
-    public Integer changeNumberOfProductsInBasket(@PathVariable UUID userId,
-                                                  @RequestBody ProductRequestDto productRequestDto) {
-        return basketService.changeNumberOfProductsInBasket(userId, productRequestDto);
+    public void changeItemCountInBasket(@PathVariable UUID userId,
+                                        @RequestBody ItemRequest itemRequest) {
+        basketService.changeItemCountInBasket(userId, itemRequest);
     }
 
-    @DeleteMapping("/{userId}/basket/products")
+    @DeleteMapping("/users/{userId}/basket/products")
     @ResponseStatus(NO_CONTENT)
-    public void deleteProductsSet(@PathVariable UUID userId,
-                                      @RequestParam Set<UUID> productIdsSet){
-        basketService.deleteProductsSet(userId, productIdsSet);
+    public void deleteItemsList(@PathVariable UUID userId,
+                                   @RequestParam List<UUID> productIdsList) {
+        basketService.deleteItemsList(userId, productIdsList);
     }
-
-//    @GetMapping("/{userId}/basket")
-//    @ResponseStatus(OK)
-//    public BasketResponseDto getBasket(@PathVariable UUID userId) {
-//        return basketService.getBasket(userId);
-//    }
 }
