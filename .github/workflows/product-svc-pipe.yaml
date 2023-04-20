@@ -1,21 +1,21 @@
-name: user-service ci/cd pipeline
+name: product-service ci/cd pipeline
 
 env:
   USERNAME: github-actions
   USER_EMAIL: actions@mail.com
-  SERVICE_NAME: user-service
+  SERVICE_NAME: product-service
 
 on:
   pull_request:
     branches:
       - develop
     paths:
-      - 'user-service/**'
+      - 'product-service/**'
   push:
     branches:
       - develop
     paths:
-      - 'user-service/**'
+      - 'product-service/**'
 
 jobs:
   build:
