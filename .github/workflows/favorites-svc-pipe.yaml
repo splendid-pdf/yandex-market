@@ -1,21 +1,21 @@
-name: user-service ci/cd pipeline
+name: favorites-service ci/cd pipeline
 
 env:
   USERNAME: github-actions
   USER_EMAIL: actions@mail.com
-  SERVICE_NAME: user-service
+  SERVICE_NAME: favorites-service
 
 on:
   pull_request:
     branches:
       - develop
     paths:
-      - 'user-service/**'
+      - 'favorites-service/**'
   push:
     branches:
       - develop
     paths:
-      - 'user-service/**'
+      - 'favorites-service/**'
 
 jobs:
   build:
