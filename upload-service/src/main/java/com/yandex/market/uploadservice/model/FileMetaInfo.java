@@ -11,12 +11,12 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Document(collection = "file_meta_info")
+@Document(collection = "files_meta_info")
 public class FileMetaInfo {
     @Id
     private String id;
     private String url;
-    private String hash;
+    private long hash;
     private String fileName;
     private LocalDateTime timestamp;
 }

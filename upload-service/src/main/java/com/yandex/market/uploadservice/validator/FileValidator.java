@@ -24,11 +24,13 @@ public class FileValidator {
 
         if (file.isEmpty()) {
             throw new IllegalArgumentException(EMPTY_FILE_EXCEPTION_MESSAGE);
-        } else if (!ArrayUtils.contains(SUPPORTED_CONTENT_TYPES, file.getContentType())) {
+        }
+
+        if (!ArrayUtils.contains(SUPPORTED_CONTENT_TYPES, file.getContentType())) {
             throw new BadRequestException(PERMITTED_FILE_TYPES_EXCEPTION_MESSAGE);
         }
 
-        val maxFileSizeInBytes = getMaxFileSizeInBytes(file);
+        long maxFileSizeInBytes = getMaxFileSizeInBytes(file);
 
         if (file.getSize() > maxFileSizeInBytes) {
             throw new SizeLimitFileExceededException(

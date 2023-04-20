@@ -13,9 +13,9 @@ application:
     region: ru-central1
     bucket-name: marketplace-object-storage
     credentials:
-      secret-key: ${SECRET_KEY}
-      access-key: ${ACCESS_KEY}
-    url-expiration-time-in-minutes: 525600 # 1 year
+      secret-key: YCAJEed9o_kAS76-bPBVqqrte
+      access-key: YCM_cp6q_WfD97OPLsAXsVT5eVxEiO7Qma_0jMfE
+    url-expiration-time-in-years: 1
 
 spring:
   application:
@@ -24,8 +24,8 @@ spring:
     import: optional:configserver:http://localhost:8888
   data:
     mongodb:
-      uri: mongodb://localhost:27017/upload-service
-      database: upload-service
+      uri: mongodb://localhost:27023/upload_service
+      database: upload_service
 
 management:
   endpoints:

@@ -13,5 +13,6 @@ import java.util.Map;
 @Component
 @ConfigurationProperties(prefix = "application")
 public class FileRestrictionProperties {
+    //todo: посмотреть можно ли значение сделать лонговым, чтобы лишний класс не создавать
     private Map<String, FileSizeRestriction> extension;
 }
