@@ -1,23 +1,81 @@
+server:
+  port: 9001
+
+
 application:
-  extension:
-    jpg:
-      max_file_size_in_bytes: 153600
-    png:
-      max_file_size_in_bytes: 1000000
-    pdf:
-      max_file_size_in_bytes: 50000
   validation:
-    maximum_files_count: 5
+    max_uploaded_files_count: 10
+    max_downloaded_files_count: 10
+    extension:
+      jpg:
+        max_file_size_in_bytes: 10_485_760 #10 mb
+        file_types:
+          - AVATAR
+          - PRODUCT
+      jpeg:
+        max_file_size_in_bytes: 10_485_760 #10 mb
+        file_types:
+          - AVATAR
+          - PRODUCT
+      png:
+        max_file_size_in_bytes: 10_485_760 #10 mb
+        file_types:
+          - AVATAR
+          - PRODUCT
+      heif:
+        max_file_size_in_bytes: 10_485_760 #10 mb
+        file_types:
+          - AVATAR
+          - PRODUCT
+      gif:
+        max_file_size_in_bytes: 10_485_760 #10 mb
+        file_types:
+          - AVATAR
+          - PRODUCT
+      webp:
+        max_file_size_in_bytes: 10_485_760 #10 mb
+        file_types:
+          - AVATAR
+          - PRODUCT
+      mov:
+        max_file_size_in_bytes: 10_485_760 #10 mb
+        file_types:
+          - PRODUCT
+      mp4:
+        max_file_size_in_bytes: 10_485_760 #10 mb
+        file_types:
+          - PRODUCT
+      mkv:
+        max_file_size_in_bytes: 10_485_760 #10 mb
+        file_types:
+          - PRODUCT
+      m4v:
+        max_file_size_in_bytes: 10_485_760 #10 mb
+        file_types:
+          - PRODUCT
+      avi:
+        max_file_size_in_bytes: 10_485_760 #10 mb
+        file_types:
+          - PRODUCT
+      pdf:
+        max_file_size_in_bytes: 5_242_880 #5 mb
+        file_types:
+          - CHECK
+
+
   object-storage:
     host: storage.yandexcloud.net
     region: ru-central1
-    bucket-name: marketplace-object-storage
+    bucket_name: marketplace-object-storage
     credentials:
-      secret-key: YCAJEed9o_kAS76-bPBVqqrte
-      access-key: YCM_cp6q_WfD97OPLsAXsVT5eVxEiO7Qma_0jMfE
-    url-expiration-time-in-years: 1
+      secret-key: ${SECRET_KEY}
+      access-key: ${ACCESS_KEY}
+    url_expiration_time_in_years: 1
 
 spring:
+  servlet:
+    multipart:
+      enabled: true
   application:
     name: upload-service
   config:
