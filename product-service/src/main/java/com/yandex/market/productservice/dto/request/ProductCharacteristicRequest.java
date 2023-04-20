@@ -7,11 +7,11 @@ import jakarta.validation.constraints.Size;
 
 public record ProductCharacteristicRequest(
 
-        @NotBlank(message = "The value of the characteristic must be specified")
-        String value,
-
         @Size(min = 3, max = 50, message = "The name of the characteristic must be in the range from 3 to 50 characters")
         String name,
+
+        @NotBlank(message = "The value of the characteristic must be specified")
+        String value,
 
         @NotNull(message = "The value type cannot be null" )
         ValueType valueType

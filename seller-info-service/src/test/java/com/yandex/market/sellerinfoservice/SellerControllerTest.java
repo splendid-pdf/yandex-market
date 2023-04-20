@@ -51,7 +51,7 @@ class SellerControllerTest {
     @Value("${spring.app.seller.json-path}" + "update/")
     private String RESOURCES_PATH_UPDATE;
 
-/*    @Test
+    @Test
     void getSellerByExternalIdSellerFoundWithoutProblem() throws Exception {
         UUID sellerId = UUID.fromString("37678201-f3c8-4d5c-a628-2344eef50c55");
 
@@ -64,7 +64,7 @@ class SellerControllerTest {
                 SellerResponseDto.class);
 
         assertEquals(seller.externalId(), sellerId, "External IDs don't match");
-    }*/
+    }
 
 /*    @Test
     void getSellerByExternalIdSellerNotFound() throws Exception {

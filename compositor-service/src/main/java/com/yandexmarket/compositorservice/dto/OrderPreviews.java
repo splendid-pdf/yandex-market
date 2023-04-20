@@ -13,6 +13,5 @@ public record OrderPreviews(
         String receiverName,
         String receiverPhone,
         String receiverAddress
-
 ) {
 }

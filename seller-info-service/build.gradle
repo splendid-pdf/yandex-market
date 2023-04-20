@@ -1,35 +1,29 @@
+import com.google.cloud.tools.jib.api.buildplan.ImageFormat
+
 plugins {
     id 'com.marketplace.common'
     id 'com.marketplace.common.spring'
+    alias libs.plugins.jib
     alias libs.plugins.spring.boot
     alias libs.plugins.spring.dependency.management
-}
-
-ext {
-    set("springCloudConfigVersion", "2022.0.1");
 }
 
 dependencies {
     implementation project(':commons')
 
-    // spring
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.boot:spring-boot-starter-security'
-    implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
+    implementation libs.spring.web
+    implementation libs.spring.data.jpa
+    implementation libs.spring.security
+    implementation libs.spring.oauth2.resource.server
 
-    //spring cloud
-    implementation 'org.springframework.cloud:spring-cloud-config-client'
+    implementation libs.spring.cloud.config.client
 
-    // db
-    runtimeOnly libs.postgres
+    runtimeOnly libs.postgresql
 
-    // annotation processor
     annotationProcessor libs.spring.config.processor
 
-    // tests
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation libs.h2.database
+    testImplementation libs.spring.test
     testImplementation libs.mockito.inline
     testImplementation libs.testcontainers.junit
     testImplementation libs.testcontainers.postgresql
@@ -37,21 +31,23 @@ dependencies {
 
 dependencyManagement {
     imports {
-        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudConfigVersion}"
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:$libs.versions.spring.cloud"
     }
 }
 
-bootBuildImage {
-    def account = rootProject.property('dockerHubUsername')
-    imageName = "${account}/${project.name}:${project.version}"
-    publish = true
-    environment = [
-            "BP_JVM_VERSION": "${compileJava.sourceCompatibility}"
-    ]
-    docker {
-        publishRegistry {
-            username = account
-            password = rootProject.property('dockerHubPassword')
+jib {
+    from {
+        image = 'gcr.io/distroless/java17-debian11'
+    }
+    to {
+        image = "${dockerHubUsername}/${project.name}:${project.version}"
+        tags = [version, project.version] as List<String>
+        auth {
+            username = dockerHubUsername
+            password = dockerHubPassword
         }
+    }
+    container {
+        format = ImageFormat.OCI
     }
 }

@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Schema
-public record OrderRequestDto(
+public record OrderRequest(
         @NotNull(message = "Способ оплаты должен быть заполнен")
         PaymentType paymentType,
         @PositiveOrZero(message = "Цена заказа не может быть отрицательной")
@@ -19,7 +19,7 @@ public record OrderRequestDto(
         LocalDateTime paymentDateTime,
         @Valid
         @NotNull(message = "Способ получения должен быть заполнен")
-        ReceiptMethodRequestDto receiptMethod,
+        ReceiptMethodRequest receiptMethod,
         @NotNull(message = "Заказанный пользователем продукт должен быть заполнен")
         List<@Valid OrderedProductDto> orderedProducts) {
 }

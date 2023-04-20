@@ -12,12 +12,12 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 @Schema
-public record ReceiptMethodRequestDto(
+public record ReceiptMethodRequest(
         @NotNull(message = "Способ доставки должен быть указан")
         DeliveryMethod deliveryMethod,
         @NotNull(message = "Адрес доставки должен быть заполнен")
         @Valid
-        AddressRequestDto address,
+        AddressRequest address,
         @NotBlank(message = "Имя получателя должно быть заполнено")
         @Size(min = 4, max = 201, message = "Длина имени получателя должна находиться в пределе от 4 до 201 символа")
         @ReceiverNameConstraint

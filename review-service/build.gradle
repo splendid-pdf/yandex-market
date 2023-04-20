@@ -1,40 +1,53 @@
+import com.google.cloud.tools.jib.api.buildplan.ImageFormat
+
 plugins {
     id 'com.marketplace.common'
-    id 'com.marketplace.common.spring'
+    alias libs.plugins.jib
     alias libs.plugins.flyway
     alias libs.plugins.spring.boot
     alias libs.plugins.spring.dependency.management
 }
 
 ext {
-    set("springCloudConfigVersion", "2022.0.1");
+    set('flywayCoreVersion', '9.14.1')
+    set("springCloudConfigVersion", "2022.0.1")
 }
 
 dependencies {
     implementation project(':commons')
+
     // spring
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-web'
 
     //spring cloud
     implementation 'org.springframework.cloud:spring-cloud-config-client'
 
+    // pdf
+    implementation 'com.itextpdf:itextpdf:5.5.13.3'
+
+    // open api
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
+
     // db
-    runtimeOnly libs.postgres
-    implementation libs.flyway
+    runtimeOnly 'org.postgresql:postgresql'
+    implementation "org.flywaydb:flyway-core:${flywayCoreVersion}"
 
     // monitoring
-    runtimeOnly libs.prometheus
+    runtimeOnly 'io.micrometer:micrometer-registry-prometheus:1.10.5'
 
     // annotation processor
-    annotationProcessor libs.spring.config.processor
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
 
     // tests
-    testImplementation libs.testcontainers.junit
-    testImplementation libs.testcontainers.postgresql
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.amqp:spring-rabbit-test'
+    testImplementation 'org.testcontainers:junit-jupiter:1.17.6'
+    testImplementation 'org.testcontainers:postgresql:1.17.6'
 }
+
 
 dependencyManagement {
     imports {
@@ -42,17 +55,19 @@ dependencyManagement {
     }
 }
 
-bootBuildImage {
-    def account = rootProject.property('dockerHubUsername')
-    imageName = "${account}/${project.name}:${project.version}"
-    publish = true
-    environment = [
-            "BP_JVM_VERSION" : "${compileJava.sourceCompatibility}"
-    ]
-    docker {
-        publishRegistry {
-            username = account
-            password = rootProject.property('dockerHubPassword')
+jib {
+    from {
+        image = 'gcr.io/distroless/java17-debian11'
+    }
+    to {
+        image = "${dockerHubUsername}/${project.name}:${project.version}"
+        tags = [version, project.getVersion()] as List<String>
+        auth {
+            username = dockerHubUsername
+            password = dockerHubPassword
         }
+    }
+    container {
+        format = ImageFormat.OCI
     }
 }

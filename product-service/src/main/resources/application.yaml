@@ -6,15 +6,15 @@ spring:
   application:
     name: product-service
   flyway:
-    enabled: true
+    enabled: false
 
   config:
     import: "optional:configserver:"
 
   datasource:
-    url: jdbc:postgresql://${DB_URL}:5432/${DB_NAME}
-    username: ${POSTGRES_USER}
-    password: ${POSTGRES_PASSWORD}
+    url: jdbc:postgresql://158.160.27.104:5432/product_db
+    username: user
+    password: password
     driver-class-name: org.postgresql.Driver
 
   jpa:
@@ -39,8 +39,7 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          jwk-set-uri: http://127.0.0.1:9000/oauth2/jwks
-
+          jwk-set-uri: http://51.250.102.12:9000/oauth2/jwks
 
   kafka:
     bootstrap-servers: localhost:9092
