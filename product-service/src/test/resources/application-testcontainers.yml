@@ -1,0 +1,20 @@
+spring:
+  app:
+    seller:
+      url: /public/api/v1/sellers/
+    product:
+      url: /public/api/v1/products/
+
+  jpa:
+    properties:
+      hibernate:
+        show_sql: true
+        use_sql_comments: true
+        format_sql: true
+    hibernate:
+      ddl-auto: update
+  datasource:
+    url: jdbc:tc:postgresql:15.2-alpine:///product-test-db
+    driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
+  flyway:
+    enabled: false
