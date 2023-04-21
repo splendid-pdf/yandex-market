@@ -16,7 +16,7 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
 
     @Query(value = """
             SELECT 
-                i.external_id AS productId
+                i.external_id AS productId,
                 bi.item_count AS totalNumberItemsInBasket
             FROM 
                 items AS i 

@@ -44,7 +44,7 @@ public class BasketController {
     @DeleteMapping("/users/{userId}/basket/products")
     @ResponseStatus(NO_CONTENT)
     public void deleteItemsList(@PathVariable UUID userId,
-                                   @RequestParam List<UUID> productIdsList) {
+                                @RequestParam List<UUID> productIdsList) {
         basketService.deleteItemsList(userId, productIdsList);
     }
 }
