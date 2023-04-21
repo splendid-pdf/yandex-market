@@ -54,12 +54,8 @@ public class ProductService {
     public UUID createProduct(CreateProductRequest request, UUID sellerId) {
         UUID typeId = request.typeId();
 
-        List<ProductImageDto> images;
 
-        if (request.images() != null) {
-            images = request.images();
-            validator.validateImages(images);
-        }
+        validator.validateImages(request.images());
 
         Type type = typeRepository.findByExternalId(typeId)
                 .orElseThrow(() -> new EntityNotFoundException(String.format(TYPE_NOT_FOUND_ERROR_MESSAGE, typeId)));
@@ -68,9 +64,7 @@ public class ProductService {
         type.addProduct(product);
         product.setSellerExternalId(sellerId);
 
-        if (request.characteristics() != null) {
-            validator.validateProductCharacteristics(product);
-        }
+        validator.validateProductCharacteristics(product);
 
         return productRepository.save(product).getExternalId();
     }
