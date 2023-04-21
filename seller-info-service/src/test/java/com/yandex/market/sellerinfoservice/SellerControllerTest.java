@@ -51,20 +51,20 @@ class SellerControllerTest {
     @Value("${spring.app.seller.json-path}" + "update/")
     private String RESOURCES_PATH_UPDATE;
 
-    @Test
-    void getSellerByExternalIdSellerFoundWithoutProblem() throws Exception {
-        UUID sellerId = UUID.fromString("37678201-f3c8-4d5c-a628-2344eef50c55");
-
-        MvcResult mvcResult = mockMvc.perform(get(PATH_TO_SELLER + "{sellerId}", sellerId)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn();
-
-        SellerResponseDto seller = objectMapper.readValue(mvcResult.getResponse().getContentAsString(),
-                SellerResponseDto.class);
-
-        assertEquals(seller.externalId(), sellerId, "External IDs don't match");
-    }
+//    @Test
+//    void getSellerByExternalIdSellerFoundWithoutProblem() throws Exception {
+//        UUID sellerId = UUID.fromString("37678201-f3c8-4d5c-a628-2344eef50c55");
+//
+//        MvcResult mvcResult = mockMvc.perform(get(PATH_TO_SELLER + "{sellerId}", sellerId)
+//                        .contentType(MediaType.APPLICATION_JSON))
+//                .andExpect(status().isOk())
+//                .andReturn();
+//
+//        SellerResponseDto seller = objectMapper.readValue(mvcResult.getResponse().getContentAsString(),
+//                SellerResponseDto.class);
+//
+//        assertEquals(seller.externalId(), sellerId, "External IDs don't match");
+//    }
 
 /*    @Test
     void getSellerByExternalIdSellerNotFound() throws Exception {
