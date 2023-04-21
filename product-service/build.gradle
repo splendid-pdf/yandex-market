@@ -44,6 +44,7 @@ dependencies {
     testImplementation libs.mockito.inline
     testImplementation libs.h2.database
     testImplementation libs.testcontainers.postgresql
+    testImplementation libs.testcontainers.junit
 
     annotationProcessor libs.spring.config.processor
 }
