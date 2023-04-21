@@ -14,31 +14,31 @@ public record CreateProductRequest(
         @Size(min = 3, max = 128, message = "The product name must be in the range from 3 to 128 characters")
         String name,
 
-        @Size(max = 200, message = "The product description must be in the range from 0 to 200 characters")
+//        @Size(max = 200, message = "The product description must be in the range from 0 to 200 characters")
         String description,
 
-        @Size(max = 200, message = "The article of the product must be in the range from 0 to 200 characters")
+//        @Size(max = 200, message = "The article of the product must be in the range from 0 to 200 characters")
         String articleFromSeller,
 
-        @NotBlank(message = "The brand name must be specified")
-        @Size(max = 50, message = "The brand name must be in the range of 50 characters")
+//        @NotBlank(message = "The brand name must be specified")
+//        @Size(max = 50, message = "The brand name must be in the range of 50 characters")
         String brand,
 
-        @NotNull(message = "The price of the product must be specified")
-        @Positive(message = "The price of the product must be above zero")
-        Long price,
+//        @NotNull(message = "The price of the product must be specified")
+//        @Positive(message = "The price of the product must be above zero")
+//        Long price,
 
-        @NotNull(message = "The quantity of the product must be specified")
-        @PositiveOrZero(message = "The quantity of the product should not be negative")
-        Long count,
+//        @NotNull(message = "The quantity of the product must be specified")
+//        @PositiveOrZero(message = "The quantity of the product should not be negative")
+//        Long count,
 
         @NotNull(message = "The product type identifier must be specified")
         UUID typeId,
 
-        @NotEmpty(message = "The product must have characteristics")
+//        @NotEmpty(message = "The product must have characteristics")
         List<@Valid ProductCharacteristicRequest> characteristics,
 
-        @NotEmpty(message = "The product must have at least one image")
+//        @NotEmpty(message = "The product must have at least one image")
         List<@Valid ProductImageDto> images
 ) {
 }

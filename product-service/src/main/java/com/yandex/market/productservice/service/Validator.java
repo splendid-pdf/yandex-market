@@ -65,7 +65,9 @@ public class Validator {
     }
 
     public void validateImages(List<ProductImageDto> productImages) {
-        long mainImagesCount = productImages.stream().filter(ProductImageDto::isMain).count();
+        long mainImagesCount = productImages.stream()
+                .filter(ProductImageDto::isMain)
+                .count();
         if(mainImagesCount > 1) {
             throw new TooMuchMainImagesException("Too much main images");
         }

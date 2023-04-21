@@ -3,12 +3,12 @@ package com.yandex.market.productservice.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yandex.market.productservice.dto.ProductImageDto;
 import com.yandex.market.productservice.dto.projections.SellerArchiveProductPreview;
-import com.yandex.market.productservice.dto.projections.UserProductPreview;
 import com.yandex.market.productservice.dto.projections.SellerProductPreview;
+import com.yandex.market.productservice.dto.projections.UserProductPreview;
 import com.yandex.market.productservice.dto.request.CreateProductRequest;
 import com.yandex.market.productservice.dto.request.ProductCharacteristicRequest;
-import com.yandex.market.productservice.dto.request.SpecialPriceRequest;
 import com.yandex.market.productservice.dto.request.ProductUpdateRequest;
+import com.yandex.market.productservice.dto.request.SpecialPriceRequest;
 import com.yandex.market.productservice.dto.response.ProductCharacteristicResponse;
 import com.yandex.market.productservice.dto.response.ProductResponse;
 import com.yandex.market.productservice.dto.response.SpecialPriceResponse;
@@ -24,7 +24,6 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-//import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -52,19 +51,26 @@ public class ProductService {
 //    private final KafkaTemplate<String, String> kafkaTemplate;
 
     @Transactional
-    public UUID createProduct(CreateProductRequest createProductRequest, UUID sellerId) {
-        UUID typeId = createProductRequest.typeId();
-        List<ProductImageDto> productImages = createProductRequest.images();
+    public UUID createProduct(CreateProductRequest request, UUID sellerId) {
+        UUID typeId = request.typeId();
 
-        validator.validateImages(productImages);
+        List<ProductImageDto> images;
+
+        if (request.images() != null) {
+            images = request.images();
+            validator.validateImages(images);
+        }
 
         Type type = typeRepository.findByExternalId(typeId)
                 .orElseThrow(() -> new EntityNotFoundException(String.format(TYPE_NOT_FOUND_ERROR_MESSAGE, typeId)));
 
-        Product product = productMapper.toProduct(createProductRequest);
+        Product product = productMapper.toProduct(request);
         type.addProduct(product);
         product.setSellerExternalId(sellerId);
-        validator.validateProductCharacteristics(product);
+
+        if (request.characteristics() != null) {
+            validator.validateProductCharacteristics(product);
+        }
 
         return productRepository.save(product).getExternalId();
     }

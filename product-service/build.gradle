@@ -8,58 +8,44 @@ plugins {
 }
 
 ext {
-    set('flywayCoreVersion', '9.10.2')
-    set('swaggerVersion', '2.2.7')
-    set('mockitoInlineVersion', '4.10.0')
-    set('openapitoolsJacksonDatabindVersion', '0.2.4')
-    set('openapiUiVersion', '2.0.2')
     set("springCloudConfigVersion", "2022.0.1")
-    set("h2databaseVersion", "2.1.214")
 }
 
 dependencies {
     implementation project(':commons')
 
     // spring
-    implementation 'org.springframework.boot:spring-boot-starter-actuator'
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.springframework.boot:spring-boot-starter-validation'
-    implementation 'org.springframework:spring-jdbc'
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
-    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation libs.spring.actuator
+    implementation libs.spring.validation
+    implementation libs.spring.data.jpa
+    implementation libs.spring.web
+    implementation libs.spring.security
+    implementation libs.spring.oauth2.resource.server
+    implementation libs.spring.openapi.webmvc
+    implementation libs.flyway
 
     //spring cloud
     implementation 'org.springframework.cloud:spring-cloud-config-client'
 
-    // open api
-    implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:${openapiUiVersion}"
-
     // db
-    implementation "org.flywaydb:flyway-core:${flywayCoreVersion}"
-    runtimeOnly 'org.postgresql:postgresql'
+    runtimeOnly libs.postgresql
 
     // utils
-    developmentOnly 'org.springframework.boot:spring-boot-devtools'
-
-    // open api
-    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
+    developmentOnly libs.spring.devtools
 
     // monitoring
-    runtimeOnly 'io.micrometer:micrometer-registry-prometheus:1.10.5'
+    runtimeOnly libs.prometheus
 
     //kafka
     //implementation 'org.springframework.kafka:spring-kafka:3.0.5'
 
     // tests
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation "org.mockito:mockito-inline:${mockitoInlineVersion}"
-    testImplementation "com.h2database:h2:${h2databaseVersion}"
+    testImplementation libs.spring.test
+    testImplementation libs.mockito.inline
+    testImplementation libs.h2.database
+    testImplementation libs.testcontainers.postgresql
 
-    testImplementation 'org.testcontainers:postgresql:1.17.6'
-
-    // annotation processor
-    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+    annotationProcessor libs.spring.config.processor
 }
 
 dependencyManagement {
