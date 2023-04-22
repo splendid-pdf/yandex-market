@@ -1,60 +1,23 @@
-import com.google.cloud.tools.jib.api.buildplan.ImageFormat
-
 plugins {
     id 'com.marketplace.common'
-    alias libs.plugins.jib
-    alias libs.plugins.spring.boot
-    alias libs.plugins.spring.dependency.management
-}
-
-ext {
-    set('springCloudVersion', "2022.0.1")
-    set('springdocVersion', "2.0.3")
+    id 'com.marketplace.common.spring'
 }
 
 dependencies {
     implementation project(':commons')
 
     // spring
-    implementation 'org.springframework.boot:spring-boot-starter-actuator'
-    implementation 'org.springframework.boot:spring-boot-starter-security'
-    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+    implementation libs.spring.security
+    implementation libs.spring.oauth2.client
+    implementation libs.spring.openapi.webflux
 
     // spring cloud
-    implementation 'org.springframework.cloud:spring-cloud-starter-circuitbreaker-resilience4j'
-    implementation 'org.springframework.cloud:spring-cloud-starter-config'
-    implementation 'org.springframework.cloud:spring-cloud-config-client'
-    implementation 'org.springframework.cloud:spring-cloud-starter-gateway'
+    implementation libs.spring.cloud.api.gateway
+    implementation libs.spring.cloud.config.client
+    implementation libs.spring.cloud.circuit.breaker
 
-    //springdoc
-    implementation "org.springdoc:springdoc-openapi-starter-webflux-ui:${springdocVersion}"
+    developmentOnly libs.spring.devtools
+    annotationProcessor libs.spring.config.processor
 
-    developmentOnly 'org.springframework.boot:spring-boot-devtools'
-    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
-
-    // tests
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-}
-
-dependencyManagement {
-    imports {
-        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
-    }
-}
-
-jib {
-    from {
-        image = 'gcr.io/distroless/java17-debian11'
-    }
-    to {
-        image = "${dockerHubUsername}/${project.name}:${project.version}"
-        tags = [version, project.getVersion()] as List<String>
-        auth {
-            username = dockerHubUsername
-            password = dockerHubPassword
-        }
-    }
-    container {
-        format = ImageFormat.OCI
-    }
+    testImplementation libs.spring.test
 }

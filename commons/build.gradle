@@ -1,8 +1,6 @@
 plugins {
     id 'java-library'
     id 'com.marketplace.common'
-    id 'org.springframework.boot' version '3.0.2'
-    id 'io.spring.dependency-management' version '1.1.0'
 }
 
 java {
@@ -10,24 +8,10 @@ java {
     targetCompatibility = JavaVersion.VERSION_17
 }
 
-ext {
-    set("springCloudConfigVersion", "2022.0.1")
-    set('springDataVersion', '3.0.4')
-}
-
 dependencies {
     // spring
-    compileOnly "org.springframework.data:spring-data-commons:${springDataVersion}"
-    compileOnly 'org.springframework.boot:spring-boot-starter-web'
-    compileOnly 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
-
-
-    // annotation processor
-    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
-}
-
-dependencyManagement {
-    imports {
-        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudConfigVersion}"
-    }
+    compileOnly libs.spring.web
+    compileOnly libs.spring.data.commons
+    compileOnly libs.spring.oauth2.resource.server
+    annotationProcessor libs.spring.config.processor
 }
