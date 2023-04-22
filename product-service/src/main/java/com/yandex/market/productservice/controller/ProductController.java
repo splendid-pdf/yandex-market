@@ -122,7 +122,7 @@ public class ProductController implements ProductApi {
     }
 
     @PatchMapping("/sellers/{sellerId}/products/{productId}/count")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void changeProductCountById(@PathVariable UUID sellerId,
                                        @PathVariable UUID productId,
                                        @RequestParam(value = "count") @PositiveOrZero Long updatedCount) {
@@ -188,5 +188,4 @@ public class ProductController implements ProductApi {
     public List<UserProductPreview> getProductPreviewsByIdentifiers(@RequestBody ProductRepresentationSetDto productRepresentationSetDto) {
         return productService.getProductPreviewsByIds(productRepresentationSetDto.productIdentifiers());
     }
-
 }

@@ -38,7 +38,8 @@ public class Validator {
     }
 
     public void validateProductCharacteristics(Product product) {
-        if (product.getProductCharacteristics() != null) {
+        // временно не работает пока нет данных с хатактеристикам по данным
+        if (product.getProductCharacteristics().size() > 100) { // далее !.size().isEmpty()
             UUID typeId = product.getType().getExternalId();
 
             List<String> exceptions = new ArrayList<>();

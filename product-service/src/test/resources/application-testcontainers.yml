@@ -1,20 +1,14 @@
 spring:
   jpa:
     properties:
-        show_sql: true
-        use_sql_comments: true
-        format_sql: true
+      show_sql: true
+      use_sql_comments: true
+      format_sql: false
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     database-platform: org.hibernate.dialect.PostgreSQLDialect
   datasource:
-    url: jdbc:tc:postgresql:14.1:///product_db
+    url: jdbc:tc:postgresql:14.1:///product_db_test
     driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
   flyway:
     enabled: false
-
-  security:
-    oauth2:
-      resourceserver:
-        jwt:
-          jwk-set-uri: http://51.250.102.12:9000/oauth2/jwks

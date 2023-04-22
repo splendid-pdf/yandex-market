@@ -1,0 +1,94 @@
+{
+  "name": "Шкаф \"Аврора\" (сталь)",
+  "description": "Супер шкаф, классный, стальной, удобный",
+  "manufacturer": "shkafsuper",
+  "articleFromSeller": "shkafsuper12",
+  "brand": "ООО \"Аврора\"",
+  "typeId": "301c5370-be41-421e-9b15-f1e80a7079f9",
+  "characteristics": [
+    {
+      "name": "Ширина, см",
+      "value": "123.1",
+      "valueType": "DOUBLE"
+    },
+    {
+      "name": "Глубина, см",
+      "value": "12.3",
+      "valueType": "DOUBLE"
+    },
+    {
+      "name": "Высота, см",
+      "value": "34.5",
+      "valueType": "DOUBLE"
+    },
+    {
+      "name": "Вес товара, кг",
+      "value": "456.7",
+      "valueType": "DOUBLE"
+    },
+    {
+      "name": "Цвет",
+      "value": "красный",
+      "valueType": "TEXT"
+    },
+    {
+      "name": "Материал фасада",
+      "value": "стальной",
+      "valueType": "TEXT"
+    },
+    {
+      "name": "Покрытие фасада",
+      "value": "стальной",
+      "valueType": "TEXT"
+    },
+    {
+      "name": "Стиль дизайна",
+      "value": "минимализм",
+      "valueType": "TEXT"
+    },
+    {
+      "name": "Расположение",
+      "value": "по центру",
+      "valueType": "TEXT"
+    },
+    {
+      "name": "Количество полок",
+      "value": "4",
+      "valueType": "LONG"
+    },
+    {
+      "name": "Количество ящиков",
+      "value": "3",
+      "valueType": "LONG"
+    },
+    {
+      "name": "Страна изготовитель",
+      "value": "Гонконг",
+      "valueType": "TEXT"
+    },
+    {
+      "name": "Форма поставки",
+      "value": "доставка",
+      "valueType": "TEXT"
+    },
+    {
+      "name": "Гарантийный срок",
+      "value": "6 м.",
+      "valueType": "TEXT"
+    }
+  ],
+  "images": [
+    {
+      "isMain": true,
+      "url": "https://example.com/url_image_shkaf11.png"
+    },
+    {
+      "isMain": false,
+      "url": "https://example.com/url_image_shkaf12.png"
+    },
+    {
+      "isMain": false,
+      "url": "https://example.com/url_image_shkaf13.png"
+    }
+  ]
+}
