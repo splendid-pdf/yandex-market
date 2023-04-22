@@ -23,7 +23,7 @@ import static com.yandex.market.productservice.utils.ExceptionMessagesConstants.
 @RequiredArgsConstructor
 public class Validator {
 
-    private final TypeRepository  typeRepository;
+    private final TypeRepository typeRepository;
 
     private final Map<UUID, Map<String, ValueType>> typeCharacteristicsMap = new HashMap<>();
 
@@ -38,63 +38,69 @@ public class Validator {
     }
 
     public void validateProductCharacteristics(Product product) {
-        UUID typeId = product.getType().getExternalId();
+        if (product.getProductCharacteristics() != null) {
+            UUID typeId = product.getType().getExternalId();
 
-        List<String> exceptions = new ArrayList<>();
-        List<ProductCharacteristic> requestedCharacteristics = product.getProductCharacteristics();
-        Map<String, ValueType> requiredCharacteristics = typeCharacteristicsMap.get(typeId);
+            List<String> exceptions = new ArrayList<>();
+            List<ProductCharacteristic> requestedCharacteristics = product.getProductCharacteristics();
+            Map<String, ValueType> requiredCharacteristics = typeCharacteristicsMap.get(typeId);
 
-        int requiredSize = requiredCharacteristics.size();
-        int requestedSize = requestedCharacteristics.size();
+            int requiredSize = requiredCharacteristics.size();
+            int requestedSize = requestedCharacteristics.size();
 
-        if(requiredSize != requestedSize) {
-           exceptions.add(String.format(INVALID_CHARACTERISTICS_SIZE, requiredSize, requestedSize));
-        }
+            if (requiredSize != requestedSize) {
+                exceptions.add(String.format(INVALID_CHARACTERISTICS_SIZE, requiredSize, requestedSize));
+            }
 
-        for(ProductCharacteristic requestedCharacteristic : requestedCharacteristics) {
-            validateCharacteristic(requestedCharacteristic, requiredCharacteristics, exceptions);
-        }
+            for (ProductCharacteristic requestedCharacteristic : requestedCharacteristics) {
+                validateCharacteristic(requestedCharacteristic, requiredCharacteristics, exceptions);
+            }
 
-        if(!exceptions.isEmpty()) {
-            try {
-                throw new InvalidCharacteristicsException(objectMapper.writeValueAsString(exceptions));
-            } catch (JsonProcessingException e) {
-                throw new RuntimeException(e);
+            if (!exceptions.isEmpty()) {
+                try {
+                    throw new InvalidCharacteristicsException(objectMapper.writeValueAsString(exceptions));
+                } catch (JsonProcessingException e) {
+                    throw new RuntimeException(e);
+                }
             }
         }
     }
 
     public void validateImages(List<ProductImageDto> productImages) {
-        long mainImagesCount = productImages.stream().filter(ProductImageDto::isMain).count();
-        if(mainImagesCount > 1) {
-            throw new TooMuchMainImagesException("Too much main images");
+        if (productImages != null) {
+            long mainImagesCount = productImages.stream()
+                    .filter(ProductImageDto::isMain)
+                    .count();
+            if (mainImagesCount > 1) {
+                throw new TooMuchMainImagesException("Too much main images");
+            }
         }
     }
 
     public void validateSpecialPrice(SpecialPriceRequest specialPriceRequest) {
         LocalDateTime from = specialPriceRequest.fromDate();
         LocalDateTime to = specialPriceRequest.toDate();
-        if(from.isAfter(to)) {
+        if (from.isAfter(to)) {
             throw new SpecialPriceCreatingException("from date cannot be after to date");
         }
     }
 
     private void validateCharacteristic(
-                                        ProductCharacteristic requestedCharacteristic,
-                                        Map<String, ValueType> requiredCharacteristics,
-                                        List<String> exceptions
+            ProductCharacteristic requestedCharacteristic,
+            Map<String, ValueType> requiredCharacteristics,
+            List<String> exceptions
     ) {
         String name = requestedCharacteristic.getName();
         String value = requestedCharacteristic.getValue();
         ValueType requestedValueType = requestedCharacteristic.getValueType();
         ValueType requiredValueType = requiredCharacteristics.get(name);
 
-        if(!requiredCharacteristics.containsKey(name)) {
+        if (!requiredCharacteristics.containsKey(name)) {
             exceptions.add(String.format(INVALID_CHARACTERISTIC, name, name));
             return;
         }
 
-        if(requiredCharacteristics.get(name) != requestedValueType) {
+        if (requiredCharacteristics.get(name) != requestedValueType) {
             exceptions.add(
                     String.format(INVALID_CHARACTERISTIC_TYPE, name, requiredValueType, requestedValueType)
             );
@@ -106,8 +112,7 @@ public class Validator {
     private void validateValueType(ValueType valueType, String name, String value, List<String> exceptions) {
         try {
             valueType.parse(value);
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             exceptions.add(String.format(INVALID_CHARACTERISTIC_VALUE, name, value, valueType));
         }
     }
