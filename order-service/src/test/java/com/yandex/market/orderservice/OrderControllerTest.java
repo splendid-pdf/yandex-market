@@ -35,7 +35,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 @ActiveProfiles("testcontainers")
-public class OrderControllerTest {
+class OrderControllerTest {
 
     private final MockMvc mockMvc;
 
