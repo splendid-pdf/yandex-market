@@ -23,9 +23,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Query("FROM Product p WHERE p.externalId=:productId AND p.isDeleted=false")
     Optional<Product> findByExternalId(@Param("productId") UUID productId);
 
-    @Query("FROM Product p WHERE p.externalId in :externals AND p.isDeleted=false")
-    Stream<Product> findByExternalId(@Param("externals") Set<UUID> uuidSet, Pageable pageable);
-
     @Query(value = """
             SELECT
                 p.external_id as id,
@@ -78,11 +75,11 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Query(value = """
                 UPDATE Product p
                 SET p.isDeleted=true,
-                    p.isArchived=true,
+                    p.isArchived=false,
                     p.isVisible=false
-                WHERE p.sellerExternalId=:sellerId AND
-                      p.externalId IN :productIds AND
-                      p.isArchived = true
+                WHERE p.isArchived=true AND
+                      p.sellerExternalId=:sellerId AND
+                      p.externalId IN :productIds
             """)
     void deleteProductsBySellerId(UUID sellerId, List<UUID> productIds);
 

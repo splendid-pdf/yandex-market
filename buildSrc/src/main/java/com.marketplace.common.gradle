@@ -1,0 +1,90 @@
+import java.time.Instant
+
+plugins {
+    id 'pmd'
+    id 'java'
+    id 'jacoco'
+    id 'com.google.cloud.tools.jib'
+}
+
+group = 'com.marketplace'
+version = '0.0.1-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+compileJava {
+    options.encoding = 'UTF-8'
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
+dependencies {
+    compileOnly libs.lombok
+    compileOnly libs.jetbrains.annotations
+
+    implementation libs.guava
+    implementation libs.mapstruct
+    implementation libs.apache.commons.lang3
+    implementation libs.apache.commons.validator
+    implementation libs.apache.commons.collections
+
+    annotationProcessor libs.lombok
+    annotationProcessor libs.mapstruct.processor
+
+    testCompileOnly libs.lombok
+    testAnnotationProcessor libs.lombok
+}
+
+jib {
+    from {
+        image = jibBaseDockerImage
+    }
+    to {
+        image = "${dockerHubUsername}/${project.name}:${project.version}"
+        tags = [version, project.version] as List<String>
+        auth {
+            username = dockerHubUsername
+            password = dockerHubPassword
+        }
+    }
+    container {
+        format = jibImageFormat
+        getCreationTime().set(Instant.now().toString())
+    }
+}
+
+test {
+    useJUnitPlatform()
+}
+
+pmd {
+    toolVersion = '6.55.0'
+    ignoreFailures = true
+    ruleSets = ["category/java/errorprone.xml", "category/java/bestpractices.xml"]
+}
+
+
+jacoco {
+    toolVersion = "0.8.9"
+}
+
+jacocoTestReport {
+    dependsOn test
+    reports {
+        xml.required = false
+        csv.required = true
+        html.outputLocation = layout.buildDirectory.dir('jacocoHtml')
+    }
+}
+
+jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            limit {
+                minimum = 0.5
+            }
+        }
+    }
+}

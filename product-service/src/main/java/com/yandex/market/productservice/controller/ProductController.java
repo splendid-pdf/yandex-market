@@ -40,26 +40,17 @@ public class ProductController implements ProductApi {
 
     //todo: кэширование
     //todo: id в error response
-    //todo: правильный exception если у пользователя нет доступа к ресурсу
     //todo: немного рефактора везде(теперь реально немного, убрать хард код где - то импорты)
-    //todo: фильтр (поиск по имени и характеристикам)
-    //todo: при создание продукта только одно обязательное поле
+    //todo: фильтр (поиск по имени и характеристикам) - карточка
     //todo: возможность добавлять новые комнаты и типы только для админов, тянем секьюрити помни про валидатор и мапу там
     //todo: возможность редактировать комнаты и типы только для админов, тянем секьюрити помни про валидатор и мапу там
-    //todo: фильтр (поиск по имени и фильтрация по характеристикам) глянь Specification
-    //todo: главная страница магазина
+    //todo: фильтр (поиск по имени и характеристикам) глянь Specification
+    //todo: главная страница магазина - карточка (4 свежих)
     //todo: характеристикам завести название группы характеристик. Например у веса ширины глубины
     // это поле будет иметь значение габариты и тд. По хорошему менять базу отношения в базе и заводить новую таблитцу,
     // но как же впадлу. Поэтому ограничемся полем
-    //todo: мапу из валидатора вынести в отдельный бин и инжектить куда надо чтобы в бд не обращаться лишний раз
-    //todo: написать на все тесты, а то руками тестировать - ад, да и писать тесты на это все тоже ад
-    //todo: посмотреть эндпоинты которые кинула наташа, скорее всего они не работают из - за того что плохо руты прописал
-    //todo: с помощью кафки че - нибудь надо слать будет этот момент обдумывать и уточнять надо у жени
-    //todo: если продавец удален, надо удалять все его продукты и наоборот
-    //todo: получить 4 свежесозданных товара
-    //todo: расширить энам с типами добавить цвета и тд
-    //todo: добиваем метрики, вообще хз что это, Никита ответит
-    //todo: везде где путь начинается с /sellers/... перенести в seller controller
+
+    //todo мапу из валидатора вынести в отдельный бин и инжектить куда надо чтобы в бд не обращаться лишний раз
 
     @PostMapping("/sellers/{sellerId}/products")
     @ResponseStatus(HttpStatus.CREATED)
@@ -75,6 +66,22 @@ public class ProductController implements ProductApi {
         return productService.getProductById(productId);
     }
 
+    @GetMapping("/sellers/{sellerId}/products")
+    @ResponseStatus(HttpStatus.OK)
+    public Page<SellerProductPreview> getProductPreviewsBySellerId(
+            @PathVariable UUID sellerId,
+            @PageableDefault(size = 20, sort = "creationDate", direction = Sort.Direction.DESC) Pageable pageable) {
+        return productService.getProductsBySellerId(sellerId, pageable);
+    }
+
+    @GetMapping("/sellers/{sellerId}/archive/products")
+    @ResponseStatus(HttpStatus.OK)
+    public Page<SellerArchiveProductPreview> getArchivedProductPreviewsBySellerId(
+            @PathVariable UUID sellerId,
+            @PageableDefault(size = 20, sort = "creationDate", direction = Sort.Direction.DESC) Pageable pageable) {
+        return productService.getArchivedProductsBySellerId(sellerId, pageable);
+    }
+
     @PutMapping("/sellers/{sellerId}/products/{productId}")
     @ResponseStatus(HttpStatus.OK)
     public ProductResponse updateProductById(@PathVariable UUID sellerId,
@@ -83,11 +90,43 @@ public class ProductController implements ProductApi {
         return productService.updateProductById(productId, productUpdateRequest);
     }
 
+    @PatchMapping("/sellers/{sellerId}/archive/products")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void changeIsArchiveField(@PathVariable UUID sellerId,
+                                     @RequestParam("is-archive") boolean isArchive,
+                                     @RequestParam("product-ids") List<UUID> productIds) {
+        productService.changeIsArchiveField(isArchive, productIds);
+    }
+
+    @PatchMapping("/sellers/{sellerId}/products/visibility")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void changeProductsVisibility(@PathVariable UUID sellerId,
+                                         @RequestParam("is-visible") boolean isVisible,
+                                         @RequestParam("product-ids") List<UUID> productIds) {
+        productService.changeProductsVisibility(isVisible, productIds);
+    }
+
     @DeleteMapping("/sellers/{sellerId}/products")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteProductsList(@PathVariable UUID sellerId,
-                                   @RequestParam List<UUID> productIds) {
+                                   @RequestParam("product-ids") List<UUID> productIds) {
         productService.deleteProductsBySellerId(sellerId, productIds);
+    }
+
+    @PatchMapping("/sellers/{sellerId}/products/{productId}/price")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void changeProductPriceById(@PathVariable UUID sellerId,
+                                       @PathVariable UUID productId,
+                                       @RequestParam(value = "price") @Positive Long updatedPrice) {
+        productService.changeProductPrice(productId, updatedPrice);
+    }
+
+    @PatchMapping("/sellers/{sellerId}/products/{productId}/count")
+    @ResponseStatus(HttpStatus.OK)
+    public void changeProductCountById(@PathVariable UUID sellerId,
+                                       @PathVariable UUID productId,
+                                       @RequestParam(value = "count") @PositiveOrZero Long updatedCount) {
+        productService.changeProductCount(productId, updatedCount);
     }
 
     @PostMapping("/sellers/{sellerId}/products/{productId}/images")
@@ -131,60 +170,11 @@ public class ProductController implements ProductApi {
     @PutMapping("/sellers/{sellerId}/products/characteristics/{characteristicId}")
     @ResponseStatus(HttpStatus.OK)
     public ProductCharacteristicResponse updateProductCharacteristicById(
-                                        @PathVariable UUID sellerId,
-                                        @PathVariable UUID characteristicId,
-                                        @RequestBody @Valid ProductCharacteristicRequest productCharacteristicRequest
+            @PathVariable UUID sellerId,
+            @PathVariable UUID characteristicId,
+            @RequestBody @Valid ProductCharacteristicRequest productCharacteristicRequest
     ) {
         return productService.updateProductCharacteristic(characteristicId, productCharacteristicRequest);
-    }
-
-    @GetMapping("/sellers/{sellerId}/products")
-    @ResponseStatus(HttpStatus.OK)
-    public Page<SellerProductPreview> getProductPreviewsBySellerId(
-                @PathVariable UUID sellerId,
-                @PageableDefault(size = 20, sort = "creationDate", direction = Sort.Direction.DESC) Pageable pageable
-    ) {
-        return productService.getProductsBySellerId(sellerId, pageable);
-    }
-
-    @GetMapping("/sellers/{sellerId}/archive/products")
-    @ResponseStatus(HttpStatus.OK)
-    public Page<SellerArchiveProductPreview> getArchivedProductPreviewsBySellerId(
-            @PathVariable UUID sellerId,
-            @PageableDefault(size = 20, sort = "creationDate", direction = Sort.Direction.DESC) Pageable pageable) {
-        return productService.getArchivedProductsBySellerId(sellerId, pageable);
-    }
-
-    @PatchMapping("/sellers/{sellerId}/archive/products")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void changeIsArchiveField(@PathVariable UUID sellerId,
-                                     @RequestParam("is-archive") boolean isArchive,
-                                     @RequestParam List<UUID> productIds) {
-        productService.changeIsArchiveField(isArchive, productIds);
-    }
-
-    @PatchMapping("/sellers/{sellerId}/products/visibility")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void changeProductsVisibility(@PathVariable UUID sellerId,
-                                         @RequestParam("is-visible") boolean isVisible,
-                                         @RequestParam List<UUID> productIds) {
-        productService.changeProductsVisibility(isVisible, productIds);
-    }
-
-    @PatchMapping("/sellers/{sellerId}/products/{productId}/price")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void changeProductPriceById(@PathVariable UUID sellerId,
-                                       @PathVariable UUID productId,
-                                       @RequestParam(value = "price") @Positive Long updatedPrice) {
-        productService.changeProductPrice(productId, updatedPrice);
-    }
-
-    @PatchMapping("/sellers/{sellerId}/products/{productId}/count")
-    @ResponseStatus(HttpStatus.OK)
-    public void changeProductCountById(@PathVariable UUID sellerId,
-                                       @PathVariable UUID productId,
-                                       @RequestParam(value = "count") @PositiveOrZero Long updatedCount) {
-        productService.changeProductCount(productId, updatedCount);
     }
 
     @GetMapping("/product-previews")

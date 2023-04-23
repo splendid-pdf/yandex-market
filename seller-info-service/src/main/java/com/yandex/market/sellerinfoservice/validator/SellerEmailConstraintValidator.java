@@ -15,6 +15,7 @@ public class SellerEmailConstraintValidator implements ConstraintValidator<Selle
     public void initialize(SellerEmailConstraint constraintAnnotation) {
     }
 
+
     @Override
     public boolean isValid(String sellerEmail, ConstraintValidatorContext context) {
         return doSellerEmailFormatCheck(sellerEmail);

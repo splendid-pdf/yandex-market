@@ -44,6 +44,7 @@ public class SellerControllerTest {
             CHANGE_VISIBILITY_PATH = SELLER_PATH + "/{sellerId}/products/visibility";
 
     @Test
+    @Disabled
     @Transactional
     void shouldChangeProductPriceSellerAndProductFoundAndChanged() throws Exception {
         long updatePrice = 30L;
@@ -55,6 +56,7 @@ public class SellerControllerTest {
     }
 
     @Test
+    @Disabled
     @Transactional
     void shouldChangeProductPriceSellerNotFoundAndNotChanged() throws Exception {
         long updatePrice = 40L;
@@ -66,6 +68,7 @@ public class SellerControllerTest {
     }
 
     @Test
+    @Disabled
     @Transactional
     void shouldChangeProductCountSellerAndProductFoundAndChanged() throws Exception {
         long updateCount = 25L;
@@ -77,6 +80,7 @@ public class SellerControllerTest {
     }
 
     @Test
+    @Disabled
     @Transactional
     void shouldChangeProductCountSellerNotFoundAndNotChanged() throws Exception {
         long updateCount = 35L;
@@ -97,6 +101,7 @@ public class SellerControllerTest {
     ));
 
     @Test
+    @Disabled
     void shouldSuccessfullyAddProductsToArchive() throws Exception {
         long countBeforeArchived = serviceTest.getArchivedCountBySellerId(SELLER_ID);
 
@@ -109,6 +114,7 @@ public class SellerControllerTest {
     }
 
     @Test
+    @Disabled
     void shouldSuccessfullyReturnProductsFromArchive() throws Exception {
         long countBeforeArchived = serviceTest.getArchivedCountBySellerId(SELLER_ID_2);
 

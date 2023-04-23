@@ -1,62 +1,23 @@
 plugins {
-    id 'java'
-    id 'org.springframework.boot' version '3.0.5'
-    id 'io.spring.dependency-management' version '1.1.0'
-}
-
-ext {
-    set('springCloudVersion', "2022.0.1")
-    set('springdocVersion', "2.0.3")
+    id 'com.marketplace.common'
+    id 'com.marketplace.common.spring'
 }
 
 dependencies {
     implementation project(':commons')
 
     // spring
-    implementation 'org.springframework.boot:spring-boot-starter-actuator'
-    developmentOnly 'org.springframework.boot:spring-boot-devtools'
-    implementation 'org.springframework.boot:spring-boot-starter-security'
-    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+    implementation libs.spring.security
+    implementation libs.spring.oauth2.client
+    implementation libs.spring.openapi.webflux
 
     // spring cloud
-    implementation 'org.springframework.cloud:spring-cloud-starter-circuitbreaker-resilience4j'
-    implementation 'org.springframework.cloud:spring-cloud-starter-config'
-    implementation 'org.springframework.cloud:spring-cloud-config-client'
-    implementation 'org.springframework.cloud:spring-cloud-starter-gateway'
+    implementation libs.spring.cloud.api.gateway
+    implementation libs.spring.cloud.config.client
+    implementation libs.spring.cloud.circuit.breaker
 
-    //springdoc
-    implementation "org.springdoc:springdoc-openapi-starter-webflux-ui:${springdocVersion}"
+    developmentOnly libs.spring.devtools
+    annotationProcessor libs.spring.config.processor
 
-    // utils
-    compileOnly 'org.projectlombok:lombok'
-    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
-    annotationProcessor 'org.projectlombok:lombok'
-
-    // tests
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-}
-
-dependencyManagement {
-    imports {
-        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
-    }
-}
-
-bootBuildImage {
-    def account = rootProject.property('dockerHubUsername')
-    imageName = "${account}/${project.name}:${project.version}"
-    publish = true
-    environment = [
-            "BP_JVM_VERSION" : "${compileJava.sourceCompatibility}"
-    ]
-    docker {
-        publishRegistry {
-            username = account
-            password = rootProject.property('dockerHubPassword')
-        }
-    }
-}
-
-tasks.named('test') {
-    useJUnitPlatform()
+    testImplementation libs.spring.test
 }
