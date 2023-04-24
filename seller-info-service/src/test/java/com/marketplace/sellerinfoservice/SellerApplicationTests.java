@@ -42,6 +42,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @Testcontainers
+@Transactional
 @AutoConfigureMockMvc
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 @ActiveProfiles("testcontainers")
@@ -61,7 +62,6 @@ class SellerApplicationTests {
     private String RESOURCES_PATH_UPDATE;
 
     @Test
-    @Transactional
     @Sql("/db/insert_test_seller.sql")
     @DisplayName("Успешное получение продавца по id")
     void getSellerByExternalIdSellerFoundWithoutProblem() throws Exception {
@@ -74,7 +74,6 @@ class SellerApplicationTests {
     }
 
     @Test
-    @Transactional
     @Sql("/db/insert_test_seller.sql")
     @DisplayName("Попытка получения продавца по id, которого не существует в базе данных")
     void getSellerByExternalIdSellerNotFound() throws Exception {
@@ -88,7 +87,6 @@ class SellerApplicationTests {
     }
 
     @Test
-    @Transactional
     @Sql("/db/insert_test_seller.sql")
     @DisplayName("Успешное обновление всех полей продавца")
     void updateSellerFoundAndFullyUpdated() throws Exception {
@@ -127,7 +125,6 @@ class SellerApplicationTests {
 
 
     @Test
-    @Transactional
     @DisplayName("Попытка обноваления продавца, которого не существует в ббазе данных")
     void updateSellerNotFound() throws Exception {
 
@@ -141,7 +138,6 @@ class SellerApplicationTests {
     }
 
     @Test
-    @Transactional
     @Sql("/db/insert_test_seller.sql")
     @DisplayName("Успешное обновление части полей продавца")
     void updateSellerFoundAndUpdatedOnlySellerName() throws Exception {
@@ -166,7 +162,6 @@ class SellerApplicationTests {
     }
 
     @Test
-    @Transactional
     @Sql("/db/insert_test_seller.sql")
     @DisplayName("Попытка обновления продавца с пустым телом запроса")
     void updateSellerFoundButWasTransferEmptyDto() throws Exception {
@@ -191,7 +186,6 @@ class SellerApplicationTests {
     }
 
     @Test
-    @Transactional
     @DisplayName("Успешное создание продавца")
     void createSeller() throws Exception {
 
@@ -211,7 +205,6 @@ class SellerApplicationTests {
     }
 
     @Test
-    @Transactional
     @DisplayName("Попытка создания продавца с невалидными телом запроса")
     void createSellerNegative() throws Exception {
 
@@ -223,7 +216,6 @@ class SellerApplicationTests {
     }
 
     @Test
-    @Transactional
     @Sql("/db/insert_test_seller.sql")
     @DisplayName("Попытка создания продавца, который уже существует в базе данных")
     void createSellerNegativeControllerExistException() throws Exception {
@@ -239,7 +231,6 @@ class SellerApplicationTests {
     }
 
     @Test
-    @Transactional
     @Sql("/db/insert_test_seller.sql")
     @DisplayName("Успешное удаление продавца из базы данных")
     void deleteSellerController() throws Exception {
@@ -253,7 +244,6 @@ class SellerApplicationTests {
     }
 
     @Test
-    @Transactional
     @DisplayName("Попытка удаления продавца, которого не существует в баазе данных")
     void deleteSellerControllerNegative() throws Exception {
 
