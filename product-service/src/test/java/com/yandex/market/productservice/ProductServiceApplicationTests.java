@@ -46,7 +46,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @TestPropertySource(locations = "classpath:application-test.yaml")
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
 @SqlGroup({
-        @Sql(value = "classpath:db/insert_tests_fields.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD),
+        @Sql(value = "classpath:db/insert_tests_products.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD),
         @Sql(value = "classpath:db/insert_types.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 })
 class ProductServiceApplicationTests {
