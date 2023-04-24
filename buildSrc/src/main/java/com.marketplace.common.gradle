@@ -90,10 +90,13 @@ jacocoTestCoverageVerification {
 }
 
 sonarqube {
-    sonarqube.dependsOn test
     properties {
         property "sonar.projectKey", "splendid-pdf_yandex-market"
         property "sonar.organization", "splendid-pdf"
         property "sonar.host.url", "https://sonarcloud.io"
     }
+}
+
+tasks.named('sonarqube').configure {
+    dependsOn test
 }
