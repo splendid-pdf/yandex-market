@@ -73,6 +73,8 @@ class ProductControllerModuleTest {
     private final String SELLER_ARCHIVED_PATH = SELLER_PATH + "archive/products";
     private final String CHANGE_PRICE_PATH = SELLER_PATH + "products/{productId}/price";
     private final String CHANGE_COUNT_PATH = SELLER_PATH + "products/{productId}/count";
+
+    private final String ADD_IMAGE_PATH = SELLER_PATH + "products/{productId}/images";
     private final String CHANGE_VISIBILITY_PATH = SELLER_PATH + "products/visibility";
 
     private final String PATH_TO_MINIMAL_PRODUCT = "src/test/resources/json/create_product_with_minimal.json";

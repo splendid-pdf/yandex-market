@@ -38,7 +38,7 @@ public class ProductTestService {
 
     private final ObjectMapper objectMapper;
 
-    private final String AUTH_TOKEN = "eyJraWQiOiI1YWIwODM5Mi00ZjUzLTQ5ZWUtODM1My0xZjZiZTIwODg0MGIiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJzZWxsZXJfZGltYUBnbWFpbC5ydSIsImF1ZCI6ImNsaWVudCIsIm5iZiI6MTY4MjE1MjU5OSwic2NvcGUiOlsib3BlbmlkIl0sImlzcyI6Imh0dHA6Ly81MS4yNTAuMTAyLjEyOjkwMDAiLCJleHAiOjE2ODI3NTczOTksImlhdCI6MTY4MjE1MjU5OSwic2VsbGVyLWlkIjoiY2IwNDFkMzEtYTM0NS00ZDgwLTk3MWEtNzBjNDljYmM1YzI4IiwiYXV0aG9yaXRpZXMiOlsiUk9MRV9TRUxMRVIiXX0.I1PH6PxdOfkZENw2UmPHlUaRIxPS_4ApOG04z2W23um0Oyb68X4v1gFn19m3SOb677g-Ofkrdy1fJ_BEZLYYSs_VeLotVv1FgRFxRe2L2WO-phXMIlPBuq0XGwxGGtdPq9dXQMjqjeHa6rlRlAfMLB8zAom7Y8NFBGELgAfZGScLfmP1iERQ-vD3_OwnqK7rKBCRayJZmWCUzR0geLAOzjl22dV69RtbwdAZFCj4VyupwjQZxDcKyN9G3w-6D-Fs3pyallqwoz1L_MfCz7RuRan64H1M9lCXOItYfQXLpqDKpu3yKg4dt9mhjzdC5iH0VE0Uee9IXj2m-AFqnKHSvg";
+    private final String AUTH_TOKEN = "eyJraWQiOiJiYjRiNjM5MS04YWRhLTQzM2YtYjljMi00Mzg2ZTE3Y2JmZWMiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJzZWxsZXJfZGltYUBnbWFpbC5ydSIsImF1ZCI6ImNsaWVudCIsIm5iZiI6MTY4MjM0ODg1MSwic2NvcGUiOlsib3BlbmlkIl0sImlzcyI6Imh0dHA6Ly81MS4yNTAuMTAyLjEyOjkwMDAiLCJleHAiOjE2ODI5NTM2NTEsImlhdCI6MTY4MjM0ODg1MSwic2VsbGVyLWlkIjoiY2IwNDFkMzEtYTM0NS00ZDgwLTk3MWEtNzBjNDljYmM1YzI4IiwiYXV0aG9yaXRpZXMiOlsiUk9MRV9TRUxMRVIiXX0.aRBrC9wnOT6oKlHQSD_HNdEYDvmDtpGNge3e07_ZvSwXfyw8C_q0tyq8NSNrq0po848s3q02agjMl2Js8hNo9BksA0ndRXqoYCgNGpWlBHqexId1c58KpJzGH7oY_jqtMM8LqkRfmou6efYxI12VO1W1dLC2RTZr2tzbW91KtknYeeqMCvatwE9Pc8ZrW-jyyjTSznooEW-eOzZgWLKhfa5FI2JUFlsWPyjQFvFKzki-fGTIroGY32SQGtR51WCDroLoJ3lDCCm9kZd_2NRQZARsyLvxmC072wRgUoRbEvqqtpYEHnM-kJW51hyUXJcSjpzzXSAZ_ljjotNMmQg42Q";
 
     private final String HEADER = "Bearer " + AUTH_TOKEN;
 
@@ -131,6 +131,13 @@ public class ProductTestService {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
     }
+
+//    public void addImageForProduct(String path, UUID sellerId, UUID productId, ResultMatcher status) throws Exception {
+//        mockMvc.perform(post(path, sellerId, productId)
+//                        .header("Authorization", HEADER)
+//                        .contentType(MediaType.APPLICATION_JSON))
+//                .andExpect(status().isNoContent());
+//    }
 
     public Product getProduct(UUID productId) {
         return productRepository.findByExternalId(productId)

@@ -45,6 +45,7 @@ dependencies {
     testImplementation libs.h2.database
     testImplementation libs.testcontainers.postgresql
     testImplementation libs.testcontainers.junit
+    testImplementation 'org.springframework.security:spring-security-test'
 
     annotationProcessor libs.spring.config.processor
 }
