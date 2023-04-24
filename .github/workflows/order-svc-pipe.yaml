@@ -13,7 +13,7 @@ on:
     branches:
       - develop
     paths:
-      - 'order-service/src/**'
+      - 'order-service/src/main/java/**'
 
 jobs:
   build:

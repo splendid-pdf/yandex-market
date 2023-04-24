@@ -4,6 +4,7 @@ plugins {
     id 'pmd'
     id 'java'
     id 'jacoco'
+    id "org.sonarqube"
     id 'com.google.cloud.tools.jib'
 }
 
@@ -86,5 +87,13 @@ jacocoTestCoverageVerification {
                 minimum = 0.5
             }
         }
+    }
+}
+
+sonarqube {
+    properties {
+        property "sonar.projectKey", "splendid-pdf_yandex-market"
+        property "sonar.organization", "splendid-pdf"
+        property "sonar.host.url", "https://sonarcloud.io"
     }
 }

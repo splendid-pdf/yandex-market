@@ -13,7 +13,7 @@ on:
     branches:
       - develop
     paths:
-      - 'seller-info-service/src/**'
+      - 'seller-info-service/src/main/java/**'
 
 jobs:
   build:
