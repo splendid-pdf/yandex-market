@@ -36,7 +36,7 @@ jobs:
         run: chmod +x gradlew
 
       - name: Build
-        run: ./gradlew :${{ env.SERVICE_NAME }}:clean :${{ env.SERVICE_NAME }}:build --quiet
+        run: ./gradlew :${{ env.SERVICE_NAME }}:clean :${{ env.SERVICE_NAME }}:build
 
       - name: Generate JaCoCo report
         run: ./gradlew :${{ env.SERVICE_NAME }}:jacocoTestReport
