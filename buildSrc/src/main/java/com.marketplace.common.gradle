@@ -90,7 +90,7 @@ jacocoTestCoverageVerification {
 }
 
 sonarqube {
-    dependsOn test
+    sonarqube.dependsOn test
     properties {
         property "sonar.projectKey", "splendid-pdf_yandex-market"
         property "sonar.organization", "splendid-pdf"
