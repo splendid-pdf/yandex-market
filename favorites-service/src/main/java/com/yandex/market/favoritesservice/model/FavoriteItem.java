@@ -21,12 +21,14 @@ public class FavoriteItem {
     @SequenceGenerator(name = "favorites_sequence", allocationSize = 1)
     private Long id;
 
+    @Builder.Default
     @Column(unique = true)
-    private UUID externalId;
+    private UUID externalId = UUID.randomUUID();
 
     private UUID userId;
 
     private UUID productId;
 
-    private LocalDateTime addedAt;
+    @Builder.Default
+    private LocalDateTime addedAt = LocalDateTime.now();
 }

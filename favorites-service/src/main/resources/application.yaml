@@ -39,3 +39,9 @@ spring:
     driverClassName: org.postgresql.Driver
     hikari:
       auto-commit: false
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://51.250.102.12:9000/oauth2/jwks

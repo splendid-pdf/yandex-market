@@ -13,9 +13,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
@@ -30,8 +28,6 @@ public class FavoriteItemServiceImpl implements FavoriteItemService {
         FavoriteItem favoriteItem = new FavoriteItem();
         favoriteItem.setUserId(userId);
         favoriteItem.setProductId(productId);
-        favoriteItem.setExternalId(UUID.randomUUID());
-        favoriteItem.setAddedAt(LocalDateTime.now());
         return repository.save(favoriteItem).getExternalId();
     }
 
@@ -41,7 +37,7 @@ public class FavoriteItemServiceImpl implements FavoriteItemService {
         Page<FavoriteItem> pageFavorites = repository.getFavoritesByUserId(userId, page);
         return new PageImpl<>(pageFavorites.getContent().stream()
                 .map(mapper::toFavoritesResponseDto)
-                .collect(Collectors.toList()));
+                .toList());
     }
 
     @Override
