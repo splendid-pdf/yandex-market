@@ -1,10 +1,6 @@
-import com.google.cloud.tools.jib.api.buildplan.ImageFormat
-
 plugins {
 	id 'com.marketplace.common'
-	alias libs.plugins.jib
-	alias libs.plugins.spring.boot
-	alias libs.plugins.spring.dependency.management
+	id 'com.marketplace.common.spring'
 }
 
 ext {
@@ -16,7 +12,6 @@ dependencies {
 	implementation project(':commons')
 
 	// Spring
-	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework:spring-context-support:6.0.4'
 	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
@@ -24,7 +19,6 @@ dependencies {
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
-
 
 	// Cloud
 	implementation 'org.springframework.cloud:spring-cloud-config-client'
@@ -43,27 +37,4 @@ dependencies {
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
 
 	runtimeOnly 'io.micrometer:micrometer-registry-prometheus:1.10.5'
-}
-
-dependencyManagement {
-	imports {
-		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
-	}
-}
-
-jib {
-	from {
-		image = 'gcr.io/distroless/java17-debian11'
-	}
-	to {
-		image = "${dockerHubUsername}/${project.name}:${project.version}"
-		tags = [version, project.version] as List<String>
-		auth {
-			username = dockerHubUsername
-			password = dockerHubPassword
-		}
-	}
-	container {
-		format = ImageFormat.OCI
-	}
 }

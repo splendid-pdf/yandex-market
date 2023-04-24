@@ -1,7 +1,10 @@
+import java.time.Instant
+
 plugins {
     id 'pmd'
     id 'java'
     id 'jacoco'
+    id 'com.google.cloud.tools.jib'
 }
 
 group = 'com.marketplace'
@@ -21,11 +24,11 @@ dependencies {
     compileOnly libs.lombok
     compileOnly libs.jetbrains.annotations
 
-   implementation libs.guava
-   implementation libs.mapstruct
-   implementation libs.apache.commons.lang3
-   implementation libs.apache.commons.validator
-   implementation libs.apache.commons.collections
+    implementation libs.guava
+    implementation libs.mapstruct
+    implementation libs.apache.commons.lang3
+    implementation libs.apache.commons.validator
+    implementation libs.apache.commons.collections
 
     annotationProcessor libs.lombok
     annotationProcessor libs.mapstruct.processor
@@ -34,15 +37,34 @@ dependencies {
     testAnnotationProcessor libs.lombok
 }
 
+jib {
+    from {
+        image = jibBaseDockerImage
+    }
+    to {
+        image = "${dockerHubUsername}/${project.name}:${project.version}"
+        tags = [version, project.version] as List<String>
+        auth {
+            username = dockerHubUsername
+            password = dockerHubPassword
+        }
+    }
+    container {
+        format = jibImageFormat
+        getCreationTime().set(Instant.now().toString())
+    }
+}
+
+test {
+    useJUnitPlatform()
+}
+
 pmd {
     toolVersion = '6.55.0'
     ignoreFailures = true
     ruleSets = ["category/java/errorprone.xml", "category/java/bestpractices.xml"]
 }
 
-test {
-    useJUnitPlatform()
-}
 
 jacoco {
     toolVersion = "0.8.9"
