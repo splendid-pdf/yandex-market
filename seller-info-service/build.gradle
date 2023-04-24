@@ -1,11 +1,6 @@
-import com.google.cloud.tools.jib.api.buildplan.ImageFormat
-
 plugins {
     id 'com.marketplace.common'
     id 'com.marketplace.common.spring'
-    alias libs.plugins.jib
-    alias libs.plugins.spring.boot
-    alias libs.plugins.spring.dependency.management
 }
 
 dependencies {
