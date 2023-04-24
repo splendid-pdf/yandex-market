@@ -42,7 +42,7 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Build
+      - name: Build project
         run: ./gradlew :${{ env.SERVICE_NAME }}:clean :${{ env.SERVICE_NAME }}:build
 
       - name: Analyze code

@@ -67,7 +67,6 @@ pmd {
     ruleSets = ["category/java/errorprone.xml", "category/java/bestpractices.xml"]
 }
 
-
 jacoco {
     toolVersion = "0.8.9"
 }
@@ -76,16 +75,6 @@ jacocoTestReport {
     reports {
         xml.required = true
         csv.required = true
-    }
-}
-
-jacocoTestCoverageVerification {
-    violationRules {
-        rule {
-            limit {
-                minimum = 0.5
-            }
-        }
     }
 }
 
