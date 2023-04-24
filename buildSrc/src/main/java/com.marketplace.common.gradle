@@ -74,9 +74,8 @@ jacoco {
 
 jacocoTestReport {
     reports {
-        xml.required = false
+        xml.required = true
         csv.required = true
-        html.outputLocation = layout.buildDirectory.dir('jacocoHtml')
     }
 }
 
@@ -91,10 +90,10 @@ jacocoTestCoverageVerification {
 }
 
 sonarqube {
+    dependsOn test
     properties {
         property "sonar.projectKey", "splendid-pdf_yandex-market"
         property "sonar.organization", "splendid-pdf"
         property "sonar.host.url", "https://sonarcloud.io"
-        property "sonar.junit.reportPaths", "$project.buildDir/reports/jacoco/test"
     }
 }
