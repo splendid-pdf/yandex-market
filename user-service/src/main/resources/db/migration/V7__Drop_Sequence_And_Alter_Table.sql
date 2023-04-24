@@ -1,0 +1,6 @@
+DROP SEQUENCE IF EXISTS "user-sequence";
+
+CREATE SEQUENCE user_sequence START WITH 100 INCREMENT BY 1;
+
+ALTER TABLE users
+RENAME COLUMN photo_url TO photo_id
