@@ -19,7 +19,11 @@ dependencies {
 
     developmentOnly libs.spring.devtools
 
-    testImplementation libs.h2.database
     testImplementation libs.spring.test
+    testImplementation libs.aspectj.core
     testImplementation libs.mockito.inline
+    testImplementation libs.spring.security.test
+    testImplementation libs.testcontainers.junit
+    testImplementation libs.testcontainers.redis
+    testImplementation libs.testcontainers.postgresql
 }
