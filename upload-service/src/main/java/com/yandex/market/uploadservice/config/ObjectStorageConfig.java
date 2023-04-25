@@ -6,6 +6,7 @@ import com.amazonaws.client.builder.AwsClientBuilder;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.yandex.market.uploadservice.config.properties.ObjectStorageProperties;
+import lombok.val;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -14,9 +15,8 @@ public class ObjectStorageConfig {
 
     @Bean
     public AmazonS3 objectStorage(ObjectStorageProperties properties) {
-        BasicAWSCredentials credentials = new BasicAWSCredentials(properties.getAccessKey(), properties.getSecretKey());
         return AmazonS3ClientBuilder.standard()
-                .withCredentials(new AWSStaticCredentialsProvider(credentials))
+                .withCredentials(new AWSStaticCredentialsProvider(properties.getCredentials()))
                 .withEndpointConfiguration(
                         new AwsClientBuilder.EndpointConfiguration(
                                 properties.getHost(),

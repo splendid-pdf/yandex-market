@@ -4,8 +4,8 @@ import lombok.Getter;
 
 @Getter
 public class SizeLimitFileExceededException extends RuntimeException {
-    private Long maxFileSize;
-    private Long actualFileSize;
+    private final Long maxFileSize;
+    private final Long actualFileSize;
 
     public SizeLimitFileExceededException(String message, Long maxFileSize, Long actualFileSize) {
         super(message);

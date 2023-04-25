@@ -4,59 +4,79 @@ server:
 
 application:
   validation:
-    max_uploaded_files_count: 10
-    max_downloaded_files_count: 10
-    extension:
+    extensions:
       jpg:
         max_file_size_in_bytes: 10_485_760 #10 mb
         file_types:
           - AVATAR
           - PRODUCT
+          - REVIEW
       jpeg:
         max_file_size_in_bytes: 10_485_760 #10 mb
         file_types:
           - AVATAR
           - PRODUCT
+          - REVIEW
       png:
         max_file_size_in_bytes: 10_485_760 #10 mb
         file_types:
           - AVATAR
           - PRODUCT
+          - REVIEW
       heif:
         max_file_size_in_bytes: 10_485_760 #10 mb
         file_types:
           - AVATAR
           - PRODUCT
+          - REVIEW
+      heic:
+        max_file_size_in_bytes: 10_485_760 #10 mb
+        file_types:
+          - AVATAR
+          - PRODUCT
+          - REVIEW
       gif:
         max_file_size_in_bytes: 10_485_760 #10 mb
         file_types:
           - AVATAR
           - PRODUCT
+          - REVIEW
       webp:
         max_file_size_in_bytes: 10_485_760 #10 mb
         file_types:
           - AVATAR
           - PRODUCT
+          - REVIEW
       mov:
-        max_file_size_in_bytes: 10_485_760 #10 mb
+        max_file_size_in_bytes: 104_857_600 #100 mb
         file_types:
           - PRODUCT
+          - REVIEW
       mp4:
-        max_file_size_in_bytes: 10_485_760 #10 mb
+        max_file_size_in_bytes: 104_857_600 #100 mb
         file_types:
           - PRODUCT
+          - REVIEW
       mkv:
-        max_file_size_in_bytes: 10_485_760 #10 mb
+        max_file_size_in_bytes: 104_857_600 #100 mb
         file_types:
           - PRODUCT
+          - REVIEW
       m4v:
-        max_file_size_in_bytes: 10_485_760 #10 mb
+        max_file_size_in_bytes: 104_857_600 #100 mb
         file_types:
           - PRODUCT
+          - REVIEW
       avi:
-        max_file_size_in_bytes: 10_485_760 #10 mb
+        max_file_size_in_bytes: 104_857_600 #100 mb
         file_types:
           - PRODUCT
+          - REVIEW
+      hevc:
+        max_file_size_in_bytes: 104_857_600 #100 mb
+        file_types:
+          - PRODUCT
+          - REVIEW
       pdf:
         max_file_size_in_bytes: 5_242_880 #5 mb
         file_types:
@@ -68,14 +88,21 @@ application:
     region: ru-central1
     bucket_name: marketplace-object-storage
     credentials:
-      secret-key: ${SECRET_KEY}
-      access-key: ${ACCESS_KEY}
-    url_expiration_time_in_years: 1
+
 
 spring:
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://localhost:9000/oauth2/jwks
+
   servlet:
     multipart:
       enabled: true
+      max-file-size: 200MB
+      max-request-size: 2000MB #2 GB
   application:
     name: upload-service
   config:

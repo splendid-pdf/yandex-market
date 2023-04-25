@@ -12,29 +12,27 @@ dependencies {
 	implementation project(':commons')
 
 	// Spring
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.springframework:spring-context-support:6.0.4'
+	implementation libs.spring.web
+	implementation libs.spring.cloud.config.client
+	implementation libs.spring.security
+	implementation libs.spring.oauth2.resource.server
 	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
 
-	developmentOnly 'org.springframework.boot:spring-boot-devtools'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
-
-	// Cloud
-	implementation 'org.springframework.cloud:spring-cloud-config-client'
-
-	implementation 'org.eclipse.angus:angus-mail:2.0.1'
+	developmentOnly libs.spring.devtools
 
 	implementation 'commons-io:commons-io:2.11.0'
 
-	// Validation
-	implementation 'jakarta.validation:jakarta.validation-api:3.0.2'
 
 	// Amazon web services
 	implementation 'com.amazonaws:aws-java-sdk-s3:1.12.400'
 
-	// Swagger
-	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
+	runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
 
-	runtimeOnly 'io.micrometer:micrometer-registry-prometheus:1.10.5'
+
+	// tests
+	testImplementation 'org.testcontainers:junit-jupiter:1.17.6'
+	testImplementation 'org.testcontainers:mongodb:1.17.6'
+	testImplementation 'org.springframework.security:spring-security-test:6.0.2'
+	testImplementation libs.spring.test
+	testImplementation libs.mockito.inline
 }

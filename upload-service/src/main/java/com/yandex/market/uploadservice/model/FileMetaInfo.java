@@ -5,6 +5,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -12,11 +13,11 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Document(collection = "files_meta_info")
+@EqualsAndHashCode(of = "externalId")
 public class FileMetaInfo {
     @Id
     private String id;
-    private String url;
-    private long hash;
-    private String fileName;
+    private UUID externalId;
+    private int hash;
     private LocalDateTime timestamp;
 }

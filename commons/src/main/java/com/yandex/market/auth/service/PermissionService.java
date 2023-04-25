@@ -7,21 +7,26 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
+
+import static com.yandex.market.auth.util.ClientAttributes.SELLER_ID;
+import static com.yandex.market.auth.util.ClientAttributes.USER_ID;
 
 @Slf4j
 public class PermissionService {
 
-    public boolean hasPermission(
-            UUID id,
-            Role role,
-            String idAttribute
-    ) {
+    public boolean hasPermission(UUID id, Role role, String idAttribute) {
         Map<String, Object> tokenAttributes = getTokenAttributes();
         return !tokenAttributes.isEmpty() && checkPermission(id, role, idAttribute, tokenAttributes);
+    }
+
+    @SuppressWarnings("unchecked")
+    public boolean hasPermission() {
+        Map<String, Object> tokenAttributes = getTokenAttributes();
+        List<String> authorities = (List<String>) tokenAttributes.getOrDefault("authorities", Collections.emptyList());
+        return Arrays.stream(Role.values())
+                .map(Role::getKey)
+                .anyMatch(authorities::contains);
     }
 
     private Map<String, Object> getTokenAttributes() {

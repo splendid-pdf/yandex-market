@@ -28,7 +28,7 @@ spring:
         - id: upload-service-route
           uri: http://127.0.0.1:9001
           predicates:
-            - Path=/*/*/*/files
+            - Path=/*/*/*/files, /*/*/*/{id}/files
         - id: review-service
           uri: http://127.0.0.1:8083
           predicates:
@@ -87,7 +87,7 @@ application:
         methods: GET
       # upload-api
       - url: /*/*/*/files
-        methods: POST, GET, DELETE
+        methods: GET, DELETE
 
 logging:
   level:
