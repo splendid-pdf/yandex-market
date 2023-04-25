@@ -1,10 +1,11 @@
 package com.yandex.market.productservice;
 
-import com.yandex.market.productservice.dto.response.ProductResponse;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.yandex.market.productservice.models.ArchiveTest;
 import com.yandex.market.productservice.models.ProductTest;
 import com.yandex.market.productservice.models.ProductsTest;
 import com.yandex.market.productservice.service.ProductTestService;
+import com.yandex.market.util.RestPageImpl;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -13,11 +14,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
 import org.springframework.test.context.jdbc.SqlGroup;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.nio.file.Files;
@@ -25,8 +30,9 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.UUID;
 
-import static com.yandex.market.util.HttpUtils.PUBLIC_API_V1;
+import static com.yandex.market.productservice.models.Paths.*;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -51,7 +57,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 })
 class ProductControllerModuleTest {
 
+    private final MockMvc mockMvc;
+
     private final ProductTestService serviceTest;
+    private final String AUTH_TOKEN = "eyJraWQiOiI0ZDZiYjgyMi04YmNlLTQ2ZDEtYTVhZS02N2Y5NGIyZGM0OWMiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJzZWxsZXJfZGltYUBnbWFpbC5ydSIsImF1ZCI6ImNsaWVudCIsIm5iZiI6MTY4MjQzODAwNywic2NvcGUiOlsib3BlbmlkIl0sImlzcyI6Imh0dHA6Ly81MS4yNTAuMTAyLjEyOjkwMDAiLCJleHAiOjE2ODMwNDI4MDcsImlhdCI6MTY4MjQzODAwNywic2VsbGVyLWlkIjoiY2IwNDFkMzEtYTM0NS00ZDgwLTk3MWEtNzBjNDljYmM1YzI4IiwiYXV0aG9yaXRpZXMiOlsiUk9MRV9TRUxMRVIiXX0.p1tXC2eaiZpEZdtXzx3e--jEoWJ0JS84L-ALxaVPBciw3wWYHWqKHseBumKXjuGxyymiTP_aI7CnBy8xfQNMUmIsd1XKWHcrH2hEylkCVdoL08YPjcRcTVcPUM7GDjThHIFWcjF8WL8Fb4OUN9HcM2GPywG7D1QffVblF8BJ4rv7zECU6o_t15cZ1Az44CekIyAEpAydFhIMs4zFD0PlqkOeQ9yrwd96FkPWjrWeqEwvP4kXiH4zD7HTs8ggSKnboxYWnayQDLjMJrx-8KFgHd4KjE5xfxDZ9GqjAVhVvcg0umQzp4t04fe_P4aCn70NXyjh8ahT2ghKjCgilxNTXQ";
+
+    private final String HEADER = "Bearer " + AUTH_TOKEN;
 
     private final UUID REAL_SELLER_ID = UUID.fromString("cb041d31-a345-4d80-971a-70c49cbc5c28");
     private final UUID UNREAL_SELLER_ID = UUID.fromString("cb041d31-a345-4d80-971a-70c49cbc5c99");
@@ -65,31 +76,23 @@ class ProductControllerModuleTest {
     );
 
     private final long ARCHIVED = 1;
-    private final long FROM_PRODUCT_LIST = 4 - ARCHIVED;
-
-    private final String SELLER_PATH = "/" + PUBLIC_API_V1 + "/sellers/{sellerId}/";
-    private final String SELLER_PRODUCT_PATH = SELLER_PATH + "products";
-    private final String PRODUCT_PATH = SELLER_PATH + "products/{productId}";
-    private final String SELLER_ARCHIVED_PATH = SELLER_PATH + "archive/products";
-    private final String CHANGE_PRICE_PATH = SELLER_PATH + "products/{productId}/price";
-    private final String CHANGE_COUNT_PATH = SELLER_PATH + "products/{productId}/count";
-
-    private final String ADD_IMAGE_PATH = SELLER_PATH + "products/{productId}/images";
-    private final String CHANGE_VISIBILITY_PATH = SELLER_PATH + "products/visibility";
-
-    private final String PATH_TO_MINIMAL_PRODUCT = "src/test/resources/json/create_product_with_minimal.json";
-    private final String PATH_TO_MAX_PRODUCT = "src/test/resources/json/create_product_with_max_fields.json";
-    private final String PATH_TO_UPDATE_PRODUCT = "src/test/resources/json/update_product_name_and_desc.json";
 
     @Test
     @DisplayName("Успешное создание товара с минимальными значениями")
     void shouldCreateProductWithMinimal() throws Exception {
-        UUID productId = serviceTest.createProduct(
-                SELLER_PRODUCT_PATH,
-                REAL_SELLER_ID,
-                Files.readString(Path.of(PATH_TO_MINIMAL_PRODUCT)), status().isCreated());
 
-        ProductTest product = serviceTest.getProduct(PRODUCT_PATH, REAL_SELLER_ID, productId, status().isOk());
+        MvcResult mvcResult = mockMvc.perform(post(SELLER_PRODUCT_PATH, REAL_SELLER_ID)
+                        .header("Authorization", HEADER)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(Files.readString(Path.of(PATH_TO_MINIMAL_PRODUCT))))
+                .andExpect(status().isCreated())
+                .andReturn();
+
+        ProductTest product = getProduct(
+                PRODUCT_PATH,
+                REAL_SELLER_ID,
+                serviceTest.getUuid(mvcResult)
+        );
 
         assertAll(
                 () -> assertNotNull(product),
@@ -104,13 +107,14 @@ class ProductControllerModuleTest {
     @Test
     @DisplayName("Обновление товара со всеми полями")
     void shouldCreateProductWithMaximal() throws Exception {
-        UUID productId = serviceTest.createProduct(
-                SELLER_PRODUCT_PATH,
-                REAL_SELLER_ID,
-                Files.readString(Path.of(PATH_TO_MAX_PRODUCT)),
-                status().isCreated());
+        MvcResult mvcResult = mockMvc.perform(post(SELLER_PRODUCT_PATH, REAL_SELLER_ID)
+                        .header("Authorization", HEADER)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(Files.readString(Path.of(PATH_TO_MAX_PRODUCT))))
+                .andExpect(status().isCreated())
+                .andReturn();
 
-        ProductTest product = serviceTest.getProduct(PRODUCT_PATH, REAL_SELLER_ID, productId, status().isOk());
+        ProductTest product = getProduct(PRODUCT_PATH, REAL_SELLER_ID, serviceTest.getUuid(mvcResult));
 
         assertAll(
                 () -> assertNotNull(product),
@@ -130,19 +134,30 @@ class ProductControllerModuleTest {
 
     @Test
     @DisplayName("Товар не может быть создан, так как некорректный id продавца")
-    void shouldCreateProductSellerNotFound() throws Exception {
-        UUID productId = serviceTest.createProduct(
-                SELLER_PRODUCT_PATH,
-                UNREAL_SELLER_ID,
-                Files.readString(Path.of(PATH_TO_MAX_PRODUCT)),
-                status().isForbidden());
-        assertNull(productId);
+    void shouldNotCreateProductSellerNotFound() throws Exception {
+        mockMvc.perform(post(SELLER_PRODUCT_PATH, UNREAL_SELLER_ID)
+                        .header("Authorization", HEADER)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(Files.readString(Path.of(PATH_TO_MAX_PRODUCT))))
+                .andExpect(status().isForbidden());
     }
 
     @Test
-    @DisplayName("Товар успешно создан")
+    @DisplayName("Список товаров успешно получен")
     void shouldCreateProductSuccessful() throws Exception {
-        Page<ProductsTest> products = serviceTest.getProducts(SELLER_PRODUCT_PATH, REAL_SELLER_ID);
+        MvcResult mvcResult = mockMvc.perform(
+                        get(SELLER_PRODUCT_PATH, REAL_SELLER_ID, PageRequest.of(0, 20))
+                                .header("Authorization", HEADER)
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        RestPageImpl<ProductsTest> products = serviceTest.getProductFromMvcResult(
+                mvcResult,
+                new TypeReference<>() {
+                }
+        );
+
         assertNotNull(products);
         assertEquals(REAL_PRODUCTS.size() - ARCHIVED, products.getTotalElements());
     }
@@ -150,40 +165,63 @@ class ProductControllerModuleTest {
     @Test
     @DisplayName("Обновление товара прошло успешно")
     void shouldUpdateProductWithAllInfo() throws Exception {
-        ProductResponse productResponse = serviceTest.updateProduct(
-                PRODUCT_PATH,
-                REAL_SELLER_ID,
-                REAL_PRODUCT_ID,
-                Files.readString(Path.of(PATH_TO_UPDATE_PRODUCT)),
-                status().isOk()
-        );
+
+        MvcResult mvcResult = mockMvc.perform(put(PRODUCT_PATH, REAL_SELLER_ID, REAL_PRODUCT_ID)
+                        .header("Authorization", HEADER)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(Files.readString(Path.of(PATH_TO_UPDATE_PRODUCT))))
+                .andExpect(status().isOk())
+                .andReturn();
+        ProductTest product = serviceTest.getProductFromMvcResult(mvcResult, new TypeReference<>() {
+        });
 
         assertAll(
-                () -> assertNotNull(productResponse),
-                () -> assertEquals("Шкаф \"Оврора\" (сталь и дерево)", productResponse.name()),
+                () -> assertNotNull(product),
+                () -> assertEquals("Шкаф \"Оврора\" (сталь и дерево)", product.name()),
                 () -> assertEquals(
                         "Супер шкаф, классный, стальной, удобный, также стальная подставка",
-                        productResponse.description()
+                        product.description()
                 ),
-                () -> assertEquals("shkafsuper12", productResponse.articleFromSeller()),
-                () -> assertEquals("ООА \"Оврора\"", productResponse.brand()),
-                () -> assertEquals(1234L, productResponse.price()),
-                () -> assertEquals(123, productResponse.count())
+                () -> assertEquals("shkafsuper12", product.articleFromSeller()),
+                () -> assertEquals("ООА \"Оврора\"", product.brand()),
+                () -> assertEquals(1234L, product.price()),
+                () -> assertEquals(123, product.count())
         );
     }
 
     @Test
     @DisplayName("Список товаров успешно получен")
     void shouldFindPageProductsBySellerIdSuccessfulSearch() throws Exception {
-        Page<ProductsTest> products = serviceTest.getProducts(SELLER_PRODUCT_PATH, REAL_SELLER_ID);
+//        Page<ProductsTest> products = getProducts(SELLER_PRODUCT_PATH, REAL_SELLER_ID);
+
+        MvcResult mvcResult = mockMvc.perform(
+                        get(SELLER_PRODUCT_PATH, REAL_SELLER_ID, PageRequest.of(0, 20))
+                                .header("Authorization", HEADER)
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+        Page<ProductsTest> products = serviceTest.getProductFromMvcResult(mvcResult, new TypeReference<RestPageImpl<ProductsTest>>() {
+        });
+
         assertNotNull(products);
+        long FROM_PRODUCT_LIST = 4 - ARCHIVED;
         assertEquals(FROM_PRODUCT_LIST, products.getTotalElements());
     }
 
     @Test
     @DisplayName("Архив товаров успешно получен")
     void shouldFindArchivedProductsPageBySellerIdSuccessfulSearch() throws Exception {
-        Page<ArchiveTest> products = serviceTest.getArchivedProducts(SELLER_ARCHIVED_PATH, REAL_SELLER_ID);
+//        Page<ArchiveTest> products = getArchivedProducts(SELLER_ARCHIVED_PATH, REAL_SELLER_ID);
+        MvcResult mvcResult = mockMvc.perform(
+                        get(SELLER_ARCHIVED_PATH, REAL_SELLER_ID, PageRequest.of(0, 20))
+                                .header("Authorization", HEADER)
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+        Page<ArchiveTest> products = serviceTest.getProductFromMvcResult(mvcResult, new TypeReference<RestPageImpl<ArchiveTest>>() {
+        });
+
+
         assertNotNull(products);
         assertEquals(ARCHIVED, products.getTotalElements());
     }
@@ -191,11 +229,16 @@ class ProductControllerModuleTest {
     @Test
     @DisplayName("Успешное получение превью товара")
     void shouldGetProductPreviewsBySellerIdSuccessful() throws Exception {
-        ProductTest product = serviceTest.getProduct(
-                PRODUCT_PATH,
-                REAL_SELLER_ID,
-                REAL_PRODUCT_ID,
-                status().isOk());
+        MvcResult mvcResult = mockMvc.perform(
+                        get(PRODUCT_PATH, REAL_SELLER_ID, REAL_PRODUCT_ID, PageRequest.of(0, 20))
+                                .header("Authorization", HEADER)
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        ProductTest product = serviceTest.getProductFromMvcResult(mvcResult, new TypeReference<>() {
+        });
+
         Assertions.assertAll(
                 () -> assertNotNull(product),
                 () -> assertEquals(REAL_PRODUCT_ID, product.id()),
@@ -206,23 +249,24 @@ class ProductControllerModuleTest {
     @Test
     @DisplayName("Не получилось получить превью товара из-за некорректного id продавца")
     void shouldGetProductPreviewsBySellerIdSellerNotFound() throws Exception {
-        ProductTest product = serviceTest.getProduct(
-                PRODUCT_PATH,
-                UNREAL_SELLER_ID,
-                REAL_PRODUCT_ID,
-                status().isForbidden());
-        assertNull(product);
+        mockMvc.perform(
+                        get(PRODUCT_PATH, UNREAL_SELLER_ID, REAL_PRODUCT_ID, PageRequest.of(0, 20))
+                                .header("Authorization", HEADER)
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden());
     }
 
     @Test
     @DisplayName("Товар успешно добавлен в архив")
     void shouldChangeIsArchiveFieldSuccessfulAddingToArchive() throws Exception {
         List<UUID> productIds = REAL_PRODUCTS.subList(0, 2);
-        serviceTest.changeArchive(
-                SELLER_ARCHIVED_PATH,
-                REAL_SELLER_ID,
-                productIds,
-                true);
+
+        mockMvc.perform(patch(SELLER_ARCHIVED_PATH, REAL_SELLER_ID)
+                        .header("Authorization", HEADER)
+                        .param("is-archive", "true")
+                        .param("product-ids", serviceTest.convertListToParam(productIds))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent());
 
         for (UUID p : productIds) {
             assertTrue(serviceTest.getProduct(p).isArchived());
@@ -233,11 +277,13 @@ class ProductControllerModuleTest {
     @DisplayName("Товар успешно вернули из архива")
     void shouldChangeIsArchiveFieldSuccessfulReturnFromArchive() throws Exception {
         List<UUID> productIds = REAL_PRODUCTS.subList(2, 3);
-        serviceTest.changeArchive(
-                SELLER_ARCHIVED_PATH,
-                REAL_SELLER_ID,
-                productIds,
-                false);
+
+        mockMvc.perform(patch(SELLER_ARCHIVED_PATH, REAL_SELLER_ID)
+                        .header("Authorization", HEADER)
+                        .param("is-archive", "false")
+                        .param("product-ids", serviceTest.convertListToParam(productIds))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent());
 
         for (UUID p : productIds) {
             assertFalse(serviceTest.getProduct(p).isArchived());
@@ -248,11 +294,13 @@ class ProductControllerModuleTest {
     @DisplayName("Товар успешно скрыт из списка товаров для пользователей")
     void shouldChangeProductsVisibilitySuccessfulVisibilityEqualsFalse() throws Exception {
         List<UUID> productIds = REAL_PRODUCTS.subList(0, 2);
-        serviceTest.changeVisible(
-                CHANGE_VISIBILITY_PATH,
-                REAL_SELLER_ID,
-                productIds,
-                false);
+
+        mockMvc.perform(patch(CHANGE_VISIBILITY_PATH, REAL_SELLER_ID)
+                        .header("Authorization", HEADER)
+                        .param("is-visible", "false")
+                        .param("product-ids", serviceTest.convertListToParam(productIds))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent());
 
         for (UUID p : productIds) {
             assertFalse(serviceTest.getProduct(p).isVisible());
@@ -263,11 +311,13 @@ class ProductControllerModuleTest {
     @DisplayName("Товар успешно вернулся в список товаров для пользователей")
     void shouldChangeProductsVisibilitySuccessfulVisibilityEqualsTrue() throws Exception {
         List<UUID> productIds = REAL_PRODUCTS.subList(3, 4);
-        serviceTest.changeVisible(
-                CHANGE_VISIBILITY_PATH,
-                REAL_SELLER_ID,
-                productIds,
-                true);
+
+        mockMvc.perform(patch(CHANGE_VISIBILITY_PATH, REAL_SELLER_ID)
+                        .header("Authorization", HEADER)
+                        .param("is-visible", "true")
+                        .param("product-ids", serviceTest.convertListToParam(productIds))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent());
 
         for (UUID p : productIds) {
             assertTrue(serviceTest.getProduct(p).isVisible());
@@ -279,13 +329,11 @@ class ProductControllerModuleTest {
     void shouldChangePriceSuccessful() throws Exception {
         long updatePrice = 1234L;
 
-//        serviceTest.changePrice(CHANGE_PRICE_PATH, REAL_SELLER_ID, REAL_PRODUCT_ID, updatePrice);
-        serviceTest.changeProductParameters(
-                CHANGE_PRICE_PATH,
-                REAL_SELLER_ID,
-                REAL_PRODUCT_ID,
-                "price",
-                String.valueOf(updatePrice));
+        mockMvc.perform(patch(CHANGE_PRICE_PATH, REAL_SELLER_ID, REAL_PRODUCT_ID)
+                        .header("Authorization", HEADER)
+                        .param("price", String.valueOf(updatePrice))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent());
 
         Long actualPrice = serviceTest.getProduct(REAL_PRODUCT_ID).getPrice();
         assertEquals(updatePrice, actualPrice, "Received price not as expected");
@@ -296,15 +344,29 @@ class ProductControllerModuleTest {
     void shouldChangeCountSuccessful() throws Exception {
         long updateCount = 123L;
 
-        serviceTest.changeProductParameters(
-                CHANGE_COUNT_PATH,
-                REAL_SELLER_ID,
-                REAL_PRODUCT_ID,
-                "count",
-                String.valueOf(updateCount));
+        mockMvc.perform(patch(CHANGE_COUNT_PATH, REAL_SELLER_ID, REAL_PRODUCT_ID)
+                        .header("Authorization", HEADER)
+                        .param("count", String.valueOf(updateCount))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent());
 
         Long actualCount = serviceTest.getProduct(REAL_PRODUCT_ID).getCount();
         assertEquals(updateCount, actualCount, "Received price not as expected");
     }
+
+    public ProductTest getProduct(String path, UUID sellerId, UUID productId) throws Exception {
+        MvcResult mvcResult = mockMvc.perform(get(path, sellerId, productId, PageRequest.of(0, 20))
+                        .header("Authorization", HEADER)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        if (mvcResult.getResponse().getStatus() == 200) {
+            return serviceTest.getProductFromMvcResult(mvcResult, new TypeReference<>() {
+            });
+        }
+        return null;
+    }
+
 }
 
