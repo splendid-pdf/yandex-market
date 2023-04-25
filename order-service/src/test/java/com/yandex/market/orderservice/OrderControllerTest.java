@@ -14,12 +14,16 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.json.JsonContentAssert;
 import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.web.client.match.MockRestRequestMatchers;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.ResultMatcher;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.transaction.annotation.Transactional;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
@@ -27,7 +31,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.UUID;
 
+import static org.springframework.test.web.client.match.MockRestRequestMatchers.content;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -48,9 +54,9 @@ class OrderControllerTest {
     void create() throws Exception {
         UUID userExternalId = UUID.fromString("cd8ae5aa-ebea-4922-b3c2-8ba8a296ef04");
         MvcResult mvcResult = mockMvc.perform(
-                post("/public/api/v1/users/{userId}/orders", userExternalId)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(Files.readString(Path.of("src/test/resources/CreateOrderRequestDto.json"))))
+                        post("/public/api/v1/users/{userId}/orders", userExternalId)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(Files.readString(Path.of("src/test/resources/CreateOrderRequestDto.json"))))
                 .andExpect(status().isCreated())
                 .andReturn();
 
@@ -112,7 +118,7 @@ class OrderControllerTest {
         Page<OrderResponsePreview> previewDto = objectMapper
                 .readValue(mvcResult.getResponse().getContentAsString(),
                         new TypeReference<RestPageImpl<OrderResponsePreview>>() {
-        });
+                        });
 
         UUID expectedOrderExternalId = UUID.fromString("37678201-f3c8-4d5c-a628-2344eef50c54");
         UUID actualOrderExternalId = previewDto.getContent().get(0).externalId();
@@ -133,6 +139,51 @@ class OrderControllerTest {
                 .andReturn();
     }
 
+    @Test
+    @Transactional
+    @Sql("/db/insertTestOrder.sql")
+    void getOrderPreviewsBySellerId() throws Exception {
+        UUID sellerId = UUID.fromString("cd8ae5aa-ebea-4922-b3c2-8ba8a296ef05");
+        mockMvc.perform(get("/public/api/v1/sellers/{sellerId}/orders", sellerId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.content().json("""
+                        [
+                         {
+                         "orderNumber":"№5",
+                         "creationTimestamp":"2023-05-13T10:14:33",
+                         "orderStatus":"CREATED",
+                         "sellerOrderContactPreview":
+                          {
+                           "receiverName":"Ivan",
+                           "receiverPhone":"+79103658847",
+                           "address":
+                            {
+                              "country":"Russia",
+                              "region":"Len obl",
+                              "city":"Piter",
+                              "postCode":"123456",
+                              "street":"street",
+                              "houseNumber":"23",
+                              "officeNumber":"01"
+                            }
+                           },
+                            "orderedProductPreviews":
+                             [
+                              {
+                              "photoUrl":"photo.ru",
+                              "name":"name",
+                              "articleFromSeller":"37678201-f3c8-4d5c-a628-2344eef50c54",
+                              "amount":1
+                              }
+                             ]
+                         }
+                        ]
+                        """))
+                .andReturn();
+
+        // "src/test/resources/ProductPreviewForSeller.json"
+    }
 
     @Test
     @Transactional
@@ -156,14 +207,6 @@ class OrderControllerTest {
                 .andExpect(status().isBadRequest())
                 .andReturn();
     }
-
-//    @Test
-//    @Transactional
-//    public void getOrderPreviewsBySellerId(){
-//        UUID sellerId = UUID.fromString("37678201-f3c8-4d5c-a628-2344eef50c54");
-//        mockMvc.perform(get("/public/api/v1/sellers/{sellerId}/orders", sellerId))
-//                .andExpect()
-//    }
 
 
 /*    @Test
