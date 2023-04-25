@@ -35,7 +35,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 @ActiveProfiles("testcontainers")
-public class OrderControllerTest {
+class OrderControllerTest {
 
     private final MockMvc mockMvc;
 
@@ -45,7 +45,7 @@ public class OrderControllerTest {
 
     @Test
     @Transactional
-    public void create() throws Exception {
+    void create() throws Exception {
         UUID userExternalId = UUID.fromString("cd8ae5aa-ebea-4922-b3c2-8ba8a296ef04");
         MvcResult mvcResult = mockMvc.perform(
                 post("/public/api/v1/users/{userId}/orders", userExternalId)
@@ -62,7 +62,7 @@ public class OrderControllerTest {
 
     @Test
     @Transactional
-    public void createNegativeUserExternalId() throws Exception {
+    void createNegativeUserExternalId() throws Exception {
         UUID userExternalId = UUID.fromString("cd8ae5aa-ebea-4922-b3c2-8ba8a296ef04");
         Path path = Path.of("src/test/resources/CreateOrderRequestDtoNegative.json");
         mockMvc.perform(post("/public/api/v1/users/{userId}/orders", userExternalId)
@@ -74,7 +74,7 @@ public class OrderControllerTest {
     @Test
     @Transactional
     @Sql("/db/insertTestOrder.sql")
-    public void getByExternalId() throws Exception {
+    void getByExternalId() throws Exception {
         UUID orderExternalId = UUID.fromString("37678201-f3c8-4d5c-a628-2344eef50c54");
         MvcResult mvcResult = mockMvc.perform(get("/public/api/v1/orders/{externalId}", orderExternalId)
                         .contentType(MediaType.APPLICATION_JSON))
@@ -93,7 +93,7 @@ public class OrderControllerTest {
     @Test
     @Transactional
     @Sql("/db/insertTestOrder.sql")
-    public void getByExternalIdNegative() throws Exception {
+    void getByExternalIdNegative() throws Exception {
         UUID orderExternalId = UUID.fromString("37678201-f3c8-4d5c-a628-2344eef50c5");
         mockMvc.perform(get("/public/api/v1/orders/{externalId}", orderExternalId)
                         .contentType(MediaType.APPLICATION_JSON))
@@ -103,7 +103,7 @@ public class OrderControllerTest {
     @Test
     @Transactional
     @Sql("/db/insertTestOrder.sql")
-    public void getOrderByUserId() throws Exception {
+    void getOrderByUserId() throws Exception {
         UUID userExternalId = UUID.fromString("cd8ae5aa-ebea-4922-b3c2-8ba8a296ef04");
         MvcResult mvcResult = mockMvc.perform(get("/public/api/v1/users/{userId}/orders/previews", userExternalId)
                         .contentType(MediaType.APPLICATION_JSON))
@@ -125,7 +125,7 @@ public class OrderControllerTest {
     @Test
     @Transactional
     @Sql("/db/insertTestOrder.sql")
-    public void getOrderByUserIdNegative() throws Exception {
+    void getOrderByUserIdNegative() throws Exception {
         UUID userExternalId = UUID.fromString("cd8ae5aa-ebea-4922-b3c2-8ba8a296ef0");
         mockMvc.perform(get("/public/api/v1/users/{userId}/orders/previews", userExternalId)
                         .contentType(MediaType.APPLICATION_JSON))
@@ -137,7 +137,7 @@ public class OrderControllerTest {
     @Test
     @Transactional
     @Sql("/db/insertTestOrder.sql")
-    public void cancelOrder() throws Exception {
+    void cancelOrder() throws Exception {
         UUID orderExternalId = UUID.fromString("37678201-f3c8-4d5c-a628-2344eef50c54");
         mockMvc.perform(put("/public/api/v1/orders/{externalId}/cancellation", orderExternalId))
                 .andExpect(status().isNoContent())
@@ -150,7 +150,7 @@ public class OrderControllerTest {
     @Test
     @Transactional
     @Sql("/db/insertTestOrderCompleted.sql")
-    public void cancelOrderNegative() throws Exception {
+    void cancelOrderNegative() throws Exception {
         UUID orderExternalId = UUID.fromString("37678201-f3c8-4d5c-a628-2344eef50c54");
         mockMvc.perform(put("/public/api/v1/orders/{externalId}/cancellation", orderExternalId))
                 .andExpect(status().isBadRequest())
