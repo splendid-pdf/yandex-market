@@ -22,7 +22,7 @@ public class SellerService {
 
     private final SellerMapper sellerMapper;
 
-    private static final String SELLER_NOT_FOUND_EXCEPTION = "Seller not found with seller id = ";
+    private final static String SELLER_NOT_FOUND_EXCEPTION = "Seller not found with seller id = ";
 
     public UUID createSeller(SellerRegistration sellerRegistration) {
         if (sellerRepository.existsSellerByEmail(sellerRegistration.email())) {
