@@ -14,8 +14,6 @@ import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.web.SecurityFilterChain;
 
-import static com.yandex.market.util.HttpUtils.PUBLIC_API_V1;
-
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
@@ -48,8 +46,8 @@ public class SecurityConfig {
                 .formLogin().disable()
                 .httpBasic().disable()
                 .authorizeHttpRequests()
-                    .requestMatchers(HttpMethod.POST, PUBLIC_API_V1 + "/sellers").permitAll()
-                    .requestMatchers(HttpMethod.GET, PUBLIC_API_V1 + "/sellers/auth").permitAll()
+                    .requestMatchers(HttpMethod.POST, "/public/api/v1/sellers").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/private/api/v1/sellers/auth").permitAll()
                     .anyRequest().authenticated()
                 .and()
                 .oauth2ResourceServer(resourceServer -> resourceServer.jwt().decoder(jwtDecoder()));
