@@ -1,15 +1,17 @@
 package com.yandex.market.productservice;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.yandex.market.productservice.dto.response.ProductResponse;
 import com.yandex.market.productservice.models.ArchiveResponse;
-import com.yandex.market.productservice.models.ProductResponse;
 import com.yandex.market.productservice.models.ProductsResponse;
+import com.yandex.market.productservice.models.UserProductPreview;
 import com.yandex.market.productservice.service.AbstractTestIntegration;
 import com.yandex.market.productservice.service.ProductTestService;
 import com.yandex.market.util.RestPageImpl;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -141,8 +143,11 @@ class ProductControllerModuleTest extends AbstractTestIntegration {
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();
-        Page<ProductsResponse> products = serviceTest.getProductFromMvcResult(mvcResult, new TypeReference<RestPageImpl<ProductsResponse>>() {
-        });
+        Page<ProductsResponse> products = serviceTest.getProductFromMvcResult(
+                mvcResult,
+                new TypeReference<RestPageImpl<ProductsResponse>>() {
+                }
+        );
 
         long FROM_PRODUCT_LIST = 4 - ARCHIVED;
         assertEquals(FROM_PRODUCT_LIST, products.getTotalElements());
@@ -298,10 +303,125 @@ class ProductControllerModuleTest extends AbstractTestIntegration {
         assertEquals(updateCount, actualCount, "Received price not as expected");
     }
 
+    /*
+    TODO: в ожидании изменения логики создания изображения
+    @PostMapping("/sellers/{sellerId}/products/{productId}/images")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ProductImageDto addImage(@PathVariable UUID sellerId,
+                                    @PathVariable UUID productId,
+                                    @RequestBody @Valid ProductImageDto productImage) {
+        return productService.addProductImage(productId, productImage);
+    }*/
+    @Test
+    @Disabled
+    void addImageSuccessful() {
 
+    }
+
+    @Test
+    @Transactional
+    void deleteProductImageSuccessful() throws Exception {
+        mockMvc.perform(delete(DEL_IMAGE_PATH, REAL_SELLER_ID)
+                        .header("Authorization", AUTH_TOKEN)
+                        .param("url", "https://random.imagecdn.app/123/123")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
+    @Transactional
+    @DisplayName("Успешное создание специальной цены для продукта")
+    void createSpecialPriceByProductIdSuccessful() throws Exception {
+        String response = mockMvc.perform(post(SPECIAL_PRICE_PATH, REAL_SELLER_ID, REAL_PRODUCT_ID)
+                        .header("Authorization", AUTH_TOKEN)
+                        .content(serviceTest.readFromFile(CREATE_SP_PATH))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated())
+                .andReturn()
+                .getResponse().getContentAsString()
+                .replaceAll("\"", "");
+
+        assertDoesNotThrow(
+                () -> UUID.fromString(response)
+        );
+    }
+
+    @Test
+    @Transactional
+    @DisplayName("Успешное обновление специальной цены")
+    void updateSpecialPriceSuccessful() throws Exception {
+        mockMvc.perform(put(DEFINITE_SP_PATH, REAL_SELLER_ID, REAL_SP_ID)
+                        .header("Authorization", AUTH_TOKEN)
+                        .content(serviceTest.readFromFile(CREATE_SP_PATH))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(String.valueOf(REAL_SP_ID)))
+                .andExpect(jsonPath("$.fromDate").value("2026-06-13T10:14:33"))
+                .andExpect(jsonPath("$.toDate").value("2026-06-14T10:14:33"))
+                .andExpect(jsonPath("$.price").value("2345"));
+    }
+
+    @Test
+    @Transactional
+    void deleteSpecialPriceByIdSuccessful() throws Exception {
+        mockMvc.perform(delete(DEFINITE_SP_PATH, REAL_SELLER_ID, REAL_SP_ID)
+                        .header("Authorization", AUTH_TOKEN)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
+    @Transactional
+    void updateProductCharacteristicByIdSuccessful() throws Exception {
+        mockMvc.perform(put(CHARACTER_PATH, REAL_SELLER_ID, REAL_CHAR_ID)
+                        .header("Authorization", AUTH_TOKEN)
+                        .content(serviceTest.readFromFile(CREATE_CHAR__PATH))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(String.valueOf(REAL_CHAR_ID)))
+                .andExpect(jsonPath("$.name").value("Ширина, см"))
+                .andExpect(jsonPath("$.value").value("999.0"));
+    }
+
+    @Test
+    void getAllProductPreviewsSuccessful() throws Exception {
+        MvcResult mvcResult = mockMvc.perform(
+                        get(PRODUCT_PREVIEW_PATH, PageRequest.of(0, 20))
+                                .header("Authorization", AUTH_TOKEN)
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        RestPageImpl<UserProductPreview> products = serviceTest.getProductFromMvcResult(
+                mvcResult,
+                new TypeReference<>() {
+                }
+        );
+
+        assertEquals(REAL_PRODUCTS.size(), products.getTotalElements());
+    }
+
+    @Test
+    void getProductPreviewsByIdentifiersSuccessful() throws Exception {
+        MvcResult mvcResult = mockMvc.perform(
+                        post(PRODUCT_PREVIEW_PATH, REAL_SELLER_ID, REAL_PRODUCT_ID)
+                                .header("Authorization", AUTH_TOKEN)
+                                .param("product-ids", serviceTest.convertListToParam(REAL_PRODUCTS))
+                                .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(status().isOk())
+                .andReturn();
+
+        List<UserProductPreview> products = serviceTest.getProductFromMvcResult(
+                mvcResult,
+                new TypeReference<>() {
+                }
+        );
+
+        assertEquals(REAL_PRODUCTS.size(), products.size());
+    }
 
     public ProductResponse getProduct(UUID sellerId, UUID productId) throws Exception {
-
         return serviceTest.getProductFromMvcResult(
                 mockMvc.perform(get(PRODUCT_PATH, sellerId, productId, PageRequest.of(0, 20))
                                 .header("Authorization", AUTH_TOKEN)

@@ -1,14 +1,13 @@
 package com.yandex.market.productservice.controller;
 
 import com.yandex.market.productservice.dto.ProductImageDto;
-import com.yandex.market.productservice.dto.ProductRepresentationSetDto;
 import com.yandex.market.productservice.dto.projections.SellerArchiveProductPreview;
 import com.yandex.market.productservice.dto.projections.SellerProductPreview;
 import com.yandex.market.productservice.dto.projections.UserProductPreview;
 import com.yandex.market.productservice.dto.request.CreateProductRequest;
 import com.yandex.market.productservice.dto.request.ProductCharacteristicRequest;
-import com.yandex.market.productservice.dto.request.SpecialPriceRequest;
 import com.yandex.market.productservice.dto.request.ProductUpdateRequest;
+import com.yandex.market.productservice.dto.request.SpecialPriceRequest;
 import com.yandex.market.productservice.dto.response.ProductCharacteristicResponse;
 import com.yandex.market.productservice.dto.response.ProductResponse;
 import com.yandex.market.productservice.dto.response.SpecialPriceResponse;
@@ -27,6 +26,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import static com.yandex.market.util.HttpUtils.PUBLIC_API_V1;
@@ -185,7 +185,7 @@ public class ProductController implements ProductApi {
 
     @PostMapping("/product-previews")
     @ResponseStatus(HttpStatus.OK)
-    public List<UserProductPreview> getProductPreviewsByIdentifiers(@RequestBody ProductRepresentationSetDto productRepresentationSetDto) {
-        return productService.getProductPreviewsByIds(productRepresentationSetDto.productIdentifiers());
+    public List<UserProductPreview> getProductPreviewsByIdentifiers(@RequestParam("product-ids") Set<UUID> productIds) {
+        return productService.getProductPreviewsByIds(productIds);
     }
 }
