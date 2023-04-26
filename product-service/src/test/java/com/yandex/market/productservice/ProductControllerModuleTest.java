@@ -25,8 +25,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.List;
 import java.util.UUID;
 
@@ -61,7 +59,7 @@ class ProductControllerModuleTest {
     private final MockMvc mockMvc;
 
     private final ProductTestService serviceTest;
-    private final String AUTH_TOKEN = "eyJraWQiOiI0ZDZiYjgyMi04YmNlLTQ2ZDEtYTVhZS02N2Y5NGIyZGM0OWMiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJzZWxsZXJfZGltYUBnbWFpbC5ydSIsImF1ZCI6ImNsaWVudCIsIm5iZiI6MTY4MjQzODAwNywic2NvcGUiOlsib3BlbmlkIl0sImlzcyI6Imh0dHA6Ly81MS4yNTAuMTAyLjEyOjkwMDAiLCJleHAiOjE2ODMwNDI4MDcsImlhdCI6MTY4MjQzODAwNywic2VsbGVyLWlkIjoiY2IwNDFkMzEtYTM0NS00ZDgwLTk3MWEtNzBjNDljYmM1YzI4IiwiYXV0aG9yaXRpZXMiOlsiUk9MRV9TRUxMRVIiXX0.p1tXC2eaiZpEZdtXzx3e--jEoWJ0JS84L-ALxaVPBciw3wWYHWqKHseBumKXjuGxyymiTP_aI7CnBy8xfQNMUmIsd1XKWHcrH2hEylkCVdoL08YPjcRcTVcPUM7GDjThHIFWcjF8WL8Fb4OUN9HcM2GPywG7D1QffVblF8BJ4rv7zECU6o_t15cZ1Az44CekIyAEpAydFhIMs4zFD0PlqkOeQ9yrwd96FkPWjrWeqEwvP4kXiH4zD7HTs8ggSKnboxYWnayQDLjMJrx-8KFgHd4KjE5xfxDZ9GqjAVhVvcg0umQzp4t04fe_P4aCn70NXyjh8ahT2ghKjCgilxNTXQ";
+    private final String AUTH_TOKEN = "eyJraWQiOiJmNTMxMWRhYy0xMzIxLTQxNTItYmQ3NS04YjQ3NjY3Y2E3ZjEiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJzZWxsZXJfZGltYUBnbWFpbC5ydSIsImF1ZCI6ImNsaWVudCIsIm5iZiI6MTY4MjUyNTYwNiwic2NvcGUiOlsib3BlbmlkIl0sImlzcyI6Imh0dHA6Ly81MS4yNTAuMTAyLjEyOjkwMDAiLCJleHAiOjE2ODMxMzA0MDYsImlhdCI6MTY4MjUyNTYwNiwic2VsbGVyLWlkIjoiY2IwNDFkMzEtYTM0NS00ZDgwLTk3MWEtNzBjNDljYmM1YzI4IiwiYXV0aG9yaXRpZXMiOlsiUk9MRV9TRUxMRVIiXX0.H0-mxIai2Lf-aC35V5i4fQdkV4O5LRNzmM_OzdKC_gxLuBX6b-aSfVO8Iwu2NIZPByhh3XD0Ac50W9xsjjvXY9hNs4ol8TqQabENRbsFVmXME2VeFY4xrsO8NIo1JKaI3kJwY8YsvcCb7SKPC-bonaSLLQ_sfvzbQTgnSlziJGXK0lAgnvTJou8Poy-9X63elgXx_uYxQ1NG_cBZInBGfOhA9-OIcwjG_WQnJli_wluyPb-j4C3RFeCQs33zghzZ7TqxtifeuNUZltjXzCwXSXd4qtJbfFbHTKcd8eEEJho9g2VvLd2olNyoRax4eIDneu_5rZg0UmfDWGdcxrzEeA";
 
     private final String HEADER = "Bearer " + AUTH_TOKEN;
 
@@ -85,7 +83,7 @@ class ProductControllerModuleTest {
         MvcResult mvcResult = mockMvc.perform(post(PRODUCTS_PATH, REAL_SELLER_ID)
                         .header("Authorization", HEADER)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(Files.readString(Path.of(MIN_PRODUCT_PATH))))
+                        .content(serviceTest.readFromFile(MIN_PRODUCT_PATH)))
                 .andExpect(status().isCreated())
                 .andReturn();
 
@@ -107,7 +105,7 @@ class ProductControllerModuleTest {
         MvcResult mvcResult = mockMvc.perform(post(PRODUCTS_PATH, REAL_SELLER_ID)
                         .header("Authorization", HEADER)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(Files.readString(Path.of(MAX_PRODUCT_PATH))))
+                        .content(serviceTest.readFromFile(MAX_PRODUCT_PATH)))
                 .andExpect(status().isCreated())
                 .andReturn();
 
@@ -135,7 +133,7 @@ class ProductControllerModuleTest {
         mockMvc.perform(post(PRODUCTS_PATH, UNREAL_SELLER_ID)
                         .header("Authorization", HEADER)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(Files.readString(Path.of(MAX_PRODUCT_PATH))))
+                        .content(serviceTest.readFromFile(MAX_PRODUCT_PATH)))
                 .andExpect(status().isForbidden());
     }
 
@@ -166,7 +164,7 @@ class ProductControllerModuleTest {
         mockMvc.perform(put(PRODUCT_PATH, REAL_SELLER_ID, REAL_PRODUCT_ID)
                         .header("Authorization", HEADER)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(Files.readString(Path.of(UPD_PRODUCT_PATH))))
+                        .content(serviceTest.readFromFile(UPD_PRODUCT_PATH)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("Шкаф \"Оврора\" (сталь и дерево)"))
                 .andExpect(jsonPath("$.description").value("Супер шкаф, классный, стальной, удобный, также стальная подставка"))
