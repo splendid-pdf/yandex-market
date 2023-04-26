@@ -8,6 +8,7 @@ import static com.yandex.market.util.HttpUtils.PUBLIC_API_V1;
 public class Environment {
     public static final String
             PRODUCTS_PATH = "/" + PUBLIC_API_V1 + "/sellers/{sellerId}/products",
+            TYPES_PATH = "/" + PUBLIC_API_V1 + "/types",
             ARCHIVE_PATH = "/" + PUBLIC_API_V1 + "/sellers/{sellerId}/archive/products",
             PRODUCT_PATH = PRODUCTS_PATH + "/{productId}",
             CHANGE_PRICE_PATH = PRODUCTS_PATH + "/{productId}/price",

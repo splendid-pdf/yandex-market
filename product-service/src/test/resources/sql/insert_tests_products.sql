@@ -6,6 +6,14 @@ create table types
     external_id uuid
 );
 
+create table rooms
+(
+    id          bigint not null
+        primary key,
+    external_id uuid,
+    name        varchar(255)
+);
+
 create table type_characteristics
 (
     id         bigint not null

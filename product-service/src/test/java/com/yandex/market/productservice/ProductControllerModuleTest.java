@@ -1,13 +1,19 @@
 package com.yandex.market.productservice;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.yandex.market.productservice.dto.projections.RoomPreview;
+import com.yandex.market.productservice.dto.projections.TypePreview;
 import com.yandex.market.productservice.dto.response.ProductResponse;
+import com.yandex.market.productservice.dto.response.TypeResponse;
 import com.yandex.market.productservice.models.ArchiveResponse;
 import com.yandex.market.productservice.models.ProductsResponse;
 import com.yandex.market.productservice.models.UserProductPreview;
 import com.yandex.market.productservice.service.AbstractTestIntegration;
 import com.yandex.market.productservice.service.ProductTestService;
 import com.yandex.market.util.RestPageImpl;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Assertions;
@@ -17,15 +23,22 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.util.List;
 import java.util.UUID;
 
 import static com.yandex.market.productservice.models.Environment.*;
+import static com.yandex.market.util.HttpUtils.PUBLIC_API_V1;
+import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.test.web.client.match.MockRestRequestMatchers.content;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -37,6 +50,16 @@ class ProductControllerModuleTest extends AbstractTestIntegration {
     private MockMvc mockMvc;
 
     private final ProductTestService serviceTest;
+
+    @Test
+    @DisplayName("Продукт не может быть создан, так как продавец не авторизован")
+    void shouldNotCreateProductSinceSellerIsNotAuthorized() throws Exception {
+        mockMvc.perform(post(PRODUCTS_PATH, REAL_SELLER_ID)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(serviceTest.readFromFile(MIN_PRODUCT_PATH)))
+                .andExpect(status().isUnauthorized())
+                .andReturn();
+    }
 
     @Test
     @Transactional
@@ -419,6 +442,28 @@ class ProductControllerModuleTest extends AbstractTestIntegration {
         );
 
         assertEquals(REAL_PRODUCTS.size(), products.size());
+    }
+
+    @Test
+    void shouldGetTypeByIdSuccessful() throws Exception {
+        mockMvc.perform(get(TYPES_PATH + "/{typeId}", REAL_TYPE_ID)
+                        .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value("301c5370-be41-421e-9b15-f1e80a7079f9"))
+                .andExpect(jsonPath("$.name").value("спальня"))
+                .andExpect(jsonPath("$.characteristics.size()").value("14"));
+    }
+
+    @Test
+    void shouldGetTypePreviewsSuccessful() throws Exception {
+        mockMvc.perform(get(TYPES_PATH)
+                        .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(jsonPath("$[0].name").value("спальня"))
+                .andExpect(jsonPath("$[0].id").value("301c5370-be41-421e-9b15-f1e80a7079f9"));
     }
 
     public ProductResponse getProduct(UUID sellerId, UUID productId) throws Exception {
