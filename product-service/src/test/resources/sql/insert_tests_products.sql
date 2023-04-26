@@ -1,5 +1,70 @@
+create table types
+(
+    id          bigint not null
+        primary key,
+    name        varchar(255),
+    external_id uuid
+);
+
+create table type_characteristics
+(
+    id         bigint not null
+        primary key,
+    name       varchar(255),
+    value_type varchar(255),
+    type_id    bigint
+        references types
+);
+
+create table products
+(
+    id                  bigint  not null
+        primary key,
+    external_id         uuid,
+    name                varchar(255),
+    description         varchar(255),
+    is_visible          boolean not null,
+    is_archived         boolean not null,
+    is_deleted          boolean not null,
+    rating              double precision,
+    seller_external_id  uuid,
+    tax_type            varchar(255),
+    price               bigint,
+    article_from_seller varchar(255),
+    count               bigint,
+    type_id             bigint
+        references types,
+    creation_date       timestamp,
+    brand               varchar(255)
+);
+
+create table product_images
+(
+    id         bigint not null,
+    url        varchar(255),
+    is_main    boolean,
+    product_id bigint
+        references products
+);
+
 insert into types(id, external_id, name)
 values (1, '301c5370-be41-421e-9b15-f1e80a7079f9', 'спальня');
+
+INSERT INTO type_characteristics (id, name, value_type, type_id)
+VALUES (209, 'Ширина, см', 'DOUBLE', 1),
+       (210, 'Глубина, см', 'DOUBLE', 1),
+       (211, 'Высота, см', 'DOUBLE', 1),
+       (212, 'Вес товара, кг', 'DOUBLE', 1),
+       (213, 'Цвет', 'TEXT', 1),
+       (214, 'Материал фасада', 'TEXT', 1),
+       (215, 'Покрытие фасада', 'TEXT', 1),
+       (216, 'Стиль дизайна', 'TEXT', 1),
+       (217, 'Расположение', 'TEXT', 1),
+       (218, 'Количество полок', 'LONG', 1),
+       (219, 'Количество ящиков', 'LONG', 1),
+       (220, 'Страна изготовитель', 'TEXT', 1),
+       (221, 'Форма поставки', 'TEXT', 1),
+       (222, 'Гарантийный срок', 'TEXT', 1);
 
 insert into products (id, external_id, name, description, is_visible, is_archived, is_deleted, rating,
                       seller_external_id, tax_type, price, article_from_seller, count, type_id, creation_date, brand)

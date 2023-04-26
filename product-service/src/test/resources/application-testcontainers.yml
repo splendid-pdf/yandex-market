@@ -8,7 +8,11 @@ spring:
       ddl-auto: update
     database-platform: org.hibernate.dialect.PostgreSQLDialect
   datasource:
-    url: jdbc:tc:postgresql:14.1:///product_db_test
-    driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
+    url: jdbc:postgresql://localhost:5432/user_db
+    username: user
+    password: password
+#  datasource:
+#    url: jdbc:tc:postgresql:14.1:///product_db_test
+#    driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
   flyway:
     enabled: false

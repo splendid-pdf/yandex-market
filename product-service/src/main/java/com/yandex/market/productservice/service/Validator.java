@@ -27,7 +27,6 @@ import static com.yandex.market.productservice.utils.ExceptionMessagesConstants.
 public class Validator {
 
     private final TypeRepository typeRepository;
-
     private final Map<UUID, Map<String, ValueType>> typeCharacteristicsMap = new HashMap<>();
 
     private final ObjectMapper objectMapper;

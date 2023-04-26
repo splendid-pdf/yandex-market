@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.UUID;
 
-public record ProductTest(
+public record ProductResponse(
         UUID id,
         UUID sellerId,
         String name,
