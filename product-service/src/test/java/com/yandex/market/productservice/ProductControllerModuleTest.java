@@ -102,7 +102,7 @@ class ProductControllerModuleTest {
     }
 
     @Test
-    @DisplayName("Обновление товара со всеми полями")
+    @DisplayName("Создание товара со всеми полями")
     void shouldCreateProductWithMaximal() throws Exception {
         MvcResult mvcResult = mockMvc.perform(post(PRODUCTS_PATH, REAL_SELLER_ID)
                         .header("Authorization", HEADER)
