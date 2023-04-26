@@ -21,7 +21,6 @@ import java.util.UUID;
 @RestControllerAdvice
 public class BasketExceptionHandler {
 
-
     @ExceptionHandler(ConstraintViolationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleConstraintViolationException(ConstraintViolationException ex) {
