@@ -12,7 +12,7 @@ import java.util.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "baskets")
-@EqualsAndHashCode(of = {"id", "externalId", "userId"})
+@EqualsAndHashCode(of = "userId")
 public class Basket {
 
     @Id
@@ -53,5 +53,16 @@ public class Basket {
                 return;
             }
         }
+    }
+
+    public Integer getAmountItems(){
+        Integer amount = 0;
+        if(getItems().isEmpty()){
+            return 0;
+        }
+        for(BasketItem basketItem : getItems()){
+            amount += basketItem.getItemCount();
+        }
+        return amount;
     }
 }

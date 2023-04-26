@@ -1,52 +1,65 @@
 plugins {
-    id 'java'
-    id 'org.springframework.boot' version '3.0.0'
-    id 'io.spring.dependency-management' version '1.1.0'
-}
-
-ext{
-    set('swaggerVersion', '2.2.7')
-}
-
-group = 'com.yandex.market'
-version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '17'
-
-configurations {
-    compileOnly {
-        extendsFrom annotationProcessor
-    }
-}
-
-repositories {
-    mavenCentral()
+    id 'com.marketplace.common'
+    id 'com.marketplace.common.spring'
 }
 
 dependencies {
     implementation project(':commons')
 
-    //spring
-    implementation 'org.springframework.boot:spring-boot-starter-actuator'
-    implementation 'org.springframework.boot:spring-boot-starter-amqp'
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.springframework.boot:spring-boot-starter-validation'
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    developmentOnly 'org.springframework.boot:spring-boot-devtools'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    annotationProcessor libs.spring.config.processor
 
-    // open api
-    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
+    implementation libs.spring.web
+    implementation libs.spring.data.jpa
+    implementation libs.spring.security
+    implementation libs.spring.oauth2.resource.server
+    implementation libs.spring.actuator
+    implementation libs.spring.validation
+    implementation libs.spring.openapi.webmvc
 
-    implementation 'org.flywaydb:flyway-core'
-    compileOnly 'org.projectlombok:lombok'
-    runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
-    runtimeOnly 'org.postgresql:postgresql'
-    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
-    annotationProcessor 'org.projectlombok:lombok'
+    implementation libs.lombok
+
+    implementation libs.flyway
+    runtimeOnly libs.postgresql
+
+    developmentOnly libs.spring.devtools
+
+    testImplementation libs.prometheus
+    testImplementation libs.spring.test
+    testImplementation libs.aspectj.core
+    testImplementation libs.mockito.inline
+    testImplementation libs.spring.security.test
+    testImplementation libs.testcontainers.junit
+    testImplementation libs.testcontainers.postgresql
 
 
+
+//    implementation 'org.springframework.boot:spring-boot-starter-amqp'
+//    implementation 'org.projectlombok:lombok:1.18.22'
+//    compileOnly 'org.projectlombok:lombok'
+//    annotationProcessor 'org.projectlombok:lombok'
 }
 
-tasks.named('test') {
-    useJUnitPlatform()
-}
+
+
+//ext{
+//    set('swaggerVersion', '2.2.7')
+//}
+//
+//group = 'com.yandex.market'
+//version = '0.0.1-SNAPSHOT'
+//sourceCompatibility = '17'
+//
+//configurations {
+//    compileOnly {
+//        extendsFrom annotationProcessor
+//    }
+//}
+//
+//repositories {
+//    mavenCentral()
+//}
+//
+//
+//tasks.named('test') {
+//    useJUnitPlatform()
+//}

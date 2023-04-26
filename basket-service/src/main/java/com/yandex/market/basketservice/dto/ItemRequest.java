@@ -6,6 +6,8 @@ import jakarta.validation.constraints.Positive;
 import java.util.UUID;
 
 public record ItemRequest(
+
+        @NotNull(message = "ID of item must be specified")
         UUID productId,
 
         @NotNull(message = "The number of items must be specified")
