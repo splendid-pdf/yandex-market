@@ -22,4 +22,5 @@ dependencies {
     testImplementation libs.mockito.inline
     testImplementation libs.testcontainers.junit
     testImplementation libs.testcontainers.postgresql
+    testImplementation 'org.springframework.security:spring-security-test:6.0.2'
 }

@@ -1,0 +1,15 @@
+{
+  "externalId": "44329c76-db69-425d-a5ef-f71cefec44db",
+  "firstName": "aleks",
+  "lastName": "zhi",
+  "email": "arkady@gmail.ru",
+  "legalAddress": "testcity",
+  "companyName": "companyName",
+  "imageUrl": "url",
+  "businessModel": "IP",
+  "ITN": "4321",
+  "PSRN": "9876",
+  "BIC": "1234",
+  "paymentAccount": "ACCOUNT123456",
+  "corporateAccount": "corporateAccount"
+}
