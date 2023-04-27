@@ -111,7 +111,7 @@ class OrderControllerTest {
     @Sql("/db/insertTestOrder.sql")
     void getOrderByUserId() throws Exception {
         UUID userExternalId = UUID.fromString("cd8ae5aa-ebea-4922-b3c2-8ba8a296ef04");
-        MvcResult mvcResult = mockMvc.perform(get("/public/api/v1/users/{userId}/orders/previews", userExternalId)
+        MvcResult mvcResult = mockMvc.perform(get("/public/api/v1/users/{userId}/orders-previews", userExternalId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();
@@ -190,7 +190,7 @@ class OrderControllerTest {
     @Sql("/db/insertTestOrder.sql")
     void cancelOrder() throws Exception {
         UUID orderExternalId = UUID.fromString("37678201-f3c8-4d5c-a628-2344eef50c54");
-        mockMvc.perform(put("/public/api/v1/orders/{externalId}/cancellation", orderExternalId))
+        mockMvc.perform(patch("/public/api/v1/orders/{externalId}/cancellation", orderExternalId))
                 .andExpect(status().isNoContent())
                 .andReturn();
 
@@ -203,7 +203,7 @@ class OrderControllerTest {
     @Sql("/db/insertTestOrderCompleted.sql")
     void cancelOrderNegative() throws Exception {
         UUID orderExternalId = UUID.fromString("37678201-f3c8-4d5c-a628-2344eef50c54");
-        mockMvc.perform(put("/public/api/v1/orders/{externalId}/cancellation", orderExternalId))
+        mockMvc.perform(patch("/public/api/v1/orders/{externalId}/cancellation", orderExternalId))
                 .andExpect(status().isBadRequest())
                 .andReturn();
     }
