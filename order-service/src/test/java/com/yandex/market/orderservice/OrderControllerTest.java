@@ -190,7 +190,7 @@ class OrderControllerTest {
     @Sql("/db/insertTestOrder.sql")
     void cancelOrder() throws Exception {
         UUID orderExternalId = UUID.fromString("37678201-f3c8-4d5c-a628-2344eef50c54");
-        mockMvc.perform(put("/public/api/v1/orders/{externalId}/cancellation", orderExternalId))
+        mockMvc.perform(patch("/public/api/v1/orders/{externalId}/cancellation", orderExternalId))
                 .andExpect(status().isNoContent())
                 .andReturn();
 
@@ -203,7 +203,7 @@ class OrderControllerTest {
     @Sql("/db/insertTestOrderCompleted.sql")
     void cancelOrderNegative() throws Exception {
         UUID orderExternalId = UUID.fromString("37678201-f3c8-4d5c-a628-2344eef50c54");
-        mockMvc.perform(put("/public/api/v1/orders/{externalId}/cancellation", orderExternalId))
+        mockMvc.perform(patch("/public/api/v1/orders/{externalId}/cancellation", orderExternalId))
                 .andExpect(status().isBadRequest())
                 .andReturn();
     }
