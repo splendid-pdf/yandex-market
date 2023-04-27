@@ -27,12 +27,14 @@ jetbrains-annotations = "24.0.1"
 apache-commons-lang3 = "3.12.0"
 apache-commons-validator = "1.7"
 apache-commons-collections = "3.2.2"
+commons-io = "2.11.0"
 
 # test
 aspectj-core = "3.24.2"
 mockito-inline = "4.10.0"
 testcontainers = "1.17.6"
 testcontainers-redis = "1.6.4"
+testcontainers-mongodb = "1.17.6"
 spring-security-test = "6.0.3"
 ########################################################################################################################
 
@@ -47,6 +49,7 @@ spring-validation = { module = "org.springframework.boot:spring-boot-starter-val
 spring-data-commons = {module = "org.springframework.data:spring-data-commons", version.ref = "spring-data-commons" }
 spring-error-handling = { module = "io.github.wimdeblauwe:error-handling-spring-boot-starter", version.ref = "spring-error-handling" }
 spring-config-processor = { module = "org.springframework.boot:spring-boot-configuration-processor", version.ref = "spring-boot" }
+spring-mongodb = { module = "org.springframework.boot:spring-boot-starter-data-mongodb", version.ref = "spring-boot" }
 
 # spring framework
 spring-webflux = { module = "org.springframework:spring-webflux", version.ref = "spring-webflux" }
@@ -75,6 +78,7 @@ postgresql = { module = "org.postgresql:postgresql", version.ref = "postgres" }
 guava = { module = "com.google.guava:guava", version.ref = "guava" }
 lombok = { module = "org.projectlombok:lombok", version.ref = "lombok" }
 mapstruct = { module = "org.mapstruct:mapstruct", version.ref = "mapstruct" }
+commons-io = { module = "commons-io:commons-io", version.ref = "commons-io" }
 mapstruct-processor = { module = "org.mapstruct:mapstruct-processor", version.ref = "mapstruct" }
 jetbrains-annotations = { module = "org.jetbrains:annotations", version.ref = "jetbrains-annotations" }
 apache-commons-lang3 = { module = "org.apache.commons:commons-lang3", version.ref = "apache-commons-lang3" }
@@ -90,6 +94,7 @@ testcontainers-junit = { module = "org.testcontainers:junit-jupiter", version.re
 testcontainers-redis = { module = "com.redis.testcontainers:testcontainers-redis", version.ref = "testcontainers-redis" }
 testcontainers-postgresql = { module = "org.testcontainers:postgresql", version.ref = "testcontainers" }
 spring-security-test = { module = "org.springframework.security:spring-security-test", version.ref = "spring-security-test" }
+testcontainers-mongodb = { module = "org.testcontainers:mongodb", version.ref = "testcontainers-mongodb" }
 ########################################################################################################################
 
 [plugins]

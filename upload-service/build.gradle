@@ -16,23 +16,23 @@ dependencies {
 	implementation libs.spring.cloud.config.client
 	implementation libs.spring.security
 	implementation libs.spring.oauth2.resource.server
-	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
+	implementation libs.spring.mongodb
 
 	developmentOnly libs.spring.devtools
 
-	implementation 'commons-io:commons-io:2.11.0'
+	implementation libs.commons.io
 
 
 	// Amazon web services
 	implementation 'com.amazonaws:aws-java-sdk-s3:1.12.400'
 
-	runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
+	runtimeOnly libs.prometheus
 
 
 	// tests
-	testImplementation 'org.testcontainers:junit-jupiter:1.17.6'
-	testImplementation 'org.testcontainers:mongodb:1.17.6'
-	testImplementation 'org.springframework.security:spring-security-test:6.0.2'
+	testImplementation libs.testcontainers.junit
+	testImplementation libs.testcontainers.mongodb
+	testImplementation libs.spring.security.test
 	testImplementation libs.spring.test
 	testImplementation libs.mockito.inline
 }
