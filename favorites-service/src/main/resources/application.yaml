@@ -39,3 +39,16 @@ spring:
     driverClassName: org.postgresql.Driver
     hikari:
       auto-commit: false
+
+management:
+  tracing:
+    enabled: false
+    sampling:
+      probability: 0.1
+  endpoints:
+    web:
+      exposure:
+        include: prometheus, health
+  zipkin:
+    tracing:
+      endpoint: http://localhost:9411/api/v2/spans

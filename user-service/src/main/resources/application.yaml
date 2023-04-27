@@ -32,6 +32,19 @@ spring:
     password: 123
     driver-class-name: org.postgresql.Driver
 
+management:
+  tracing:
+    enabled: false
+    sampling:
+      probability: 0.1
+  endpoints:
+    web:
+      exposure:
+        include: prometheus,health
+  metrics:
+    tags:
+      application: ${spring.application.name}
+
 app:
   validation:
     error-info:

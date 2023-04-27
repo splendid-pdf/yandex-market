@@ -13,6 +13,8 @@ spring-authorization-server = "1.0.0"
 
 # monitoring
 prometheus = "1.10.5"
+micrometer-tracing = "1.0.0"
+opentelemetry-exporter-zipkin = "1.25.0"
 
 # db-layer
 flyway = "9.16.0"
@@ -65,6 +67,10 @@ spring-oauth2-authorization-server = { module = "org.springframework.security:sp
 
 # other
 prometheus = { module = "io.micrometer:micrometer-registry-prometheus", version.ref = "prometheus" }
+micrometr-tracing = { module = "io.micrometer:micrometer-tracing", version.ref = "micrometer-tracing" }
+micrometr-tracing-bom = { module = "io.micrometer:micrometer-tracing-bom", version.ref = "micrometer-tracing" }
+micrometr-tracing-bridge-otel = { module = "io.micrometer:micrometer-tracing-bridge-otel", version.ref = "micrometer-tracing" }
+opentelemetry-exporter-zipkin = { module = "io.opentelemetry:opentelemetry-exporter-zipkin", version.ref = "opentelemetry-exporter-zipkin" }
 spring-devtools = { module = "org.springframework.boot:spring-boot-devtools", version.ref = "spring-boot" }
 
 # db-layer
