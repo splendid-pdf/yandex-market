@@ -1,6 +1,6 @@
 package com.yandex.market.favoritesservice.mapper;
 
-import com.yandex.market.favoritesservice.dto.FavoriteItemResponseDto;
+import com.yandex.market.favoritesservice.dto.response.FavoriteItemResponseDto;
 import com.yandex.market.favoritesservice.model.FavoriteItem;
 import org.mapstruct.Mapper;
 

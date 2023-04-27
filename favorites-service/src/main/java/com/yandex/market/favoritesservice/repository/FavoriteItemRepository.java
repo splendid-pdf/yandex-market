@@ -12,5 +12,5 @@ public interface FavoriteItemRepository extends JpaRepository<FavoriteItem, Long
 
     Page<FavoriteItem> getFavoritesByUserId(UUID userId, Pageable pageable);
 
-    Optional<FavoriteItem> getFavoriteItemByUserIdAndProductId(UUID userId, UUID productId);
+    Optional<FavoriteItem> getFavoriteItemByUserId(UUID userId);
 }

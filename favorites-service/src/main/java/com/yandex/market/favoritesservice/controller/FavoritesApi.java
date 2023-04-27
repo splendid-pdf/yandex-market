@@ -1,6 +1,7 @@
 package com.yandex.market.favoritesservice.controller;
 
-import com.yandex.market.favoritesservice.dto.FavoriteItemResponseDto;
+import com.yandex.market.favoritesservice.dto.request.FavoriteProductDto;
+import com.yandex.market.favoritesservice.dto.response.FavoriteItemResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -8,10 +9,12 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.UUID;
 
@@ -33,7 +36,7 @@ public interface FavoritesApi {
             """
     )
     UUID createFavorites(@Parameter(name = "userId", description = "Идентификатор клиента") UUID userId,
-                         @Parameter(name = "productId", description = "Идентификатор продукта") UUID productId);
+                         FavoriteProductDto favoriteProductDto);
 
     @Operation(operationId = "getFavorites", summary = "Получение избранных продуктов клиента")
     @ApiResponse(responseCode = "200", description = "OK",

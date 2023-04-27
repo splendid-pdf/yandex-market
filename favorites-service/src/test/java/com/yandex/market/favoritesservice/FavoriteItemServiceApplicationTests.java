@@ -3,7 +3,8 @@ package com.yandex.market.favoritesservice;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.exc.ValueInstantiationException;
-import com.yandex.market.favoritesservice.dto.FavoriteItemResponseDto;
+import com.yandex.market.auth.model.Role;
+import com.yandex.market.favoritesservice.dto.response.FavoriteItemResponseDto;
 import com.yandex.market.favoritesservice.model.FavoriteItem;
 import com.yandex.market.favoritesservice.repository.FavoriteItemRepository;
 import com.yandex.market.util.RestPageImpl;
@@ -21,6 +22,10 @@ import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlGroup;
@@ -30,14 +35,18 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.authentication;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@Transactional
 @SpringBootTest
 @Testcontainers
 @AutoConfigureMockMvc
@@ -70,10 +79,6 @@ class FavoriteItemServiceApplicationTests {
     @Value("classpath:json/expected-response-of-added-favorite-item.json")
     private Resource expectedAddedFavoriteItemResource;
 
-    private final String AUTH_TOKEN = "eyJraWQiOiJiYjRiNjM5MS04YWRhLTQzM2YtYjljMi00Mzg2ZTE3Y2JmZWMiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJyb2NrQHJvY2sucnUiLCJhdWQiOiJjbGllbnQiLCJuYmYiOjE2ODIzNjA2MzAsInNjb3BlIjpbIm9wZW5pZCJdLCJ1c2VyLWlkIjoiNmEyZTYzYTctYThiNy00YTVlLTk0MjItNmExNmVlOTYzZThkIiwiaXNzIjoiaHR0cDovLzUxLjI1MC4xMDIuMTI6OTAwMCIsImV4cCI6MTY4Mjk2NTQzMCwiaWF0IjoxNjgyMzYwNjMwLCJhdXRob3JpdGllcyI6WyJST0xFX1VTRVIiXX0.pJcnmRliJY9g3n-TsAyRZxP0IiZNMkP8gMdiPItF9mcQZHuDOCzH8NWYstNUStVjZcRacxeL10IzsWvNWOfx2ZW7_hsJvqDrOJx30ykGahQY08xiaDelLg_KzVaAN-XqZL5-oUKybJfLC0mdcAejcfRch9APYwF-hwwU6KEvZK-UsfzoJik9sMvoCQCuK_2_unjHl9K3zUj-id-TE6bRLbTQI-E6hZSXQ_oU5K30EEUVxsf_Gc0GgMYBgRRzPIn7P9FqPgjDLkM9HH6HAQwWwBhJIziKQZSk-0S0JIS6JNawSqeLxNhgbgjLrEnpoiHiqvWwtPzQ8N6FOshGGQcSKA";
-
-    private final String HEADER = "Bearer " + AUTH_TOKEN;
-
     @Test
     @SuppressWarnings("ResultOfMethodCallIgnored")
     void shouldCreateFavoritesReturnFavoritesExternalIdAndStatusCreated() throws Exception {
@@ -84,7 +89,7 @@ class FavoriteItemServiceApplicationTests {
 
             MvcResult mvcResult = mockMvc.perform(
                             post(PUBLIC_API + "{userId}/favorites/{productId}", USER_ID, PRODUCT_ID)
-                                    .header("Authorization", HEADER))
+                                    .with(authentication(getToken())))
                     .andDo(print())
                     .andExpect(status().isCreated())
                     .andReturn();
@@ -114,7 +119,7 @@ class FavoriteItemServiceApplicationTests {
     void shouldGetFavoritesByUserIdReturnPageFavoritesAndStatusOk() throws Exception {
         MvcResult mvcResult = mockMvc.perform(
                         get(PUBLIC_API + "/{userId}/favorites", USER_ID).contentType(MediaType.APPLICATION_JSON)
-                                .header("Authorization", HEADER))
+                                .with(authentication(getToken())))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andReturn();
@@ -124,7 +129,6 @@ class FavoriteItemServiceApplicationTests {
                 });
 
         UUID actualFavoritesId = page.getContent().get(0).externalId();
-        UUID actualProductId = page.getContent().get(0).productId();
         UUID actualUserId = page.getContent().get(0).userId();
 
         assertAll(
@@ -132,7 +136,6 @@ class FavoriteItemServiceApplicationTests {
                 () -> assertEquals(1L, page.getTotalElements()),
                 () -> assertEquals(1, page.getTotalPages()),
                 () -> assertEquals(FAVORITE_ID_UUID, actualFavoritesId),
-                () -> assertEquals(PRODUCT_ID_UUID, actualProductId),
                 () -> assertEquals(USER_ID_UUID, actualUserId)
         );
     }
@@ -142,7 +145,7 @@ class FavoriteItemServiceApplicationTests {
     void shouldDeleteFavoritesReturnStatusNoContent() throws Exception {
         mockMvc.perform(
                         delete(PUBLIC_API + "/{userId}/favorites/{productId}", USER_ID, PRODUCT_ID)
-                                .header("Authorization", HEADER)
+                                .with(authentication(getToken()))
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isNoContent())
@@ -155,7 +158,7 @@ class FavoriteItemServiceApplicationTests {
     void shouldDeleteFavoritesNegativeReturnStatusNotFound() throws Exception {
         MvcResult mvcResult = mockMvc.perform(
                         delete(PUBLIC_API + "/{userId}/favorites/{productId}", USER_ID, PRODUCT_ID)
-                                .header("Authorization", HEADER)
+                                .with(authentication(getToken()))
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isNotFound())
@@ -170,7 +173,7 @@ class FavoriteItemServiceApplicationTests {
     void shouldGetFavoritesByUserIdNegativeReturnPageFavoritesAndStatusOk() throws Exception {
         MvcResult mvcResult = mockMvc.perform(
                         get(PUBLIC_API + "/{userId}/favorites", USER_ID, PageRequest.of(0, 10))
-                                .header("Authorization", HEADER)
+                                .with(authentication(getToken()))
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -186,5 +189,19 @@ class FavoriteItemServiceApplicationTests {
 
     private String unwrapString(String str) {
         return str.substring(1, str.length() - 1);
+    }
+
+    private JwtAuthenticationToken getToken() {
+
+        Jwt jwt = Jwt.withTokenValue("token")
+                .header("kid", "5ab08392-4f53-49ee-8353-1f6be208840b")
+                .header("alg", "RS256")
+                .claim("sub", "rock@rock.ru")
+                .claim("user-id", "6a2e63a7-a8b7-4a5e-9422-6a16ee963e8d")
+                .claim("authorities", List.of(Role.USER.getKey()))
+                .build();
+
+        Collection<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList(Role.USER.getKey());
+        return new JwtAuthenticationToken(jwt, authorities);
     }
 }

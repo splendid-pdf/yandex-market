@@ -15,6 +15,7 @@ dependencies {
     implementation libs.spring.cloud.config.client
     annotationProcessor libs.spring.config.processor
     implementation libs.spring.oauth2.resource.server
+    testImplementation 'org.springframework.security:spring-security-test:6.0.2'
 
     implementation libs.flyway
     runtimeOnly libs.postgresql

@@ -1,7 +1,9 @@
 package com.yandex.market.favoritesservice.controller;
 
-import com.yandex.market.favoritesservice.dto.FavoriteItemResponseDto;
-import com.yandex.market.favoritesservice.service.FavoriteItemService;
+import com.yandex.market.favoritesservice.dto.response.FavoriteItemResponseDto;
+import com.yandex.market.favoritesservice.dto.request.FavoriteProductDto;
+import com.yandex.market.favoritesservice.service.FavoritesService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,13 +24,15 @@ import static com.yandex.market.util.HttpUtils.PUBLIC_API_V1;
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 public class FavoritesController implements FavoritesApi {
 
-    private final FavoriteItemService favoriteItemService;
+    private final FavoritesService favoritesService;
 
-    @PostMapping("/users/{userId}/favorites/{productId}")
+    @PostMapping("/users/{userId}/favorites")
     @ResponseStatus(HttpStatus.CREATED)
-    public UUID createFavorites(@PathVariable("userId") UUID userId, @PathVariable("productId") UUID productId) {
-        log.info("Received a request to added product '%s' in favorites for user '%s'".formatted(productId, userId));
-        return favoriteItemService.addItemInFavorites(productId, userId);
+    public UUID createFavorites(@PathVariable("userId") UUID userId,
+                                @RequestBody @Valid FavoriteProductDto favoriteProductDto) {
+        log.info("POST 'createFavorites' was called for userId = '%s' with request = '%s'"
+                .formatted(userId, favoriteProductDto.productId()));
+        return favoritesService.addProductInFavorites(userId, favoriteProductDto);
     }
 
     @GetMapping("/users/{userId}/favorites")
@@ -37,13 +41,13 @@ public class FavoritesController implements FavoritesApi {
             @PathVariable("userId") UUID userId,
             @PageableDefault(sort = "addedAt", direction = Sort.Direction.ASC) Pageable page) {
         log.info("Received a request to get favorites products of user: \"%s\"".formatted(userId));
-        return favoriteItemService.getFavoritesByUserId(userId, page);
+        return favoritesService.getFavoritesByUserId(userId, page);
     }
 
     @DeleteMapping("/users/{userId}/favorites/{productId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteFavorites(@PathVariable("userId") UUID userId, @PathVariable("productId") UUID productId) {
         log.info("Received a request to delete favorites product \"%s\" of user: \"%s\"".formatted(productId, userId));
-        favoriteItemService.deleteFavoritesByUserId(userId, productId);
+        favoritesService.deleteFavoriteProductByUserIdAndProductId(userId, productId);
     }
 }
