@@ -100,6 +100,8 @@ public class StorageService {
     }
 
     private URL generateUrl(String bucketName, String externalId) {
+        //todo: 15 need to move into objectStorage properties
+        //15 is the expire time of urls in minutes
         return amazonS3.generatePresignedUrl(bucketName, externalId, new DateTime().plusMinutes(15).toDate());
     }
 

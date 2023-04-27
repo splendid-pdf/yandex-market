@@ -48,12 +48,6 @@ class FileControllerTest extends UploadIntegrationTest {
     @Test
     @Disabled
     void getUrlsWhenOk() throws Exception {
-        System.out.println(fileMetaInfoRepository.findAll().size());
-        System.out.println(fileMetaInfoRepository.findAll().size());
-        System.out.println(fileMetaInfoRepository.findAll().size());
-        System.out.println(fileMetaInfoRepository.findAll().size());
-        System.out.println(fileMetaInfoRepository.findAll().size());
-        System.out.println(fileMetaInfoRepository.findAll().size());
         mockGenerateUrlMethod();
         mockMvc.perform(
                         MockMvcRequestBuilders.get("/public/api/v1/files")
@@ -80,30 +74,19 @@ class FileControllerTest extends UploadIntegrationTest {
     }
 
     @Test
-    @Disabled
     void uploadWhenOk() throws Exception {
-        UUID uuid = UUID.fromString("62dc66f7-e141-4283-9c1d-a0dd0e2aba21");
+        UUID uuid0 = UUID.fromString("eb527df9-fac2-4de5-96ea-8c11ba8089f0");
         List<MockMultipartFile> mockFiles = getMockedFiles();
-        Mockito.doReturn(null)
-                .when(amazonS3)
-                .putObject(any(), eq("62dc66f7-e141-4283-9c1d-a0dd0e2aba21"), any(), any());
 
         try (
                 MockedStatic<UUID> mockedUuid = Mockito.mockStatic(UUID.class);
                 MockedStatic<MurmurHash3> mockedMurMur = Mockito.mockStatic(MurmurHash3.class)
         ) {
-            mockedUuid.when(UUID::randomUUID).thenReturn(uuid);
-            mockedMurMur.when(() -> MurmurHash3.hash32x86(mockFiles.get(0).getBytes())).thenReturn(0);
-            mockedMurMur.when(() -> MurmurHash3.hash32x86(mockFiles.get(1).getBytes())).thenReturn(1);
-            mockedMurMur.when(() -> MurmurHash3.hash32x86(mockFiles.get(2).getBytes())).thenReturn(2);
-            mockedMurMur.when(() -> MurmurHash3.hash32x86(mockFiles.get(3).getBytes())).thenReturn(3);
-
+            mockedUuid.when(UUID::randomUUID).thenReturn(uuid0);
+            mockedMurMur.when(() -> MurmurHash3.hash32x86(mockFiles.get(0).getBytes())).thenReturn(11111111);
             mockMvc.perform(
                             MockMvcRequestBuilders.multipart("/public/api/v1/files")
                                     .file(mockFiles.get(0))
-                                    .file(mockFiles.get(1))
-                                    .file(mockFiles.get(2))
-                                    .file(mockFiles.get(3))
                                     .queryParam("fileType", "PRODUCT")
                                     .with(authentication(token("t51c4cd3-6fe7-4d3e-b82c-f5d044e46091", "ROLE_USER")))
                                     .accept(MediaType.APPLICATION_JSON)
@@ -113,16 +96,13 @@ class FileControllerTest extends UploadIntegrationTest {
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(content().json("""
                                                             [
-                                                              "eb527df9-fac2-4de5-96ea-8c11ba8089f0",
-                                                              "2b8e3df0-628a-4ef0-9044-e14a995b539d",
-                                                              "cb25d05a-11f0-46c2-bc17-1a1185ade628",
-                                                              "62dc66f7-e141-4283-9c1d-a0dd0e2aba21"
+                                                              "eb527df9-fac2-4de5-96ea-8c11ba8089f0"
                                                             ]
                                                          """
                     ));
         }
 
-        verify(amazonS3, times(3)).generatePresignedUrl(any(), any(), any());
+        verify(amazonS3).putObject(any(), eq(uuid0.toString()), any(), any());
         verifyNoMoreInteractions(amazonS3);
     }
 

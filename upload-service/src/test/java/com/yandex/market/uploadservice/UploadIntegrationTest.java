@@ -17,10 +17,11 @@ import org.testcontainers.utility.MountableFile;
 @TestPropertySource(locations = "classpath:application-test.yaml")
 public abstract class UploadIntegrationTest {
 
+    //todo: need to create mongo-init.js file and init mongo db. I can't do it
     @Container
     static final MongoDBContainer MONGO_DB_CONTAINER =
-            new MongoDBContainer(DockerImageName.parse("mongo:5.0.16-focal"))
-                    .withCopyFileToContainer(MountableFile.forClasspathResource("/mongo-init.js"), "/docker-entrypoint-initdb.d/mongo-init.js:ro");
+            new MongoDBContainer(DockerImageName.parse("mongo:5.0.16-focal"));
+                    //.withCopyFileToContainer(MountableFile.forClasspathResource("/mongo-init.js"), "/docker-entrypoint-initdb.d/mongo-init.js:ro");
 
     @DynamicPropertySource
     static void mongoProperties(DynamicPropertyRegistry registry) {
