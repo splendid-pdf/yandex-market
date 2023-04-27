@@ -18,5 +18,3 @@ public record OrderResponsePreview(
         List<OrderedProductPreviewDto> orderedProductPreviews
 ) {
 }
-//сделать эндпоинт для превьюшки, которая отрисована на фигме
-//изменить update(только статус)

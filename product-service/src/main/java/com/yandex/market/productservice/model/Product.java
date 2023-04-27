@@ -92,5 +92,4 @@ public class Product {
     public void removeProductSpecialPrice(ProductSpecialPrice productSpecialPrice) {
         productSpecialPrices.remove(productSpecialPrice);
     }
-
 }

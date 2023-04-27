@@ -7,7 +7,10 @@ import com.yandex.market.productservice.dto.request.SpecialPriceRequest;
 import com.yandex.market.productservice.exception.InvalidCharacteristicsException;
 import com.yandex.market.productservice.exception.SpecialPriceCreatingException;
 import com.yandex.market.productservice.exception.TooMuchMainImagesException;
-import com.yandex.market.productservice.model.*;
+import com.yandex.market.productservice.model.Product;
+import com.yandex.market.productservice.model.ProductCharacteristic;
+import com.yandex.market.productservice.model.TypeCharacteristic;
+import com.yandex.market.productservice.model.ValueType;
 import com.yandex.market.productservice.repository.TypeRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +27,6 @@ import static com.yandex.market.productservice.utils.ExceptionMessagesConstants.
 public class Validator {
 
     private final TypeRepository typeRepository;
-
     private final Map<UUID, Map<String, ValueType>> typeCharacteristicsMap = new HashMap<>();
 
     private final ObjectMapper objectMapper;
@@ -38,7 +40,8 @@ public class Validator {
     }
 
     public void validateProductCharacteristics(Product product) {
-        if (product.getProductCharacteristics() != null) {
+        if (!product.getProductCharacteristics().isEmpty() &&
+                !typeCharacteristicsMap.isEmpty()) {
             UUID typeId = product.getType().getExternalId();
 
             List<String> exceptions = new ArrayList<>();

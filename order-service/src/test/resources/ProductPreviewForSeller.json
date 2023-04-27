@@ -1,0 +1,34 @@
+[
+  {
+    "orderNumber": "№1",
+    "creationTimestamp": "2023-04-25T19:37:38.89653",
+    "orderStatus": "CREATED",
+    "sellerOrderContactPreview": {
+      "receiverName": "receiverName",
+      "receiverPhone": "+79196578832",
+      "address": {
+        "country": "country",
+        "region": "region",
+        "city": "city",
+        "postCode": "123456",
+        "street": "street",
+        "houseNumber": "24",
+        "officeNumber": "1"
+      }
+    },
+    "orderedProductPreviews": [
+      {
+        "photoUrl": "photo1",
+        "name": "keyboard",
+        "articleFromSeller": "articleFromSeller",
+        "amount": 2
+      },
+      {
+        "photoUrl": "secondUrl",
+        "name": "mouse",
+        "articleFromSeller": "articleFromSeller",
+        "amount": 2
+      }
+    ]
+  }
+]

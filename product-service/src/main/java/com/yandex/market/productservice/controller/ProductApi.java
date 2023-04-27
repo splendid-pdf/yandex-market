@@ -2,7 +2,6 @@ package com.yandex.market.productservice.controller;
 
 import com.yandex.market.model.ErrorResponse;
 import com.yandex.market.productservice.dto.ProductImageDto;
-import com.yandex.market.productservice.dto.ProductRepresentationSetDto;
 import com.yandex.market.productservice.dto.projections.SellerArchiveProductPreview;
 import com.yandex.market.productservice.dto.projections.SellerProductPreview;
 import com.yandex.market.productservice.dto.projections.UserProductPreview;
@@ -26,6 +25,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Tag(name = "Products")
@@ -34,32 +34,32 @@ import java.util.UUID;
                 responseCode = "400",
                 description = "На сервер переданы неверные данные",
                 content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = ErrorResponse.class)
+                        mediaType = "application/json",
+                        schema = @Schema(implementation = ErrorResponse.class)
                 )
         ),
         @ApiResponse(
                 responseCode = "401",
                 description = "Пользователь не авторизован",
                 content = @Content(
-                mediaType = "application/json",
-                schema = @Schema(implementation = ErrorResponse.class)
+                        mediaType = "application/json",
+                        schema = @Schema(implementation = ErrorResponse.class)
                 )
         ),
         @ApiResponse(
                 responseCode = "403",
                 description = "У пользователя нет доступа к ресурсу",
                 content = @Content(
-                mediaType = "application/json",
-                schema = @Schema(implementation = ErrorResponse.class)
+                        mediaType = "application/json",
+                        schema = @Schema(implementation = ErrorResponse.class)
                 )
         ),
         @ApiResponse(
                 responseCode = "404",
                 description = "Ресурс не был найден по id",
                 content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = ErrorResponse.class)
+                        mediaType = "application/json",
+                        schema = @Schema(implementation = ErrorResponse.class)
                 )
         )
 })
@@ -259,7 +259,7 @@ public interface ProductApi {
             @Parameter(name = "characteristicId", description = "Идентификатор характеристики", required = true)
             UUID characteristicId,
             @Parameter(name = "productCharacteristicRequest", description = "Обновленные данные характеристики",
-                       required = true)
+                    required = true)
             ProductCharacteristicRequest productCharacteristicRequest
     );
 
@@ -386,12 +386,5 @@ public interface ProductApi {
 
     @Operation(method = "getNewestProductPreviewsByIdentifiers", description = "Получение превью самых новых товаров")
     @ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = "application/json"))
-    List<UserProductPreview> getProductPreviewsByIdentifiers(
-            ProductRepresentationSetDto productRepresentationSetDto
-    );
-
-
-
-
-
+    List<UserProductPreview> getProductPreviewsByIdentifiers(Set<UUID> productIds);
 }

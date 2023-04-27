@@ -5,7 +5,7 @@ spring:
   application:
     name: seller-info-service
   flyway:
-    enabled: false
+    enabled: true
   config:
     import: "optional:configserver:"
 
@@ -19,7 +19,7 @@ spring:
     database: POSTGRESQL
     show-sql: true
     hibernate:
-      ddl-auto: create # далее validate
+      ddl-auto: update # далее validate
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
