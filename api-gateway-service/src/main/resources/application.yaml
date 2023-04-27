@@ -12,7 +12,7 @@ spring:
         - id: order-service-route
           uri: http://127.0.0.1:8081
           predicates:
-            - Path=/*/*/*/orders, /*/*/*/orders/**
+            - Path=/*/*/*/orders/{orderId}, /*/*/*/orders/{orderId}/*, /*/*/*/users/{userId}/orders, /*/*/*/users/{userId}/orders/previews, /*/*/*/sellers/{sellerId}/orders
         - id: user-info-service-route
           uri: http://127.0.0.1:8080
           predicates:
@@ -88,6 +88,17 @@ application:
       # upload-api
       - url: /*/*/*/files
         methods: POST, GET, DELETE
+      # order-api (пока нету security все эндпоинты открыты)
+      - url: /*/*/*/orders/{orderId}
+        methods: GET
+      - url: /*/*/*/users/{userId}/orders
+        methods: POST
+      - url: /*/*/*/users/{userId}/orders/previews
+        methods: GET
+      - url: /*/*/*/sellers/{sellerId}/orders
+        methods: GET
+      - url: /*/*/*/orders/{orderId}/*
+        methods: GET, PATCH
 
 logging:
   level:

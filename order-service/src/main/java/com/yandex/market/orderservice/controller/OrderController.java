@@ -44,8 +44,6 @@ import static com.yandex.market.util.HttpUtils.PUBLIC_API_V1;
                 content = @Content(mediaType = "application/json"))})
 public class OrderController {
 
-    public static final String EXTERNAL_ID = "externalId";
-
     public static final String STATUS_OK = "200";
     public static final String USER_ID = "userId";
     public static final String SUCCESSFUL_OPERATION = "Successful operation";
@@ -61,7 +59,7 @@ public class OrderController {
                             @RequestBody @Valid OrderRequest orderRequest,
                             @Parameter(name = "userId", description = "User's identifier")
                             @PathVariable(USER_ID) UUID userId) {
-        log.info("Received a request to create new order {} for user: {}}", orderRequest, userId);
+        log.info("POST 'createOrder' request received oderRequest: {} for userId: {}", orderRequest, userId);
         return orderService.create(orderRequest, userId);
     }
 
@@ -73,7 +71,7 @@ public class OrderController {
     public OrderResponse getByOrderId(
             @Parameter(name = "orderId", description = "Order's identifier")
             @PathVariable("orderId") UUID orderId) {
-        log.info("Received a request to get orders by order identifier: {}", orderId);
+        log.info("GET 'getByOrderId' request received by orderId: {}", orderId);
         return orderService.getOrderResponseById(orderId);
     }
 
@@ -87,7 +85,7 @@ public class OrderController {
             @Parameter(name = USER_ID, description = "User's identifier")
             @PathVariable(USER_ID) UUID userId,
             @PageableDefault(sort = "creationTimestamp", direction = Sort.Direction.DESC) Pageable pageable) {
-        log.info("Received a request to get orders by user identifier: {}", userId);
+        log.info("GET 'getOrderByUserId' request received by userId: {}", userId);
         return orderService.getOrdersByUserId(userId, pageable);
     }
 
@@ -100,18 +98,18 @@ public class OrderController {
     public List<SellerOrderPreview> getOrderBySellerId(
             @Parameter(name = "sellerId", description = "User's identifier")
             @PathVariable("sellerId") UUID sellerId) {
-        log.info("Received a request to get orders by seller identifier: {}", sellerId);
+        log.info("GET 'getOrderBySellerId' request received by sellerId: {}", sellerId);
         return orderService.getOrderPreviewsBySellerId(sellerId);
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PutMapping("/orders/{externalId}/cancellation")
+    @PatchMapping("/orders/{orderId}/cancellation")
     @Operation(operationId = "cancelOrder", summary = "Cancel order by it's external id")
     @ApiResponse(responseCode = "204", description = SUCCESSFUL_OPERATION)
-    public void cancelOrder(@Parameter(name = EXTERNAL_ID, description = "Order's identifier")
-                            @PathVariable(EXTERNAL_ID) UUID externalId) {
-        log.info("Received a request to cancel an order: {}", externalId);
-        orderService.cancelOrder(externalId);
+    public void cancelOrder(@Parameter(name = "orderId", description = "Order's identifier")
+                            @PathVariable("orderId") UUID orderId) {
+        log.info("PATCH 'cancelOrder' request received by orderId: {}", orderId);
+        orderService.cancelOrder(orderId);
     }
 
 //    @ResponseStatus(HttpStatus.OK)
@@ -128,7 +126,7 @@ public class OrderController {
 //    }
 
     @ResponseStatus(HttpStatus.OK)
-    @PutMapping("/orders/{orderId}/status")
+    @PatchMapping("/orders/{orderId}/status")
     @Operation(operationId = "updateOrderStatus", summary = "Update order status by order id")
     @ApiResponse(responseCode = STATUS_OK, description = SUCCESSFUL_OPERATION)
     public OrderResponse updateOrderStatus(
@@ -137,15 +135,15 @@ public class OrderController {
             @Parameter(name = "OrderStatus")
             @RequestBody OrderStatus orderstatus
     ) {
-        log.info("Received a request to update an order: {}", orderId);
+        log.info("PATCH 'updateOrderStatus' request received by orderId: {}", orderId);
         return orderService.updateOrderStatus(orderId, orderstatus);
     }
 
     @ResponseStatus(HttpStatus.OK)
-    @GetMapping("/orders/{externalId}/check")
-    public ResponseEntity<InputStreamResource> receiveOrderCheck(@PathVariable(EXTERNAL_ID) UUID externalID) {
-        ByteArrayInputStream byteArrayInputStream = orderService.createCheck(externalID);
-        log.info("Received a request to generate of check of order: {}", externalID);
+    @GetMapping("/orders/{orderId}/check")
+    public ResponseEntity<InputStreamResource> receiveOrderCheck(@PathVariable("orderId") UUID orderId) {
+        ByteArrayInputStream byteArrayInputStream = orderService.createCheck(orderId);
+        log.info("GET 'receiveOrderCheck' request to generate of check of order: {}", orderId);
 
         var headers = new HttpHeaders();
         headers.add("Content-Disposition", "inline; filename=check.pdf");
