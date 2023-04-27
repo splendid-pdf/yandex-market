@@ -7,7 +7,9 @@ import com.yandex.market.exception.SizeLimitFileExceededException;
 import com.yandex.market.exception.ValidationException;
 import com.yandex.market.model.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
@@ -19,6 +21,7 @@ import java.util.UUID;
 public class UploadExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(IllegalArgumentException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleIllegalArgumentException(IllegalArgumentException e) {
         ErrorResponse errorResponse = new ErrorResponse(
                 UUID.randomUUID().toString(),
@@ -30,6 +33,7 @@ public class UploadExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(AmazonS3Exception.class)
+    @ResponseStatus(HttpStatus.BAD_GATEWAY)
     public ErrorResponse handleAmazonS3Exception(AmazonS3Exception e) {
         ErrorResponse errorResponse = new ErrorResponse(
                 UUID.randomUUID().toString(),
@@ -41,6 +45,7 @@ public class UploadExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(BadRequestException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleBadRequestException(BadRequestException e) {
         ErrorResponse errorResponse = new ErrorResponse(
                 UUID.randomUUID().toString(),
@@ -52,6 +57,7 @@ public class UploadExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(NotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handleNotFoundException(NotFoundException e) {
         ErrorResponse errorResponse = new ErrorResponse(
                 UUID.randomUUID().toString(),
@@ -63,6 +69,7 @@ public class UploadExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(ValidationException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleValidationException(ValidationException e) {
         ErrorResponse errorResponse = new ErrorResponse(
                 UUID.randomUUID().toString(),

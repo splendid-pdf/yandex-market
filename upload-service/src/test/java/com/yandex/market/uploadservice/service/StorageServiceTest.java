@@ -208,15 +208,15 @@ class StorageServiceTest {
     private static List<byte[]> readAllFiles() throws IOException {
 
         byte[] file1Bytes = Files.readAllBytes(
-                Paths.get("src", "test", "resources", "photos", "test_photo_1.jpeg")
+                Paths.get("src", "test", "resources", "photos", "test_photo_0.jpeg")
         );
 
         byte[] file2Bytes = Files.readAllBytes(
-                Paths.get("src", "test", "resources", "photos", "test_photo_2.jpg")
+                Paths.get("src", "test", "resources", "photos", "test_photo_1.jpg")
         );
 
         byte[] file3Bytes = Files.readAllBytes(
-                Paths.get("src", "test", "resources", "photos", "test_photo_3.png")
+                Paths.get("src", "test", "resources", "photos", "test_photo_2.png")
         );
 
         return List.of(file1Bytes, file2Bytes, file3Bytes);

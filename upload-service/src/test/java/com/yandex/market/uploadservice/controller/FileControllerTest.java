@@ -19,6 +19,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -37,12 +38,11 @@ class FileControllerTest extends UploadIntegrationTest {
     private AmazonS3 amazonS3;
 
     @Autowired
-    MockMvc mockMvc;
+    private MockMvc mockMvc;
 
     @Test
     public void getUrlsWhenOk() throws Exception {
         mockGenerateUrlMethod();
-
         mockMvc.perform(
                         MockMvcRequestBuilders.get("/public/api/v1/files")
                                 .accept(MediaType.APPLICATION_JSON)
@@ -107,6 +107,77 @@ class FileControllerTest extends UploadIntegrationTest {
 
         verify(amazonS3, times(3)).generatePresignedUrl(any(), any(), any());
         verifyNoMoreInteractions(amazonS3);
+    }
+
+    @Test
+    public void uploadWhenNotAuthorize() throws Exception {
+        List<MockMultipartFile> mockFiles = getMockedFiles();
+        mockPutMethod();
+        mockMvc.perform(
+                MockMvcRequestBuilders.multipart("/public/api/v1/files")
+                        .file(mockFiles.get(0))
+                        .file(mockFiles.get(1))
+                        .file(mockFiles.get(2))
+                        .file(mockFiles.get(3))
+                        .accept(MediaType.MULTIPART_FORM_DATA)
+                        .contentType(MediaType.MULTIPART_FORM_DATA)
+                )
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    public void getUrlsWhenUrlsNotFound() throws Exception {
+        OffsetDateTime offsetDateTime = OffsetDateTime.now();
+        try (
+                MockedStatic<UUID> mockedUuid = Mockito.mockStatic(UUID.class);
+                MockedStatic<OffsetDateTime> offsetDateTimeMocked = Mockito.mockStatic(OffsetDateTime.class)
+        ) {
+            mockedUuid.when(UUID::randomUUID).thenReturn(UUID.fromString("eb527df9-fac2-4de5-96ea-8c11ba8089f9"));
+            offsetDateTimeMocked.when(OffsetDateTime::now).thenReturn(offsetDateTime);
+            mockMvc.perform(
+                            MockMvcRequestBuilders.get("/public/api/v1/files")
+                                    .accept(MediaType.APPLICATION_JSON)
+                                    .contentType(MediaType.APPLICATION_JSON)
+                                    .queryParam("filesIds", "eb527df9-fac2-4de5-96ea-8c11ba8089f9")
+                    )
+                    .andExpect(status().isNotFound())
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                    //todo: измени json
+                    .andExpect(content().json("""
+                               [
+                                   "https://www.instagram.com/1",
+                                   "https://www.instagram.com/2",
+                                   "https://www.instagram.com/3"
+                               ]
+                            """
+                    ));
+        }
+    }
+
+    @Test
+    public void uploadWhenFilesNotValid() throws Exception {
+        OffsetDateTime offsetDateTime = OffsetDateTime.now();
+        byte[] bytes = {0,0,0,0};
+        MockMultipartFile mockMultipartFile = new MockMultipartFile("name", bytes);
+        Mockito.doReturn(null).when(amazonS3).putObject(any(), any(), any(), any());
+        try (
+                MockedStatic<UUID> mockedUuid = Mockito.mockStatic(UUID.class);
+                MockedStatic<OffsetDateTime> offsetDateTimeMocked = Mockito.mockStatic(OffsetDateTime.class)
+        ) {
+            mockedUuid.when(UUID::randomUUID).thenReturn(UUID.fromString("eb527df9-fac2-4de5-96ea-8c11ba8089f9"));
+            offsetDateTimeMocked.when(OffsetDateTime::now).thenReturn(offsetDateTime);
+            mockMvc.perform(
+                            MockMvcRequestBuilders.multipart("/public/api/v1/files")
+                                    .file(mockMultipartFile)
+                                    .with(authentication(token("t51c4cd3-6fe7-4d3e-b82c-f5d044e46091", "ROLE_USER")))
+                                    .accept(MediaType.MULTIPART_FORM_DATA)
+                                    .contentType(MediaType.MULTIPART_FORM_DATA)
+                    )
+                    .andExpect(status().isBadRequest())
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+            //todo: присобачб json
+        }
+
     }
 
     private List<MockMultipartFile> getMockedFiles() throws IOException {
