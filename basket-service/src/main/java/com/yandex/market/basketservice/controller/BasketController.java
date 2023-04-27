@@ -1,21 +1,20 @@
 package com.yandex.market.basketservice.controller;
 
-import com.yandex.market.basketservice.dto.ItemResponse;
 import com.yandex.market.basketservice.dto.ItemRequest;
+import com.yandex.market.basketservice.dto.ItemResponse;
 import com.yandex.market.basketservice.service.BasketService;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.*;
+import java.util.List;
+import java.util.UUID;
 
 import static com.yandex.market.util.HttpUtils.PUBLIC_API_V1;
-import static org.springframework.http.HttpStatus.*;
+import static org.springframework.http.HttpStatus.OK;
 
 @RestController
 @RequestMapping(PUBLIC_API_V1)
@@ -36,17 +35,17 @@ public class BasketController implements BasketApi{
         return basketService.getAllItemsInsideBasketByUserId(userId, pageable);
     }
 
-    @PatchMapping("/users/{userId}/basket/product")
+    @PatchMapping("/users/{userId}/basket/products")
     @ResponseStatus(OK)
     public Integer changeItemCountInBasket(@PathVariable UUID userId,
-                                           @RequestBody ItemRequest itemRequest) {
-        return basketService.changeItemCountInBasket(userId, itemRequest);
+                                           @RequestBody ItemRequest request) {
+        return basketService.changeItemCountInBasket(userId, request);
     }
 
     @DeleteMapping("/users/{userId}/basket/products")
     @ResponseStatus(OK)
     public Integer deleteItemsList(@PathVariable UUID userId,
-                                   @RequestParam(name = "products") List<UUID> itemsIdsList) {
-        return basketService.deleteItemsList(userId, itemsIdsList);
+                                   @RequestParam(name = "products") List<UUID> itemIds) {
+        return basketService.deleteItemsList(userId, itemIds);
     }
 }

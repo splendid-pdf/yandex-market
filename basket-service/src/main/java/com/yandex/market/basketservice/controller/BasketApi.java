@@ -21,7 +21,7 @@ import java.util.UUID;
 @ApiResponses({
         @ApiResponse(
                 responseCode = "400",
-                description = "Invalid data provided to the server",
+                description = "На сервер переданы неверные данные",
                 content = {
                         @Content(
                                 mediaType = "application/json",
@@ -31,15 +31,15 @@ import java.util.UUID;
         ),
         @ApiResponse(
                 responseCode = "401",
-                description = "Unauthorized error"
+                description = "Пользователь не авторизован"
         ),
         @ApiResponse(
                 responseCode = "403",
-                description = "Forbidden to get a resource"
+                description = "У пользователя нет доступа к ресурсу"
         ),
         @ApiResponse(
                 responseCode = "404",
-                description = "Not found requested resource",
+                description = "Ресурс не найден",
                 content = {
                         @Content(
                                 mediaType = "application/json",
@@ -49,12 +49,11 @@ import java.util.UUID;
         )
 })
 public interface BasketApi {
-
     @Operation(
-            summary = "Get the page with items which were added to the basket by the user",
+            summary = "Получить страницу с добавленными товарами в корзину",
             responses = @ApiResponse(
                     responseCode = "200",
-                    description = "Successful operation",
+                    description = "Страница со списком товаров в корзине успешно получена",
                     content = {
                             @Content(
                                     mediaType = "application/json",
@@ -72,16 +71,15 @@ public interface BasketApi {
             """
     )
     Page<ItemResponse> getAllItemsInsideBasketByUserId(
-            @Parameter(name = "id", description = "user external ID", required = true) UUID userId,
+            @Parameter(name = "userId", description = "Идентификатор продовца", required = true) UUID userId,
             @Parameter(name = "pageable", description = "pageable") Pageable pageable
     );
 
-
     @Operation(
-            summary = "Adding an item to the basket and changing the count of the item",
+            summary = "Добавление товара в корзину и изменение колличества товара в корзине",
             responses = @ApiResponse(
                     responseCode = "200",
-                    description = "Successful operation",
+                    description = "Товар добавлен в корзину с новым значением колличества",
                     content = @Content(mediaType = "application/json")
             )
     )
@@ -94,15 +92,15 @@ public interface BasketApi {
             """
     )
     Integer changeItemCountInBasket(
-            @Parameter(name = "userId", description = "user external ID", required = true) UUID userId,
-            @Parameter(name = "Item request", description = "Information about added item", required = true) ItemRequest itemRequest
+            @Parameter(name = "userId", description = "Идентификатор продовца", required = true) UUID userId,
+            @Parameter(name = "itemRequest", description = "Информация о добавляемом товаре", required = true) ItemRequest itemRequest
     );
 
     @Operation(
-            description = "delete one or more items from the basket",
+            description = "Удаленеи одного или несколько товаров из корзины",
             responses = @ApiResponse(
                     responseCode = "200",
-                    description = "Successful operation",
+                    description = "Выбранные товары успещно удалены из корзины",
                     content = @Content(mediaType = "application/json")
             )
     )
@@ -115,8 +113,7 @@ public interface BasketApi {
             """
     )
     Integer deleteItemsList(
-            @Parameter(name = "id", description = "user external id", required = true) UUID userId,
-            @Parameter(name = "itemsIds", description = "list items for deleting", required = true) List<UUID> itemsIdsList
+            @Parameter(name = "userId", description = "Идентификатор продовца", required = true) UUID userId,
+            @Parameter(name = "itemIds", description = "Список удаляемых товаров", required = true) List<UUID> itemIds
     );
-
 }

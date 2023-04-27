@@ -3,10 +3,10 @@ package com.yandex.market.basketservice.repository;
 import com.yandex.market.basketservice.dto.ItemResponse;
 import com.yandex.market.basketservice.model.Item;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.data.domain.Pageable;
 
 import java.util.Optional;
 import java.util.UUID;

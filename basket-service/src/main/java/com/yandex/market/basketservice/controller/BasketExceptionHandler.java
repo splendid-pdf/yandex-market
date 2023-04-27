@@ -1,7 +1,6 @@
 package com.yandex.market.basketservice.controller;
 
 
-import com.yandex.market.exception.ValidationException;
 import com.yandex.market.model.ErrorResponse;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ConstraintViolationException;
@@ -53,7 +52,6 @@ public class BasketExceptionHandler {
         );
     }
 
-
     @ExceptionHandler(MissingServletRequestParameterException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleMissingServletRequestParameterException(MissingServletRequestParameterException ex) {
@@ -69,23 +67,6 @@ public class BasketExceptionHandler {
                 OffsetDateTime.now()
         );
     }
-
-
-//    @ExceptionHandler(ValidationException.class)
-//    @ResponseStatus(HttpStatus.BAD_REQUEST)
-//    public ErrorResponse handleValidationException(ValidationException ex) {
-//        String errorId = UUID.randomUUID().toString();
-//
-//        if (log.isErrorEnabled()) {
-//            log.error("Handled validation error: msg = '{}', error_id = '{}'", ex.getMessage(), errorId);
-//        }
-//
-//        return new ErrorResponse(
-//                errorId,
-//                ex.getMessage(),
-//                OffsetDateTime.now()
-//        );
-//    }
 
     @ExceptionHandler(EntityNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)

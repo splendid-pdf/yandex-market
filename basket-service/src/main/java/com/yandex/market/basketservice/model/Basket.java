@@ -3,7 +3,9 @@ package com.yandex.market.basketservice.model;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Getter
@@ -14,8 +16,8 @@ import java.util.*;
 @Table(name = "baskets")
 @EqualsAndHashCode(of = "userId")
 public class Basket {
-
     @Id
+    @SequenceGenerator(name = "products_sequence", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
@@ -31,7 +33,6 @@ public class Basket {
             orphanRemoval = true
     )
     @Builder.Default
-    //check the new sets collections, mb they have method .get() for Set
     private List<BasketItem> items = new ArrayList<>();
 
     public void addItem(Item item, Integer itemCount) {
@@ -55,12 +56,12 @@ public class Basket {
         }
     }
 
-    public Integer getAmountItems(){
+    public Integer getAmountItems() {
         Integer amount = 0;
-        if(getItems().isEmpty()){
+        if (getItems().isEmpty()) {
             return 0;
         }
-        for(BasketItem basketItem : getItems()){
+        for (BasketItem basketItem : getItems()) {
             amount += basketItem.getItemCount();
         }
         return amount;

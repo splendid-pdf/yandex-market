@@ -3,7 +3,7 @@ package com.yandex.market.basketservice.model;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.*;
+import java.util.UUID;
 
 @Entity
 @Getter

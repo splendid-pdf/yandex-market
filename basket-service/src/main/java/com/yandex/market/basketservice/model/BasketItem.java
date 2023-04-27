@@ -10,9 +10,8 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(of = {"basket", "item"})
-@Table(name = "basket_item")
+@Table(name = "basket_items")
 public class BasketItem {
-
     @EmbeddedId
     private BasketItemId id;
 
