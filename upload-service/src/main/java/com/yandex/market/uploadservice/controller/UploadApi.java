@@ -21,7 +21,7 @@ import java.util.UUID;
 @ApiResponses({
         @ApiResponse(
                 responseCode = "400",
-                description = "На сервер переданы неверные данные",
+                description = "РќР° СЃРµСЂРІРµСЂ РїРµСЂРµРґР°РЅРЅС‹ РЅРµРІРµСЂРЅС‹Рµ РґР°РЅРЅС‹Рµ",
                 content = @Content(
                         mediaType = "application/json",
                         schema = @Schema(implementation = ErrorResponse.class)
@@ -29,7 +29,7 @@ import java.util.UUID;
         ),
         @ApiResponse(
                 responseCode = "401",
-                description = "Пользователь не авторизован",
+                description = "РџРѕР»СЊР·РѕРІР°С‚РµР»СЊ РЅРµ Р°РІС‚РѕСЂРёР·РѕРІР°РЅ",
                 content = @Content(
                         mediaType = "application/json",
                         schema = @Schema(implementation = ErrorResponse.class)
@@ -37,7 +37,7 @@ import java.util.UUID;
         ),
         @ApiResponse(
                 responseCode = "404",
-                description = "Ресурс не был найден по url",
+                description = "Р”Р°РЅРЅС‹Рµ РЅРµ Р±С‹Р»Рё РЅР°Р№РґРµРЅС‹ РїРѕ РїРµСЂРµРґР°РЅРЅС‹Рј url",
                 content = @Content(
                         mediaType = "application/json",
                         schema = @Schema(implementation = ErrorResponse.class)
@@ -46,13 +46,13 @@ import java.util.UUID;
 })
 public interface UploadApi {
 
-    @Operation(operationId = "upload", summary = "Загрузить файлы на сервер", security = @SecurityRequirement(name = "bearerAuth"))
-    @ApiResponse(responseCode = "201", description = "Файлы успешно загружены", content = @Content(mediaType = "application/json"))
+    @Operation(operationId = "upload", summary = "Р—Р°РіСЂСѓР·РёС‚СЊ С„Р°Р№Р»С‹ РЅР° СЃРµСЂРІРµСЂ", security = @SecurityRequirement(name = "bearerAuth"))
+    @ApiResponse(responseCode = "201", description = "Р¤Р°Р№Р»С‹ СѓСЃРїРµС€РЅРѕ Р·Р°РіСЂСѓР¶РµРЅС‹", content = @Content(mediaType = "application/json"))
     @PreAuthorize(value = "@permissionService.hasPermission()")
     List<UUID> upload(List<MultipartFile> files, FileType fileType);
 
-    @Operation(operationId = "getUrls", summary = "Получить ссылки на фотографии")
-    @ApiResponse(responseCode = "200", description = "Ссылки успешно получены", content = @Content(mediaType = "application/json"))
+    @Operation(operationId = "getUrls", summary = "РџРѕР»СѓС‡РёС‚СЊ СЃСЃС‹Р»РєРё РЅР° С„РѕС‚РѕРіСЂР°С„РёРё")
+    @ApiResponse(responseCode = "200", description = "РЎСЃС‹Р»РєРё СѓСЃРїРµС€РЅРѕ РїРѕР»СѓС‡РµРЅС‹", content = @Content(mediaType = "application/json"))
     List<URL> getUrls(List<UUID> filesIds);
 
 }

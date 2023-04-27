@@ -47,7 +47,7 @@ class FileControllerTest extends UploadIntegrationTest {
 
     @Test
     @Disabled
-    public void getUrlsWhenOk() throws Exception {
+    void getUrlsWhenOk() throws Exception {
         System.out.println(fileMetaInfoRepository.findAll().size());
         System.out.println(fileMetaInfoRepository.findAll().size());
         System.out.println(fileMetaInfoRepository.findAll().size());
@@ -81,7 +81,7 @@ class FileControllerTest extends UploadIntegrationTest {
 
     @Test
     @Disabled
-    public void uploadWhenOk() throws Exception {
+    void uploadWhenOk() throws Exception {
         UUID uuid = UUID.fromString("62dc66f7-e141-4283-9c1d-a0dd0e2aba21");
         List<MockMultipartFile> mockFiles = getMockedFiles();
         Mockito.doReturn(null)
@@ -127,7 +127,7 @@ class FileControllerTest extends UploadIntegrationTest {
     }
 
     @Test
-    public void uploadWhenNotAuthorize() throws Exception {
+    void uploadWhenNotAuthorize() throws Exception {
         List<MockMultipartFile> mockFiles = getMockedFiles();
         mockMvc.perform(
                 MockMvcRequestBuilders.multipart("/public/api/v1/files")
@@ -143,7 +143,7 @@ class FileControllerTest extends UploadIntegrationTest {
     }
 
     @Test
-    public void getUrlsWhenUrlsNotFound() throws Exception {
+    void getUrlsWhenUrlsNotFound() throws Exception {
         OffsetDateTime offsetDateTime = OffsetDateTime.parse("2023-04-27T18:40:08.309708+03:00");
         UUID expectedUUID = UUID.fromString("5d87c1c9-55ad-44ec-ad66-99b1d47ced4a");
         try (
@@ -172,7 +172,7 @@ class FileControllerTest extends UploadIntegrationTest {
     }
 
     @Test
-    public void uploadWhenFilesNotValid() throws Exception {
+    void uploadWhenFilesNotValid() throws Exception {
         OffsetDateTime offsetDateTime = OffsetDateTime.parse("2023-04-27T18:40:08.309708+03:00");
         UUID expectedUUID = UUID.fromString("5d87c1c9-55ad-44ec-ad66-99b1d47ced4a");
         byte[] bytes = {0,0,0,0};
