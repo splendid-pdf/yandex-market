@@ -59,7 +59,7 @@ public class OrderController {
                             @RequestBody @Valid OrderRequest orderRequest,
                             @Parameter(name = "userId", description = "User's identifier")
                             @PathVariable(USER_ID) UUID userId) {
-        log.info("POST 'createOrder' request received oderRequest: {} for userId: {}", orderRequest, userId);
+        log.info("'createOrder' was called for userId = {} with request = {}", userId, orderRequest);
         return orderService.create(orderRequest, userId);
     }
 
@@ -71,12 +71,12 @@ public class OrderController {
     public OrderResponse getByOrderId(
             @Parameter(name = "orderId", description = "Order's identifier")
             @PathVariable("orderId") UUID orderId) {
-        log.info("GET 'getByOrderId' request received by orderId: {}", orderId);
+        log.info("'getByOrderId' was called by orderId = {}", orderId);
         return orderService.getOrderResponseById(orderId);
     }
 
     @ResponseStatus(HttpStatus.OK)
-    @GetMapping("/users/{userId}/orders/previews")
+    @GetMapping("/users/{userId}/orders-previews")
     @Operation(operationId = "getOrderByUserId", summary = "Get user orders by user identifier")
     @ApiResponse(responseCode = STATUS_OK, description = SUCCESSFUL_OPERATION,
             content = @Content(mediaType = APPLICATION_JSON,
@@ -85,7 +85,7 @@ public class OrderController {
             @Parameter(name = USER_ID, description = "User's identifier")
             @PathVariable(USER_ID) UUID userId,
             @PageableDefault(sort = "creationTimestamp", direction = Sort.Direction.DESC) Pageable pageable) {
-        log.info("GET 'getOrderByUserId' request received by userId: {}", userId);
+        log.info("'getOrderByUserId' was called for userId = {}", userId);
         return orderService.getOrdersByUserId(userId, pageable);
     }
 
@@ -98,7 +98,7 @@ public class OrderController {
     public List<SellerOrderPreview> getOrderBySellerId(
             @Parameter(name = "sellerId", description = "User's identifier")
             @PathVariable("sellerId") UUID sellerId) {
-        log.info("GET 'getOrderBySellerId' request received by sellerId: {}", sellerId);
+        log.info("'getOrderBySellerId' was called for sellerId: {}", sellerId);
         return orderService.getOrderPreviewsBySellerId(sellerId);
     }
 
@@ -108,7 +108,7 @@ public class OrderController {
     @ApiResponse(responseCode = "204", description = SUCCESSFUL_OPERATION)
     public void cancelOrder(@Parameter(name = "orderId", description = "Order's identifier")
                             @PathVariable("orderId") UUID orderId) {
-        log.info("PATCH 'cancelOrder' request received by orderId: {}", orderId);
+        log.info("'cancelOrder' was called by orderId: {}", orderId);
         orderService.cancelOrder(orderId);
     }
 
@@ -135,7 +135,7 @@ public class OrderController {
             @Parameter(name = "OrderStatus")
             @RequestBody OrderStatus orderstatus
     ) {
-        log.info("PATCH 'updateOrderStatus' request received by orderId: {}", orderId);
+        log.info("'updateOrderStatus' was called by orderId: {}", orderId);
         return orderService.updateOrderStatus(orderId, orderstatus);
     }
 
@@ -143,7 +143,7 @@ public class OrderController {
     @GetMapping("/orders/{orderId}/check")
     public ResponseEntity<InputStreamResource> receiveOrderCheck(@PathVariable("orderId") UUID orderId) {
         ByteArrayInputStream byteArrayInputStream = orderService.createCheck(orderId);
-        log.info("GET 'receiveOrderCheck' request to generate of check of order: {}", orderId);
+        log.info("'receiveOrderCheck' was called by orderId: {}", orderId);
 
         var headers = new HttpHeaders();
         headers.add("Content-Disposition", "inline; filename=check.pdf");
