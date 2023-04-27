@@ -1,7 +1,6 @@
 package com.yandex.market.uploadservice.service;
 
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectResult;
 import com.yandex.market.uploadservice.config.properties.ObjectStorageProperties;

@@ -7,14 +7,9 @@ application:
       secret-key: secret_key
       access-key: access_key
 
-  uuids: "eb527df9-fac2-4de5-96ea-8c11ba8089f0, 2b8e3df0-628a-4ef0-9044-e14a995b539d, cb25d05a-11f0-46c2-bc17-1a1185ade628, 62dc66f7-e141-4283-9c1d-a0dd0e2aba21"
-  expected_urls: "https://www.instagram.com/1, https://www.instagram.com/2, https://www.instagram.com/3"
-  files_paths: "/photos/test_photo_0.jpeg, /photos/test_photo_1.jpg, /photos/test_photo_2.png, /photos/test_photo_3.jpg"
 
 
 spring:
-
-
   flyway:
     enabled: false
 

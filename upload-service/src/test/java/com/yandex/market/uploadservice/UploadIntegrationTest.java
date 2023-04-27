@@ -20,8 +20,7 @@ public abstract class UploadIntegrationTest {
     @Container
     static final MongoDBContainer MONGO_DB_CONTAINER =
             new MongoDBContainer(DockerImageName.parse("mongo:5.0.16-focal"))
-                    .withCopyFileToContainer(MountableFile.forClasspathResource("/mongo/init.js"), "/docker-entrypoint-initdb.d/mongo-init.js:ro")
-                    .withExposedPorts(27017);
+                    .withCopyFileToContainer(MountableFile.forClasspathResource("/mongo-init.js"), "/docker-entrypoint-initdb.d/mongo-init.js:ro");
 
     @DynamicPropertySource
     static void mongoProperties(DynamicPropertyRegistry registry) {

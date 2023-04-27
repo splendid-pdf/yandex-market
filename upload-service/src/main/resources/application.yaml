@@ -1,7 +1,6 @@
 server:
   port: 9001
 
-
 application:
   validation:
     extensions:
@@ -82,12 +81,13 @@ application:
         file_types:
           - CHECK
 
-
   object-storage:
     host: storage.yandexcloud.net
     region: ru-central1
     bucket_name: marketplace-object-storage
     credentials:
+      secret-key: ${SECRET_KEY}
+      access-key: ${ACCESS_KEY}
 
 
 spring:

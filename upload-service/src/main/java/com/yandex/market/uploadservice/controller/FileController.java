@@ -21,7 +21,7 @@ import static com.yandex.market.util.HttpUtils.PUBLIC_API_V1;
 @RestController
 @RequestMapping(PUBLIC_API_V1)
 @RequiredArgsConstructor
-public class FileController {
+public class FileController implements UploadApi {
 
     private final StorageService storageService;
 
@@ -31,7 +31,6 @@ public class FileController {
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE
     )
     @ResponseStatus(HttpStatus.CREATED)
-    @PreAuthorize(value = " @permissionService.hasPermission()")
     public List<UUID> upload(@RequestPart @Size(min = 1, max = 10) List<MultipartFile> files,
                              @RequestParam FileType fileType) {
         return storageService.uploadFiles(files, fileType);

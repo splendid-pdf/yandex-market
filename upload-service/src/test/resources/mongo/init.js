@@ -1,2 +1,0 @@
-
-db.files_meta_info.insert({"_id": 1, "hash": 1, "externalId": "33f31181-d61d-4b7f-b4ae-9efa76f80a63", "timestamp": "2023-04-24T12:37:20.086+00:00", "_class": "com.yandex.market.uploadservice.model.FileMetaInfo"});
