@@ -1,18 +1,22 @@
 package com.yandex.market.favoritesservice.service;
 
-import com.yandex.market.favoritesservice.dto.response.FavoriteItemResponseDto;
-import com.yandex.market.favoritesservice.dto.request.FavoriteProductDto;
-import com.yandex.market.favoritesservice.dto.request.FavoriteSellerDto;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import com.yandex.market.favoritesservice.dto.request.*;
+import com.yandex.market.favoritesservice.dto.response.FavoritePreview;
+import org.springframework.data.domain.*;
 
 import java.util.UUID;
 
 public interface FavoritesService {
 
-    UUID addProductInFavorites(UUID userId, FavoriteProductDto favoriteProductDto);
+    UUID addProductInFavorites(UUID userId, FavoriteProductRequest request);
 
-    void deleteFavoriteProductByUserIdAndProductId(UUID userId, UUID productId);
+    UUID addSellerInFavorites(UUID userId, FavoriteSellerRequest request);
 
-    Page<FavoriteItemResponseDto> getFavoritesByUserId(UUID userId, Pageable page);
+    void deleteFavoriteProduct(UUID userId, UUID productId);
+
+    void deleteFavoriteSeller(UUID userId, UUID sellerId);
+
+    Page<FavoritePreview> getFavoriteProductsByUserId(UUID userId, Pageable page);
+
+    Page<FavoritePreview> getFavoriteSellersByUserId(UUID userId, Pageable page);
 }

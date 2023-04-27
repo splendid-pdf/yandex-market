@@ -17,8 +17,8 @@ import java.util.UUID;
 public class FavoriteProduct {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "favorite_product_seq")
-    @SequenceGenerator(name = "favorite_product_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "favorite_products_seq")
+    @SequenceGenerator(name = "favorite_products_seq", allocationSize = 1)
     private Long id;
 
     private UUID externalId;
