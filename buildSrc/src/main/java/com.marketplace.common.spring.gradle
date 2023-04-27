@@ -9,9 +9,9 @@ dependencies {
     // implementation libs.spring.error.handling
 
     implementation platform(libs.micrometr.tracing.bom)
-    implementation(libs.micrometr.tracing)
-    implementation(libs.micrometr.tracing.bridge.otel)
-    implementation(libs.opentelemetry.exporter.zipkin)
+    implementation libs.micrometr.tracing
+    implementation libs.micrometr.tracing.bridge.otel
+    implementation libs.opentelemetry.exporter.zipkin
 
     runtimeOnly libs.prometheus
     annotationProcessor libs.spring.config.processor
