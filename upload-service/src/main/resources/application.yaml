@@ -113,6 +113,10 @@ spring:
       database: upload_service
 
 management:
+  tracing:
+    enabled: false
+    sampling:
+      probability: 0.1
   endpoints:
     web:
       exposure:
@@ -120,10 +124,6 @@ management:
   metrics:
     tags:
       application: ${spring.application.name}
-  server:
-    port: 9001
-    ssl:
-      enabled: false
 
 logging:
   level:

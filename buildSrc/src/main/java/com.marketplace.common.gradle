@@ -1,7 +1,6 @@
 import java.time.Instant
 
 plugins {
-    id 'pmd'
     id 'java'
     id 'jacoco'
     id "org.sonarqube"
@@ -59,12 +58,6 @@ jib {
 test {
     test.finalizedBy jacocoTestReport
     useJUnitPlatform()
-}
-
-pmd {
-    toolVersion = '6.55.0'
-    ignoreFailures = true
-    ruleSets = ["category/java/errorprone.xml", "category/java/bestpractices.xml"]
 }
 
 jacoco {
