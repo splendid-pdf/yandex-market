@@ -42,9 +42,6 @@ class FileControllerTest extends UploadIntegrationTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @Autowired
-    private FileMetaInfoRepository fileMetaInfoRepository;
-
     @Test
     @Disabled
     void getUrlsWhenOk() throws Exception {
@@ -53,7 +50,7 @@ class FileControllerTest extends UploadIntegrationTest {
                         MockMvcRequestBuilders.get("/public/api/v1/files")
                                 .accept(MediaType.APPLICATION_JSON)
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .queryParam("filesIds",
+                                .queryParam("id",
                                                   "eb527df9-fac2-4de5-96ea-8c11ba8089f0",
                                                   "2b8e3df0-628a-4ef0-9044-e14a995b539d",
                                                   "cb25d05a-11f0-46c2-bc17-1a1185ade628")
@@ -87,7 +84,7 @@ class FileControllerTest extends UploadIntegrationTest {
             mockMvc.perform(
                             MockMvcRequestBuilders.multipart("/public/api/v1/files")
                                     .file(mockFiles.get(0))
-                                    .queryParam("fileType", "PRODUCT")
+                                    .queryParam("type", "PRODUCT")
                                     .with(authentication(token("t51c4cd3-6fe7-4d3e-b82c-f5d044e46091", "ROLE_USER")))
                                     .accept(MediaType.APPLICATION_JSON)
                                     .contentType(MediaType.MULTIPART_FORM_DATA)
@@ -117,7 +114,7 @@ class FileControllerTest extends UploadIntegrationTest {
                         .file(mockFiles.get(3))
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.MULTIPART_FORM_DATA)
-                        .queryParam("fileType", "PRODUCT")
+                        .queryParam("type", "PRODUCT")
                 )
                 .andExpect(status().isUnauthorized());
     }
@@ -136,7 +133,7 @@ class FileControllerTest extends UploadIntegrationTest {
                             MockMvcRequestBuilders.get("/public/api/v1/files")
                                     .accept(MediaType.APPLICATION_JSON)
                                     .contentType(MediaType.APPLICATION_JSON)
-                                    .queryParam("filesIds", "eb527df9-fac2-4de5-96ea-8c11ba8089f9")
+                                    .queryParam("id", "eb527df9-fac2-4de5-96ea-8c11ba8089f9")
                     )
                     .andExpect(status().isNotFound())
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -156,7 +153,7 @@ class FileControllerTest extends UploadIntegrationTest {
         OffsetDateTime offsetDateTime = OffsetDateTime.parse("2023-04-27T18:40:08.309708+03:00");
         UUID expectedUUID = UUID.fromString("5d87c1c9-55ad-44ec-ad66-99b1d47ced4a");
         byte[] bytes = {0,0,0,0};
-        MockMultipartFile mockMultipartFile = new MockMultipartFile("files", "OriginalFileName", null, bytes);
+        MockMultipartFile mockMultipartFile = new MockMultipartFile("file", "OriginalFileName", null, bytes);
         try (
                 MockedStatic<UUID> mockedUuid = Mockito.mockStatic(UUID.class);
                 MockedStatic<OffsetDateTime> offsetDateTimeMocked = Mockito.mockStatic(OffsetDateTime.class)
@@ -166,7 +163,7 @@ class FileControllerTest extends UploadIntegrationTest {
             mockMvc.perform(
                             MockMvcRequestBuilders.multipart("/public/api/v1/files")
                                     .file(mockMultipartFile)
-                                    .queryParam("fileType", "PRODUCT")
+                                    .queryParam("type", "PRODUCT")
                                     .with(authentication(token("t51c4cd3-6fe7-4d3e-b82c-f5d044e46091", "ROLE_USER")))
                                     .accept(MediaType.APPLICATION_JSON)
                                     .contentType(MediaType.MULTIPART_FORM_DATA)
@@ -187,25 +184,25 @@ class FileControllerTest extends UploadIntegrationTest {
 
     private List<MockMultipartFile> getMockedFiles() throws IOException {
         MockMultipartFile file0 = new MockMultipartFile(
-                "files",
+                "file",
                 "test_photo_0.jpeg",
                 null,
                 Files.readAllBytes(Paths.get("src/test/resources/photos/test_photo_0.jpeg")));
 
         MockMultipartFile file1 = new MockMultipartFile(
-                "files",
+                "file",
                 "test_photo_1.jpg",
                 null,
                 Files.readAllBytes(Paths.get("src/test/resources/photos/test_photo_1.jpg")));
 
         MockMultipartFile file2 = new MockMultipartFile(
-                "files",
+                "file",
                 "test_photo_2.png",
                 null,
                 Files.readAllBytes(Paths.get("src/test/resources/photos/test_photo_2.png")));
 
         MockMultipartFile file3 = new MockMultipartFile(
-                "files",
+                "file",
                 "test_photo_3.jpg",
                 null,
                 Files.readAllBytes(Paths.get("src/test/resources/photos/test_photo_3.jpg")));
