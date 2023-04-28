@@ -1,7 +1,7 @@
 package com.yandex.market.basketservice.controller.publicapi;
 
 
-import com.yandex.market.basketservice.AbstractIntegrationTest;
+import com.yandex.market.basketservice.AbstractTestIntegration;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -9,11 +9,11 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static com.yandex.market.basketservice.models.Environment.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
 //@RequiredArgsConstructor(onConstructor = @__(@Autowired))
-class BasketControllerTest extends AbstractIntegrationTest {
+class BasketControllerTest extends AbstractTestIntegration {
 
     @Autowired
     private MockMvc mockMvc;

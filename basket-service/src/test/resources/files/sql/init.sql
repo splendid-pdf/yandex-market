@@ -1,7 +1,4 @@
-create sequence "baskets_seq" start with 1 increment by 3;
-create sequence "items_seq" start with 1 increment by 3;
-
-create table public.baskets
+create table baskets
 (
     id              bigint primary key      not null,
     external_id     uuid                    not null,
@@ -9,29 +6,19 @@ create table public.baskets
 
 );
 
-create table public.items
+create table items
 (
     id              bigint primary key      not null,
     external_id     uuid                    not null
 );
 
-create table public.basket_items
+create table basket_items
 (
     item_id         bigint          not null,
     basket_id       bigint          not null,
     item_count      integer,
     primary key (basket_id, item_id)
 );
-
--- alter table if exists basket_items
---     add constraint FK12dqrxecdip27psybxhejw6oc
---         foreign key (basket_id)
---             references baskets;
---
--- alter table if exists basket_items
---     add constraint FK8v906utb86c7gn2ap9y78i9xi
---         foreign key (item_id)
---             references items;
 
 INSERT INTO baskets(id, external_id, user_id)
 VALUES (1, '83d85ba2-195d-4205-bc70-260199855347', '6a2e63a7-a8b7-4a5e-9422-6a16ee963e8d');
