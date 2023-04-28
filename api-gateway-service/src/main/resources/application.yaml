@@ -87,7 +87,7 @@ application:
         methods: GET
       # upload-api
       - url: /*/*/*/files
-        methods: POST, GET, DELETE
+        methods: GET
       # order-api (пока нету security все эндпоинты открыты)
       - url: /*/*/*/orders/{orderId}
         methods: GET
