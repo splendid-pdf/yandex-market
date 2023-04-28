@@ -8,6 +8,7 @@ dependencies {
 
     annotationProcessor libs.spring.config.processor
 
+    //spring
     implementation libs.spring.web
     implementation libs.spring.data.jpa
     implementation libs.spring.security
@@ -18,11 +19,14 @@ dependencies {
 
     implementation libs.lombok
 
+    //db
     implementation libs.flyway
     runtimeOnly libs.postgresql
 
+    //utils
     developmentOnly libs.spring.devtools
 
+    //tests
     testImplementation libs.prometheus
     testImplementation libs.spring.test
     testImplementation libs.aspectj.core
@@ -30,36 +34,4 @@ dependencies {
     testImplementation libs.spring.security.test
     testImplementation libs.testcontainers.junit
     testImplementation libs.testcontainers.postgresql
-
-
-
-//    implementation 'org.springframework.boot:spring-boot-starter-amqp'
-//    implementation 'org.projectlombok:lombok:1.18.22'
-//    compileOnly 'org.projectlombok:lombok'
-//    annotationProcessor 'org.projectlombok:lombok'
 }
-
-
-
-//ext{
-//    set('swaggerVersion', '2.2.7')
-//}
-//
-//group = 'com.yandex.market'
-//version = '0.0.1-SNAPSHOT'
-//sourceCompatibility = '17'
-//
-//configurations {
-//    compileOnly {
-//        extendsFrom annotationProcessor
-//    }
-//}
-//
-//repositories {
-//    mavenCentral()
-//}
-//
-//
-//tasks.named('test') {
-//    useJUnitPlatform()
-//}
