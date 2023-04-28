@@ -31,14 +31,14 @@ public class FileController implements UploadApi {
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE
     )
     @ResponseStatus(HttpStatus.CREATED)
-    public List<UUID> upload(@RequestPart @Size(min = 1, max = 10) List<MultipartFile> files,
-                             @RequestParam FileType fileType) {
+    public List<UUID> upload(@RequestPart("file") @Size(min = 1, max = 10) List<MultipartFile> files,
+                             @RequestParam("type") FileType fileType) {
         return storageService.uploadFiles(files, fileType);
     }
 
     @GetMapping("/files")
     @ResponseStatus(HttpStatus.OK)
-    public List<URL> getUrls(@RequestParam List<UUID> filesIds) {
+    public List<URL> getUrls(@RequestParam("id") List<UUID> filesIds) {
         return storageService.getUrls(filesIds);
     }
 
