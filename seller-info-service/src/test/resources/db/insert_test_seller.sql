@@ -9,4 +9,7 @@ VALUES (1, '1234', '4321', '9876', 'IP', 'companyName', 'corporateAccount', 'ark
         'SELLER'),
        (3, '1234', '4321', '9876', 'IP', 'companyName', 'corporateAccount', 'arkady@gmail.ru',
         '44329c76-db69-425d-a5ef-f71cefec44db', 'aleks', 'url', 'zhi', 'testcity', 'ACCOUNT123456', false, 'Aa4321!8ee',
+        'SELLER'),
+       (4, '1234', '4321', '9876', 'IP', 'companyName', 'corporateAccount', 'sellertest@gmail.ru',
+        '1ae32a42-b9a9-4e6f-a403-2adae9702ae1', 'aleks', 'url', 'zhi', 'testcity', 'ACCOUNT123456', false, 'Seller!df5',
         'SELLER');

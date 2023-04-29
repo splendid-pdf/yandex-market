@@ -62,7 +62,7 @@ public interface SellerApi {
             })
     UUID createSeller(@RequestBody @Valid SellerRegistration sellerRegistration);
 
-    @Operation(operationId = "getSellerByExternalId", summary = "Получение продавца по externalId")
+    @Operation(operationId = "getSellerBySellerId", summary = "Получение продавца по sellerId")
     @ApiResponses({
             @ApiResponse(responseCode = "200",
                     description = "Продавец успешно получен",
@@ -73,15 +73,15 @@ public interface SellerApi {
     })
     @PreAuthorize(value = """
             @permissionService.hasPermission(
-                #externalId,
+                #sellerId,
                 T(com.yandex.market.auth.model.Role).SELLER,
                 T(com.yandex.market.auth.util.ClientAttributes).SELLER_ID
             )
             """
     )
-    SellerResponseDto getSellerByExternalId(
-            @Parameter(name = "externalId", description = "Идентификатор продавца")
-            @PathVariable("externalId") UUID externalId);
+    SellerResponseDto getSellerBySellerId(
+            @Parameter(name = "sellerId", description = "Идентификатор продавца")
+            @PathVariable("sellerId") UUID sellerId);
 
     @ApiResponses({
             @ApiResponse(responseCode = "200",
@@ -93,19 +93,19 @@ public interface SellerApi {
     })
     @Operation(operationId = "обновлениеПродавца",
             summary = "Поиск по продавца Id и обновление с помощью Dto",
-            description = "Обновление продавца на основе входящего объекта DTO и продавца UUID")
+            description = "Обновление продавца на основе входящего объекта Dto и продавца UUID")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize(value = """
             @permissionService.hasPermission(
-                #externalId,
+                #sellerId,
                 T(com.yandex.market.auth.model.Role).SELLER,
                 T(com.yandex.market.auth.util.ClientAttributes).SELLER_ID
             )
             """
     )
     SellerResponseDto updateSeller(
-            @Parameter(name = "externalId", description = "Индификатор продавца")
-            @PathVariable UUID externalId,
+            @Parameter(name = "sellerId", description = "Индификатор продавца")
+            @PathVariable UUID sellerId,
             @RequestBody SellerRequestDto sellerRequestDto);
 
     @Operation(summary = "Удаление продавца", responses = {
@@ -114,12 +114,12 @@ public interface SellerApi {
     })
     @PreAuthorize(value = """
             @permissionService.hasPermission(
-                #externalId,
+                #sellerId,
                 T(com.yandex.market.auth.model.Role).SELLER,
                 T(com.yandex.market.auth.util.ClientAttributes).SELLER_ID
             )
             """
     )
-    void deleteSeller(@Parameter(name = "externalId", description = "Идентификатор продавца")
-                      @PathVariable UUID externalId);
+    void deleteSeller(@Parameter(name = "sellerId", description = "Идентификатор продавца")
+                      @PathVariable UUID sellerId);
 }

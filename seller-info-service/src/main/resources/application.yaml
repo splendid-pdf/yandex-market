@@ -4,8 +4,6 @@ server:
 spring:
   application:
     name: seller-info-service
-  flyway:
-    enabled: true
   config:
     import: "optional:configserver:"
 
@@ -14,12 +12,14 @@ spring:
     username: ${POSTGRES_USER}
     password: ${POSTGRES_PASSWORD}
     driver-class-name: org.postgresql.Driver
+  flyway:
+    enabled: true
 
   jpa:
     database: POSTGRESQL
     show-sql: true
     hibernate:
-      ddl-auto: update # далее validate
+      ddl-auto: validate # далее validate
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
