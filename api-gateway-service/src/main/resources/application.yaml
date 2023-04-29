@@ -39,7 +39,10 @@ spring:
             - Path=/*/*/*/sellers, /*/*/*/sellers/{externalId}
       default-filters:
         - name: AuthFilter
-
+        - name: CircuitBreaker
+          args:
+            name: DefaultCircuitBreaker
+            fallbackUri: forward:/fallback
   security:
     oauth2:
       client:
@@ -88,8 +91,6 @@ application:
       - url: /*/*/*/product-previews
         methods: POST, GET
       # products-api
-#      - url: /*/*/*/products/{externalId}
-#        methods: GET
       - url: /*/*/*/products/{externalId}
         methods: GET
       # upload-api

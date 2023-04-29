@@ -14,7 +14,8 @@ spring-authorization-server = "1.0.0"
 # monitoring
 prometheus = "1.10.5"
 micrometer-tracing = "1.0.0"
-opentelemetry-exporter-zipkin = "1.25.0"
+resilience4j-micrometer = "2.0.2"
+opentelemetry-exporter-zipkin = "1.20.0"
 
 # db-layer
 flyway = "9.16.0"
@@ -62,6 +63,7 @@ spring-openapi-webflux = { module = "org.springdoc:springdoc-openapi-starter-web
 spring-cloud-api-gateway = { module = "org.springframework.cloud:spring-cloud-starter-gateway" }
 spring-cloud-config-client = { module = "org.springframework.cloud:spring-cloud-config-client" }
 spring-cloud-circuit-breaker = { module = "org.springframework.cloud:spring-cloud-starter-circuitbreaker-resilience4j" }
+spring-cloud-circuit-breaker-reactive = { module = "org.springframework.cloud:spring-cloud-starter-circuitbreaker-reactor-resilience4j" }
 
 # spring oauth2
 spring-oauth2-client = { module = "org.springframework.boot:spring-boot-starter-oauth2-client", version.ref = "spring-boot" }
@@ -72,6 +74,7 @@ spring-oauth2-authorization-server = { module = "org.springframework.security:sp
 prometheus = { module = "io.micrometer:micrometer-registry-prometheus", version.ref = "prometheus" }
 micrometr-tracing = { module = "io.micrometer:micrometer-tracing", version.ref = "micrometer-tracing" }
 micrometr-tracing-bom = { module = "io.micrometer:micrometer-tracing-bom", version.ref = "micrometer-tracing" }
+resilience4j-micrometer = { module = "io.github.resilience4j:resilience4j-micrometer", version.ref = "resilience4j-micrometer" }
 micrometr-tracing-bridge-otel = { module = "io.micrometer:micrometer-tracing-bridge-otel", version.ref = "micrometer-tracing" }
 opentelemetry-exporter-zipkin = { module = "io.opentelemetry:opentelemetry-exporter-zipkin", version.ref = "opentelemetry-exporter-zipkin" }
 spring-devtools = { module = "org.springframework.boot:spring-boot-devtools", version.ref = "spring-boot" }
