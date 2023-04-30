@@ -7,14 +7,15 @@ import lombok.Builder;
 import java.util.UUID;
 
 /**
- * @param ITN  ITN - Идентификационный номер налогоплательщика
- * @param PSRN PSRN - Основной государственный регистрационный номер
- * @param BIC  BIC - Банковский идентификационный код
+ * @param itn  ITN - Идентификационный номер налогоплательщика
+ * @param psrn PSRN - Основной государственный регистрационный номер
+ * @param bic  BIC - Банковский идентификационный код
  */
 
 @Builder
 @Schema(description = "Модель для отображения модели \"Seller\"")
 public record SellerResponseDto(
+
         @Schema(description = "Внешний id для продавца")
         UUID externalId,
         @Schema(description = "Имя продавца")
@@ -32,11 +33,11 @@ public record SellerResponseDto(
         @Schema(description = "Форма регистрации фирмы продавца")
         BusinessModel businessModel,
         @Schema(description = "Идентификационный номер налогоплательщика продавца")
-        String ITN,
+        String itn,
         @Schema(description = "Основной государственный регистрационный номер продавца")
-        String PSRN,
+        String psrn,
         @Schema(description = "Банковский идентификационный код продавца")
-        String BIC,
+        String bic,
         @Schema(description = "Банковский расчетный счет продавца")
         String paymentAccount,
         @Schema(description = "Банковский корпаративный счет продавца")

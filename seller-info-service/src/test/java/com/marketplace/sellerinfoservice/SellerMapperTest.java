@@ -37,9 +37,9 @@ class SellerMapperTest {
             .companyName("Alex Corp")
             .imageUrl("https://example.com/image.jpg")
             .businessModel(BusinessModel.OOO)
-            .ITN("123456789012")
-            .PSRN("123456789012345")
-            .BIC("123456789")
+            .itn("123456789012")
+            .psrn("123456789012345")
+            .bic("123456789")
             .paymentAccount("12345678901234567890")
             .corporateAccount("12345678901234567890")
             .build();
@@ -47,7 +47,6 @@ class SellerMapperTest {
     private final SellerRequestDto SELLER_REQUEST_DTO = new SellerRequestDto(
             "Александр",
             "Бородач",
-            "alexsandrooo@example.com",
             "г. Саратов, ул. Московская, д123, к13",
             "Alex Corp",
             "https://example.com/image.jpg",
@@ -84,7 +83,6 @@ class SellerMapperTest {
         SellerRequestDto sellerRequestDto = new SellerRequestDto(
                 "Игорь",
                 null,
-                "alexsandrooo@gmail.com",
                 "г. Саратов, ул. Московская, д123, к14",
                 null,
                 null,
@@ -100,13 +98,12 @@ class SellerMapperTest {
         Assertions.assertAll(
                 () -> Assertions.assertEquals(sellerRequestDto.firstName(), sellerAfterUpdate.getFirstName()),
                 () -> Assertions.assertEquals(SELLER.getLastName(), sellerAfterUpdate.getLastName()),
-                () -> Assertions.assertEquals(sellerRequestDto.email(), sellerAfterUpdate.getEmail()),
                 () -> Assertions.assertEquals(sellerRequestDto.legalAddress(), sellerAfterUpdate.getLegalAddress()),
                 () -> Assertions.assertEquals(SELLER.getCompanyName(), sellerAfterUpdate.getCompanyName()),
                 () -> Assertions.assertEquals(SELLER.getBusinessModel(), sellerAfterUpdate.getBusinessModel()),
-                () -> Assertions.assertEquals(sellerRequestDto.ITN(), sellerAfterUpdate.getITN()),
-                () -> Assertions.assertEquals(SELLER.getPSRN(), sellerAfterUpdate.getPSRN()),
-                () -> Assertions.assertEquals(SELLER.getBIC(), sellerAfterUpdate.getBIC()),
+                () -> Assertions.assertEquals(sellerRequestDto.itn(), sellerAfterUpdate.getItn()),
+                () -> Assertions.assertEquals(SELLER.getPsrn(), sellerAfterUpdate.getPsrn()),
+                () -> Assertions.assertEquals(SELLER.getBic(), sellerAfterUpdate.getBic()),
                 () -> Assertions.assertEquals(sellerRequestDto.paymentAccount(), sellerAfterUpdate.getPaymentAccount()),
                 () -> Assertions.assertEquals(SELLER.getCorporateAccount(), sellerAfterUpdate.getCorporateAccount())
         );

@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
+import static com.yandex.market.auth.util.TestClientAttributes.SELLER;
 import static com.yandex.market.auth.util.TestClientAttributes.USER;
 
 public class AuthUtils {
@@ -16,6 +17,15 @@ public class AuthUtils {
         Jwt jwt = Jwt.withTokenValue(USER.accessToken())
                 .header(JoseHeaderNames.KID, UUID.randomUUID().toString())
                 .claim(ClientAttributes.USER_ID, id)
+                .claim("authorities", List.of(role))
+                .build();
+        return new JwtAuthenticationToken(jwt, Collections.emptyList());
+    }
+
+    public static JwtAuthenticationToken sellerToken(String id, String role) {
+        Jwt jwt = Jwt.withTokenValue(SELLER.accessToken())
+                .header(JoseHeaderNames.KID, UUID.randomUUID().toString())
+                .claim(ClientAttributes.SELLER_ID, id)
                 .claim("authorities", List.of(role))
                 .build();
         return new JwtAuthenticationToken(jwt, Collections.emptyList());

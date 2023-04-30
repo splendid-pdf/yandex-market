@@ -46,11 +46,11 @@ public class Seller {
     @Enumerated(value = EnumType.STRING)
     private BusinessModel businessModel;
 
-    private String ITN;
+    private String itn;
 
-    private String PSRN;
+    private String psrn;
 
-    private String BIC;
+    private String bic;
 
     private String paymentAccount;
 

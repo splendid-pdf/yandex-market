@@ -29,27 +29,27 @@ public class SellerController implements SellerApi {
         return sellerService.createSeller(sellerRegistration);
     }
 
-    @GetMapping("sellers/{externalId}")
+    @GetMapping("sellers/{sellerId}")
     @ResponseStatus(HttpStatus.OK)
-    public SellerResponseDto getSellerByExternalId(
-            @Parameter(name = "externalId", description = "Идентификатор продавца")
-            @PathVariable("externalId") UUID externalId) {
-        return sellerService.getSellerByExternalId(externalId);
+    public SellerResponseDto getSellerBySellerId(
+            @Parameter(name = "sellerId", description = "Идентификатор продавца")
+            @PathVariable("sellerId") UUID sellerId) {
+        return sellerService.getSellerBySellerId(sellerId);
     }
 
-    @PutMapping("sellers/{externalId}")
+    @PutMapping("sellers/{sellerId}")
     @ResponseStatus(HttpStatus.OK)
     public SellerResponseDto updateSeller(
-            @Parameter(name = "externalId", description = "Идентификатор продавца")
-            @PathVariable UUID externalId,
+            @Parameter(name = "sellerId", description = "Идентификатор продавца")
+            @PathVariable UUID sellerId,
             @RequestBody SellerRequestDto sellerRequestDto) {
-        return sellerService.updateSeller(externalId, sellerRequestDto);
+        return sellerService.updateSeller(sellerId, sellerRequestDto);
     }
 
-    @DeleteMapping("sellers/{externalId}")
+    @DeleteMapping("sellers/{sellerId}")
     @ResponseStatus(HttpStatus.OK)
-    public void deleteSeller(@Parameter(name = "externalId", description = "Идентификатор продавца")
-                             @PathVariable UUID externalId) {
-        sellerService.deleteSellerByExternalId(externalId);
+    public void deleteSeller(@Parameter(name = "sellerId", description = "Идентификатор продавца")
+                             @PathVariable UUID sellerId) {
+        sellerService.deleteSellerBySellerId(sellerId);
     }
 }

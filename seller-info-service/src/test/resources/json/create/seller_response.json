@@ -7,9 +7,9 @@
   "companyName": "companyName",
   "imageUrl": "url",
   "businessModel": "IP",
-  "ITN": "4321",
-  "PSRN": "9876",
-  "BIC": "1234",
+  "itn": "4321",
+  "psrn": "9876",
+  "bic": "1234",
   "paymentAccount": "ACCOUNT123456",
   "corporateAccount": "corporateAccount"
 }
