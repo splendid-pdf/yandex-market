@@ -4,6 +4,7 @@ import com.yandex.market.auth.service.PermissionService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -25,7 +26,22 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .csrf().disable()
-                .oauth2ResourceServer(resourceServer -> resourceServer.jwt().decoder(jwtDecoder()));
+                .oauth2ResourceServer(resourceServer -> resourceServer.jwt().decoder(jwtDecoder()))
+                .exceptionHandling()
+                .accessDeniedHandler(
+                        ((request, response, exception) -> {
+                            response.setContentType("application/json");
+                            response.setStatus(HttpStatus.FORBIDDEN.value());
+                            response.getWriter()
+                                    .write("""
+                                            {
+                                                "code": 403,
+                                                "error": "Access is denied",
+                                                "message": "Sorry, you do not have permission to access this resource. Please login with your account profile to gain access."
+                                            }
+                                            """);
+                        })
+                );
         return http.build();
     }
 
