@@ -4,6 +4,7 @@ import com.yandex.market.auth.service.PermissionService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -14,6 +15,8 @@ import org.springframework.security.oauth2.jose.jws.SignatureAlgorithm;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.web.SecurityFilterChain;
+
+import static com.yandex.market.util.GlobalEnviroment.SECURITY_FORBIDDEN_MESSAGE;
 
 @Configuration
 @EnableWebSecurity
@@ -52,6 +55,15 @@ public class SecurityConfig {
                 .csrf().disable()
                 .oauth2ResourceServer(resourceServer -> resourceServer
                         .jwt().decoder(jwtDecoder())
+                )
+                .exceptionHandling()
+                .accessDeniedHandler(
+                        ((request, response, exception) -> {
+                            response.setContentType("application/json");
+                            response.setStatus(HttpStatus.FORBIDDEN.value());
+                            response.getWriter()
+                                    .write(SECURITY_FORBIDDEN_MESSAGE);
+                        })
                 );
         return http.build();
     }

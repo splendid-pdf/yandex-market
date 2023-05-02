@@ -14,6 +14,8 @@ import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.web.SecurityFilterChain;
 
+import static com.yandex.market.util.GlobalEnviroment.SECURITY_FORBIDDEN_MESSAGE;
+
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
@@ -33,13 +35,7 @@ public class SecurityConfig {
                             response.setContentType("application/json");
                             response.setStatus(HttpStatus.FORBIDDEN.value());
                             response.getWriter()
-                                    .write("""
-                                            {
-                                                "code": 403,
-                                                "error": "Access is denied",
-                                                "message": "Sorry, you do not have permission to access this resource. Please login with your account profile to gain access."
-                                            }
-                                            """);
+                                    .write(SECURITY_FORBIDDEN_MESSAGE);
                         })
                 );
         return http.build();
