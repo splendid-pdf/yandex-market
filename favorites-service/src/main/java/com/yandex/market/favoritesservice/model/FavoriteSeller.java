@@ -23,8 +23,7 @@ public class FavoriteSeller {
 
     private UUID externalId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private UserFavoritesPage userFavoritesPage;
+    private UUID userId;
 
     @Builder.Default
     private LocalDateTime addedAt = LocalDateTime.now();

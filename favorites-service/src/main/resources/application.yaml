@@ -15,24 +15,16 @@ spring:
     serialization:
       fail-on-empty-beans: false
 
-  flyway:
-    enabled: false
-    defaultSchema: favorite
-
   jpa:
     database: POSTGRESQL
     show-sql: true
-    generateDdl: true
+    generateDdl: false
     hibernate:
-      ddl-auto: create
+      ddl-auto: validate
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
-        schema_update:
-          unique_constraint_strategy: RECREATE_QUIETLY
-        connection:
-          provider_disables_autocommit: true
 
   datasource:
     url: jdbc:postgresql://localhost:5432/favorite
@@ -41,6 +33,10 @@ spring:
     driverClassName: org.postgresql.Driver
     hikari:
       auto-commit: false
+
+  flyway:
+    enabled: true
+    defaultSchema: public
 
   security:
     oauth2:

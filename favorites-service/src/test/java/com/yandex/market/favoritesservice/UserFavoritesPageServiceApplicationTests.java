@@ -5,8 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.exc.ValueInstantiationException;
 import com.yandex.market.auth.model.Role;
 import com.yandex.market.favoritesservice.dto.request.FavoriteProductRequest;
-import com.yandex.market.favoritesservice.model.UserFavoritesPage;
-import com.yandex.market.favoritesservice.repository.UserFavoritesPageRepository;
 import com.yandex.market.util.RestPageImpl;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;

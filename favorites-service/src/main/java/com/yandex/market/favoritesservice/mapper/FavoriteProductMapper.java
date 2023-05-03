@@ -8,8 +8,8 @@ import org.mapstruct.*;
 public interface FavoriteProductMapper {
 
     @Mapping(target = "id", ignore = true)
+    @Mapping(target = "userId", ignore = true)
     @Mapping(target = "addedAt", ignore = true)
-    @Mapping(target = "favoriteItem", ignore = true)
     @Mapping(target = "externalId", source = "productId")
     FavoriteProduct toFavoriteProduct(FavoriteProductRequest favoriteProductRequest);
 }
