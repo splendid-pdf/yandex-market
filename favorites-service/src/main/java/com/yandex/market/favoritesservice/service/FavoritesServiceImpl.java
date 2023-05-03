@@ -5,10 +5,10 @@ import com.yandex.market.favoritesservice.dto.request.FavoriteSellerRequest;
 import com.yandex.market.favoritesservice.dto.response.FavoritePreview;
 import com.yandex.market.favoritesservice.mapper.FavoriteProductMapper;
 import com.yandex.market.favoritesservice.mapper.FavoriteSellerMapper;
-import com.yandex.market.favoritesservice.model.FavoriteItem;
+import com.yandex.market.favoritesservice.model.UserFavoritesPage;
 import com.yandex.market.favoritesservice.model.FavoriteProduct;
 import com.yandex.market.favoritesservice.model.FavoriteSeller;
-import com.yandex.market.favoritesservice.repository.FavoriteItemRepository;
+import com.yandex.market.favoritesservice.repository.UserFavoritesPageRepository;
 import com.yandex.market.favoritesservice.repository.FavoriteProductRepository;
 import com.yandex.market.favoritesservice.repository.FavoriteSellerRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -30,7 +30,7 @@ public class FavoritesServiceImpl implements FavoritesService {
 
     private final FavoriteProductMapper favoriteProductMapper;
 
-    private final FavoriteItemRepository favoriteItemRepository;
+    private final UserFavoritesPageRepository userFavoritesPageRepository;
 
     private final FavoriteSellerRepository favoriteSellerRepository;
 
@@ -38,44 +38,44 @@ public class FavoritesServiceImpl implements FavoritesService {
 
     @Transactional
     public UUID addProductInFavorites(UUID userId, FavoriteProductRequest request) {
-        FavoriteItem favoriteItem = getOrCreateFavoriteItem(userId);
+        UserFavoritesPage userFavoritesPage = getOrCreateUserFavoritesPage(userId);
         FavoriteProduct favoriteProduct = favoriteProductMapper.toFavoriteProduct(request);
 
-        if (favoriteProductRepository.findFavoriteItemByFavoriteItemAndExternalId(
-                favoriteItem,
+        if (favoriteProductRepository.findFavoriteItemByUserFavoritesPageAndExternalId(
+                userFavoritesPage,
                 favoriteProduct.getExternalId()).isEmpty()) {
 
-            favoriteItem.addProduct(favoriteProduct);
-            favoriteItemRepository.save(favoriteItem);
+            userFavoritesPage.addProduct(favoriteProduct);
+            userFavoritesPageRepository.save(userFavoritesPage);
         }
         return favoriteProduct.getExternalId();
     }
 
     @Transactional
     public UUID addSellerInFavorites(UUID userId, FavoriteSellerRequest request) {
-        FavoriteItem favoriteItem = getOrCreateFavoriteItem(userId);
+        UserFavoritesPage userFavoritesPage = getOrCreateUserFavoritesPage(userId);
         FavoriteSeller favoriteSeller = favoriteSellerMapper.toFavoriteSeller(request);
 
-        if (favoriteSellerRepository.findFavoriteItemByFavoriteItemAndExternalId(
-                favoriteItem,
+        if (favoriteSellerRepository.findByUserFavoritesPageAndExternalId(
+                userFavoritesPage,
                 favoriteSeller.getExternalId()).isEmpty()) {
 
-            favoriteItem.addSeller(favoriteSeller);
-            favoriteItemRepository.save(favoriteItem);
+            userFavoritesPage.addSeller(favoriteSeller);
+            userFavoritesPageRepository.save(userFavoritesPage);
         }
         return favoriteSeller.getExternalId();
     }
 
     @Transactional
     public void deleteFavoriteProduct(UUID userId, UUID productId) {
-        FavoriteItem favoriteItem = findFavoriteItem(userId);
-        favoriteProductRepository.deleteByFavoriteItemAndExternalId(favoriteItem, productId);
+        UserFavoritesPage userFavoritesPage = findUserFavoritesPage(userId);
+        favoriteProductRepository.deleteByUserFavoritesPageAndExternalId(userFavoritesPage, productId);
     }
 
     @Transactional
     public void deleteFavoriteSeller(UUID userId, UUID sellerId) {
-        FavoriteItem favoriteItem = findFavoriteItem(userId);
-        favoriteSellerRepository.deleteByFavoriteItemAndExternalId(favoriteItem, sellerId);
+        UserFavoritesPage userFavoritesPage = findUserFavoritesPage(userId);
+        favoriteSellerRepository.deleteByUserFavoritesPageAndExternalId(userFavoritesPage, sellerId);
     }
 
     @Transactional(readOnly = true)
@@ -88,18 +88,18 @@ public class FavoritesServiceImpl implements FavoritesService {
         return favoriteSellerRepository.findFavoriteSellersByUserId(userId, page);
     }
 
-    private FavoriteItem findFavoriteItem(UUID userId) {
-        return favoriteItemRepository.findFavoriteItemByUserId(userId).orElseThrow(
+    private UserFavoritesPage findUserFavoritesPage(UUID userId) {
+        return userFavoritesPageRepository.findUserFavoritesPageByUserId(userId).orElseThrow(
                 () -> new EntityNotFoundException("Favorite item was not found by given user ID = %s".formatted(userId))
         );
     }
 
-    private FavoriteItem getOrCreateFavoriteItem(UUID userId) {
-        Optional<FavoriteItem> favoriteItem = favoriteItemRepository.findFavoriteItemByUserId(userId);
+    private UserFavoritesPage getOrCreateUserFavoritesPage(UUID userId) {
+        Optional<UserFavoritesPage> userFavoritesPage = userFavoritesPageRepository.findUserFavoritesPageByUserId(userId);
 
-        return favoriteItem.orElseGet(
-                () -> favoriteItemRepository.save(
-                        FavoriteItem.builder()
+        return userFavoritesPage.orElseGet(
+                () -> userFavoritesPageRepository.save(
+                        UserFavoritesPage.builder()
                                 .userId(userId)
                                 .build()));
     }

@@ -5,8 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.exc.ValueInstantiationException;
 import com.yandex.market.auth.model.Role;
 import com.yandex.market.favoritesservice.dto.request.FavoriteProductRequest;
-import com.yandex.market.favoritesservice.model.FavoriteItem;
-import com.yandex.market.favoritesservice.repository.FavoriteItemRepository;
+import com.yandex.market.favoritesservice.model.UserFavoritesPage;
+import com.yandex.market.favoritesservice.repository.UserFavoritesPageRepository;
 import com.yandex.market.util.RestPageImpl;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
@@ -60,13 +60,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
                 executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD
         )
 })
-class FavoriteItemServiceApplicationTests {
+class UserFavoritesPageServiceApplicationTests {
 
     private final MockMvc mockMvc;
 
     private final ObjectMapper objectMapper;
 
-    private final FavoriteItemRepository repository;
+    private final UserFavoritesPageRepository repository;
 
     private final static String USER_ID = "6a2e63a7-a8b7-4a5e-9422-6a16ee963e8d";
     private final static String PRODUCT_ID = "5d61ef1a-b76a-4675-b791-356ab3b834d5";
@@ -99,7 +99,7 @@ class FavoriteItemServiceApplicationTests {
             String content = mvcResult.getResponse().getContentAsString();
             String expectedUUID = unwrapString(content);
 
-            FavoriteItem favorite = repository.findById(1L)
+            UserFavoritesPage favorite = repository.findById(1L)
                     .orElseThrow(() -> new EntityNotFoundException("Entity not found!"));
 
             assertAll(
@@ -109,7 +109,7 @@ class FavoriteItemServiceApplicationTests {
                             .usingRecursiveComparison()
                             .ignoringFields("addedAt")
                             .isEqualTo(objectMapper.readValue(
-                                    Files.readString(Path.of(expectedAddedFavoriteItemResource.getURI())), FavoriteItem.class))
+                                    Files.readString(Path.of(expectedAddedFavoriteItemResource.getURI())), UserFavoritesPage.class))
             );
 
         }

@@ -24,7 +24,8 @@ public interface FavoriteSellerRepository extends JpaRepository<FavoriteSeller, 
     Page<FavoritePreview> findFavoriteSellersByUserId(@Param("userId") UUID userId, Pageable pageable);
 
 
-    Optional<FavoriteSeller> findFavoriteItemByFavoriteItemAndExternalId(FavoriteItem favoriteItem, UUID externalId);
+    Optional<FavoriteSeller> findByUserFavoritesPageAndExternalId(UserFavoritesPage userFavoritesPage,
+                                                                  UUID externalId);
 
-    void deleteByFavoriteItemAndExternalId(FavoriteItem favoriteItem, UUID externalId);
+    void deleteByUserFavoritesPageAndExternalId(UserFavoritesPage userFavoritesPage, UUID externalId);
 }

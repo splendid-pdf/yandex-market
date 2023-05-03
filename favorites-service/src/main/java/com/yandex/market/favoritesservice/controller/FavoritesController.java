@@ -33,7 +33,7 @@ public class FavoritesController implements FavoriteProductApi, FavoriteSellerAp
     @ResponseStatus(HttpStatus.CREATED)
     public UUID createFavoriteProduct(@PathVariable("userId") UUID userId,
                                       @RequestBody @Valid FavoriteProductRequest request) {
-        log.info("POST 'createFavoriteProduct' was called for userId = '%s' with request = '%s'".formatted(userId, request));
+        log.info("'createFavoriteProduct' was called for userId = '%s' with request = '%s'".formatted(userId, request));
         return favoritesService.addProductInFavorites(userId, request);
     }
 
@@ -41,7 +41,7 @@ public class FavoritesController implements FavoriteProductApi, FavoriteSellerAp
     @ResponseStatus(HttpStatus.CREATED)
     public UUID createFavoriteSeller(@PathVariable("userId") UUID userId,
                                      @RequestBody @Valid FavoriteSellerRequest request) {
-        log.info("POST 'createFavoriteSeller' was called for userId = '%s' with request = '%s'".formatted(userId, request));
+        log.info("'createFavoriteSeller' was called for userId = '%s' with request = '%s'".formatted(userId, request));
         return favoritesService.addSellerInFavorites(userId, request);
     }
 
@@ -50,7 +50,7 @@ public class FavoritesController implements FavoriteProductApi, FavoriteSellerAp
     public Page<FavoritePreview> getFavoriteProducts(
             @PathVariable("userId") UUID userId,
             @PageableDefault(sort = "addedAt", direction = Sort.Direction.ASC) Pageable page) {
-        log.info("GET 'getFavoriteProducts' received a request to get favorites products of user: \"%s\""
+        log.info("'getFavoriteProducts' received a request to get favorites products of user: \"%s\""
                 .formatted(userId));
         return favoritesService.getFavoriteProductsByUserId(userId, page);
     }
@@ -60,7 +60,7 @@ public class FavoritesController implements FavoriteProductApi, FavoriteSellerAp
     public Page<FavoritePreview> getFavoriteSellers(
             @PathVariable("userId") UUID userId,
             @PageableDefault(sort = "addedAt", direction = Sort.Direction.ASC) Pageable page) {
-        log.info("GET 'getFavoriteSellers' received a request to get favorites products of user: \"%s\""
+        log.info("'getFavoriteSellers' received a request to get favorites products of user: \"%s\""
                 .formatted(userId));
         return favoritesService.getFavoriteSellersByUserId(userId, page);
     }
@@ -69,7 +69,7 @@ public class FavoritesController implements FavoriteProductApi, FavoriteSellerAp
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteFavoriteProduct(@PathVariable("userId") UUID userId,
                                       @PathVariable("productId") UUID productId) {
-        log.info("DELETE 'deleteFavoriteProduct' received a request to delete favorite product '%s' of user: '%s'"
+        log.info("'deleteFavoriteProduct' received a request to delete favorite product '%s' of user: '%s'"
                 .formatted(productId, userId));
         favoritesService.deleteFavoriteProduct(userId, productId);
     }
@@ -78,7 +78,7 @@ public class FavoritesController implements FavoriteProductApi, FavoriteSellerAp
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteFavoriteSeller(@PathVariable("userId") UUID userId,
                                      @PathVariable("sellerId") UUID sellerId) {
-        log.info("DELETE 'deleteFavoriteSeller' received a request to delete favorite brand '%s' of user: '%s'"
+        log.info("'deleteFavoriteSeller' received a request to delete favorite brand '%s' of user: '%s'"
                 .formatted(sellerId, userId));
         favoritesService.deleteFavoriteSeller(userId, sellerId);
     }

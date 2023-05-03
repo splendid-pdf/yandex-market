@@ -15,7 +15,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Table(name = "favorites")
 @EqualsAndHashCode(of = "id")
-public class FavoriteItem {
+public class UserFavoritesPage {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "favorites_seq")
@@ -37,12 +37,12 @@ public class FavoriteItem {
     private List<FavoriteSeller> sellers = new ArrayList<>();
 
     public void addProduct(FavoriteProduct product) {
-        product.setFavoriteItem(this);
+        product.setUserFavoritesPage(this);
         products.add(product);
     }
 
     public void addSeller(FavoriteSeller seller) {
-        seller.setFavoriteItem(this);
+        seller.setUserFavoritesPage(this);
         sellers.add(seller);
     }
 }

@@ -1,6 +1,6 @@
 package com.yandex.market.favoritesservice.controller.api;
 
-import com.yandex.market.favoritesservice.dto.response.ExceptionResponse;
+import com.yandex.market.model.ErrorResponse;
 import io.swagger.v3.oas.annotations.media.*;
 import io.swagger.v3.oas.annotations.responses.*;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -13,7 +13,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
                 content = {
                         @Content(
                                 mediaType = "application/json",
-                                schema = @Schema(implementation = ExceptionResponse.class)
+                                schema = @Schema(implementation = ErrorResponse.class)
                         )
                 }
         ),
@@ -31,7 +31,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
                 content = {
                         @Content(
                                 mediaType = "application/json",
-                                schema = @Schema(implementation = ExceptionResponse.class)
+                                schema = @Schema(implementation = ErrorResponse.class)
                         )
                 }
         )

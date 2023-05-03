@@ -17,9 +17,9 @@ import java.util.UUID;
 public interface FavoriteSellerApi extends FavoritesApi {
 
     @Operation(operationId = "createFavoriteSeller", summary = "Добавление магазина во вкладку избранное клиента")
-    @ApiResponse(responseCode = "201", description = "CREATED",
+    @ApiResponse(responseCode = "201", description = "Магазин успешно добавлен в избранное",
             content = @Content(mediaType = "application/json",
-                    schema = @Schema(implementation = UUID.class)))
+                    schema = @Schema(implementation = FavoriteSellerRequest.class)))
     @PreAuthorize(value = """
             @permissionService.hasPermission(
                 #userId,
@@ -33,9 +33,9 @@ public interface FavoriteSellerApi extends FavoritesApi {
                               FavoriteSellerRequest request);
 
     @Operation(operationId = "getFavoriteSellers", summary = "Получение избранных магазинов клиента")
-    @ApiResponse(responseCode = "200", description = "OK",
+    @ApiResponse(responseCode = "200", description = "Избранные магазины успешно получены",
             content = @Content(mediaType = "application/json",
-                    array = @ArraySchema(schema = @Schema(implementation = FavoriteSellerRequest.class))))
+                    array = @ArraySchema(schema = @Schema(implementation = FavoritePreview.class))))
     @PreAuthorize(value = """
             @permissionService.hasPermission(
                 #userId,
@@ -49,7 +49,7 @@ public interface FavoriteSellerApi extends FavoritesApi {
             @Parameter(name = "page", description = "Список избранных магазинов клиента") Pageable page);
 
     @Operation(operationId = "deleteFavoriteSeller", summary = "Удаление магазина с избранных клиента")
-    @ApiResponse(responseCode = "204", description = "NO_CONTENT")
+    @ApiResponse(responseCode = "204", description = "Магазин успешно удален с избранных")
     @PreAuthorize(value = """
             @permissionService.hasPermission(
                 #userId,
