@@ -1,33 +1,122 @@
+server:
+  port: 9001
+
 application:
-  extension:
-    jpg:
-      max_file_size_in_bytes: 153600
-    png:
-      max_file_size_in_bytes: 1000000
-    pdf:
-      max_file_size_in_bytes: 50000
   validation:
-    maximum_files_count: 5
+    extensions:
+      jpg:
+        max_file_size_in_bytes: 10_485_760 #10 mb
+        file_types:
+          - AVATAR
+          - PRODUCT
+          - REVIEW
+      jpeg:
+        max_file_size_in_bytes: 10_485_760 #10 mb
+        file_types:
+          - AVATAR
+          - PRODUCT
+          - REVIEW
+      png:
+        max_file_size_in_bytes: 10_485_760 #10 mb
+        file_types:
+          - AVATAR
+          - PRODUCT
+          - REVIEW
+      heif:
+        max_file_size_in_bytes: 10_485_760 #10 mb
+        file_types:
+          - AVATAR
+          - PRODUCT
+          - REVIEW
+      heic:
+        max_file_size_in_bytes: 10_485_760 #10 mb
+        file_types:
+          - AVATAR
+          - PRODUCT
+          - REVIEW
+      gif:
+        max_file_size_in_bytes: 10_485_760 #10 mb
+        file_types:
+          - AVATAR
+          - PRODUCT
+          - REVIEW
+      webp:
+        max_file_size_in_bytes: 10_485_760 #10 mb
+        file_types:
+          - AVATAR
+          - PRODUCT
+          - REVIEW
+      mov:
+        max_file_size_in_bytes: 104_857_600 #100 mb
+        file_types:
+          - PRODUCT
+          - REVIEW
+      mp4:
+        max_file_size_in_bytes: 104_857_600 #100 mb
+        file_types:
+          - PRODUCT
+          - REVIEW
+      mkv:
+        max_file_size_in_bytes: 104_857_600 #100 mb
+        file_types:
+          - PRODUCT
+          - REVIEW
+      m4v:
+        max_file_size_in_bytes: 104_857_600 #100 mb
+        file_types:
+          - PRODUCT
+          - REVIEW
+      avi:
+        max_file_size_in_bytes: 104_857_600 #100 mb
+        file_types:
+          - PRODUCT
+          - REVIEW
+      hevc:
+        max_file_size_in_bytes: 104_857_600 #100 mb
+        file_types:
+          - PRODUCT
+          - REVIEW
+      pdf:
+        max_file_size_in_bytes: 5_242_880 #5 mb
+        file_types:
+          - CHECK
+
   object-storage:
     host: storage.yandexcloud.net
     region: ru-central1
-    bucket-name: marketplace-object-storage
+    bucket_name: marketplace-object-storage
     credentials:
       secret-key: ${SECRET_KEY}
       access-key: ${ACCESS_KEY}
-    expiration-time: 60 # in minutes
+
 
 spring:
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://localhost:9000/oauth2/jwks
+
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 200MB
+      max-request-size: 2000MB #2 GB
   application:
     name: upload-service
   config:
     import: optional:configserver:http://localhost:8888
   data:
     mongodb:
-      uri: mongodb://localhost:27017/upload-service
-      database: upload-service
+      uri: mongodb://localhost:27023/upload_service
+      database: upload_service
 
 management:
+  tracing:
+    enabled: false
+    sampling:
+      probability: 0.1
   endpoints:
     web:
       exposure:
@@ -35,10 +124,6 @@ management:
   metrics:
     tags:
       application: ${spring.application.name}
-  server:
-    port: 9001
-    ssl:
-      enabled: false
 
 logging:
   level:

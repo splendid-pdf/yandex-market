@@ -14,7 +14,9 @@ dependencies {
     // spring cloud
     implementation libs.spring.cloud.api.gateway
     implementation libs.spring.cloud.config.client
-    implementation libs.spring.cloud.circuit.breaker
+
+    implementation libs.resilience4j.micrometer
+    implementation libs.spring.cloud.circuit.breaker.reactive
 
     developmentOnly libs.spring.devtools
     annotationProcessor libs.spring.config.processor

@@ -12,7 +12,7 @@ spring:
         - id: order-service-route
           uri: http://127.0.0.1:8081
           predicates:
-            - Path=/*/*/*/orders, /*/*/*/orders/**
+            - Path=/*/*/*/orders/{orderId}, /*/*/*/orders/{orderId}/*, /*/*/*/users/{userId}/orders, /*/*/*/users/{userId}/orders-previews, /*/*/*/sellers/{sellerId}/orders
         - id: user-info-service-route
           uri: http://127.0.0.1:8080
           predicates:
@@ -39,7 +39,10 @@ spring:
             - Path=/*/*/*/sellers, /*/*/*/sellers/{externalId}
       default-filters:
         - name: AuthFilter
-
+        - name: CircuitBreaker
+          args:
+            name: DefaultCircuitBreaker
+            fallbackUri: forward:/fallback
   security:
     oauth2:
       client:
@@ -61,13 +64,20 @@ spring:
             user-info-uri: "http://127.0.0.1:9000/userinfo"
 
 management:
+  tracing:
+    enabled: false
+    sampling:
+      probability: 0.1
   endpoint:
     gateway:
       enabled: true
   endpoints:
     web:
       exposure:
-        include: gateway
+        include: gateway, prometheus
+  zipkin:
+    tracing:
+      endpoint: http://localhost:9411/api/v2/spans
 
 application:
   security:
@@ -81,13 +91,22 @@ application:
       - url: /*/*/*/product-previews
         methods: POST, GET
       # products-api
-#      - url: /*/*/*/products/{externalId}
-#        methods: GET
       - url: /*/*/*/products/{externalId}
         methods: GET
       # upload-api
       - url: /*/*/*/files
-        methods: POST, GET, DELETE
+        methods: GET
+      # order-api (пока нету security все эндпоинты открыты)
+      - url: /*/*/*/orders/{orderId}
+        methods: GET
+      - url: /*/*/*/users/{userId}/orders
+        methods: POST
+      - url: /*/*/*/users/{userId}/orders-previews
+        methods: GET
+      - url: /*/*/*/sellers/{sellerId}/orders
+        methods: GET
+      - url: /*/*/*/orders/{orderId}/*
+        methods: GET, PATCH
 
 logging:
   level:

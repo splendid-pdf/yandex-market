@@ -13,6 +13,8 @@ dependencies {
 
     implementation libs.spring.cloud.config.client
 
+    implementation libs.flyway
+
     runtimeOnly libs.postgresql
 
     annotationProcessor libs.spring.config.processor
@@ -22,4 +24,5 @@ dependencies {
     testImplementation libs.mockito.inline
     testImplementation libs.testcontainers.junit
     testImplementation libs.testcontainers.postgresql
+    testImplementation libs.spring.security.test
 }

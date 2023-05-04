@@ -1,18 +1,15 @@
 application:
-  extension:
-    jpg:
-      max_file_size_in_bytes: 153600
-    png:
-      max_file_size_in_bytes: 1000000
-    pdf:
-      max_file_size_in_bytes: 50000
-  validation:
-    maximum_files_count: 5
   object-storage:
-    host: storage.yandexcloud.net
-    region: ru-central1
-    bucket-name: marketplace-object-storage
+    host: host
+    region: region
+    bucket-name: bucket-name
     credentials:
-      secret-key: abc21312321321421
-      access-key: 2109321938129321dcs
-    expiration-time: 60 # in minutes
+      secret-key: secret_key
+      access-key: access_key
+
+
+
+spring:
+  flyway:
+    enabled: false
+

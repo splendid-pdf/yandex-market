@@ -1,15 +1,18 @@
 package com.yandex.market.uploadservice.validator;
 
-import com.yandex.market.exception.BadRequestException;
-import com.yandex.market.exception.SizeLimitFileExceededException;
-import com.yandex.market.uploadservice.config.properties.FileRestrictionProperties;
+import com.yandex.market.exception.ValidationException;
+import com.yandex.market.uploadservice.config.properties.FileRestriction;
+import com.yandex.market.uploadservice.config.properties.ValidationProperties;
+import com.yandex.market.uploadservice.model.FileType;
 import lombok.RequiredArgsConstructor;
-import lombok.val;
+import lombok.SneakyThrows;
 import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.yandex.market.uploadservice.utils.Constants.*;
 
@@ -18,40 +21,48 @@ import static com.yandex.market.uploadservice.utils.Constants.*;
 @RequiredArgsConstructor
 public class FileValidator {
 
-    private final FileRestrictionProperties properties;
+    private final ValidationProperties properties;
 
-    public void validate(MultipartFile file) {
+    @SneakyThrows
+    public void validate(List<MultipartFile> files, FileType fileType) {
+        List<String> exceptionMessages = new ArrayList<>();
+        files.forEach(file -> validateFile(file, fileType, exceptionMessages));
+
+        if (!CollectionUtils.isEmpty(exceptionMessages)) {
+            throw new ValidationException(String.join(" | ", exceptionMessages));
+        }
+
+    }
+
+    private void validateFile(MultipartFile file, FileType fileType, List<String> exceptionMessages) {
+        String fileName = file.getOriginalFilename();
 
         if (file.isEmpty()) {
-            throw new IllegalArgumentException(EMPTY_FILE_EXCEPTION_MESSAGE);
-        } else if (!ArrayUtils.contains(SUPPORTED_CONTENT_TYPES, file.getContentType())) {
-            throw new BadRequestException(PERMITTED_FILE_TYPES_EXCEPTION_MESSAGE);
+            exceptionMessages.add(EMPTY_FILE_EXCEPTION_MESSAGE);
+            return;
         }
 
-        val maxFileSizeInBytes = getMaxFileSizeInBytes(file);
+        String extension = FilenameUtils.getExtension(file.getOriginalFilename());
 
-        if (file.getSize() > maxFileSizeInBytes) {
-            throw new SizeLimitFileExceededException(
-                    MAX_FILE_SIZE_EXCEPTION_MESSAGE,
-                    file.getSize(),
-                    maxFileSizeInBytes
+        if (!properties.getExtensions().containsKey(extension)) {
+            exceptionMessages.add(NOT_PERMITTED_FILE_EXTENSION_EXCEPTION_MESSAGE.formatted(fileName));
+            return;
+        }
+
+        FileRestriction fileRestriction = properties.getExtensions().get(extension);
+
+        if (!fileRestriction.getFileTypes().contains(fileType)) {
+            exceptionMessages.add(NOT_PERMITTED_FILE_TYPE_BY_FILE_EXTENSION_EXCEPTION_MESSAGE
+                    .formatted(fileName, fileType, extension)
             );
+            return;
+        }
+
+        long fileSizeInBytes = file.getSize();
+
+        if (fileRestriction.getMaxFileSizeInBytes() < fileSizeInBytes) {
+            exceptionMessages.add(MAX_FILE_SIZE_EXCEPTION_MESSAGE.formatted(fileName));
         }
     }
 
-    public void validateImpotencyKey(String key) {
-        if (StringUtils.isBlank(key)) {
-            throw new IllegalArgumentException("Key cannot be empty");
-        }
-    }
-
-    private String getExtension(String filename) {
-        return FilenameUtils.getExtension(filename);
-    }
-
-    private Long getMaxFileSizeInBytes(MultipartFile file) {
-        return properties
-                .getExtension()
-                .get(getExtension(file.getOriginalFilename())).getMaxFileSizeInBytes();
-    }
 }

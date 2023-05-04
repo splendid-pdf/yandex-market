@@ -1,9 +1,9 @@
 import java.time.Instant
 
 plugins {
-    id 'pmd'
     id 'java'
     id 'jacoco'
+    id "org.sonarqube"
     id 'com.google.cloud.tools.jib'
 }
 
@@ -56,35 +56,29 @@ jib {
 }
 
 test {
+    test.finalizedBy jacocoTestReport
     useJUnitPlatform()
 }
-
-pmd {
-    toolVersion = '6.55.0'
-    ignoreFailures = true
-    ruleSets = ["category/java/errorprone.xml", "category/java/bestpractices.xml"]
-}
-
 
 jacoco {
     toolVersion = "0.8.9"
 }
 
 jacocoTestReport {
-    dependsOn test
     reports {
-        xml.required = false
+        xml.required = true
         csv.required = true
-        html.outputLocation = layout.buildDirectory.dir('jacocoHtml')
     }
 }
 
-jacocoTestCoverageVerification {
-    violationRules {
-        rule {
-            limit {
-                minimum = 0.5
-            }
-        }
+sonarqube {
+    properties {
+        property "sonar.projectKey", "splendid-pdf_yandex-market"
+        property "sonar.organization", "splendid-pdf"
+        property "sonar.host.url", "https://sonarcloud.io"
     }
+}
+
+tasks.named('sonarqube').configure {
+    dependsOn test
 }

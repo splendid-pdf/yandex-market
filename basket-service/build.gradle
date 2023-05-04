@@ -1,39 +1,65 @@
 plugins {
-    id 'java'
-    id 'org.springframework.boot' version '3.0.0'
-    id 'io.spring.dependency-management' version '1.1.0'
-}
-
-group = 'com.yandex.market'
-version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '17'
-
-configurations {
-    compileOnly {
-        extendsFrom annotationProcessor
-    }
-}
-
-repositories {
-    mavenCentral()
+    id 'com.marketplace.common'
+    id 'com.marketplace.common.spring'
 }
 
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-actuator'
-    implementation 'org.springframework.boot:spring-boot-starter-amqp'
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.flywaydb:flyway-core'
-    compileOnly 'org.projectlombok:lombok'
-    developmentOnly 'org.springframework.boot:spring-boot-devtools'
-    runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
-    runtimeOnly 'org.postgresql:postgresql'
-    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
-    annotationProcessor 'org.projectlombok:lombok'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation 'org.springframework.amqp:spring-rabbit-test'
+    implementation project(':commons')
+
+    annotationProcessor libs.spring.config.processor
+
+    implementation libs.spring.web
+    implementation libs.spring.data.jpa
+    implementation libs.spring.security
+    implementation libs.spring.oauth2.resource.server
+    implementation libs.spring.actuator
+    implementation libs.spring.validation
+    implementation libs.spring.openapi.webmvc
+
+    implementation libs.lombok
+
+    implementation libs.flyway
+    runtimeOnly libs.postgresql
+
+    developmentOnly libs.spring.devtools
+
+    testImplementation libs.prometheus
+    testImplementation libs.spring.test
+    testImplementation libs.aspectj.core
+    testImplementation libs.mockito.inline
+    testImplementation libs.spring.security.test
+    testImplementation libs.testcontainers.junit
+    testImplementation libs.testcontainers.postgresql
+
+
+
+//    implementation 'org.springframework.boot:spring-boot-starter-amqp'
+//    implementation 'org.projectlombok:lombok:1.18.22'
+//    compileOnly 'org.projectlombok:lombok'
+//    annotationProcessor 'org.projectlombok:lombok'
 }
 
-tasks.named('test') {
-    useJUnitPlatform()
-}
+
+
+//ext{
+//    set('swaggerVersion', '2.2.7')
+//}
+//
+//group = 'com.yandex.market'
+//version = '0.0.1-SNAPSHOT'
+//sourceCompatibility = '17'
+//
+//configurations {
+//    compileOnly {
+//        extendsFrom annotationProcessor
+//    }
+//}
+//
+//repositories {
+//    mavenCentral()
+//}
+//
+//
+//tasks.named('test') {
+//    useJUnitPlatform()
+//}

@@ -7,7 +7,7 @@ create table orders
     id                 bigint       not null,
     external_id        uuid         not null,
     user_id            uuid         not null,
-    price              float        not null,
+    price              BIGINT        not null,
     order_status       varchar(255) not null,
     payment_type       varchar(255) not null,
     paid               boolean      not null,
@@ -26,7 +26,7 @@ create table orders
     delivery_date      date         not null,
     delivery_start     time         not null,
     delivery_end       time         not null,
-    delivery_cost      float8       not null,
+    delivery_cost      BIGINT       not null,
     delivery_method    varchar(255) not null,
     primary key (id)
 );
@@ -38,7 +38,7 @@ create table ordered_products
     name                varchar(255) not null,
     article_from_seller varchar(255) not null,
     amount              integer      not null,
-    price               float8       not null,
+    price               BIGINT       not null,
     description         varchar(255) not null,
     photo_url           varchar(255) not null,
     seller_id           uuid         not null,

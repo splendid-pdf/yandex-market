@@ -1,14 +1,6 @@
-import com.google.cloud.tools.jib.api.buildplan.ImageFormat
-
-import java.time.Instant
-
 plugins {
     id 'com.marketplace.common'
     id 'com.marketplace.common.spring'
-}
-
-ext {
-    set("springCloudConfigVersion", "2022.0.1")
 }
 
 dependencies {
@@ -25,7 +17,7 @@ dependencies {
     implementation libs.flyway
 
     //spring cloud
-    implementation 'org.springframework.cloud:spring-cloud-config-client'
+    implementation libs.spring.cloud.config.client
 
     // db
     runtimeOnly libs.postgresql
@@ -45,6 +37,7 @@ dependencies {
     testImplementation libs.h2.database
     testImplementation libs.testcontainers.postgresql
     testImplementation libs.testcontainers.junit
+    testImplementation libs.spring.security.test
 
     annotationProcessor libs.spring.config.processor
 }
