@@ -1,7 +1,8 @@
 package com.yandex.market.favoritesservice.controller;
 
-import com.yandex.market.favoritesservice.dto.ExceptionResponse;
+import com.yandex.market.model.ErrorResponse;
 import jakarta.persistence.EntityNotFoundException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -14,63 +15,71 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
+import java.time.OffsetDateTime;
+import java.util.UUID;
 
+@Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(EntityNotFoundException.class)
-    public ExceptionResponse handleEntityNotFoundException(EntityNotFoundException ex) {
-        return ExceptionResponse.builder()
-                .timeStamped(LocalDateTime.now())
-                .message("EntityNotFoundException: entity doesn't found in datasource")
-                .debugMessage(ex.getMessage())
-                .build();
+    public ErrorResponse handleEntityNotFoundException(EntityNotFoundException ex) {
+
+        ErrorResponse errorResponse = new ErrorResponse(
+                UUID.randomUUID().toString(),
+                ex.getMessage(),
+                OffsetDateTime.now()
+        );
+
+        logging(errorResponse.message(), errorResponse.id());
+        return errorResponse;
     }
 
     @ExceptionHandler(RuntimeException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    private ExceptionResponse handleRuntimeException(RuntimeException ex) {
-        return ExceptionResponse.builder()
-                .timeStamped(LocalDateTime.now())
-                .message("RuntimeException")
-                .debugMessage(ex.getMessage())
-                .build();
+    private ErrorResponse handleRuntimeException(RuntimeException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                UUID.randomUUID().toString(),
+                ex.getMessage(),
+                OffsetDateTime.now()
+        );
+
+        logging(errorResponse.message(), errorResponse.id());
+        return errorResponse;
     }
 
     @Override
     protected ResponseEntity<Object> handleHttpRequestMethodNotSupported(
-            HttpRequestMethodNotSupportedException ex,
-            HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+            HttpRequestMethodNotSupportedException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
 
-        ExceptionResponse exceptionResponse = ExceptionResponse.builder()
-                .timeStamped(LocalDateTime.now())
-                .message("HttpRequestMethodNotSupported: Malformed JSON Request")
-                .debugMessage(ex.getMessage())
-                .build();
-        return new ResponseEntity<>(exceptionResponse, status);
+        ErrorResponse errorResponse = new ErrorResponse(
+                UUID.randomUUID().toString(),
+                ex.getMessage(),
+                OffsetDateTime.now()
+        );
+
+        logging(errorResponse.message(), errorResponse.id());
+        return new ResponseEntity<>(errorResponse, status);
     }
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(
-            MethodArgumentNotValidException ex,
-            HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+            MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
 
-        Map<String, String> errors = new HashMap<>();
-        ex.getBindingResult()
-                .getFieldErrors()
-                .forEach(error ->
-                        errors.put(error.getField(), error.getDefaultMessage()));
+        ErrorResponse errorResponse = new ErrorResponse(
+                UUID.randomUUID().toString(),
+                ex.getMessage(),
+                OffsetDateTime.now()
+        );
 
-        ExceptionResponse exceptionResponse = ExceptionResponse.builder()
-                .timeStamped(LocalDateTime.now())
-                .message("MethodArgumentNotValid: Method Argument Not Valid")
-                .debugMessage(ex.getMessage())
-                .errors(errors)
-                .build();
-        return new ResponseEntity<>(exceptionResponse, status);
+        logging(errorResponse.message(), errorResponse.id());
+        return new ResponseEntity<>(errorResponse, status);
+    }
+
+    private void logging(String debugMsg, String id) {
+        if (log.isDebugEnabled()) {
+            log.error("Handled http message not readable error: msg = '{}', exception_id = {}", debugMsg, id);
+        }
     }
 }
