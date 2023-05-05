@@ -31,7 +31,8 @@ alter table if exists basket_items
             references items;
 
 insert into baskets(id, external_id, user_id)
-values (1, '83d85ba2-195d-4205-bc70-260199855347', '6a2e63a7-a8b7-4a5e-9422-6a16ee963e8d');
+values (1, '83d85ba2-195d-4205-bc70-260199855347', '6a2e63a7-a8b7-4a5e-9422-6a16ee963e8d'),
+       (2, '79eacacf-3b23-4e6e-8b17-aacbdad4ba99', 'ef3d5941-2ead-442c-ab45-113d464591d5');
 
 insert into items (id, external_id)
 values (1, 'f34c4cd3-6fe7-4d3e-b82c-f5d044e46091'),
@@ -45,4 +46,9 @@ values (1, 1, 10),
        (2, 1, 3),
        (3, 1, 5),
        (4, 1, 6),
-       (5, 1, 4);
+       (5, 1, 4),
+       (1, 2, 10),
+       (2, 2, 3),
+       (3, 2, 5),
+       (4, 2, 6),
+       (5, 2, 4);
