@@ -42,7 +42,7 @@ public class SellerController implements SellerApi {
     public SellerResponseDto updateSeller(
             @Parameter(name = "sellerId", description = "Идентификатор продавца")
             @PathVariable UUID sellerId,
-            @RequestBody SellerRequestDto sellerRequestDto) {
+            @RequestBody @Valid SellerRequestDto sellerRequestDto) {
         return sellerService.updateSeller(sellerId, sellerRequestDto);
     }
 

@@ -95,18 +95,18 @@ class SellerApplicationTests {
     @DisplayName("Успешное обновление всех полей продавца")
     void updateSellerFoundAndFullyUpdated() throws Exception {
         SellerResponseDto expectedSeller = SellerResponseDto.builder()
-                .firstName("Новое имя")
-                .lastName("Новая фамилия")
+                .firstName("Новоеимя")
+                .lastName("Новаяфамилия")
                 .email("newemail@mail.ru")
                 .legalAddress("Ул Новая, 1")
                 .companyName("Новая компания")
-                .imageUrl("new.png")
+                .imageUrl("37678209-f3c8-4d5c-a628-2344eef50c99")
                 .businessModel(BusinessModel.IP)
-                .itn("123456789")
-                .psrn("123456")
-                .bic("1234")
-                .paymentAccount("ACCOUNT123456")
-                .corporateAccount("SACCOUNT123")
+                .itn("1234567890")
+                .psrn("123456789090871")
+                .bic("123456739")
+                .paymentAccount("23456789191234567895")
+                .corporateAccount("23456789191234567893")
                 .build();
 
         mockMvc.perform(put(
@@ -143,8 +143,8 @@ class SellerApplicationTests {
     @Sql("/db/insert_test_seller.sql")
     @DisplayName("Успешное обновление части полей продавца")
     void updateSellerFoundAndUpdatedOnlySellerName() throws Exception {
-        String firstName = "Новое имя",
-                lastName = "Новая фамилия";
+        String firstName = "Новоеимя",
+                lastName = "Новаяфамилия";
 
         mockMvc.perform(put(
                         PATH_TO_SELLER + "/{sellerId}", SELLER_ID)
