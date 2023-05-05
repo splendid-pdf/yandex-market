@@ -1,0 +1,49 @@
+{
+    "content": [
+        {
+            "productId": "02583e02-a22b-4df9-8827-ffb45f2c2914",
+            "totalNumberItemsInBasket": 4
+        },
+        {
+            "productId": "2b3e16c0-6479-483b-a3ae-6c25f44a4df2",
+            "totalNumberItemsInBasket": 6
+        },
+        {
+            "productId": "75ce7550-3657-4811-a431-32bf05d4ef21",
+            "totalNumberItemsInBasket": 5
+        },
+        {
+            "productId": "459f48f3-c6eb-4931-90d6-0d492658a223",
+            "totalNumberItemsInBasket": 3
+        },
+        {
+            "productId": "f34c4cd3-6fe7-4d3e-b82c-f5d044e46091",
+            "totalNumberItemsInBasket": 10
+        }
+    ],
+    "pageable": {
+        "sort": {
+            "empty": false,
+            "sorted": true,
+            "unsorted": false
+        },
+        "offset": 0,
+        "pageNumber": 0,
+        "pageSize": 5,
+        "paged": true,
+        "unpaged": false
+    },
+    "totalPages": 1,
+    "totalElements": 5,
+    "last": true,
+    "size": 5,
+    "number": 0,
+    "sort": {
+        "empty": false,
+        "sorted": true,
+        "unsorted": false
+    },
+    "first": true,
+    "numberOfElements": 5,
+    "empty": false
+}
