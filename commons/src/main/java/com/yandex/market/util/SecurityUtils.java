@@ -3,7 +3,8 @@ package com.yandex.market.util;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.web.access.AccessDeniedHandler;
 
-import static com.yandex.market.util.GlobalEnviroment.SECURITY_FORBIDDEN_MESSAGE;
+import java.time.LocalDateTime;
+import java.util.UUID;
 
 public class SecurityUtils {
     private SecurityUtils() {
@@ -14,7 +15,16 @@ public class SecurityUtils {
         return (request, response, exception) -> {
             response.setContentType("application/json");
             response.setStatus(HttpStatus.FORBIDDEN.value());
-            response.getWriter().write(SECURITY_FORBIDDEN_MESSAGE);
+            String responseBody = "{\n" +
+                    "  \"timestamp\": \"" + LocalDateTime.now() + "\",\n" +
+                    "  \"path\": \"" + request.getRequestURI() + "\",\n" +
+                    "  \"status\": " + HttpStatus.FORBIDDEN.value() + ",\n" +
+                    "  \"error\": \"Access is denied\",\n" +
+                    "  \"message\": \"Sorry, you do not have permission to access this resource. Please login with your account profile to gain access.\",\n" +
+                    "  \"requestId\": \"" + UUID.randomUUID() + "\",\n" +
+                    "  \"exception\": \"" + exception.getClass().getName() + "\"\n" +
+                    "}";
+            response.getWriter().write(responseBody);
         };
     }
 }
