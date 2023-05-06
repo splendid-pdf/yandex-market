@@ -52,9 +52,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .csrf().disable()
-                .oauth2ResourceServer(resourceServer -> resourceServer
-                        .jwt().decoder(jwtDecoder())
-                )
+                .oauth2ResourceServer(resourceServer -> resourceServer.jwt().decoder(jwtDecoder()))
                 .exceptionHandling().accessDeniedHandler(resourceAccessDenied());
         return http.build();
     }
