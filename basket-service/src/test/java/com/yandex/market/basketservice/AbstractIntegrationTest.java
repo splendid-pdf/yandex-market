@@ -14,7 +14,7 @@ import org.testcontainers.utility.MountableFile;
 @Testcontainers
 @AutoConfigureMockMvc
 @ActiveProfiles("testcontainers")
-@TestPropertySource(locations = "classpath:application-testcontainers.yml")
+@TestPropertySource(locations = "classpath:application-testcontainers.yaml")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class AbstractIntegrationTest {
 

@@ -60,7 +60,11 @@ class BasketControllerTest extends AbstractIntegrationTest {
                                         """)
                 )
                 .andExpect(status().isOk())
-                .andExpect(content().string("25"));
+                .andExpect(content().json("""
+                        {
+                            "itemsCount": 25
+                        }
+                        """));
     }
 
     @Test
@@ -105,7 +109,11 @@ class BasketControllerTest extends AbstractIntegrationTest {
                                 .with(authentication(token(USER_ID_FOR_CHANGING_COUNT_ITEMS, "ROLE_USER")))
                                 .param("products", "f34c4cd3-6fe7-4d3e-b82c-f5d044e46091"))
                 .andExpect(status().isOk())
-                .andExpect(content().string("18"));
+                .andExpect(content().json("""
+                        {
+                            "itemsCount": 18
+                        }
+                        """));
     }
 
     @Test
@@ -123,6 +131,10 @@ class BasketControllerTest extends AbstractIntegrationTest {
                                         """)
                 )
                 .andExpect(status().isOk())
-                .andExpect(content().string("7"));
+                .andExpect(content().json("""
+                        {
+                            "itemsCount": 7
+                        }
+                        """));
     }
 }
