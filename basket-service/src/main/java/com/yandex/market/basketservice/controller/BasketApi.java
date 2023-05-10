@@ -32,11 +32,23 @@ import java.util.UUID;
         ),
         @ApiResponse(
                 responseCode = "401",
-                description = "Пользователь не авторизован"
+                description = "Пользователь не авторизован",
+                content = {
+                        @Content(
+                                mediaType = "application/json",
+                                schema = @Schema(implementation = ErrorResponse.class)
+                        )
+                }
         ),
         @ApiResponse(
                 responseCode = "403",
-                description = "У пользователя нет доступа к ресурсу"
+                description = "У пользователя нет доступа к ресурсу",
+                content = {
+                        @Content(
+                                mediaType = "application/json",
+                                schema = @Schema(implementation = ErrorResponse.class)
+                        )
+                }
         ),
         @ApiResponse(
                 responseCode = "404",

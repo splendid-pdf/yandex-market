@@ -43,7 +43,6 @@ public class Basket {
         } else {
             items.get(indexOfItem).setItemCount(itemCount);
         }
-        items.add(basketItem);
     }
 
     public void removeItem(Item item) {
