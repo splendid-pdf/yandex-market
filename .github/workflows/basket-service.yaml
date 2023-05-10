@@ -1,0 +1,83 @@
+name: basket-service ci/cd pipeline
+
+env:
+  SERVICE_NAME: basket-service
+
+on:
+  pull_request:
+    branches:
+      - develop
+    paths:
+      - 'basket-service/src/**'
+  push:
+    branches:
+      - develop
+    paths:
+      - 'basket-service/src/main/java/**'
+
+jobs:
+  build:
+    if: ${{ github.event_name == 'pull_request' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download repo
+        uses: actions/checkout@v3
+
+      - name: Setup Java 17
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'corretto'
+          java-version: '17'
+
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v2
+
+      - name: Cache SonarCloud packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.sonar/cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Build project
+        run: ./gradlew :${{ env.SERVICE_NAME }}:clean :${{ env.SERVICE_NAME }}:build
+
+      - name: Analyze code
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: ./gradlew :${{ env.SERVICE_NAME }}:sonarqube --info
+
+  deploy:
+    if: ${{ github.event_name == 'push' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download repo
+        uses: actions/checkout@v3
+
+      - name: Setup Java 17
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'corretto'
+          java-version: '17'
+
+      - name: Setup gradle
+        uses: gradle/gradle-build-action@v2
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Build and publish image
+        run: ./gradlew :${{ env.SERVICE_NAME }}:jib --quiet
+
+      - name: Executing remote ssh commands using ssh key
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.SECRET_HOST }}
+          username: ${{ secrets.SECRET_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SECRET_PORT }}
+          script: ansible-playbook -i ./ansible/hosts.txt ./ansible/docker/${{ env.SERVICE_NAME }}/replace-container.yaml

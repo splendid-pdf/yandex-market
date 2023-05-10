@@ -25,7 +25,7 @@ public class BasketExceptionHandler {
     public ErrorResponse handleConstraintViolationException(ConstraintViolationException ex) {
         String errorId = UUID.randomUUID().toString();
 
-        if (log.isDebugEnabled()) {
+        if (log.isErrorEnabled()) {
             log.error("Handled constraint violation error: msg = '{}', error_id = {}", ex.getMessage(), errorId);
         }
 
@@ -41,7 +41,7 @@ public class BasketExceptionHandler {
     public ErrorResponse handleHttpMessageNotReadableException(HttpMessageNotReadableException ex) {
         String errorId = UUID.randomUUID().toString();
 
-        if (log.isDebugEnabled()) {
+        if (log.isErrorEnabled()) {
             log.error("Handled http message not readable error: msg = '{}', error_id = {}", ex.getMessage(), errorId);
         }
 
@@ -57,7 +57,7 @@ public class BasketExceptionHandler {
     public ErrorResponse handleMissingServletRequestParameterException(MissingServletRequestParameterException ex) {
         String errorId = UUID.randomUUID().toString();
 
-        if (log.isDebugEnabled()) {
+        if (log.isErrorEnabled()) {
             log.error("Handled missing servlet request parameter error: msg = '{}', error_id = {}", ex.getMessage(), errorId);
         }
 
