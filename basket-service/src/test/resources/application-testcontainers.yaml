@@ -11,6 +11,5 @@ spring:
     url: jdbc:postgresql://localhost:5432/basket_db
     username: user
     password: password
-
   flyway:
     enabled: false
