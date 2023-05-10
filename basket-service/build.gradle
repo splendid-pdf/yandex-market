@@ -8,6 +8,7 @@ dependencies {
 
     annotationProcessor libs.spring.config.processor
 
+    //spring
     implementation libs.spring.web
     implementation libs.spring.data.jpa
     implementation libs.spring.security
@@ -18,11 +19,14 @@ dependencies {
 
     implementation libs.lombok
 
+    //db
     implementation libs.flyway
     runtimeOnly libs.postgresql
 
+    //utils
     developmentOnly libs.spring.devtools
 
+    //tests
     testImplementation libs.prometheus
     testImplementation libs.spring.test
     testImplementation libs.aspectj.core
