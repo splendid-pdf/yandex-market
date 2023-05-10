@@ -1,5 +1,6 @@
 package com.yandex.market.basketservice.service;
 
+import com.yandex.market.basketservice.dto.CountItemsResponse;
 import com.yandex.market.basketservice.dto.ItemRequest;
 import com.yandex.market.basketservice.dto.ItemResponse;
 import com.yandex.market.basketservice.model.Basket;
@@ -37,16 +38,17 @@ public class BasketService {
         return itemRepository.findAllItemsInsideBasketByUserId(userId, pageable);
     }
 
-    public Integer changeItemCountInBasket(UUID userId, @Valid ItemRequest request) {
+    @Transactional
+    public CountItemsResponse changeItemCountInBasket(UUID userId, @Valid ItemRequest request) {
         Item item = findItemByExternalId(request.productId());
         Basket basket = findBasketByUserId(userId);
         basket.addItem(item, request.numberOfItems());
         basketRepository.save(basket);
-        return basket.getAmountItems();
+        return new CountItemsResponse(basket.getAmountItems());
     }
 
-    public Integer deleteItemsList(UUID userId, @NotEmpty List<UUID> itemIds) {
-
+    @Transactional
+    public CountItemsResponse deleteItemsList(UUID userId, @NotEmpty List<UUID> itemIds) {
         Basket basket = findBasketByUserId(userId);
         itemIds.forEach(
                 externalItemId ->
@@ -57,7 +59,7 @@ public class BasketService {
                         )
         );
         basketRepository.save(basket);
-        return basket.getAmountItems();
+        return new CountItemsResponse(basket.getAmountItems());
     }
 
     private Basket createNewBasket(UUID userId) {

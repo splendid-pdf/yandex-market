@@ -1,5 +1,6 @@
 package com.yandex.market.basketservice.controller;
 
+import com.yandex.market.basketservice.dto.CountItemsResponse;
 import com.yandex.market.basketservice.dto.ItemRequest;
 import com.yandex.market.basketservice.dto.ItemResponse;
 import com.yandex.market.basketservice.service.BasketService;
@@ -8,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,11 +21,11 @@ import static org.springframework.http.HttpStatus.OK;
 @RestController
 @RequestMapping(PUBLIC_API_V1)
 @RequiredArgsConstructor
-public class BasketController implements BasketApi{
+public class BasketController implements BasketApi {
 
     private final BasketService basketService;
 
-    @GetMapping("/users/{userId}/basket/products")
+    @GetMapping(value = "/users/{userId}/basket/products")
     @ResponseStatus(OK)
     public Page<ItemResponse> getAllItemsInsideBasketByUserId(@PathVariable UUID userId,
                                                               @PageableDefault(
@@ -35,17 +37,24 @@ public class BasketController implements BasketApi{
         return basketService.getAllItemsInsideBasketByUserId(userId, pageable);
     }
 
-    @PatchMapping("/users/{userId}/basket/products")
+    @PatchMapping(
+            value = "/users/{userId}/basket/products",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
     @ResponseStatus(OK)
-    public Integer changeItemCountInBasket(@PathVariable UUID userId,
-                                           @RequestBody ItemRequest request) {
+    public CountItemsResponse changeItemCountInBasket(@PathVariable UUID userId,
+                                                      @RequestBody ItemRequest request) {
         return basketService.changeItemCountInBasket(userId, request);
     }
 
-    @DeleteMapping("/users/{userId}/basket/products")
+    @DeleteMapping(
+            value = "/users/{userId}/basket/products",
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
     @ResponseStatus(OK)
-    public Integer deleteItemsList(@PathVariable UUID userId,
-                                   @RequestParam(name = "products") List<UUID> itemIds) {
+    public CountItemsResponse deleteItemsList(@PathVariable UUID userId,
+                                              @RequestParam(name = "products") List<UUID> itemIds) {
         return basketService.deleteItemsList(userId, itemIds);
     }
 }

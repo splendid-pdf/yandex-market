@@ -20,7 +20,7 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
                 bi.item_count AS totalNumberItemsInBasket
             FROM 
                 items AS i 
-                JOIN basket_item AS bi ON bi.item_id = i.id
+                JOIN basket_items AS bi ON bi.item_id = i.id
                 JOIN baskets AS b ON b.id = bi.basket_id
             WHERE b.user_id =:user_id
             """, nativeQuery = true)
