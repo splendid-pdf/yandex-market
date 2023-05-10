@@ -17,8 +17,8 @@ import java.util.UUID;
 @EqualsAndHashCode(of = "userId")
 public class Basket {
     @Id
-    @SequenceGenerator(name = "basket_sequence", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "basket_sequence")
+    @SequenceGenerator(name = "baskets_sequence", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "baskets_sequence")
     private Long id;
 
     @Column(name = "external_id")

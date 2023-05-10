@@ -7,8 +7,8 @@ import lombok.*;
 @Getter
 @Setter
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @EqualsAndHashCode(of = {"basket", "item"})
 @Table(name = "basket_items")
 public class BasketItem {
@@ -19,7 +19,7 @@ public class BasketItem {
     @MapsId("basketId")
     private Basket basket;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @MapsId("itemId")
     private Item item;
 
@@ -33,6 +33,3 @@ public class BasketItem {
         this.itemCount = itemCount;
     }
 }
-
-
-

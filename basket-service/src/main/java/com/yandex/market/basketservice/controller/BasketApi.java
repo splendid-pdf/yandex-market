@@ -1,5 +1,6 @@
 package com.yandex.market.basketservice.controller;
 
+import com.yandex.market.basketservice.dto.CountItemsResponse;
 import com.yandex.market.basketservice.dto.ItemRequest;
 import com.yandex.market.basketservice.dto.ItemResponse;
 import com.yandex.market.model.ErrorResponse;
@@ -31,11 +32,23 @@ import java.util.UUID;
         ),
         @ApiResponse(
                 responseCode = "401",
-                description = "Пользователь не авторизован"
+                description = "Пользователь не авторизован",
+                content = {
+                        @Content(
+                                mediaType = "application/json",
+                                schema = @Schema(implementation = ErrorResponse.class)
+                        )
+                }
         ),
         @ApiResponse(
                 responseCode = "403",
-                description = "У пользователя нет доступа к ресурсу"
+                description = "У пользователя нет доступа к ресурсу",
+                content = {
+                        @Content(
+                                mediaType = "application/json",
+                                schema = @Schema(implementation = ErrorResponse.class)
+                        )
+                }
         ),
         @ApiResponse(
                 responseCode = "404",
@@ -49,17 +62,12 @@ import java.util.UUID;
         )
 })
 public interface BasketApi {
+
     @Operation(
             summary = "Получить страницу с добавленными товарами в корзину",
             responses = @ApiResponse(
                     responseCode = "200",
-                    description = "Страница со списком товаров в корзине успешно получена",
-                    content = {
-                            @Content(
-                                    mediaType = "application/json",
-                                    schema = @Schema(implementation = ItemResponse.class)
-                            )
-                    }
+                    description = "Страница со списком товаров в корзине успешно получена"
             )
     )
     @PreAuthorize(value = """
@@ -71,16 +79,19 @@ public interface BasketApi {
             """
     )
     Page<ItemResponse> getAllItemsInsideBasketByUserId(
-            @Parameter(name = "userId", description = "Идентификатор продовца", required = true) UUID userId,
-            @Parameter(name = "pageable", description = "pageable") Pageable pageable
+            @Parameter(name = "userId", description = "Идентификатор покупателя", required = true) UUID userId,
+            @Parameter(name = "pageable", description = "Информация о пагинации") Pageable pageable
     );
 
     @Operation(
-            summary = "Добавление товара в корзину и изменение колличества товара в корзине",
+            summary = "Добавление товара в корзину или изменение количества товара уже добавленного в корзину",
             responses = @ApiResponse(
                     responseCode = "200",
-                    description = "Товар добавлен в корзину с новым значением колличества",
-                    content = @Content(mediaType = "application/json")
+                    description = "Товар успешно добавлен в корзину с новым значением количества",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = CountItemsResponse.class)
+                    )
             )
     )
     @PreAuthorize(value = """
@@ -91,17 +102,20 @@ public interface BasketApi {
             )
             """
     )
-    Integer changeItemCountInBasket(
-            @Parameter(name = "userId", description = "Идентификатор продовца", required = true) UUID userId,
+    CountItemsResponse changeItemCountInBasket(
+            @Parameter(name = "userId", description = "Идентификатор покупателя", required = true) UUID userId,
             @Parameter(name = "itemRequest", description = "Информация о добавляемом товаре", required = true) ItemRequest itemRequest
     );
 
     @Operation(
-            description = "Удаленеи одного или несколько товаров из корзины",
+            summary = "Удаление одного или несколько товаров из корзины",
             responses = @ApiResponse(
                     responseCode = "200",
-                    description = "Выбранные товары успещно удалены из корзины",
-                    content = @Content(mediaType = "application/json")
+                    description = "Выбранные товары успешно удалены из корзины",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = CountItemsResponse.class)
+                    )
             )
     )
     @PreAuthorize(value = """
@@ -112,8 +126,8 @@ public interface BasketApi {
             )
             """
     )
-    Integer deleteItemsList(
-            @Parameter(name = "userId", description = "Идентификатор продовца", required = true) UUID userId,
+    CountItemsResponse deleteItemsList(
+            @Parameter(name = "userId", description = "Идентификатор покупателя", required = true) UUID userId,
             @Parameter(name = "itemIds", description = "Список удаляемых товаров", required = true) List<UUID> itemIds
     );
 }

@@ -8,10 +8,10 @@ import java.io.Serializable;
 
 @Getter
 @Setter
-@AllArgsConstructor
+@Embeddable
 @NoArgsConstructor
 @EqualsAndHashCode
-@Embeddable
+@AllArgsConstructor
 public class BasketItemId implements Serializable {
 
     @Column(name = "basket_id")
@@ -19,4 +19,6 @@ public class BasketItemId implements Serializable {
 
     @Column(name = "item_id")
     private Long itemId;
+
+
 }
