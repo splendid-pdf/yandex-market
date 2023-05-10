@@ -7,8 +7,8 @@ spring:
   flyway:
     enabled: true
 
-#  config:
-#    import: "optional:configserver:"
+  config:
+    import: "optional:configserver:"
 
   datasource:
     url: jdbc:postgresql://localhost:5432/basket_db
