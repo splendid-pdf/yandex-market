@@ -1,0 +1,2570 @@
+openapi: 3.0.0
+info:
+  title: Marketplace API
+  version: 1.0.0
+servers:
+- url: https://d5dgfhb917mq6267t8v5.apigw.yandexcloud.net
+tags:
+  - name: auth
+  - name: users
+  - name: sellers
+  - name: rooms
+  - name: types
+  - name: products
+  - name: reviews
+    description: Реализовано, неактульно
+  - name: orders
+    description: Реализовано, неактульно
+  - name: favorites
+    description: Реализовано, неактульно
+  - name: baskets
+    description: Реализовано, на тестировании
+  - name: upload
+paths:
+#auth##################################################################
+
+  /public/api/v1/users/oauth/login:
+    post:
+      tags:
+        - auth
+      security: []
+      requestBody:
+        description: JSON Object with user's information
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserLoginRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OAuthUserResponse'
+          headers:
+            X-User-Id:
+              schema:
+                type: string
+        '401':
+          description: Authorization information is missing or invalid.
+  /public/api/v1/sellers/oauth/login:
+    post:
+      tags:
+        - auth
+      security: []
+      requestBody:
+        description: JSON Object with user's information
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserLoginRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OAuthUserResponse'
+          headers:
+            X-User-Id:
+              schema:
+                type: string
+        '401':
+          description: Authorization information is missing or invalid.
+          
+  /public/api/v1/oauth/logout:
+    post:
+      tags:
+        - auth
+      responses:
+        '204':
+          description: Succussefully deauthenticated
+        '401':
+          description: Authorization information is missing or invalid.
+
+#users#################################################################
+          
+  /public/api/v1/users:
+    post:
+      tags:
+        - users
+      security: []
+      requestBody:
+        description: JSON Object with user's information
+        content:
+            application/json: 
+              schema: 
+                $ref: '#/components/schemas/UserRequestDto'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: string
+                format: uuid
+                example: 'b0ca32a7-6960-49a9-9f20-d78fb3799409'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicErrorResponse'
+  /public/api/v1/users/{userId}:
+    get:
+      tags:
+        - users
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        schema:
+          type: string
+          example: 'b0ca32a7-6960-49a9-9f20-d78fb3799409'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponseDto'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicErrorResponse'
+        '401':
+          description: Authorization information is missing or invalid.
+            
+    put:
+      tags:
+        - users
+      requestBody:
+        description: JSON Object with user's information
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserUpdateRequestDto'
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponseDto'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicErrorResponse'
+        '401':
+          description: Authorization information is missing or invalid.
+          
+    delete:
+      tags:
+        - users
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: Succussefully deleted
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicErrorResponse'
+        '401':
+          description: Authorization information is missing or invalid.
+
+#sellers###############################################################
+  
+  /public/api/v1/sellers:
+    post:
+      tags:
+        - sellers
+      security: []
+      requestBody:
+        description: JSON Object with user's information
+        content:
+            application/json: 
+              schema: 
+                $ref: '#/components/schemas/SellerRegistrationRequest'
+      responses:
+        '201':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: string
+                format: uuid
+                example: 'b0ca32a7-6960-49a9-9f20-d78fb3799409'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicErrorResponse'
+                
+  /public/api/v1/sellers/{sellerId}:
+    get:
+      tags:
+        - sellers
+      parameters:
+      - name: sellerId
+        in: path
+        required: true
+        schema:
+          type: string
+          example: 'b0ca32a7-6960-49a9-9f20-d78fb3799409'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SellerResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicErrorResponse'
+        '401':
+          description: Authorization information is missing or invalid.
+            
+    put:
+      tags:
+        - sellers
+      requestBody:
+        description: JSON Object with user's information
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SellerUpdateRequest'
+      parameters:
+      - name: sellerId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SellerResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicErrorResponse'
+        '401':
+          description: Authorization information is missing or invalid.
+          
+    delete:
+      tags:
+        - sellers
+      parameters:
+      - name: sellerId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: Succussefully deleted
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicErrorResponse'
+        '401':
+          description: Authorization information is missing or invalid.
+
+#rooms#################################################################
+
+  /public/api/v1/rooms/{roomId}:
+    get:
+      summary: 'Получение информации о комнате по id'
+      tags:
+        - rooms
+      security: []
+      parameters:
+      - name: roomId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RoomPreview'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicErrorResponse'
+                
+  /public/api/v1/rooms:
+    get:
+      summary: 'Получение информации о комнатах'
+      tags:
+        - rooms
+      security: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RoomPreview'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicErrorResponse'
+                  
+  /public/api/v1/types/{typeId}/rooms:
+    get:
+      summary: 'Получение информации о комнатах для определенного типа'
+      tags:
+        - rooms
+      security: []
+      parameters:
+      - name: typeId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RoomPreview'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicErrorResponse'
+
+#types#################################################################
+
+  /public/api/v1/types/{typeId}:
+    get:
+      summary: 'Получение информацию о типе по id'
+      tags:
+        - types
+      security: []  
+      parameters:
+      - name: typeId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TypeResponse'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicErrorResponse'
+                
+  #######################################################################
+                
+  /public/api/v1/types:
+    get:
+      summary: 'Получение информацию о типах'
+      tags:
+        - types
+      security: []  
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TypePreview'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicErrorResponse'
+                
+  #######################################################################
+
+  /public/api/v1/rooms/{roomId}/types:
+    get:
+      summary: 'Получение информацию о типах для конкретной комнаты'
+      tags:
+        - types
+      security: []  
+      parameters:
+      - name: roomId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TypePreview'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicErrorResponse'
+
+#products##############################################################
+
+  /public/api/v1/sellers/{sellerId}/products/{productId}:
+    get:
+      summary: 'Получение товара по id'
+      tags:
+        - products
+      parameters:
+      - name: productId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: sellerId
+        in: path
+        required: true
+        schema:
+          type: string    
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductResponse'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicErrorResponse'
+                  
+    put: 
+      tags:
+        - products
+      summary: Обновить товар
+      parameters:
+      - name: sellerId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: productId
+        in: path
+        required: true
+        schema:
+          type: string    
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductUpdateRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: string
+                format: uuid
+                example: 'b0ca32a7-6960-49a9-9f20-d78fb3799409'
+        '400':
+          description: Bad request
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicErrorResponse'
+        '401':
+          description: Authorization information is missing or invalid.            
+                
+  #######################################################################
+
+  /public/api/v1/sellers/{sellerId}/products:
+    get:
+      tags:
+        - products
+      summary: Получить превью товаров продавца
+      parameters:
+      - name: sellerId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          example: 0
+      - name: size
+        in: query
+        required: false
+        schema:
+          type: integer
+          example: 0
+      - name: sort
+        in: query
+        required: false
+        schema:
+          type: string
+          example: creationDate,DESC
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PageableSellerProductPreview'
+        '401':
+          description: Authorization information is missing or invalid.
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicErrorResponse'
+
+    post: 
+      tags:
+        - products
+      summary: Создать продукт
+      parameters:
+      - name: sellerId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateProductRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: string
+                format: uuid
+                example: 'b0ca32a7-6960-49a9-9f20-d78fb3799409'
+        '400':
+          description: Bad request
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicErrorResponse'
+        '401':
+          description: Authorization information is missing or invalid.
+    
+    delete:
+      tags:
+        - products
+      summary: Удалить продукты
+      parameters:
+      - name: sellerId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: identifiers
+        in: query
+        required: true
+        schema:
+          type: array
+          items:
+            type: string
+          minItems: 1
+        style: form
+        explode: false
+        examples:
+          oneId:
+            summary: Example of a single ID
+            value: ['9d59a660-a668-4e80-8790-f42c3b380f84']
+          multipleIds:
+            summary: Example of multiple IDs
+            value: ['289be236-5e9a-43a6-95b0-9251835ca06b', 'f798f628-0bd2-4e2b-870c-1f44d1cc67a4']
+      responses:
+        '204':
+          description: Succussefully deleted
+        '400':
+          description: Bad request
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicErrorResponse'
+        '401':
+          description: Authorization information is missing or
+
+  #######################################################################  
+  
+  /public/api/v1/sellers/{sellerId}/archive/products:
+    get:
+      tags:
+        - products
+      summary: Получить список товаров продавца  из архива
+      parameters:
+      - name: sellerId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          example: 0
+      - name: size
+        in: query
+        required: false
+        schema:
+          type: integer
+          example: 0
+      - name: sort
+        in: query
+        required: false
+        schema:
+          type: string
+          example: creationDate,DESC
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PageableSellerArchiveProductPreview'
+        '401':
+          description: Authorization information is missing or invalid.
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicErrorResponse'
+    
+    patch:
+      summary: Добавить или убрать продукты из архива
+      description: 'false - убрать из архива, true - добавить в архив' 
+      tags:
+        - products
+      parameters:
+      - name: sellerId
+        in: path
+        required: true
+        schema:
+          type: string  
+      - name: is-archived
+        in: query
+        required: true
+        schema:
+          type: boolean
+          example: false
+      - name: identifiers
+        in: query
+        required: true
+        schema:
+          type: array
+          items:
+            type: string
+          minItems: 1
+        style: form
+        explode: false
+        examples:
+          oneId:
+            summary: Example of a single ID
+            value: ['9d59a660-a668-4e80-8790-f42c3b380f84']
+          multipleIds:
+            summary: Example of multiple IDs
+            value: ['289be236-5e9a-43a6-95b0-9251835ca06b', 'f798f628-0bd2-4e2b-870c-1f44d1cc67a4']
+  
+      responses:
+        '204':
+          description: No content
+        '400':
+          description: Bad request
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicErrorResponse'
+        '404':
+          description: Not found
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicErrorResponse'            
+          
+  ####################################################################### 
+
+  /public/api/v1/sellers/{sellerId}/products/{productId}/special-prices:
+    post:
+      summary: Добавить акцию на товар
+      tags:
+        - products
+      parameters:
+      - name: productId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: sellerId
+        in: path
+        required: true
+        schema:
+          type: string  
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SpecialPriceRequest'
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad request
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicErrorResponse'
+        '401':
+          description: Authorization information is missing or invalid.
+        '404': 
+          description: Product with wasn't found
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicErrorResponse'
+  
+  ####################################################################### 
+  
+  /public/api/v1/sellers/{sellerId}/products/special-prices/{specialPriceId}:
+    put:
+      summary: Изменить спец.предложение
+      tags:
+        - products
+      parameters:
+      - name: sellerId
+        in: path
+        required: true
+        schema:
+          type: string  
+      - name: specialPriceId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SpecialPriceRequest'    
+      responses:
+        '200':
+          description: 'спец предложение изменено'
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SpecialPriceResponse'
+        '400':
+          description: Bad request
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicErrorResponse'
+        '404':
+          description: Not found
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicErrorResponse'
+    
+    delete:
+      summary: Удалить спец.предложение
+      tags:
+        - products
+      parameters:
+      - name: sellerId
+        in: path
+        required: true
+        schema:
+          type: string  
+      - name: specialPriceId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: No content
+        '400':
+          description: Bad request
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicErrorResponse'
+        '404':
+          description: Not found
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicErrorResponse'
+          
+  ####################################################################### 
+    
+  /public/api/v1/sellers/{sellerId}/products/{productId}/images:
+    post:
+      summary: Добавить фото товару
+      tags:
+        - products
+      parameters:
+      - name: sellerId
+        in: path
+        required: true
+        schema:
+          type: string  
+      - name: productId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductImageDto'
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad request
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicErrorResponse'
+        '401':
+          description: Authorization information is missing or invalid.
+        '404': 
+          description: Product with wasn't found
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicErrorResponse'
+              
+  ####################################################################### 
+    
+  /public/api/v1/sellers/{sellerId}/products/images:
+    delete:
+      summary: Удалить фото товара
+      tags:
+        - products
+      parameters:
+      - name: sellerId
+        in: path
+        required: true
+        schema:
+          type: string  
+      - name: url
+        in: query
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: No content
+        '400':
+          description: Bad request
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicErrorResponse'
+          
+  ####################################################################### 
+                  
+  /public/api/v1/sellers/{sellerId}/products/characteristics/{characteristicId}:
+    put:
+      summary: Изменить характеристику продукта
+      tags:
+        - products
+      parameters:
+      - name: sellerId
+        in: path
+        required: true
+        schema:
+          type: string  
+      - name: characteristicId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductCharacteristicRequest'    
+      responses:
+        '200':
+          description: 'характеристика изменена'
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductCharacteristicResponse'
+          
+        '400':
+          description: Bad request
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicErrorResponse'
+        '404':
+          description: Not found
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicErrorResponse'                 
+           
+  ####################################################################### 
+                 
+  /public/api/v1/sellers/{sellerId}/products/{productId}/price:  
+    patch:
+      summary: Изменить цену продукта
+      tags:
+        - products
+      parameters:
+      - name: sellerId
+        in: path
+        required: true
+        schema:
+          type: string  
+      - name: productId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: price
+        in: query
+        required: true
+        schema:
+          type: number
+          format: long
+      responses:
+        '204':
+          description: No content
+        '400':
+          description: Bad request
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicErrorResponse'
+        '404':
+          description: Not found
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicErrorResponse'
+          
+  ####################################################################### 
+      
+  /public/api/v1/sellers/{sellerId}/products/{productId}/count:  
+    patch:
+      summary: Изменить количество продукта
+      tags:
+        - products
+      parameters:
+      - name: sellerId
+        in: path
+        required: true
+        schema:
+          type: string  
+      - name: productId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: count
+        in: query
+        required: true
+        schema:
+          type: number
+          format: long
+      responses:
+        '204':
+          description: No content
+        '400':
+          description: Bad request
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicErrorResponse'
+        '404':
+          description: Not found
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicErrorResponse'            
+          
+  ####################################################################### 
+                  
+  /public/api/v1/sellers/{sellerId}/products/visibility:  
+    patch:
+      summary: Изменить видимость продуктов
+      tags:
+        - products
+      parameters:
+      - name: sellerId
+        in: path
+        required: true
+        schema:
+          type: string  
+      - name: is-visible
+        in: query
+        required: true
+        schema:
+          type: boolean
+          example: false
+      - name: identifiers
+        in: query
+        required: true
+        schema:
+          type: array
+          items:
+            type: string
+          minItems: 1
+        style: form
+        explode: false
+        examples:
+          oneId:
+            summary: Example of a single ID
+            value: ['9d59a660-a668-4e80-8790-f42c3b380f84']
+          multipleIds:
+            summary: Example of multiple IDs
+            value: ['289be236-5e9a-43a6-95b0-9251835ca06b', 'f798f628-0bd2-4e2b-870c-1f44d1cc67a4']
+        
+      responses:
+        '204':
+          description: No content
+        '400':
+          description: Bad request
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicErrorResponse'
+        '404':
+          description: Not found
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicErrorResponse'
+  
+  #######################################################################   
+  
+  /public/api/v1/product-previews:
+    get:
+      security: []
+      summary: получить превью продуктов
+      tags:
+        - products
+      parameters:
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          example: 0
+      - name: size
+        in: query
+        required: false
+        schema:
+          type: integer
+          example: 0
+      - name: sort
+        in: query
+        required: false
+        schema:
+          type: string
+          example: creationDate,DESC
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PageableUserProductPreview'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicErrorResponse'
+                
+    post:
+      security: []
+      summary: получить превью продуктов
+      tags:
+        - products
+      requestBody:
+        content:
+            application/json:
+              schema:
+                  $ref: '#/components/schemas/ProductRepresentationSetDto'
+      responses:
+        '200':
+          description: 'успешно'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserProductPreview'
+        '400':
+          description: Bad request
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicErrorResponse'
+        '404':
+          description: Not found
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicErrorResponse'   
+
+#reviews###############################################################
+
+  /public/api/v1/users/{userId}/reviews:
+    post:
+      summary: Добавить отзыв
+      tags:
+        - reviews
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReviewRequest'
+      responses:
+        '201':
+          description: Created
+        '400':
+          description: Bad request
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicErrorResponse'
+        '401':
+          description: Authorization information is missing or invalid.
+        '403':
+          description: Forbidden.
+          
+    get:
+      summary: Получение всех отзывов пользователя отсортированных по дате создания по убыванию
+      tags:
+        - reviews
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ReviewResponse'
+        '400':
+          description: Bad request
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicErrorResponse'
+        '401':
+          description: Authorization information is missing or invalid.
+        '403':
+          description: Forbidden.
+    
+  /public/api/v1/products/{productId}/reviews:
+    get:
+      summary: Получение всех отзывов о продукте отсортированных по дате создания по убыванию
+      tags:
+        - reviews
+      parameters:
+      - name: productId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ReviewResponse'
+        '400':
+          description: Bad request
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicErrorResponse'
+        '401':
+          description: Authorization information is missing or invalid.
+        '403':
+          description: Forbidden.
+          
+  /public/api/v1/reviews/{reviewId}:
+    get:
+      summary: Получение отзыва
+      tags:
+        - reviews
+      parameters:
+      - name: reviewId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                  $ref: '#/components/schemas/ReviewResponse'
+        '401':
+          description: Authorization information is missing or invalid.
+        '403':
+          description: Forbidden.
+        '404':
+          description: Not Found.
+    delete:
+      summary: Удалить отзыв
+      tags:
+        - reviews
+      parameters:
+      - name: reviewId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: No content
+        '401':
+          description: Authorization information is missing or invalid.
+        '403':
+          description: Forbidden.
+        '404':
+          description: Not Found.
+
+#orders################################################################
+
+#favorites#############################################################
+
+#baskets###############################################################
+
+  /public/api/v1/users/{userId}/basket/products:
+    get:
+      tags:
+        - baskets
+      summary: Получить страницу с добавленными товарами в корзину
+      parameters:
+        - name: userId
+          in: path
+          description: Идентификатор покупателя
+          example: 6a2e63a7-a8b7-4a5e-9422-6a16ee963e8d
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: pageable
+          in: query
+          description: Информация о пагинации
+          required: true
+          schema:
+            $ref: '#/components/schemas/Pageable'
+      responses:
+        '200':
+          description: Страница со списком товаров в корзине успешно получена
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/PageItemResponse'
+        '400':
+          description: На сервер переданы неверные данные
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicErrorResponse'
+        '401':
+          description: Пользователь не авторизован
+        '403':
+          description: У пользователя нет доступа к ресурсу
+        '404':
+          description: Ресурс не найден
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicErrorResponse'
+    delete:
+      tags:
+        - baskets
+      summary: Удаление одного или несколько товаров из корзины
+      operationId: deleteItemsList
+      parameters:
+        - name: userId
+          in: path
+          description: Идентификатор покупателя
+          example: 6a2e63a7-a8b7-4a5e-9422-6a16ee963e8d
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: products
+          in: query
+          description: Список идентификаторов удаляемых товаров
+          example: 02583e02-a22b-4df9-8827-ffb45f2c2914
+          required: true
+          schema:
+            type: array
+            items:
+              type: string
+              format: uuid
+      responses:
+        '200':
+          description: Выбранные товары успешно удалены из корзины
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CountItemsResponse'
+        '400':
+          description: На сервер переданы неверные данные
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicErrorResponse'
+        '401':
+          description: Пользователь не авторизован
+        '403':
+          description: У пользователя нет доступа к ресурсу
+        '404':
+          description: Ресурс не найден
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicErrorResponse'
+    patch:
+      tags:
+        - baskets
+      summary: >-
+        Добавление товара в корзину или изменение количества товара уже
+        добавленного в корзину
+      operationId: changeItemCountInBasket
+      parameters:
+        - name: userId
+          in: path
+          description: Идентификатор покупателя
+          example: 6a2e63a7-a8b7-4a5e-9422-6a16ee963e8d
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ItemRequest'
+        required: true
+      responses:
+        '200':
+          description: Товар успешно добавлен в корзину с новым значением количества
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CountItemsResponse'
+        '400':
+          description: На сервер переданы неверные данные
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicErrorResponse'
+        '401':
+          description: Пользователь не авторизован
+          
+        '403':
+          description: У пользователя нет доступа к ресурсу
+          
+        '404':
+          description: Ресурс не найден
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicErrorResponse'
+  
+#upload################################################################
+
+  /public/api/v1/files:
+    post:
+      tags:
+      - upload
+      summary: Загрузить файлы на сервер
+      operationId: upload
+      parameters:
+      - name: type
+        in: query
+        required: true
+        schema:
+          type: string
+          enum:
+          - CHECK
+          - AVATAR
+          - PRODUCT
+          - REVIEW
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              required:
+              - file
+              type: object
+              properties:
+                file:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+      responses:
+        '201':
+          description: Файлы успешно загружены
+          content:
+            application/json: {}
+        '400':
+          description: На сервер переданны неверные данные
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/BasicErrorResponse"
+        '401':
+          description: Пользователь не авторизован
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/BasicErrorResponse"
+        '404':
+          description: Данные не были найдены по переданным url
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/BasicErrorResponse"
+        '502':
+          description: Bad Gateway
+          content:
+            "*/*":
+              schema:
+                "$ref": "#/components/schemas/BasicErrorResponse"
+  
+    get:
+      security: []
+      tags:
+      - upload
+      summary: Получить ссылки на фотографии
+      operationId: getUrls
+      parameters:
+      - name: id
+        in: query
+        required: true
+        schema:
+          type: array
+          items:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Ссылки успешно получены
+          content:
+            application/json: {}
+        '400':
+          description: На сервер переданны неверные данные
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/BasicErrorResponse"
+        '401':
+          description: Пользователь не авторизован
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/BasicErrorResponse"
+        '404':
+          description: Данные не были найдены по переданным url
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/BasicErrorResponse"
+        '502':
+          description: Bad Gateway
+          content:
+            "*/*":
+              schema:
+                "$ref": "#/components/schemas/BasicErrorResponse"
+                
+#COMPONENTS############################################################     
+components:
+  schemas:
+    UserLoginRequest:
+      required:
+        - email
+        - password
+      type: object
+      properties:
+        email:
+          type: string
+          example: admin@gmail.ru
+        password:
+          type: string
+          example: Aa4321!8ee
+    OAuthUserResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          example: 8ffbfb87-bf65-4e72-873e-1ceef55ee379
+        email: 
+          type: string
+          example: admin@gmail.ru
+        token:
+          type: string
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+    UserRequestDto:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          example: admin@gmail.ru
+        password:
+          type: string
+          example: Aa4321!8ee
+          
+    UserUpdateRequestDto:
+      type: object
+      properties:
+        firstName:
+          type: string
+          example: John
+        lastName:
+          type: string
+          example: Thompson
+        password:
+          type: string
+          example: password  
+        phone:
+          type: string
+          example: '+79241249521'
+        email:
+          type: string
+          example: john-thompson@email.com
+        sex:
+          type: string
+          enum:
+            - MALE
+            - FEMALE
+            - NONE
+        photoUrl:
+          type: string
+          example: 'https://image.ru/id123'
+        location:
+          $ref: '#/components/schemas/LocationDto'
+          
+    UserResponseDto:
+      type: object
+      properties:
+        id: 
+          type: string
+          format: uuid
+          example: '28835672-4402-4aed-87b4-9717df31086f' 
+        firstName:
+          type: string
+          example: John
+        lastName:
+          type: string
+          example: Thompson
+        phone:
+          type: string
+          example: '+79241249521'
+        email:
+          type: string
+          example: john-thompson@email.com
+        sex:
+          type: string
+          enum:
+            - MALE
+            - FEMALE
+            - NONE
+        photoUrl:
+          type: string
+          example: 'https://image.ru/id123'
+        location:
+          $ref: '#/components/schemas/LocationDto'
+      
+    LocationDto:
+      type: object
+      properties:
+        city:
+          type: string
+          example: 'Saint-Petersburg'
+        deliveryAddress:
+          type: string
+          example: 'Nevskii avenue, 32'
+          
+  ############################################################### 
+
+    SellerRegistrationRequest:
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          example: seller@gmail.ru
+        password:
+          type: string
+          example: Aa4321!8ee
+          
+    SellerUpdateRequest:
+      type: object
+      properties:
+        firstName:
+          description: 'Имя'
+          type: string
+          example: John
+        lastName:
+          description: 'Фамилия'
+          type: string
+          example: Thompson
+        legalAddress:
+          description: 'Юридический адрес'
+          type: string
+          example: legalAdress12
+        companyName:
+          description: 'Название компании'
+          type: string
+          example: companyName12
+        imageUrl:
+          description: 'Уникальный идентификатор изображения'
+          type: string
+          format: UUID
+          example: b5db8c9d-2748-4d24-85f9-db598479a064
+        businessModel:
+          description: 'Модель ведение бизнеса ООП или ИП (на данный момент только ИП)'
+          type: string
+          enum:
+            - IP
+          example: IP
+        itn:
+          description: 'Идентификационный номер налогоплательщика продавца'
+          type: string
+          example: '1234567890'
+        psrn:
+          description: 'Основной государственный регистрационный номер продавца'
+          type: string
+          example: '123456789090871'
+        bic:
+          description: 'Банковский идентификационный код продавца'
+          type: string
+          example: '123456739'
+        paymentAccount:
+          description: 'Банковский расчетный счет продавца'
+          type: string
+          example: '23456789191234567895'
+        corporateAccount:
+          description: 'Банковский корпаративный счет продавца'
+          type: string
+          example: '23456789191234567893'
+    
+    SellerResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: '2ebc814f-1b30-4cae-a0cf-fae8feea4960'
+        firstName:
+          type: string
+          example: John
+        lastName:
+          type: string
+          example: Thompson
+        email:
+          type: string
+          example: seller@email.com  
+        legalAddress:
+          type: string
+          example: 'Moscow, Tyhachevskaya 8/1'
+        companyName:
+          type: string
+          example: 'Ikea'
+        imageUrl:
+          type: string
+          example: 'https://random-im'
+        businessModel:
+          type: string
+          enum:
+            - IP
+            - OOO
+        itn:
+          description: 'Идентификационный номер налогоплательщика продавца'
+          type: string
+          example: '4324124124124'
+        psrn:
+          description: 'Основной государственный регистрационный номер продавца'
+          type: string
+          example: '12412412412'
+        bic:
+          description: 'Банковский идентификационный код продавца'
+          type: string
+          example: '52933162'
+        paymentAccount:
+          description: 'Банковский расчетный счет продавца'
+          type: string
+          example: '4562123241231123'
+        corporateAccount:
+          description: 'Банковский корпаративный счет продавца'
+          type: string
+          example: '4512231212341231'
+
+  ###############################################################
+
+    ReviewRequest:
+      type: object
+      properties:
+        userId:
+          type: string
+          format: uuid
+          example: 'a05a1472-b57f-4ac9-a8ff-ebc8d11cbc68'
+        productId:
+          type: string
+          format: uuid
+          example: 'a05a1472-b57f-4ac9-a8ff-ebc8d11cbc68'
+        reviewType:
+          type: string
+          enum: 
+            - PRODUCT_REVIEW
+        advantages: 
+          type: string
+        disadvantages:
+          type: string
+        commentary:
+          type: string
+        rating:
+          type: integer
+          example: 4
+        photoUrls:
+          type: array
+          items:
+            type: string
+            example: 'https://random.imagecdn.app/493'
+    
+    ReviewResponse:
+      type: object
+      properties:
+        userId:
+          type: string
+          format: uuid
+          example: 'a05a1472-b57f-4ac9-a8ff-ebc8d11cbc68'
+        productId:
+          type: string
+          format: uuid
+          example: 'a05a1472-b57f-4ac9-a8ff-ebc8d11cbc68'
+        reviewType:
+          type: string
+          enum: 
+            - PRODUCT_REVIEW
+        advantages: 
+          type: string
+        disadvantages:
+          type: string
+        commentary:
+          type: string
+        rating:
+          type: integer
+          example: 4
+        creationTimestamp:
+          type: string
+          format: date-time
+          example: '2023-03-29T21:47:02.419920309Z'
+        photoUrls:
+          type: array
+          items:
+            type: string
+            example: 'https://random.imagecdn.app/493'
+    
+  ###############################################################
+
+    RoomPreview:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: '2ebc814f-1b30-4cae-a0cf-fae8feea4960'
+        name:
+          type: string
+          example: 'Спальня'
+          
+  ###############################################################
+
+    SellerArchiveProductPreview:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: '28835672-4402-4aed-87b4-9717df31086f'
+        name:
+          type: string
+          example: 'Диван Види Textile Grey'
+        brand:
+          type: string
+          example: 'ikea'  
+        sellerId:
+          type: string
+          format: uuid
+          example: '28835672-4402-4aed-87b4-9717df31086f'  
+        price:
+          type: number
+          format: long
+          example: 900
+        count:
+          type: number
+          format: long
+          example: 90 
+        type:
+          type: string
+          example: 'комоды'
+        creationDate:
+          type: string
+          format: date-time
+          example: '2023-03-16T21:47:02.419920309Z'
+        imageUrl:
+          type: string
+          example: 'instagram/eseo.a'
+          
+  ###############################################################
+
+    SellerProductPreview:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: '28835672-4402-4aed-87b4-9717df31086f'
+        name:
+          type: string
+          example: 'Диван Види Textile Grey'
+        sellerId:
+          type: string
+          format: uuid
+          example: 'Диван Види Textile Grey' 
+        brand:
+          type: string
+          example: 'Диван Види Textile Grey'  
+        price:
+          type: number
+          format: long
+          example: 90000
+        count:
+          type: number
+          format: long
+          example: 10  
+        type:
+          type: string
+          example: "комоды"    
+        creationDate:
+          type: string
+          format: date-time
+          example: '2023-03-16T21:47:02.419920309Z'  
+        isVisible:
+          type: boolean
+          example: false
+        imageUrl:
+          type: string
+          example: 'instagram/eseo.a'
+   
+ ###############################################################
+   
+    TypePreview:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: '28835672-4402-4aed-87b4-9717df31086f'
+        name:
+          type: string
+          example: 'комоды'          
+          
+  ###############################################################
+
+    UserProductPreview:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: '28835672-4402-4aed-87b4-9717df31086f'
+        sellerId:
+          type: string
+          format: uuid
+          example: '28835672-4402-4aed-87b4-9717df31086f'  
+        name:
+          type: string
+          example: 'Диван Види Textile Grey'
+        price:
+          type: number
+          format: long
+          example: 900
+        imageUrl:
+          type: string
+          example: 'instagram/eseo.a'
+          
+  ###############################################################
+
+    CreateProductRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          example: 'комоды'
+        description:
+          type: string
+          example: 'какое-то описание товара by eseo.a'
+        articleFromSeller:
+          type: string
+          format: uuid
+          example: '28835672-4402-4aed-87b4-9717df31086f'
+        brand:
+          type: string
+          example: 'ikea'
+        price:
+          type: number
+          format: long
+          example: 100000  
+        count:
+          type: number
+          format: long
+          example: 10
+        typeId:
+          type: string
+          format: uuid
+          example: '28835672-4402-4aed-87b4-9717df31086f'
+        characteristics: 
+          type: array
+          items: 
+            $ref: '#/components/schemas/ProductCharacteristicRequest'  
+        images: 
+          type: array
+          items: 
+            $ref: '#/components/schemas/ProductImageDto'  
+          
+  ###############################################################
+
+    ProductCharacteristicRequest:
+      type: object
+      properties:
+        value:
+          type: string
+          example: 108
+        name: 
+          type: string
+          example: 'Объем'
+        valueType: 
+          type: string
+          enum:
+            - TEXT
+            - LONG
+            - DOUBLE
+            - BOOLEAN
+            - LOCAL_DATE
+          example: LONG
+          
+  ###############################################################
+
+    ProductUpdateRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          example: 'подушка мягкая с чонгуком'
+        brand:
+          type: string
+          example: 'битиес'
+        description:
+          type: string
+          example: 'some product description by eseo.a'
+        articleFromSeller:
+          type: string
+          example: '....'
+        price:
+          type: number
+          format: long
+          example: 100000
+        count:
+          type: number
+          format: long
+          example: 10
+        isArchived:
+          type: boolean
+          example: false
+        isVisible:
+          type: boolean
+          example: true
+          
+  ###############################################################
+
+    SpecialPriceRequest:
+      type: object
+      properties:
+        fromDate:
+          type: string
+          format: date-time
+          example: '2023-03-16T21:47:02.419920309Z'
+        toDate:
+          type: string
+          format: date-time
+          example: '2023-03-16T21:47:02.419920309Z'
+        price:
+          type: number
+          format: long
+          example: 100000  
+  
+  ###############################################################
+
+    ProductCharacteristicResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: '28835672-4402-4aed-87b4-9717df31086f'
+        name:
+          type: string
+          example: 'вес, кг'
+        value: 
+          type: object
+          example: 100
+          
+  ###############################################################
+
+    ProductResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: '28835672-4402-4aed-87b4-9717df31086f'
+        sellerId:
+          type: string
+          format: uuid
+          example: '28835672-4402-4aed-87b4-9717df31086f'  
+        name:
+          type: string
+          example: 'матрас вышибатя'
+        brand:
+          type: string
+          example: 'ikea'
+        description:
+          type: string
+          example: 'some description by eseo.a'
+        price:
+          type: number
+          format: long
+          example: 100000
+        count:
+          type: number
+          format: long
+          example: 100
+        articleFromSeller: 
+          type: string
+          example: '...'
+        isVisible: 
+          type: boolean
+          example: true
+        isArchived: 
+          type: boolean
+          example: false
+        creationDate: 
+          type: string
+          format: date-time
+          example: '2023-03-16T21:47:02.419920309Z'
+        tax:
+          type: string
+          enum: 
+            - ABSENT
+            - MIN
+            - MAX
+          example: 'MAX'  
+        type: 
+          $ref: '#/components/schemas/TypePreviewResponse'
+        characteristics:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProductCharacteristicResponse'
+        images: 
+          type: array
+          items: 
+            $ref: '#/components/schemas/ProductImageDto'
+            
+  ###############################################################                  
+
+    RoomResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: '28835672-4402-4aed-87b4-9717df31086f'
+        name:
+          type: string
+          example: санузел
+          
+  ###############################################################
+
+    SpecialPriceResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: '28835672-4402-4aed-87b4-9717df31086f'
+        fromDate:
+          type: string
+          format: date-time
+          example: '2023-03-16T21:47:02.419920309Z'
+        toDate:
+          type: string
+          format: date-time
+          example: '2023-03-16T21:47:02.419920309Z'
+        price:
+          type: number
+          format: long
+          example: 13400
+          
+  ###############################################################
+
+    TypeCharacteristicResponse:
+      type: object
+      properties:
+        name:
+          type: string
+          example: 'вес'
+        valueType:
+          type: string
+          enum:
+            - TEXT
+            - LONG
+            - DOUBLE
+            - BOOLEAN
+            - LOCAL_DATE
+          example: LONG
+          
+  ###############################################################
+
+    TypePreviewResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: '28835672-4402-4aed-87b4-9717df31086f'
+        name:
+          type: string
+          example: 'комоды'
+          
+  ###############################################################
+
+    TypeResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: '28835672-4402-4aed-87b4-9717df31086f'
+        name:
+          type: string
+          example: 'комоды'
+        characteristics:
+          type: array
+          items:
+            $ref: '#/components/schemas/TypeCharacteristicResponse'
+          
+
+  ###############################################################
+          
+    ProductImageDto:
+      type: object
+      properties:
+        isMain: 
+          type: boolean
+        url: 
+          type: string
+          example: 'instagram eseo.a'
+
+  ############################################################### 
+
+    ProductRepresentationSetDto:
+      type: object
+      properties:
+        productIdentifiers: 
+          type: array
+          items:
+            type: string
+            format: uuid
+          minItems: 1
+          
+  ###############################################################  
+
+    PageableSellerProductPreview:
+      type: object
+      properties:
+        content: 
+          type: array
+          items:
+            $ref: '#/components/schemas/SellerProductPreview'
+        pageable:
+            $ref: '#/components/schemas/DefaulePageableResponse'
+        totalPages:
+          type: integer
+          example: 1
+        totalElements:
+          type: integer
+          example: 1
+        size:
+          type: integer
+          example: 1
+        number:
+          type: integer
+          example: 0
+        sort:
+          $ref: '#/components/schemas/PageableSort'
+        first:
+          type: boolean
+        last:
+          type: boolean
+        numberOfElements:
+          type: integer
+          example: 1
+        empty:
+          type: boolean
+          example: false
+          
+  ###############################################################   
+
+    PageableSellerArchiveProductPreview:
+      type: object
+      properties:
+        content: 
+          type: array
+          items:
+            $ref: '#/components/schemas/SellerArchiveProductPreview'
+        pageable:
+            $ref: '#/components/schemas/DefaulePageableResponse'
+        totalPages:
+          type: integer
+          example: 1
+        totalElements:
+          type: integer
+          example: 1
+        size:
+          type: integer
+          example: 1
+        number:
+          type: integer
+          example: 0
+        sort:
+          $ref: '#/components/schemas/PageableSort'
+        first:
+          type: boolean
+        last:
+          type: boolean
+        numberOfElements:
+          type: integer
+          example: 1
+        empty:
+          type: boolean
+          example: false
+
+  ###############################################################  
+    
+    PageableUserProductPreview:
+      type: object
+      properties:
+        content: 
+          type: array
+          items:
+            $ref: '#/components/schemas/UserProductPreview'
+        pageable:
+            $ref: '#/components/schemas/DefaulePageableResponse'
+        totalPages:
+          type: integer
+          example: 1
+        totalElements:
+          type: integer
+          example: 1
+        size:
+          type: integer
+          example: 1
+        number:
+          type: integer
+          example: 0
+        sort:
+          $ref: '#/components/schemas/PageableSort'
+        first:
+          type: boolean
+        last:
+          type: boolean
+        numberOfElements:
+          type: integer
+          example: 1
+        empty:
+          type: boolean
+          example: false
+          
+  #baskets_components#############################################
+  
+    PageItemResponse:
+      type: object
+      properties:
+        totalPages:
+          type: integer
+          format: int32
+        totalElements:
+          type: integer
+          format: int64
+        size:
+          type: integer
+          format: int32
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/ItemResponse'
+        number:
+          type: integer
+          format: int32
+        sort:
+          $ref: '#/components/schemas/PageableSort'
+        pageable:
+          $ref: '#/components/schemas/PageableObject'
+        first:
+          type: boolean
+        last:
+          type: boolean
+        numberOfElements:
+          type: integer
+          format: int32
+        empty:
+          type: boolean
+          
+    ItemResponse:
+      type: object
+      properties:
+        productId:
+          type: string
+          description: Идентификатор товара
+          format: uuid
+        totalNumberItemsInBasket:
+          minimum: 1
+          type: integer
+          description: Количество данного товара в корзине (шт.)
+          format: int32
+      description: Информация о добавленном в корзину товаре
+      
+    PageableObject:
+      type: object
+      properties:
+        offset:
+          type: integer
+          format: int64
+        sort:
+          $ref: '#/components/schemas/PageableSort'
+        pageNumber:
+          type: integer
+          format: int32
+        pageSize:
+          type: integer
+          format: int32
+        paged:
+          type: boolean
+        unpaged:
+          type: boolean
+    
+    CountItemsResponse:
+      type: object
+      properties:
+        itemsCount:
+          type: integer
+          description: Общее количество товаров в корзине (шт.)
+          format: int32
+      description: Информация о количестве имеющихся товаров в корзине
+      
+    ItemRequest:
+      required:
+        - numberOfItems
+        - productId
+      type: object
+      properties:
+        productId:
+          type: string
+          description: Идентификатор продукта
+          example: 02583e02-a22b-4df9-8827-ffb45f2c2914
+          format: uuid
+        numberOfItems:
+          minimum: 1
+          type: integer
+          description: Количество добавляемого товара в корзину (шт.)
+          format: int32
+      description: Информация о добавляемом товаре
+
+  ###############################################################            
+          
+    Pageable: 
+      type: object
+      properties:
+        page:
+          type: integer
+        size:
+          type: integer
+          example: 20
+        sort:
+          type: string
+          format: enum
+            - ASC
+            - DESC
+          example: DESC
+          
+  ###############################################################                      
+    
+    DefaulePageableResponse:
+      type: object
+      properties:
+        sort:
+          $ref: '#/components/schemas/PageableSort'
+        offset:
+          type: integer
+          example: 0
+        pageNumber: 
+          type: integer
+          example: 0  
+        pageSize: 
+          type: integer
+          example: 1
+        paged: 
+          type: boolean
+        unpaged:
+          type: boolean
+          example: false
+      
+    PageableSort:
+      type: object
+      properties:
+        empty:
+          type: boolean
+          example: false
+        sorted:
+          type: boolean
+          example: true
+        unsorted:
+          type: boolean
+          example: false
+      
+    BasicErrorResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          example: '28835672-4402-4aed-87b4-9717df31086f' 
+        message:
+          type: string
+          example: "error message"
+        timestamp:
+          type: string
+          format: date-time
+          example: '2023-03-16T21:47:02.419920309Z'
+    
+    # ProductCharacteristicsArray:
+    #   content:
+    #     application/json:
+    #       schema:
+    #         type: array
+    #         items:
+    #           $ref: '#/components/schemas/ProductCharacteristicResponse'
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      
+security:
+  - BearerAuth: []
