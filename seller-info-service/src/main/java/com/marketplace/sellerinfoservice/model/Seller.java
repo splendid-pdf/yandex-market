@@ -41,7 +41,7 @@ public class Seller {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    private String imageUrl;
+    private String imageId;
 
     @Enumerated(value = EnumType.STRING)
     private BusinessModel businessModel;

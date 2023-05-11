@@ -4,7 +4,6 @@ import com.marketplace.sellerinfoservice.dto.SellerRegistration;
 import com.marketplace.sellerinfoservice.dto.SellerRequestDto;
 import com.marketplace.sellerinfoservice.dto.SellerResponseDto;
 import com.marketplace.sellerinfoservice.service.SellerService;
-import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,7 +31,6 @@ public class SellerController implements SellerApi {
     @GetMapping("sellers/{sellerId}")
     @ResponseStatus(HttpStatus.OK)
     public SellerResponseDto getSellerBySellerId(
-            @Parameter(name = "sellerId", description = "Идентификатор продавца")
             @PathVariable("sellerId") UUID sellerId) {
         return sellerService.getSellerBySellerId(sellerId);
     }
@@ -40,7 +38,6 @@ public class SellerController implements SellerApi {
     @PutMapping("sellers/{sellerId}")
     @ResponseStatus(HttpStatus.OK)
     public SellerResponseDto updateSeller(
-            @Parameter(name = "sellerId", description = "Идентификатор продавца")
             @PathVariable UUID sellerId,
             @RequestBody @Valid SellerRequestDto sellerRequestDto) {
         return sellerService.updateSeller(sellerId, sellerRequestDto);
@@ -48,8 +45,7 @@ public class SellerController implements SellerApi {
 
     @DeleteMapping("sellers/{sellerId}")
     @ResponseStatus(HttpStatus.OK)
-    public void deleteSeller(@Parameter(name = "sellerId", description = "Идентификатор продавца")
-                             @PathVariable UUID sellerId) {
+    public void deleteSeller(@PathVariable UUID sellerId) {
         sellerService.deleteSellerBySellerId(sellerId);
     }
 }

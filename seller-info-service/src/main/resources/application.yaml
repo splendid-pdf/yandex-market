@@ -19,7 +19,7 @@ spring:
     database: POSTGRESQL
     show-sql: true
     hibernate:
-      ddl-auto: validate # далее validate
+      ddl-auto: validate
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
@@ -33,7 +33,7 @@ spring:
 
 management:
   tracing:
-    enabled: false
+    enabled: true
     sampling:
       probability: 0.1
   endpoints:

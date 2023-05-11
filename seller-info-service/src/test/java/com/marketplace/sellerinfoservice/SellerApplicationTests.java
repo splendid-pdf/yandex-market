@@ -100,7 +100,7 @@ class SellerApplicationTests {
                 .email("newemail@mail.ru")
                 .legalAddress("Ул Новая, 1")
                 .companyName("Новая компания")
-                .imageUrl("37678209-f3c8-4d5c-a628-2344eef50c99")
+                .imageId("37678209-f3c8-4d5c-a628-2344eef50c99")
                 .businessModel(BusinessModel.IP)
                 .itn("1234567890")
                 .psrn("123456789090871")
@@ -126,9 +126,8 @@ class SellerApplicationTests {
                 .isEqualTo(seller);
     }
 
-
     @Test
-    @DisplayName("Попытка обноваления продавца, которого не существует в ббазе данных")
+    @DisplayName("Попытка обноваления продавца, которого не существует в базе данных")
     void updateSellerNotFound() throws Exception {
         mockMvc.perform(put(
                         PATH_TO_SELLER + "/{sellerId}", SELLER_ID)
