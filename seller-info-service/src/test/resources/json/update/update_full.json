@@ -1,13 +1,13 @@
 {
-  "firstName": "Новое имя",
-  "lastName": "Новая фамилия",
+  "firstName": "Новоеимя",
+  "lastName": "Новаяфамилия",
   "legalAddress": "Ул Новая, 1",
   "companyName": "Новая компания",
-  "imageUrl": "new.png",
+  "imageId": "37678209-f3c8-4d5c-a628-2344eef50c99",
   "businessModel": "IP",
-  "itn": "123456789",
-  "psrn": "123456",
-  "bic": "1234",
-  "paymentAccount": "ACCOUNT123456",
-  "corporateAccount": "SACCOUNT123"
+  "itn": "1234567890",
+  "psrn": "123456789090871",
+  "bic": "123456739",
+  "paymentAccount": "23456789191234567895",
+  "corporateAccount": "23456789191234567893"
 }

@@ -14,7 +14,8 @@ import java.lang.annotation.Target;
 @Constraint(validatedBy = SellerPasswordConstraintValidator.class)
 public @interface SellerPasswordConstraint {
 
-    String message() default "Введённый пароль невалиден";
+    String message() default "Введённый пароль некорректный," +
+            "должен соответствовать ^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[#$@!%&*?])[A-Za-z\\d#$@!%&*?]{8,30}$";
 
     Class<?>[] groups() default {};
 
