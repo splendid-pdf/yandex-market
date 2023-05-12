@@ -14,7 +14,8 @@ import java.lang.annotation.Target;
 @Constraint(validatedBy = SellerEmailConstraintValidator.class)
 public @interface SellerEmailConstraint {
 
-    String message() default "Введённая электронная почта некорректна";
+    String message() default "Введённая электронная почта некорректна," +
+            "должна соответствовать ^(?=.{1,50}@)[a-zA-Z0-9_!#$%&'+=?`{|}~^.-]+@[a-zA-Z0-9.-]+$";
 
     Class<?>[] groups() default {};
 
