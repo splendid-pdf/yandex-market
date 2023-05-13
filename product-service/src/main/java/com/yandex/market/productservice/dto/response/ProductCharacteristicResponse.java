@@ -5,6 +5,8 @@ import java.util.UUID;
 public record ProductCharacteristicResponse(
         UUID id,
         String name,
-        Object value
+        Object value,
+
+        String groupProduct
 ) {
 }

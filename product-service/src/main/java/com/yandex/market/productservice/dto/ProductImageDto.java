@@ -11,7 +11,7 @@ public record ProductImageDto(
         @NotNull(message = "The flag whether the photo is the main photo of the product must be specified")
         boolean isMain,
 
-        @URL(message = "The URL must be valid")
+//        @URL(message = "The URL must be valid")
         @NotBlank(message = "The link to the image must be specified")
         String url
 ) {

@@ -6,15 +6,15 @@ spring:
   application:
     name: product-service
   flyway:
-    enabled: false
+    enabled: true
 
   config:
     import: "optional:configserver:"
 
   datasource:
-    url: jdbc:postgresql://158.160.27.104:5432/product_db
-    username: user
-    password: password
+    url: jdbc:postgresql://localhost:5432/product_db
+    username: postgres
+    password: 123
     driver-class-name: org.postgresql.Driver
 
   jpa:
