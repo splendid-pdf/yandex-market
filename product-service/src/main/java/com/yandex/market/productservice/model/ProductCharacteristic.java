@@ -34,5 +34,5 @@ public class ProductCharacteristic {
     @Enumerated(value = EnumType.STRING)
     private ValueType valueType;
 
-    private String groupProduct;
+    private String groupCharacteristic;
 }

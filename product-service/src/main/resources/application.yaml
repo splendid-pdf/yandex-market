@@ -39,7 +39,7 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          jwk-set-uri: http://51.250.102.12:9000/oauth2/jwks
+          jwk-set-uri: http://localhost:9000/oauth2/jwks
 
   kafka:
     bootstrap-servers: localhost:9092

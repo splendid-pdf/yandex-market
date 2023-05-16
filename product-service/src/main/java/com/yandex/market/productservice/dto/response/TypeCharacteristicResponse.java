@@ -9,7 +9,8 @@ import jakarta.validation.constraints.Size;
 public record TypeCharacteristicResponse(
 
         String name,
-        ValueType valueType
+        ValueType valueType,
+        String groupCharacteristic
 
 ) {
 }

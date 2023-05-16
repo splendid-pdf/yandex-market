@@ -26,5 +26,5 @@ public class TypeCharacteristic {
     @ManyToOne(fetch = FetchType.LAZY)
     private Type type;
 
-    private String groupProduct;
+    private String groupCharacteristic;
 }

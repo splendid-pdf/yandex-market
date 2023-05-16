@@ -6,7 +6,6 @@ public record ProductCharacteristicResponse(
         UUID id,
         String name,
         Object value,
-
-        String groupProduct
+        String groupCharacteristic
 ) {
 }
