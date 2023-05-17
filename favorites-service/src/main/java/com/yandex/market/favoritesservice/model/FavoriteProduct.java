@@ -12,21 +12,19 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "favorites")
 @EqualsAndHashCode(of = "id")
-public class FavoriteItem {
+@Table(name = "favorite_products")
+public class FavoriteProduct {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "favorites_sequence")
-    @SequenceGenerator(name = "favorites_sequence", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "favorite_products_seq")
+    @SequenceGenerator(name = "favorite_products_seq", allocationSize = 1)
     private Long id;
 
-    @Column(unique = true)
     private UUID externalId;
 
     private UUID userId;
 
-    private UUID productId;
-
-    private LocalDateTime addedAt;
+    @Builder.Default
+    private LocalDateTime addedAt = LocalDateTime.now();
 }

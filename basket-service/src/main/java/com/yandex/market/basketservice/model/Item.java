@@ -9,14 +9,15 @@ import java.util.UUID;
 @Getter
 @Setter
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "items")
 @EqualsAndHashCode(of = {"externalId"})
 public class Item {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @SequenceGenerator(name = "items_sequence", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "items_sequence")
     private Long id;
 
     @Column(name = "external_id")

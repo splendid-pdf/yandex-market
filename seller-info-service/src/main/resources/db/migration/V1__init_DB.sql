@@ -11,7 +11,7 @@ CREATE TABLE sellers
     legal_address     varchar(255),
     company_name      varchar(255),
     role              varchar(20)  not null default 'SELLER',
-    image_url         varchar(255),
+    image_id         varchar(255),
     business_model    varchar(255),
     itn               varchar(255),
     psrn              varchar(255),

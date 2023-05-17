@@ -29,7 +29,7 @@ public record SellerResponseDto(
         @Schema(description = "Имя фирмы продавца")
         String companyName,
         @Schema(description = "Фото продавца")
-        String imageUrl,
+        String imageId,
         @Schema(description = "Форма регистрации фирмы продавца")
         BusinessModel businessModel,
         @Schema(description = "Идентификационный номер налогоплательщика продавца")
