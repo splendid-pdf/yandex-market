@@ -35,7 +35,7 @@ class SellerMapperTest {
             .email("alexsandrooo@example.com")
             .legalAddress("г. Саратов, ул. Московская, д123, к13")
             .companyName("Alex Corp")
-            .imageUrl("https://example.com/image.jpg")
+            .imageId("https://example.com/image.jpg")
             .businessModel(BusinessModel.OOO)
             .itn("123456789012")
             .psrn("123456789012345")
