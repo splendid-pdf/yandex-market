@@ -3,10 +3,13 @@ package com.yandex.market.productservice.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.yandex.market.auth.model.Role;
+import com.yandex.market.auth.util.AuthUtils;
 import com.yandex.market.productservice.model.Product;
 import com.yandex.market.productservice.repository.ProductRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
 import org.springframework.test.web.servlet.MvcResult;
 
@@ -30,6 +33,10 @@ public class ProductTestService {
     public String readFromFile(String path) throws IOException {
         byte[] fileBytes = Files.readAllBytes(Path.of(path));
         return new String(fileBytes, StandardCharsets.UTF_8);
+    }
+
+    public JwtAuthenticationToken getToken(String sellerId) {
+        return AuthUtils.sellerToken(sellerId, Role.SELLER.getKey());
     }
 
     public Product getProduct(UUID productId) {
