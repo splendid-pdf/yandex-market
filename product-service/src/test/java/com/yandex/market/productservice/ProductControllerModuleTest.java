@@ -1,19 +1,13 @@
 package com.yandex.market.productservice;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.yandex.market.productservice.dto.projections.RoomPreview;
-import com.yandex.market.productservice.dto.projections.TypePreview;
 import com.yandex.market.productservice.dto.response.ProductResponse;
-import com.yandex.market.productservice.dto.response.TypeResponse;
 import com.yandex.market.productservice.models.ArchiveResponse;
 import com.yandex.market.productservice.models.ProductsResponse;
 import com.yandex.market.productservice.models.UserProductPreview;
 import com.yandex.market.productservice.service.AbstractTestIntegration;
 import com.yandex.market.productservice.service.ProductTestService;
 import com.yandex.market.util.RestPageImpl;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Assertions;
@@ -23,22 +17,17 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.util.List;
 import java.util.UUID;
 
 import static com.yandex.market.productservice.models.Environment.*;
-import static com.yandex.market.util.HttpUtils.PUBLIC_API_V1;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.springframework.test.web.client.match.MockRestRequestMatchers.content;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.authentication;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -57,8 +46,7 @@ class ProductControllerModuleTest extends AbstractTestIntegration {
         mockMvc.perform(post(PRODUCTS_PATH, REAL_SELLER_ID)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(serviceTest.readFromFile(MIN_PRODUCT_PATH)))
-                .andExpect(status().isUnauthorized())
-                .andReturn();
+                .andExpect(status().isUnauthorized());
     }
 
     @Test
@@ -67,7 +55,7 @@ class ProductControllerModuleTest extends AbstractTestIntegration {
     void shouldCreateProductWithMinimal() throws Exception {
 
         MvcResult mvcResult = mockMvc.perform(post(PRODUCTS_PATH, REAL_SELLER_ID)
-                        .header("Authorization", AUTH_TOKEN)
+                        .with(authentication(serviceTest.getToken(REAL_SELLER_ID.toString())))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(serviceTest.readFromFile(MIN_PRODUCT_PATH)))
                 .andExpect(status().isCreated())
@@ -87,7 +75,7 @@ class ProductControllerModuleTest extends AbstractTestIntegration {
     @DisplayName("Создание товара со всеми полями")
     void shouldCreateProductWithMaximal() throws Exception {
         MvcResult mvcResult = mockMvc.perform(post(PRODUCTS_PATH, REAL_SELLER_ID)
-                        .header("Authorization", AUTH_TOKEN)
+                        .with(authentication(serviceTest.getToken(REAL_SELLER_ID.toString())))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(serviceTest.readFromFile(MAX_PRODUCT_PATH)))
                 .andExpect(status().isCreated())
@@ -112,7 +100,7 @@ class ProductControllerModuleTest extends AbstractTestIntegration {
     @DisplayName("Товар не может быть создан, так как некорректный id продавца")
     void shouldNotCreateProductSellerNotFound() throws Exception {
         mockMvc.perform(post(PRODUCTS_PATH, UNREAL_SELLER_ID)
-                        .header("Authorization", AUTH_TOKEN)
+                        .with(authentication(serviceTest.getToken(REAL_SELLER_ID.toString())))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(serviceTest.readFromFile(MAX_PRODUCT_PATH)))
                 .andExpect(status().isForbidden());
@@ -123,7 +111,7 @@ class ProductControllerModuleTest extends AbstractTestIntegration {
     void shouldGetProductsPageSuccessful() throws Exception {
         MvcResult mvcResult = mockMvc.perform(
                         get(PRODUCTS_PATH, REAL_SELLER_ID, PageRequest.of(0, 20))
-                                .header("Authorization", AUTH_TOKEN)
+                                .with(authentication(serviceTest.getToken(REAL_SELLER_ID.toString())))
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();
@@ -144,7 +132,7 @@ class ProductControllerModuleTest extends AbstractTestIntegration {
     void shouldUpdateProductWithAllInfo() throws Exception {
 
         mockMvc.perform(put(PRODUCT_PATH, REAL_SELLER_ID, REAL_PRODUCT_ID)
-                        .header("Authorization", AUTH_TOKEN)
+                        .with(authentication(serviceTest.getToken(REAL_SELLER_ID.toString())))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(serviceTest.readFromFile(UPD_PRODUCT_PATH)))
                 .andExpect(status().isOk())
@@ -162,7 +150,7 @@ class ProductControllerModuleTest extends AbstractTestIntegration {
 
         MvcResult mvcResult = mockMvc.perform(
                         get(PRODUCTS_PATH, REAL_SELLER_ID, PageRequest.of(0, 20))
-                                .header("Authorization", AUTH_TOKEN)
+                                .with(authentication(serviceTest.getToken(REAL_SELLER_ID.toString())))
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();
@@ -182,7 +170,7 @@ class ProductControllerModuleTest extends AbstractTestIntegration {
 
         MvcResult mvcResult = mockMvc.perform(
                         get(ARCHIVE_PATH, REAL_SELLER_ID, PageRequest.of(0, 20))
-                                .header("Authorization", AUTH_TOKEN)
+                                .with(authentication(serviceTest.getToken(REAL_SELLER_ID.toString())))
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();
@@ -199,7 +187,7 @@ class ProductControllerModuleTest extends AbstractTestIntegration {
 
         MvcResult mvcResult = mockMvc.perform(
                         get(PRODUCT_PATH, REAL_SELLER_ID, REAL_PRODUCT_ID, PageRequest.of(0, 20))
-                                .header("Authorization", AUTH_TOKEN)
+                                .with(authentication(serviceTest.getToken(REAL_SELLER_ID.toString())))
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();
@@ -219,7 +207,7 @@ class ProductControllerModuleTest extends AbstractTestIntegration {
     void shouldGetProductPreviewsBySellerIdSellerNotFound() throws Exception {
 
         mockMvc.perform(get(PRODUCT_PATH, UNREAL_SELLER_ID, REAL_PRODUCT_ID, PageRequest.of(0, 20))
-                        .header("Authorization", AUTH_TOKEN)
+                        .with(authentication(serviceTest.getToken(REAL_SELLER_ID.toString())))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isForbidden());
     }
@@ -231,7 +219,7 @@ class ProductControllerModuleTest extends AbstractTestIntegration {
         List<UUID> productIds = REAL_PRODUCTS.subList(0, 2);
 
         mockMvc.perform(patch(ARCHIVE_PATH, REAL_SELLER_ID)
-                        .header("Authorization", AUTH_TOKEN)
+                        .with(authentication(serviceTest.getToken(REAL_SELLER_ID.toString())))
                         .param("is-archive", "true")
                         .param("product-ids", serviceTest.convertListToParam(productIds))
                         .contentType(MediaType.APPLICATION_JSON))
@@ -249,7 +237,7 @@ class ProductControllerModuleTest extends AbstractTestIntegration {
         List<UUID> productIds = REAL_PRODUCTS.subList(2, 3);
 
         mockMvc.perform(patch(ARCHIVE_PATH, REAL_SELLER_ID)
-                        .header("Authorization", AUTH_TOKEN)
+                        .with(authentication(serviceTest.getToken(REAL_SELLER_ID.toString())))
                         .param("is-archive", "false")
                         .param("product-ids", serviceTest.convertListToParam(productIds))
                         .contentType(MediaType.APPLICATION_JSON))
@@ -267,7 +255,7 @@ class ProductControllerModuleTest extends AbstractTestIntegration {
         List<UUID> productIds = REAL_PRODUCTS.subList(0, 2);
 
         mockMvc.perform(patch(CHANGE_VIS_PATH, REAL_SELLER_ID)
-                        .header("Authorization", AUTH_TOKEN)
+                        .with(authentication(serviceTest.getToken(REAL_SELLER_ID.toString())))
                         .param("is-visible", "false")
                         .param("product-ids", serviceTest.convertListToParam(productIds))
                         .contentType(MediaType.APPLICATION_JSON))
@@ -285,7 +273,7 @@ class ProductControllerModuleTest extends AbstractTestIntegration {
         List<UUID> productIds = REAL_PRODUCTS.subList(3, 4);
 
         mockMvc.perform(patch(CHANGE_VIS_PATH, REAL_SELLER_ID)
-                        .header("Authorization", AUTH_TOKEN)
+                        .with(authentication(serviceTest.getToken(REAL_SELLER_ID.toString())))
                         .param("is-visible", "true")
                         .param("product-ids", serviceTest.convertListToParam(productIds))
                         .contentType(MediaType.APPLICATION_JSON))
@@ -302,7 +290,7 @@ class ProductControllerModuleTest extends AbstractTestIntegration {
         long updatePrice = 1234L;
 
         mockMvc.perform(patch(CHANGE_PRICE_PATH, REAL_SELLER_ID, REAL_PRODUCT_ID)
-                        .header("Authorization", AUTH_TOKEN)
+                        .with(authentication(serviceTest.getToken(REAL_SELLER_ID.toString())))
                         .param("price", String.valueOf(updatePrice))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
@@ -317,7 +305,7 @@ class ProductControllerModuleTest extends AbstractTestIntegration {
         long updateCount = 123L;
 
         mockMvc.perform(patch(CHANGE_COUNT_PATH, REAL_SELLER_ID, REAL_PRODUCT_ID)
-                        .header("Authorization", AUTH_TOKEN)
+                        .with(authentication(serviceTest.getToken(REAL_SELLER_ID.toString())))
                         .param("count", String.valueOf(updateCount))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
@@ -345,7 +333,7 @@ class ProductControllerModuleTest extends AbstractTestIntegration {
     @Transactional
     void deleteProductImageSuccessful() throws Exception {
         mockMvc.perform(delete(DEL_IMAGE_PATH, REAL_SELLER_ID)
-                        .header("Authorization", AUTH_TOKEN)
+                        .with(authentication(serviceTest.getToken(REAL_SELLER_ID.toString())))
                         .param("url", "https://random.imagecdn.app/123/123")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
@@ -356,7 +344,7 @@ class ProductControllerModuleTest extends AbstractTestIntegration {
     @DisplayName("Успешное создание специальной цены для продукта")
     void createSpecialPriceByProductIdSuccessful() throws Exception {
         String response = mockMvc.perform(post(SPECIAL_PRICE_PATH, REAL_SELLER_ID, REAL_PRODUCT_ID)
-                        .header("Authorization", AUTH_TOKEN)
+                        .with(authentication(serviceTest.getToken(REAL_SELLER_ID.toString())))
                         .content(serviceTest.readFromFile(CREATE_SP_PATH))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
@@ -374,7 +362,7 @@ class ProductControllerModuleTest extends AbstractTestIntegration {
     @DisplayName("Успешное обновление специальной цены")
     void updateSpecialPriceSuccessful() throws Exception {
         mockMvc.perform(put(DEFINITE_SP_PATH, REAL_SELLER_ID, REAL_SP_ID)
-                        .header("Authorization", AUTH_TOKEN)
+                        .with(authentication(serviceTest.getToken(REAL_SELLER_ID.toString())))
                         .content(serviceTest.readFromFile(CREATE_SP_PATH))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -388,7 +376,7 @@ class ProductControllerModuleTest extends AbstractTestIntegration {
     @Transactional
     void deleteSpecialPriceByIdSuccessful() throws Exception {
         mockMvc.perform(delete(DEFINITE_SP_PATH, REAL_SELLER_ID, REAL_SP_ID)
-                        .header("Authorization", AUTH_TOKEN)
+                        .with(authentication(serviceTest.getToken(REAL_SELLER_ID.toString())))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
     }
@@ -397,7 +385,7 @@ class ProductControllerModuleTest extends AbstractTestIntegration {
     @Transactional
     void updateProductCharacteristicByIdSuccessful() throws Exception {
         mockMvc.perform(put(CHARACTER_PATH, REAL_SELLER_ID, REAL_CHAR_ID)
-                        .header("Authorization", AUTH_TOKEN)
+                        .with(authentication(serviceTest.getToken(REAL_SELLER_ID.toString())))
                         .content(serviceTest.readFromFile(CREATE_CHAR__PATH))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -410,7 +398,7 @@ class ProductControllerModuleTest extends AbstractTestIntegration {
     void getAllProductPreviewsSuccessful() throws Exception {
         MvcResult mvcResult = mockMvc.perform(
                         get(PRODUCT_PREVIEW_PATH, PageRequest.of(0, 20))
-                                .header("Authorization", AUTH_TOKEN)
+                                .with(authentication(serviceTest.getToken(REAL_SELLER_ID.toString())))
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();
@@ -428,7 +416,7 @@ class ProductControllerModuleTest extends AbstractTestIntegration {
     void getProductPreviewsByIdentifiersSuccessful() throws Exception {
         MvcResult mvcResult = mockMvc.perform(
                         post(PRODUCT_PREVIEW_PATH, REAL_SELLER_ID, REAL_PRODUCT_ID)
-                                .header("Authorization", AUTH_TOKEN)
+                                .with(authentication(serviceTest.getToken(REAL_SELLER_ID.toString())))
                                 .param("product-ids", serviceTest.convertListToParam(REAL_PRODUCTS))
                                 .contentType(MediaType.APPLICATION_JSON)
                 )
@@ -469,7 +457,7 @@ class ProductControllerModuleTest extends AbstractTestIntegration {
     public ProductResponse getProduct(UUID sellerId, UUID productId) throws Exception {
         return serviceTest.getProductFromMvcResult(
                 mockMvc.perform(get(PRODUCT_PATH, sellerId, productId, PageRequest.of(0, 20))
-                                .header("Authorization", AUTH_TOKEN)
+                                .with(authentication(serviceTest.getToken(REAL_SELLER_ID.toString())))
                                 .contentType(MediaType.APPLICATION_JSON))
                         .andExpect(status().isOk())
                         .andReturn(),
@@ -478,3 +466,4 @@ class ProductControllerModuleTest extends AbstractTestIntegration {
     }
 }
 
+    
