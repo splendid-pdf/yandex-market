@@ -1,33 +1,29 @@
 create table types
 (
-    id          bigint not null
-        primary key,
+    id          bigint not null     primary key,
     name        varchar(255),
     external_id uuid
 );
 
 create table rooms
 (
-    id          bigint not null
-        primary key,
+    id          bigint not null     primary key,
     external_id uuid,
     name        varchar(255)
 );
 
 create table type_characteristics
 (
-    id         bigint not null
-        primary key,
+    id         bigint not null      primary key,
     name       varchar(255),
     value_type varchar(255),
-    type_id    bigint
-        references types
+    type_id    bigint               references types,
+    group_characteristic varchar(255)
 );
 
 create table products
 (
-    id                  bigint  not null
-        primary key,
+    id                  bigint  not null    primary key,
     external_id         uuid,
     name                varchar(255),
     description         varchar(255),
@@ -40,8 +36,7 @@ create table products
     price               bigint,
     article_from_seller varchar(255),
     count               bigint,
-    type_id             bigint
-        references types,
+    type_id             bigint              references types,
     creation_date       timestamp,
     brand               varchar(255)
 );
@@ -51,40 +46,37 @@ create table product_images
     id         bigint not null,
     url        varchar(255),
     is_main    boolean,
-    product_id bigint
-        references products
+    product_id bigint           references products
 );
 
 create table product_special_prices
 (
-    id          bigint not null
-        primary key,
+    id          bigint not null     primary key,
     external_id uuid,
     from_date   timestamp,
     to_date     timestamp,
     price       bigint,
-    product_id  bigint
-        references products
+    product_id  bigint              references products
 );
 
 insert into types(id, external_id, name)
 values (1, '301c5370-be41-421e-9b15-f1e80a7079f9', 'спальня');
 
-INSERT INTO type_characteristics (id, name, value_type, type_id)
-VALUES (209, 'Ширина, см', 'DOUBLE', 1),
-       (210, 'Глубина, см', 'DOUBLE', 1),
-       (211, 'Высота, см', 'DOUBLE', 1),
-       (212, 'Вес товара, кг', 'DOUBLE', 1),
-       (213, 'Цвет', 'TEXT', 1),
-       (214, 'Материал фасада', 'TEXT', 1),
-       (215, 'Покрытие фасада', 'TEXT', 1),
-       (216, 'Стиль дизайна', 'TEXT', 1),
-       (217, 'Расположение', 'TEXT', 1),
-       (218, 'Количество полок', 'LONG', 1),
-       (219, 'Количество ящиков', 'LONG', 1),
-       (220, 'Страна изготовитель', 'TEXT', 1),
-       (221, 'Форма поставки', 'TEXT', 1),
-       (222, 'Гарантийный срок', 'TEXT', 1);
+INSERT INTO type_characteristics (id, name, value_type, type_id, group_characteristic)
+VALUES (209, 'Ширина, см', 'DOUBLE', 1, 'Габариты'),
+       (210, 'Глубина, см', 'DOUBLE', 1, 'Габариты'),
+       (211, 'Высота, см', 'DOUBLE', 1, 'Габариты'),
+       (212, 'Вес товара, кг', 'DOUBLE', 1, 'Габариты'),
+       (213, 'Цвет', 'TEXT', 1, 'Габариты'),
+       (214, 'Материал фасада', 'TEXT', 1, 'Габариты'),
+       (215, 'Покрытие фасада', 'TEXT', 1, 'Габариты'),
+       (216, 'Стиль дизайна', 'TEXT', 1, 'Габариты'),
+       (217, 'Расположение', 'TEXT', 1, 'Габариты'),
+       (218, 'Количество полок', 'LONG', 1, 'Габариты'),
+       (219, 'Количество ящиков', 'LONG', 1, 'Габариты'),
+       (220, 'Страна изготовитель', 'TEXT', 1, 'Габариты'),
+       (221, 'Форма поставки', 'TEXT', 1, 'Габариты'),
+       (222, 'Гарантийный срок', 'TEXT', 1, 'Габариты');
 
 insert into products (id, external_id, name, description, is_visible, is_archived, is_deleted, rating,
                       seller_external_id, tax_type, price, article_from_seller, count, type_id, creation_date, brand)
@@ -131,23 +123,23 @@ create table product_characteristics
     external_id uuid,
     name        varchar(255),
     value       varchar(255),
-    product_id  bigint
-        references products,
-    value_type  varchar(255)
+    product_id  bigint        references products,
+    value_type  varchar(255),
+    group_characteristic varchar(255)
 );
 
-INSERT INTO product_characteristics (id, external_id, name, value, product_id, value_type)
-VALUES (100, 'f3bb4ee9-c624-472b-8e4d-669dc863267d', 'Ширина, см', 123, 11, 'DOUBLE'),
-       (101, 'a969bc99-324b-4e7e-aa72-1d7f197948e5', 'Глубина, см', 12.3, 11, 'DOUBLE'),
-       (102, '81de4b86-ea7d-484e-8217-53f7d36691a3', 'Высота, см', 34.5, 11, 'DOUBLE'),
-       (103, '90082405-f0e1-41b2-a34b-5c5717fc1f3d', 'Вес товара, кг', 456.7, 11, 'DOUBLE'),
-       (104, 'a782e3ac-6165-425b-b61c-ce93654f9aa3', 'Цвет', 'красный', 11, 'TEXT'),
-       (105, '1c884d4c-7bc6-4d54-8b21-d83015568e70', 'Материал фасада', 'стальной', 11, 'TEXT'),
-       (106, '13f2dd2f-8255-48f3-9991-c70e28d79a6d', 'Покрытие фасада', 'стальной', 11, 'TEXT'),
-       (107, '91b42d5d-12c8-4f60-a5dc-b34334b0c610', 'Стиль дизайна', 'минимализм', 11, 'TEXT'),
-       (108, '3919c626-87de-4070-b72e-b12be29cd7d3', 'Расположение', 'по центру', 11, 'TEXT'),
-       (109, '0e1ab7c4-5816-4efe-8052-6c199b0fb566', 'Количество полок', 4, 11, 'LONG'),
-       (110, '1c92165b-13ec-43c9-b095-57c7b41f3cb8', 'Количество ящиков', 3, 11, 'LONG'),
-       (111, '56805755-04dd-4873-9b52-290423fa8761', 'Страна изготовитель', 'Гонконг', 11, 'TEXT'),
-       (112, '39d1a737-8a4f-40dd-b217-14b561c3109f', 'Форма поставки', 'доставка', 11, 'TEXT'),
-       (113, 'c55cd11a-2ff8-483e-aa6e-a7d50529d16c', 'Гарантийный срок', '6 м.', 11, 'TEXT');
+INSERT INTO product_characteristics (id, external_id, name, value, product_id, value_type, group_characteristic)
+VALUES (100, 'f3bb4ee9-c624-472b-8e4d-669dc863267d', 'Ширина, см', 123, 11, 'DOUBLE', 'Габариты'),
+       (101, 'a969bc99-324b-4e7e-aa72-1d7f197948e5', 'Глубина, см', 12.3, 11, 'DOUBLE', 'Габариты'),
+       (102, '81de4b86-ea7d-484e-8217-53f7d36691a3', 'Высота, см', 34.5, 11, 'DOUBLE', 'Габариты'),
+       (103, '90082405-f0e1-41b2-a34b-5c5717fc1f3d', 'Вес товара, кг', 456.7, 11, 'DOUBLE', 'Габариты'),
+       (104, 'a782e3ac-6165-425b-b61c-ce93654f9aa3', 'Цвет', 'красный', 11, 'TEXT', 'Габариты'),
+       (105, '1c884d4c-7bc6-4d54-8b21-d83015568e70', 'Материал фасада', 'стальной', 11, 'TEXT', 'Габариты'),
+       (106, '13f2dd2f-8255-48f3-9991-c70e28d79a6d', 'Покрытие фасада', 'стальной', 11, 'TEXT', 'Габариты'),
+       (107, '91b42d5d-12c8-4f60-a5dc-b34334b0c610', 'Стиль дизайна', 'минимализм', 11, 'TEXT', 'Габариты'),
+       (108, '3919c626-87de-4070-b72e-b12be29cd7d3', 'Расположение', 'по центру', 11, 'TEXT', 'Габариты'),
+       (109, '0e1ab7c4-5816-4efe-8052-6c199b0fb566', 'Количество полок', 4, 11, 'LONG', 'Габариты'),
+       (110, '1c92165b-13ec-43c9-b095-57c7b41f3cb8', 'Количество ящиков', 3, 11, 'LONG', 'Габариты'),
+       (111, '56805755-04dd-4873-9b52-290423fa8761', 'Страна изготовитель', 'Гонконг', 11, 'TEXT', 'Габариты'),
+       (112, '39d1a737-8a4f-40dd-b217-14b561c3109f', 'Форма поставки', 'доставка', 11, 'TEXT', 'Габариты'),
+       (113, 'c55cd11a-2ff8-483e-aa6e-a7d50529d16c', 'Гарантийный срок', '6 м.', 11, 'TEXT', 'Габариты');
