@@ -454,6 +454,20 @@ class ProductControllerModuleTest extends AbstractTestIntegration {
                 .andExpect(jsonPath("$[0].id").value("301c5370-be41-421e-9b15-f1e80a7079f9"));
     }
 
+    @Test
+    void deleteProductBySellerId() throws  Exception{
+        List<UUID> productIds = REAL_PRODUCTS.subList(3, 4);
+
+        mockMvc.perform(delete(PRODUCTS_PATH, REAL_SELLER_ID)
+                        .with(authentication(serviceTest.getToken(REAL_SELLER_ID.toString())))
+                        .param("product-ids", serviceTest.convertListToParam(productIds))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent());
+
+        
+
+    }
+
     public ProductResponse getProduct(UUID sellerId, UUID productId) throws Exception {
         return serviceTest.getProductFromMvcResult(
                 mockMvc.perform(get(PRODUCT_PATH, sellerId, productId, PageRequest.of(0, 20))
