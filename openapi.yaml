@@ -1567,7 +1567,7 @@ paths:
             "*/*":
               schema:
                 "$ref": "#/components/schemas/BasicErrorResponse"
-                
+
 #COMPONENTS############################################################     
 components:
   schemas:
@@ -2000,7 +2000,7 @@ components:
           example: 'комоды'
         description:
           type: string
-          example: 'какое-то описание товара by eseo.a'
+          example: 'какое-то описание товара'
         articleFromSeller:
           type: string
           format: uuid
@@ -2008,14 +2008,6 @@ components:
         brand:
           type: string
           example: 'ikea'
-        price:
-          type: number
-          format: long
-          example: 100000  
-        count:
-          type: number
-          format: long
-          example: 10
         typeId:
           type: string
           format: uuid
@@ -2049,6 +2041,9 @@ components:
             - BOOLEAN
             - LOCAL_DATE
           example: LONG
+        groupCharacteristic: 
+          type: string
+          example: 'габариты'
           
   ###############################################################
 
@@ -2229,6 +2224,9 @@ components:
             - BOOLEAN
             - LOCAL_DATE
           example: LONG
+        groupCharacteristic: 
+          type: string
+          example: 'вес'
           
   ###############################################################
 
