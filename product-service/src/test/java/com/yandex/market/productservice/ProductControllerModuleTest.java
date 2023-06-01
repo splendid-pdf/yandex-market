@@ -466,3 +466,4 @@ class ProductControllerModuleTest extends AbstractTestIntegration {
     }
 }
 
+    
