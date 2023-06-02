@@ -39,6 +39,8 @@ public class OrderService {
         Order order = orderMapper.toOrder(orderRequest);
         order.setUserId(userId);
         orderRepository.save(order);
+        //todo: create method generate unic order number
+        //todo: перебрать все
         return order.getExternalId();
     }
 

@@ -49,6 +49,7 @@ public class OrderController {
     public static final String SUCCESSFUL_OPERATION = "Successful operation";
     public static final String APPLICATION_JSON = "application/json";
     private final OrderService orderService;
+    //todo: сделать дто которое описано в документе по паспорту
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/users/{userId}/orders")
