@@ -23,6 +23,8 @@ public class Order {
     @SequenceGenerator(name = "order-sequence", allocationSize = 1)
     private Long id;
 
+    private String orderNumber;
+
     @Column(unique = true)
     private UUID externalId;
 

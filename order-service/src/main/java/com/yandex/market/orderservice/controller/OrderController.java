@@ -56,12 +56,12 @@ public class OrderController {
     @Operation(operationId = "createOrder", summary = "Create new order for the user")
     @ApiResponse(responseCode = "201", description = SUCCESSFUL_OPERATION,
             content = @Content(mediaType = APPLICATION_JSON, schema = @Schema(implementation = UUID.class)))
-    public UUID createOrder(@Parameter(name = "orderRequestDto", description = "Representation of a created order")
-                            @RequestBody @Valid OrderRequest orderRequest,
+    public List<UUID> createOrder(@Parameter(name = "orderRequestDto", description = "Representation of a created order")
+                            @RequestBody @Valid List<OrderRequest> orderRequestList,
                             @Parameter(name = "userId", description = "User's identifier")
                             @PathVariable(USER_ID) UUID userId) {
-        log.info("'createOrder' was called for userId = {} with request = {}", userId, orderRequest);
-        return orderService.create(orderRequest, userId);
+        log.info("'createOrder' was called for userId = {} with request = {}", userId, orderRequestList);
+        return orderService.create(orderRequestList, userId);
     }
 
     @ResponseStatus(HttpStatus.OK)

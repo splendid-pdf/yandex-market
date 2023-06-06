@@ -20,7 +20,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.ByteArrayInputStream;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.UUID;
 
 @Slf4j
@@ -35,13 +40,16 @@ public class OrderService {
     private static final String USER_BY_EXTERNAL_ID_IS_NOT_FOUND_MESSAGE = "Order not found by user external id = '%s'";
 
     @Transactional
-    public UUID create(OrderRequest orderRequest, UUID userId) {
-        Order order = orderMapper.toOrder(orderRequest);
-        order.setUserId(userId);
-        orderRepository.save(order);
-        //todo: create method generate unic order number
-        //todo: перебрать все
-        return order.getExternalId();
+    public List<UUID> create(List<OrderRequest> orderRequestList, UUID userId) {
+        List<UUID> listOrderIds = new ArrayList<>();
+        for(OrderRequest orderRequest : orderRequestList){
+            Order order = orderMapper.toOrder(orderRequest);
+            order.setUserId(userId);
+            order.setOrderNumber(generateOrderNumber());
+            orderRepository.save(order);
+            listOrderIds.add(order.getExternalId());
+        }
+        return listOrderIds;
     }
 
     @Transactional(readOnly = true)
@@ -118,5 +126,10 @@ public class OrderService {
         if (OrderStatus.COMPLETED == order.getOrderStatus()) {
             throw new UnsupportedOperationException(COMPLETED_ORDER_CAN_NOT_BE_UPDATED);
         }
+    }
+
+    private static String generateOrderNumber(){
+        int random = new Random().nextInt(1_000_000);
+        return "ЗАКАЗ " + random + " от " + LocalDate.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
     }
 }
