@@ -1,0 +1,22 @@
+spring:
+  application:
+    name: workflow-api
+  config:
+    import: "optional:configserver:"
+
+management:
+  tracing:
+    enabled: false
+    sampling:
+      probability: 0.1
+  endpoints:
+    web:
+      exposure:
+        include: prometheus,health
+  metrics:
+    tags:
+      application: ${spring.application.name}
+
+logging:
+  level:
+    web: INFO
