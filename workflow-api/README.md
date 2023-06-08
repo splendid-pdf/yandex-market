@@ -1,14 +1,18 @@
 # workflow-api
 
-Данный сервис предназначен для распространения изменений в системе.
-Работа с сервисом происходит через рест (с методом http - POST).
+Данный сервис предназначен для распространения изменений в системе при работе с аггрегатами.
+<br>Работа с сервисом происходит через рест (с методом http - POST).
 
-Основная единица над которой произоводится работы - объект типа Operation, который содержит в себе всю информацию, которую нужно обработать или распространить в другие сервисы.
+Работа осуществляется над объектом типа Operation, который содержит в себе всю информацию, которую нужно распространить в другие сервисы.
 
 При получении запроса по ресту, сервис обращается к указанной Schema для последовательной обработке операции (шаг за шагом).
+<br>Шаг - объект типа AbstractStep, базовая единица работы манипулирующая объектом Operation. <br><br>
+Каждый шаг может быть обогащен функционалом за счет использования DecoratorChain.
+При использовании объекта DecoratorChain в схеме надо понимать, что цепочка декораторов будет применена к каждому шагу внутри одной схемы.  
 
-Рассмотрим простой пример. Нам необходимо удалить продукты и их фотографии по переданным идентификаторам.
-Опишем модель ProductGroupOperation.
+
+Рассмотрим простой пример при работе с двумя аггрегатами. Нам необходимо удалить продукты и их фотографии по переданным идентификаторам.
+<br>Опишем модель ProductGroupOperation.
 ```
 public class ProductGroupOperation extends Operation {
     List<String> product_ids;
@@ -55,13 +59,19 @@ public class PhotoGroupDeleteStep extends AbstractStep<ProductGroupOperation> {
 
 
 Далее, имея шаги, описывается схема, в которой шаги указываются в порядке, в котором они будут вызваны.
+Тут же мы указываем, что ко всем шагам должна быть применена цепокчка декораторов.
+Обьект типа BaseDecoratorChain содержит в себе 3 декоратара: 
+* один осуществляет try-catch на случай, если что то пойдет не так
+* второй измеряет время выполнения шага в наносекундах
+* третий логирует начало и завершения работы шага.<br>
+<b><i>Пользователь может определить cвои декораторы и собрать из них свою цепочку декораторов<i><b>
 ```
 @Component
 public class DeleteProductGroupScheme implements SchemaProvider<ProdictGroupOperation> {
 
     public Schema<ProdictGroupOperation> provideSchema(ProdictGroupOperation operation) {
         return SchemaBuilder.builder(operation)
-                .decorator(new LogDecorator<>(new TimeTrackDecorator<>()))
+                .decoratorChain(new BaseDecoratorChain())
                 .step(new ProductGroupDeleteStep(), "productGroupDeleteStep")
                 .step(new PhotoGroupDeleteStep(), "photoGroupDeleteStep")
                 .build();
@@ -69,7 +79,7 @@ public class DeleteProductGroupScheme implements SchemaProvider<ProdictGroupOper
 }
 ```
 
-Конфигурируете Workflow
+Пришло время создать бин типа Workflow, Workflow принимает в конструктор схему и при его вызове передает управление схеме.
 ```
 @Configuration
 public class WorkflowConfiguration {
@@ -81,16 +91,16 @@ public class WorkflowConfiguration {
 }
 ```
 
-И создаем эндпоинт для обработки операции по заданному workflow.
+Осталось прописать эндпоинт для обработки Вашей операции по заданному workflow.
 ```
 @RestController
+@RequestMapping(....)
 public class WorkflowController {
     private final Workflow<ProdictGroupOperation> deleteProductGroupWorkflow;
 
-    @PostMapping()
-    public Operation deleteProductGroup(ProdictGroupOperation operation) {
-        ProdictGroupOperation result =  deleteProductGroupWorkflow.process(operation);
-        return result;
+    @PostMapping(....)
+    public ResponseEntity<OperationProgressReport> deleteProductGroup(ProdictGroupOperation operation) {
+        return ResponseEntity.ok(deleteProductGroupWorkflow.process(operation));
     }
 }
 ```
