@@ -17,8 +17,8 @@ public class CatchExceptionIfThrownDecorator<O extends Operation> extends StepDe
         try {
             return step.apply(o);
         } catch (Exception ex) {
-            log.error("Step '{}' was failed with error message: {}", step.operationName(), ex.getMessage());
-            return StepResult.failed(o, step.operationName());
+            log.error("Step '{}' was failed with error message: {}", step.stepName(), ex.getMessage());
+            return StepResult.failed(o, step.stepName());
         }
     }
 }

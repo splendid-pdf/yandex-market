@@ -13,6 +13,6 @@ public abstract class StepDecorator<O extends Operation> extends AbstractStep<O>
     public StepDecorator(AbstractStep<O> step) {
         this.step = step;
         this.fallback(step.fallback());
-        this.operationName(step.operationName());
+        this.stepName(step.stepName());
     }
 }

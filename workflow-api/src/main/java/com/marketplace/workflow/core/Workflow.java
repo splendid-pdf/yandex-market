@@ -11,6 +11,6 @@ public class Workflow<O extends Operation> {
     private final SchemaProvider<O> schemaProvider;
 
     public OperationProgressReport process(O o) {
-        return schemaProvider.provideSchema(o).apply();
+        return schemaProvider.provideSchema().apply(o);
     }
 }

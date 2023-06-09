@@ -13,7 +13,7 @@ public class LogStepDecorator<O extends Operation> extends StepDecorator<O> {
 
     @Override
     public StepResult<O> apply(O o) {
-        log.info("Started to process '{}' step", this.operationName());
+        log.info("Started to process '{}' step", this.stepName());
 
         StepResult<O> result = step.apply(o);
 

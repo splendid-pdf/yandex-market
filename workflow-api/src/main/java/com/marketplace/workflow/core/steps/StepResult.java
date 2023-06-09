@@ -10,6 +10,9 @@ public record StepResult<O>(O o, String stepName, StepState state) {
         return new StepResult<>(o, stepName, StepState.FAILED);
     }
 
+    public boolean isOk() {
+        return this.state == StepState.OK;
+    }
     public boolean isFailed() {
         return this.state == StepState.FAILED;
     }
