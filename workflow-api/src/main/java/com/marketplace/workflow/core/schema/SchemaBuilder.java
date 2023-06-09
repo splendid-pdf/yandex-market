@@ -17,22 +17,22 @@ public class SchemaBuilder<O extends Operation> {
     private DecoratorChain<O> decoratorChain;
 
     public static <O extends Operation> SchemaBuilder<O> builder() {
-        return new SchemaBuilder<>();
+        return new SchemaBuilder<O>();
     }
 
-    public SchemaBuilder<O> withDecoratorChain(DecoratorChain<O> decoratorChain) {
-        this.decoratorChain = decoratorChain;
+    public SchemaBuilder<O> withDecoratorChain(DecoratorChain<? extends O> decoratorChain) {
+        this.decoratorChain = (DecoratorChain<O>) decoratorChain;
         return this;
     }
 
-    public SchemaBuilder<O> step(AbstractStep<O> step) {
-        steps.add(step);
+    public SchemaBuilder<O> step(AbstractStep<? extends O> step) {
+        steps.add((AbstractStep<O>) step);
         return this;
     }
 
-    public SchemaBuilder<O> step(AbstractStep<O> step, String operationName) {
-        step.stepName(operationName);
-        steps.add(step);
+    public SchemaBuilder<O> step(AbstractStep<? extends O> step, String stepName) {
+        step.stepName(stepName);
+        steps.add((AbstractStep<O>) step);
         return this;
     }
 

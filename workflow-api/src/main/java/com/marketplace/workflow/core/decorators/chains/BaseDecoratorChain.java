@@ -7,7 +7,7 @@ import com.marketplace.workflow.core.decorators.LogStepDecorator;
 import com.marketplace.workflow.core.decorators.StepDecorator;
 import com.marketplace.workflow.core.decorators.TimeTrackingStepDecorator;
 
-public class BaseDecoratorChain<O extends Operation> {
+public class BaseDecoratorChain<O extends Operation> implements DecoratorChain<O>{
 
     public StepDecorator<O> decorate(AbstractStep<O> step) {
         return

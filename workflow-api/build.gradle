@@ -10,6 +10,9 @@ dependencies {
 	implementation libs.spring.cloud.config.client
 
 	developmentOnly libs.spring.devtools
+
+	testImplementation libs.spring.test
+	testImplementation libs.aspectj.core
 }
 
 tasks.register("prepareKotlinBuildScriptModel") {}

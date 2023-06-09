@@ -27,13 +27,13 @@ public class ProductGroupDeleteStep extends AbstractStep<ProductGroupOperation> 
     private final ProductGateway gateway;
 
     @Override
-    public StepResult<ProductGroupOperation> apply() {
+    public StepResult<ProductGroupOperation> apply(O o) {
         Response response = gateway.deleteProductGroup(this.operation.getProductIds());
         if (response.is2xxSuccessfull()) {
-            return StepResult.ok(this.operation(), this.operationName());
+            return StepResult.ok(o, this.stepName());
         }
         
-        return StepResult.failed(this.operation(), this.operationName());
+        return StepResult.failed(o, this.stepName());
     }
 }
 ```
@@ -46,13 +46,13 @@ public class PhotoGroupDeleteStep extends AbstractStep<ProductGroupOperation> {
     private final UploadGateway gateway;
 
     @Override
-    public StepResult<ProductGroupOperation> apply() {
+    public StepResult<ProductGroupOperation> apply(O o) {
         Response response = gateway.deletePhotoGroup(this.operation.getPhotoIds());
         if (response.is2xxSuccessfull()) {
-            return StepResult.ok(this.operation(), this.operationName());
+            return StepResult.ok(o, this.stepName());
         }
         
-        return StepResult.failed(this.operation(), this.operationName());
+        return StepResult.failed(o, this.stepName());
     }
 }
 ```

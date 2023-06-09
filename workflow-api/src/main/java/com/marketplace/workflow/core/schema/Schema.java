@@ -2,7 +2,7 @@ package com.marketplace.workflow.core.schema;
 
 import com.marketplace.workflow.core.decorators.chains.DecoratorChain;
 import com.marketplace.workflow.core.resilience.Retry;
-import com.marketplace.workflow.core.steps.RollbackDetails;
+import com.marketplace.workflow.core.steps.ErrorDetails;
 import com.marketplace.workflow.core.steps.FallbackResult;
 import com.marketplace.workflow.core.operations.Operation;
 import com.marketplace.workflow.core.operations.OperationProgressReport;
@@ -11,6 +11,7 @@ import com.marketplace.workflow.core.steps.StepResult;
 import com.yandex.market.model.OperationResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import org.springframework.util.Assert;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -35,6 +36,7 @@ public class Schema<O extends Operation> {
 
 
     public OperationProgressReport apply(O o) {
+        Assert.notEmpty(steps, "Steps were not configured");
         ListIterator<AbstractStep<O>> iterator = steps.listIterator();
         OperationProgressReport report = new OperationProgressReport();
 
@@ -44,16 +46,22 @@ public class Schema<O extends Operation> {
             StepResult<O> result = runStep(o, step);
 
             if (result.isFailed()) {
-                if (nonNull(retry) && tryRetry(o, step).isFailed()) {
-                    List<RollbackDetails> rollbackDetails = rollback(iterator);
-                    if (isNotEmpty(rollbackDetails)) {
-                        return report.resultType(FAILED).details(rollbackDetails);
+                if (nonNull(retry) && tryRetry(o, step).isOk()) {
+                    continue;
+                }
+
+                if (nonNull(step.fallback())) {
+                    List<ErrorDetails> errorDetails = rollback(iterator);
+                    if (isNotEmpty(errorDetails)) {
+                        return report.operation(o).resultType(FAILED).errorDetails(errorDetails);
                     }
+                } else {
+                    return report.operation(o).resultType(FAILED);
                 }
             }
         }
 
-        return report.resultType(OK);
+        return report.resultType(OK).operation(o);
     }
 
     private StepResult<O> runStep(O o, AbstractStep<O> step) {
@@ -92,10 +100,10 @@ public class Schema<O extends Operation> {
         }
     }
 
-    private List<RollbackDetails> rollback(ListIterator<AbstractStep<O>> iterator) {
-        List<RollbackDetails> details = Collections.emptyList();
+    private List<ErrorDetails> rollback(ListIterator<AbstractStep<O>> iterator) {
+        List<ErrorDetails> details = Collections.emptyList();
         while (iterator.hasPrevious()) {
-            AbstractStep<O> step = iterator.previous();
+            AbstractStep<? extends O> step = iterator.previous();
             OperationResponse operationResponse = tryCatch(step.fallback());
             FallbackResult fallbackResult = (FallbackResult) operationResponse.operationResult();
             if (fallbackResult == FallbackResult.FAILED) {
@@ -104,7 +112,7 @@ public class Schema<O extends Operation> {
                 }
 
                 details.add(
-                        new RollbackDetails(
+                        new ErrorDetails(
                             step.stepName(),
                             DEFAULT_ERROR_MESSAGE.formatted(operationResponse.errorMessage())
                         )

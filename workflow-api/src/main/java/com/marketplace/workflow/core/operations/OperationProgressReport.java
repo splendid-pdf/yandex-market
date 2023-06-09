@@ -1,6 +1,6 @@
 package com.marketplace.workflow.core.operations;
 
-import com.marketplace.workflow.core.steps.RollbackDetails;
+import com.marketplace.workflow.core.steps.ErrorDetails;
 import com.yandex.market.model.OperationResultType;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,6 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @Accessors(chain = true, fluent = true)
 public class OperationProgressReport {
-    private List<RollbackDetails> details;
+    private Operation operation;
+    private List<ErrorDetails> errorDetails;
     private OperationResultType resultType;
 }
