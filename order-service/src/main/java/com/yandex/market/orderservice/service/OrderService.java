@@ -21,7 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.ByteArrayInputStream;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +34,7 @@ public class OrderService {
 
     private final OrderMapper orderMapper;
     private final OrderRepository orderRepository;
-    private static final String COMPLETED_ORDER_CAN_NOT_BE_UPDATED = "Completed order can not be updated";
+    private static final String COMPLETED_OR_CANCELED_ORDER_CAN_NOT_BE_UPDATED = "Completed or canceled orders can not be updated";
     private static final String ORDER_BY_EXTERNAL_ID_IS_NOT_FOUND_MESSAGE = "Order not found by external id = '%s'";
     private static final String USER_BY_EXTERNAL_ID_IS_NOT_FOUND_MESSAGE = "Order not found by user external id = '%s'";
 
@@ -77,36 +76,45 @@ public class OrderService {
     }
 
     @Transactional
-    public void cancelOrder(UUID orderId) {
+    public void cancelOrderByUser(UUID orderId) {
         Order order = getOrderById(orderId);
 
-        checkIfOrderIsCompletedAndThrowUOE(order);
+        checkIfOrderIsReceivedAndThrowUOE(order);
 
-        order.setOrderStatus(OrderStatus.CANCELED);
+        order.setOrderStatus(OrderStatus.CANCELED_BY_USER);
     }
 
-//    @Transactional
-//    public OrderResponse update(OrderRequest orderRequest, UUID orderId) {
-//        Order storedOrder = getOrderById(orderId);
-//
-//        checkIfOrderIsCompletedAndThrowUOE(storedOrder);
-//
-//        Order order = orderMapper.toOrder(orderRequest);
-//        order.setId(storedOrder.getId());
-//        order.setUserId(storedOrder.getUserId());
-//        order.setExternalId(storedOrder.getExternalId());
-//        for (int i = 0; i < storedOrder.getOrderedProducts().size(); i++) {
-//            order.getOrderedProducts().get(i).setId(storedOrder.getOrderedProducts().get(i).getId());
-//        }
-//
-//        orderRepository.save(order);
-//        return orderMapper.toOrderResponseDto(order);
-//    }
+    @Transactional
+    public void cancelOrderBySeller(UUID orderId) {
+        Order order = getOrderById(orderId);
+
+        checkIfOrderIsReceivedAndThrowUOE(order);
+
+        order.setOrderStatus(OrderStatus.CANCELED_BY_SELLER);
+    }
+
+    @Transactional
+    public void sendOrder(UUID orderId) {
+        Order order = getOrderById(orderId);
+
+        checkIfOrderIsReceivedAndThrowUOE(order);
+
+        order.setOrderStatus(OrderStatus.SENT);
+    }
+
+    @Transactional
+    public void receivedOrder(UUID orderId) {
+        Order order = getOrderById(orderId);
+
+        checkIfOrderIsReceivedAndThrowUOE(order);
+
+        order.setOrderStatus(OrderStatus.RECEIVED);
+    }
 
     @Transactional
     public OrderResponse updateOrderStatus(UUID orderId, OrderStatus orderStatus) {
         Order storedOrder = getOrderById(orderId);
-        checkIfOrderIsCompletedAndThrowUOE(storedOrder);
+        checkIfOrderIsReceivedAndThrowUOE(storedOrder);
         storedOrder.setOrderStatus(orderStatus);
         return orderMapper.toOrderResponseDto(storedOrder);
     }
@@ -122,9 +130,13 @@ public class OrderService {
                         ORDER_BY_EXTERNAL_ID_IS_NOT_FOUND_MESSAGE.formatted(orderId)));
     }
 
-    private static void checkIfOrderIsCompletedAndThrowUOE(Order order) {
-        if (OrderStatus.COMPLETED == order.getOrderStatus()) {
-            throw new UnsupportedOperationException(COMPLETED_ORDER_CAN_NOT_BE_UPDATED);
+    private static void checkIfOrderIsReceivedAndThrowUOE(Order order) {
+        if (OrderStatus.RECEIVED == order.getOrderStatus() ||
+                OrderStatus.CANCELED_BY_SELLER == order.getOrderStatus() ||
+                OrderStatus.CANCELED_BY_USER == order.getOrderStatus()
+
+        ) {
+            throw new UnsupportedOperationException(COMPLETED_OR_CANCELED_ORDER_CAN_NOT_BE_UPDATED);
         }
     }
 

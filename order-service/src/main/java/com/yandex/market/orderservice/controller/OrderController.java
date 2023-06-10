@@ -57,9 +57,9 @@ public class OrderController {
     @ApiResponse(responseCode = "201", description = SUCCESSFUL_OPERATION,
             content = @Content(mediaType = APPLICATION_JSON, schema = @Schema(implementation = UUID.class)))
     public List<UUID> createOrder(@Parameter(name = "orderRequestDto", description = "Representation of a created order")
-                            @RequestBody @Valid List<OrderRequest> orderRequestList,
-                            @Parameter(name = "userId", description = "User's identifier")
-                            @PathVariable(USER_ID) UUID userId) {
+                                  @RequestBody @Valid List<OrderRequest> orderRequestList,
+                                  @Parameter(name = "userId", description = "User's identifier")
+                                  @PathVariable(USER_ID) UUID userId) {
         log.info("'createOrder' was called for userId = {} with request = {}", userId, orderRequestList);
         return orderService.create(orderRequestList, userId);
     }
@@ -103,41 +103,38 @@ public class OrderController {
         return orderService.getOrderPreviewsBySellerId(sellerId);
     }
 
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PatchMapping("/orders/{orderId}/cancellation")
-    @Operation(operationId = "cancelOrder", summary = "Cancel order by it's external id")
-    @ApiResponse(responseCode = "204", description = SUCCESSFUL_OPERATION)
-    public void cancelOrder(@Parameter(name = "orderId", description = "Order's identifier")
-                            @PathVariable("orderId") UUID orderId) {
+    @ResponseStatus(HttpStatus.OK)
+    @PatchMapping("/users/orders/{orderId}/cancellation")
+    @Operation(operationId = "cancelOrder", summary = "User cancels the order by external id")
+    @ApiResponse(responseCode = "200", description = SUCCESSFUL_OPERATION)
+    public void cancelOrderByUser(@Parameter(name = "orderId", description = "Order's identifier")
+                                  @PathVariable("orderId") UUID orderId) {
         log.info("'cancelOrder' was called by orderId: {}", orderId);
-        orderService.cancelOrder(orderId);
+        orderService.cancelOrderByUser(orderId);
     }
 
-//    @ResponseStatus(HttpStatus.OK)
-//    @PutMapping("/orders/{externalId}")
-//    @Operation(operationId = "updateOrder", summary = "Update order by it's external id")
-//    @ApiResponse(responseCode = "200", description = SUCCESSFUL_OPERATION)
-//    public OrderResponseDto updateOrder(
-//            @Parameter(name = "orderRequestDto", description = "Representation of a updated order")
-//            @RequestBody @Valid OrderRequestDto orderRequestDto,
-//            @Parameter(name = EXTERNAL_ID, description = "Order's identifier")
-//            @PathVariable(EXTERNAL_ID) UUID externalId) {
-//        log.info("Received a request to update an order: {}", externalId);
-//        return orderService.update(orderRequestDto, externalId);
-//    }
+    @ResponseStatus(HttpStatus.OK)
+    @PatchMapping("/sellers/orders/{orderId}/cancellation")
+    @Operation(operationId = "cancelOrder", summary = "Seller cancels the order by external id")
+    @ApiResponse(responseCode = "200", description = SUCCESSFUL_OPERATION)
+    public void cancelOrderBySeller(@Parameter(name = "orderId", description = "Order's identifier")
+                                    @PathVariable("orderId") UUID orderId) {
+        log.info("'cancelOrder' was called by orderId: {}", orderId);
+        orderService.cancelOrderBySeller(orderId);
+    }
 
     @ResponseStatus(HttpStatus.OK)
-    @PatchMapping("/orders/{orderId}/status")
-    @Operation(operationId = "updateOrderStatus", summary = "Update order status by order id")
-    @ApiResponse(responseCode = STATUS_OK, description = SUCCESSFUL_OPERATION)
-    public OrderResponse updateOrderStatus(
-            @Parameter(name = "orderId", description = "Order's identifier")
-            @PathVariable("orderId") UUID orderId,
-            @Parameter(name = "OrderStatus")
-            @RequestBody OrderStatus orderstatus
-    ) {
-        log.info("'updateOrderStatus' was called by orderId: {}", orderId);
-        return orderService.updateOrderStatus(orderId, orderstatus);
+    @PatchMapping("/sellers/orders/{orderId}/send")
+    public void sendOrder(@Parameter(name = "orderId", description = "Order's identifier")
+                          @PathVariable("orderId") UUID orderId){
+        orderService.sendOrder(orderId);
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @PatchMapping("/users/orders/{orderId}/received")
+    public void receivedOrder(@Parameter(name = "orderId", description = "Order's identifier")
+                          @PathVariable("orderId") UUID orderId){
+        orderService.receivedOrder(orderId);
     }
 
     @ResponseStatus(HttpStatus.OK)
