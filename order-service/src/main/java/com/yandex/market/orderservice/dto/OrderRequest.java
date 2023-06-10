@@ -13,6 +13,7 @@ import java.util.UUID;
 @Schema
 public record OrderRequest(
 
+        @NotNull(message =  "Идентификатор продавца должен быть заполнен")
         UUID sellerId,
         @NotNull(message = "Способ оплаты должен быть заполнен")
         PaymentType paymentType,

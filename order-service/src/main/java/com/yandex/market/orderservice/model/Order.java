@@ -45,6 +45,7 @@ public class Order {
     @Embedded
     private ReceiptMethod receiptMethod;
 
+    private UUID sellerId;
     private boolean paid;
 
     private LocalDateTime paymentDateTime;

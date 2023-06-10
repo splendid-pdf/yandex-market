@@ -34,6 +34,4 @@ public class OrderedProduct {
     private String description;
 
     private String photoUrl;
-
-    private UUID sellerId;
 }
