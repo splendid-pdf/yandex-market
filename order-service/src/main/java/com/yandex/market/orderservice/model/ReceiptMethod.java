@@ -7,7 +7,6 @@ import jakarta.persistence.Enumerated;
 import lombok.*;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 
 @Getter
 @Setter
@@ -23,17 +22,15 @@ public class ReceiptMethod {
     @Embedded
     private Address address;
 
-    private String receiverName;
+    private String receiverFirstName;
+
+    private String receiverLastName;
 
     private String receiverPhone;
 
     private String receiverEmail;
 
     private LocalDate deliveryDate;
-
-    private LocalTime deliveryStart;
-
-    private LocalTime deliveryEnd;
 
     private Long deliveryCost;
 }

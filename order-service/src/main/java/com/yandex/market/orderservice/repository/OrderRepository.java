@@ -19,8 +19,8 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     @Query(value = """
                SELECT o
                FROM Order o
-               JOIN FETCH o.orderedProducts op
-               WHERE op.sellerId = :sellerId
+               
+               WHERE o.sellerId = :sellerId
                   """)
     List<Order> getOrdersBySellerId(UUID sellerId);
 }
