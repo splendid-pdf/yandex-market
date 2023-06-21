@@ -8,9 +8,13 @@ import jakarta.validation.constraints.PositiveOrZero;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Schema
 public record OrderRequest(
+
+        @NotNull(message =  "Идентификатор продавца должен быть заполнен")
+        UUID sellerId,
         @NotNull(message = "Способ оплаты должен быть заполнен")
         PaymentType paymentType,
         @PositiveOrZero(message = "Цена заказа не может быть отрицательной")
