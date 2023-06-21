@@ -4,6 +4,12 @@ spring:
   config:
     import: "optional:configserver:"
 
+app:
+  rest:
+    timeout-in-seconds:
+      connect: 1
+      read: 3
+
 management:
   tracing:
     enabled: false

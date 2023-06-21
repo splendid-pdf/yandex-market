@@ -11,6 +11,7 @@ import com.marketplace.workflow.core.steps.StepResult;
 import com.yandex.market.model.OperationResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
 import java.util.ArrayList;
@@ -27,6 +28,7 @@ import static java.util.Objects.nonNull;
 import static org.apache.commons.collections.CollectionUtils.isNotEmpty;
 
 @RequiredArgsConstructor
+@Component
 public class Schema<O extends Operation> {
     private static final String DEFAULT_ERROR_MESSAGE = "Step was not rollbacked due the cause: %s";
 

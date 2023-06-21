@@ -20,7 +20,7 @@ spring:
   datasource:
     url: ${POSTGRES_URL:jdbc:postgresql://localhost:5432/postgres}
     username: ${POSTGRES_USER:postgres}
-    password: ${POSTGRES_PASSWORD:navvrks9}
+    password: ${POSTGRES_PASSWORD:123}
     driver-class-name: org.postgresql.Driver
   flyway:
     enabled: true

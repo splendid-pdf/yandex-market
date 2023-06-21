@@ -41,7 +41,7 @@ public class SchemaBuilder<O extends Operation> {
         return this;
     }
 
-    public Schema<O> build() {
+    public <O extends Operation> Schema build() {
         return new Schema<>(retry, steps, decoratorChain);
     }
 }

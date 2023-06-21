@@ -141,6 +141,12 @@ public class ProductService {
 
     @Transactional
     public void changeProductCount(UUID productId, Long updatedCount) {
+        if (updatedCount < 0 &&
+                findProductByExternalId(productId).getCount() < Math.abs(updatedCount)
+        ) {
+            throw new IllegalArgumentException("Not enough amount of the product on the storage");
+        }
+
         productRepository.updateProductCount(productId, updatedCount);
     }
 

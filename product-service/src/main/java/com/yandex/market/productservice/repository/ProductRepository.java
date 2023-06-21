@@ -124,7 +124,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Modifying
     @Query("""
             UPDATE Product p
-            SET p.count=:updatedCount
+            SET p.count= p.count + :updatedCount
             WHERE p.externalId=:productId
             """)
     void updateProductCount(UUID productId, Long updatedCount);

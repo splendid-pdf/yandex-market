@@ -121,7 +121,7 @@ public class ProductController implements ProductApi {
         productService.changeProductPrice(productId, updatedPrice);
     }
 
-    @PatchMapping("/sellers/{sellerId}/products/{productId}/count")
+    @PutMapping ("/sellers/{sellerId}/products/{productId}/count")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void changeProductCountById(@PathVariable UUID sellerId,
                                        @PathVariable UUID productId,
