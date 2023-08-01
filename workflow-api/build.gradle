@@ -3,6 +3,12 @@ plugins {
 	id 'com.marketplace.common.spring'
 }
 
+repositories {
+	maven{
+		url 'https://jitpack.io'
+	}
+}
+
 dependencies {
 	implementation project(':commons')
 
@@ -13,6 +19,8 @@ dependencies {
 
 	testImplementation libs.spring.test
 	testImplementation libs.aspectj.core
+
+	implementation 'com.github.senior-council:workflow:0.0.1-RELEASE'
 }
 
 tasks.register("prepareKotlinBuildScriptModel") {}

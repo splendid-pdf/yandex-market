@@ -1,30 +1,45 @@
 package com.marketplace.workflow.core.steps;
 
 import com.marketplace.workflow.core.gateway.ChangeCountProductGateway;
-import com.marketplace.workflow.core.operations.ChangeCountProductOperation;
+import com.marketplace.workflow.core.operations.SendOrderOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
+
+import java.util.function.Supplier;
 
 @RequiredArgsConstructor
-public class ChangeCountProductStep extends AbstractStep<ChangeCountProductOperation> {
-
+public class ChangeCountProductStep extends AbstractStep<SendOrderOperation> {
 
     private final ChangeCountProductGateway gateway;
 
-
     @Override
-    public StepResult<ChangeCountProductOperation> apply(ChangeCountProductOperation changeCountProductOperation) {
+    public StepResult<SendOrderOperation> apply(SendOrderOperation sendOrderOperation) {
 
-        HttpStatusCode httpStatusCode = gateway.changeCountProduct(
-                changeCountProductOperation.sellerId(),
-                changeCountProductOperation.productId(),
-                changeCountProductOperation.count()
+         ResponseEntity responseEntity = gateway.changeCountProduct(
+                sendOrderOperation.sellerId(),
+                sendOrderOperation.productCountDtoList()
         );
 
-        if(httpStatusCode.is2xxSuccessful()){
-            return StepResult.ok(changeCountProductOperation,this.stepName());
+        System.out.println(responseEntity.getBody());
+
+        if(responseEntity.getStatusCode().is2xxSuccessful()){
+            return StepResult.ok(sendOrderOperation,this.stepName());
         }
 
-        return StepResult.failed(changeCountProductOperation,this.stepName());
+
+
+        return StepResult.failed(sendOrderOperation,this.stepName());
+    }
+
+    @Override
+    public AbstractStep<SendOrderOperation> fallback(Supplier<FallbackResult> fallback) {
+        return super.fallback(fallback);
+    }
+
+    @Override
+    public Supplier<FallbackResult> fallback() {
+        System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+        return super.fallback();
     }
 }

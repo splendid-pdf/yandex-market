@@ -1,6 +1,7 @@
 package com.yandex.market.productservice.repository;
 
 
+import com.yandex.market.productservice.dto.ProductCountDto;
 import com.yandex.market.productservice.dto.projections.SellerArchiveProductPreview;
 import com.yandex.market.productservice.dto.projections.UserProductPreview;
 import com.yandex.market.productservice.dto.projections.SellerProductPreview;
@@ -141,11 +142,21 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @Modifying
     @Query(value = """
-             UPDATE Product p
-             SET p.isVisible=:isVisible
-             WHERE p.externalId IN :productIds AND
-                   p.isDeleted=false AND
-                   p.isArchived=false
-         """)
+                UPDATE Product p
+                SET p.isVisible=:isVisible
+                WHERE p.externalId IN :productIds AND
+                      p.isDeleted=false AND
+                      p.isArchived=false
+            """)
     void changeProductVisibility(List<UUID> productIds, boolean isVisible);
+
+
+    @Query(value = """
+            SELECT *
+            FROM products p
+            WHERE p.external_id IN :productIds AND
+                  p.seller_external_id =:sellerId         
+            """, nativeQuery = true)
+    List<Product> findProductByExternalIds(List<UUID> productIds, UUID sellerId);
+
 }

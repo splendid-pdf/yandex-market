@@ -1,6 +1,7 @@
 package com.yandex.market.productservice.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.yandex.market.productservice.dto.ProductCountDto;
 import com.yandex.market.productservice.dto.ProductImageDto;
 import com.yandex.market.productservice.dto.projections.SellerArchiveProductPreview;
 import com.yandex.market.productservice.dto.projections.SellerProductPreview;
@@ -10,6 +11,7 @@ import com.yandex.market.productservice.dto.request.ProductCharacteristicRequest
 import com.yandex.market.productservice.dto.request.ProductUpdateRequest;
 import com.yandex.market.productservice.dto.request.SpecialPriceRequest;
 import com.yandex.market.productservice.dto.response.ProductCharacteristicResponse;
+import com.yandex.market.productservice.dto.response.ProductCountDtoResponse;
 import com.yandex.market.productservice.dto.response.ProductResponse;
 import com.yandex.market.productservice.dto.response.SpecialPriceResponse;
 import com.yandex.market.productservice.mapper.ProductCharacteristicMapper;
@@ -27,9 +29,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.yandex.market.productservice.utils.ExceptionMessagesConstants.*;
 
@@ -224,4 +225,64 @@ public class ProductService {
                 .findByExternalId(productId)
                 .orElseThrow(() -> new EntityNotFoundException(String.format(PRODUCT_NOT_FOUND_ERROR_MESSAGE, productId)));
     }
+
+    @Transactional
+    public List<ProductCountDtoResponse> changeAmountOfProductsByIds(UUID sellerId, List<ProductCountDto> productCountDtoRequestList) {
+        List<UUID> productIds = productCountDtoRequestList.stream()
+                .map(p -> UUID.fromString(p.productId()))
+                .toList();
+
+        List<ProductCountDto> productCountDtoRepoList =
+                productRepository.findProductByExternalIds(productIds, sellerId).stream()
+                        .map(productMapper::toProductCountDto)
+                        .toList();
+
+        if (productCountDtoRepoList.isEmpty()) {
+            throw new EntityNotFoundException(String.format(PRODUCT_NOT_FOUND_ERROR_MESSAGE, productCountDtoRequestList));
+        }
+
+        List<ProductCountDtoResponse> productCountDtoResponseList = new ArrayList<>(productCountDtoRequestList.size());
+
+        for (ProductCountDto productCountDtoCheck : productCountDtoRequestList) {
+            int index = productCountDtoRepoList.indexOf(productCountDtoCheck);
+
+            if (index < 0) {
+                productCountDtoResponseList.add(
+                        new ProductCountDtoResponse(
+                                productCountDtoCheck.productId(),
+                                productCountDtoCheck.count(),
+                                "NOT FOUND PRODUCT",
+                                "Данного продукта нет на в наличии на складе"
+                        )
+                );
+            }
+            else if (productCountDtoCheck.count() > productCountDtoRepoList.get(index).count()) {
+                productCountDtoResponseList.add(
+                        new ProductCountDtoResponse(
+                                productCountDtoCheck.productId(),
+                                productCountDtoCheck.count(),
+                                "FAILED UPDATE",
+                                "Данного продукта недостаточно на складе. В наличии " + productCountDtoRepoList.get(index).count()
+                        )
+                );
+            }
+            else {
+                productRepository.updateProductCount(
+                        UUID.fromString(productCountDtoCheck.productId()),
+                        productCountDtoCheck.count() * (-1)
+                );
+
+                productCountDtoResponseList.add(
+                        new ProductCountDtoResponse(
+                                productCountDtoCheck.productId(),
+                                productCountDtoRepoList.get(index).count() - productCountDtoCheck.count(),
+                                "SUCCESSFUL UPDATE",
+                                ""
+                        )
+                );
+            }
+        }
+        return productCountDtoResponseList;
+    }
+
 }

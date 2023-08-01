@@ -54,7 +54,7 @@ public class BasketController implements BasketApi {
     )
     @ResponseStatus(OK)
     public CountItemsResponse deleteItemsList(@PathVariable UUID userId,
-                                              @RequestParam(name = "products") List<UUID> itemIds) {
+                                              @RequestBody List<UUID> itemIds) {
         return basketService.deleteItemsList(userId, itemIds);
     }
 }

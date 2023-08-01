@@ -5,13 +5,14 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
-import java.util.Set;
+import java.util.List;
 
 @Getter
 @Setter
 @RequiredArgsConstructor
-public class ChangeStatusOrderOperation extends Operation{
+public class SendOrderOperation extends Operation{
     private final String orderId;
     private final String sellerId;
-    private final Set<ProductCountDto> productCountDtoList;
+    private final List<ProductCountDto> productCountDtoList;
+    private final String userId;
 }

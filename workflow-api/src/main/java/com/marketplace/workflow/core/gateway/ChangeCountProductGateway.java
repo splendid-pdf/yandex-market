@@ -1,10 +1,13 @@
 package com.marketplace.workflow.core.gateway;
 
+import com.marketplace.workflow.dto.ProductCountDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatusCode;
+import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -12,31 +15,20 @@ public class ChangeCountProductGateway {
 
     private final RestTemplate restTemplate;
 
-    public HttpStatusCode changeCountProduct(String sellerId, String productId, Long count) {
-//        return restTemplate.patchForObject(
-//                "http://localhost:9090/public/api/v1/sellers/{}/products/{}/count?count={}",
-//                String.class,
-//                sellerId, productId, count
-//        ).getStatusCode();
+    public ResponseEntity changeCountProduct(String sellerId, List<ProductCountDto> productCountList) {
 
-//        restTemplate.put(
-//                "http://localhost:9090/public/api/v1/sellers/" + sellerId +
-//                        "/products/" + productId +
-//                        "/count?count=" + count,
-//                String.class,
-//                String.class,
-//                sellerId, productId, count
-//        );
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.setContentType(MediaType.APPLICATION_JSON);
 
-//        return HttpStatusCode.valueOf(204);
+        HttpEntity<List<ProductCountDto>> entity = new HttpEntity<>(productCountList);
 
         return restTemplate.exchange(
-                "http://localhost:9090/public/api/v1/sellers/" + sellerId +
-                        "/products/" + productId +
-                        "/count?count=" + count,
+                "http://localhost:9090/public/api/v1/sellers/" + sellerId + "/products/counts",
                 HttpMethod.PUT,
-                null,
-                HttpStatusCode.class
-        ).getStatusCode();
+                entity,
+                List.class
+        );
     }
+
+
 }

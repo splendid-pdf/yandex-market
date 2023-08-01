@@ -27,8 +27,9 @@ import static com.yandex.market.model.OperationResultType.OK;
 import static java.util.Objects.nonNull;
 import static org.apache.commons.collections.CollectionUtils.isNotEmpty;
 
+
+//@Component
 @RequiredArgsConstructor
-@Component
 public class Schema<O extends Operation> {
     private static final String DEFAULT_ERROR_MESSAGE = "Step was not rollbacked due the cause: %s";
 
