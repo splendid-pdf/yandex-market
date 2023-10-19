@@ -84,6 +84,6 @@ create table type_characteristics
     id         bigint,
     name       varchar(255),
     value_type varchar(255),
-    type_id    bigint REFERENCES type_characteristics (id),
+    type_id    bigint REFERENCES types (id),
     primary key (id)
 );

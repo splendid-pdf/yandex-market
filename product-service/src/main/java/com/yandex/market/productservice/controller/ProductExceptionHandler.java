@@ -1,7 +1,6 @@
 package com.yandex.market.productservice.controller;
 
 import com.yandex.market.productservice.controller.response.ErrorResponse;
-import com.yandex.market.productservice.exception.InvalidCharacteristicsException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ValidationException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
@@ -12,8 +11,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.time.LocalDateTime;
-import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestControllerAdvice

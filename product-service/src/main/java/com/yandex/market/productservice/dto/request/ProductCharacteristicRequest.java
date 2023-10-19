@@ -14,6 +14,9 @@ public record ProductCharacteristicRequest(
         String value,
 
         @NotNull(message = "The value type cannot be null" )
-        ValueType valueType
+        ValueType valueType,
+
+        String groupCharacteristic
+
 ) {
 }
