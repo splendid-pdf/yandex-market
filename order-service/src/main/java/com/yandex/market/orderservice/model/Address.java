@@ -12,17 +12,15 @@ import lombok.*;
 @AllArgsConstructor
 public class Address {
 
-    private String country;
+    private String deliveryAddress;
 
-    private String region;
+    private String entrance;
 
-    private String city;
+    private String floor;
 
-    private String postCode;
+    private String apartment;
 
-    private String street;
+    private String intercom;
 
-    private String houseNumber;
-
-    private String officeNumber;
+    private String comment;
 }
