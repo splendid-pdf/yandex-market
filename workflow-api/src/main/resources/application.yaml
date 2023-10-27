@@ -1,0 +1,31 @@
+server:
+  port: 8084
+
+spring:
+  application:
+    name: workflow-api
+  config:
+    import: "optional:configserver:"
+
+app:
+  rest:
+    timeout-in-seconds:
+      connect: 1
+      read: 3
+
+management:
+  tracing:
+    enabled: false
+    sampling:
+      probability: 0.1
+  endpoints:
+    web:
+      exposure:
+        include: prometheus,health
+  metrics:
+    tags:
+      application: ${spring.application.name}
+
+logging:
+  level:
+    web: INFO

@@ -124,7 +124,7 @@ public class OrderController {
     }
 
     @ResponseStatus(HttpStatus.OK)
-    @PatchMapping("/sellers/orders/{orderId}/send")
+    @PutMapping("/sellers/orders/{orderId}/send")
     public void sendOrder(@Parameter(name = "orderId", description = "Order's identifier")
                           @PathVariable("orderId") UUID orderId){
         orderService.sendOrder(orderId);

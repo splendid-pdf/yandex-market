@@ -358,16 +358,16 @@ public interface ProductApi {
 
     @Operation(operationId = "changeProductPrice", summary = "Изменить количество товара", security = @SecurityRequirement(name = "bearerAuth"))
     @ApiResponse(responseCode = "204", description = "Количество товара было успешно изменено")
-    @PreAuthorize(value = """
-            @permissionService.hasPermission(
-                #sellerId,
-                T(com.yandex.market.auth.model.Role).SELLER,
-                T(com.yandex.market.auth.util.ClientAttributes).SELLER_ID
-            )
-            and
-            @securityService.hasAccessToProduct(#sellerId, #productId)
-            """
-    )
+//    @PreAuthorize(value = """
+//            @permissionService.hasPermission(
+//                #sellerId,
+//                T(com.yandex.market.auth.model.Role).SELLER,
+//                T(com.yandex.market.auth.util.ClientAttributes).SELLER_ID
+//            )
+//            and
+//            @securityService.hasAccessToProduct(#sellerId, #productId)
+//            """
+//    )
     void changeProductCountById(
             @Parameter(name = "sellerId", description = "Идентификатор продавца", required = true)
             UUID sellerId,

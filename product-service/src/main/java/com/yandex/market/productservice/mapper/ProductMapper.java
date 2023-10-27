@@ -1,5 +1,6 @@
 package com.yandex.market.productservice.mapper;
 
+import com.yandex.market.productservice.dto.ProductCountDto;
 import com.yandex.market.productservice.dto.request.CreateProductRequest;
 import com.yandex.market.productservice.dto.request.ProductUpdateRequest;
 import com.yandex.market.productservice.dto.response.ProductResponse;
@@ -33,5 +34,8 @@ public interface ProductMapper {
     @Mapping(target = "visible", constant = "true")
     @Mapping(source = "typeId", target = "type", ignore = true)
     Product toProduct(CreateProductRequest createProductRequest);
+
+    @Mapping(source = "externalId", target = "productId")
+    ProductCountDto toProductCountDto(Product product);
 
 }

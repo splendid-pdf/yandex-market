@@ -1,5 +1,6 @@
 package com.yandex.market.productservice.controller;
 
+import com.yandex.market.productservice.dto.ProductCountDto;
 import com.yandex.market.productservice.dto.ProductImageDto;
 import com.yandex.market.productservice.dto.projections.SellerArchiveProductPreview;
 import com.yandex.market.productservice.dto.projections.SellerProductPreview;
@@ -9,6 +10,7 @@ import com.yandex.market.productservice.dto.request.ProductCharacteristicRequest
 import com.yandex.market.productservice.dto.request.ProductUpdateRequest;
 import com.yandex.market.productservice.dto.request.SpecialPriceRequest;
 import com.yandex.market.productservice.dto.response.ProductCharacteristicResponse;
+import com.yandex.market.productservice.dto.response.ProductCountDtoResponse;
 import com.yandex.market.productservice.dto.response.ProductResponse;
 import com.yandex.market.productservice.dto.response.SpecialPriceResponse;
 import com.yandex.market.productservice.service.ProductService;
@@ -23,8 +25,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -121,12 +125,19 @@ public class ProductController implements ProductApi {
         productService.changeProductPrice(productId, updatedPrice);
     }
 
-    @PatchMapping("/sellers/{sellerId}/products/{productId}/count")
+    @PutMapping("/sellers/{sellerId}/products/{productId}/count")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void changeProductCountById(@PathVariable UUID sellerId,
                                        @PathVariable UUID productId,
                                        @RequestParam(value = "count") @PositiveOrZero Long updatedCount) {
         productService.changeProductCount(productId, updatedCount);
+    }
+
+    @PutMapping("/sellers/{sellerId}/products/counts")
+    @ResponseStatus(HttpStatus.OK)
+    public List<ProductCountDtoResponse> changeAmountOfProductsByIds(@PathVariable UUID sellerId,
+                                                                     @RequestBody List<ProductCountDto> productCountDtoList) {
+        return productService.changeAmountOfProductsByIds(sellerId, productCountDtoList);
     }
 
     @PostMapping("/sellers/{sellerId}/products/{productId}/images")

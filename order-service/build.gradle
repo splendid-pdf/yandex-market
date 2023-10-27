@@ -10,6 +10,7 @@ ext {
 }
 
 dependencies {
+	implementation project(':workflow-api')
 	implementation project(':commons')
 
 	// spring
